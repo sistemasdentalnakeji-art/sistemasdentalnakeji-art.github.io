@@ -51,8 +51,26 @@ export function AuroraBackground({ theme, effect = 'aurora', className }: Aurora
   const canvasRef = useRef<HTMLCanvasElement>(null)
   // Sube cuando Chrome restaura el contexto gráfico: vuelve a montar la aurora desde cero.
   const [generation, setGeneration] = useState(0)
+  // El footer (hilos de luz) está muy abajo: su WebGL no se inicia hasta que el visitante se acerca,
+  // para no gastar tiempo de carga (compilar shaders y leer píxeles) en algo que aún no se ve.
+  const [armed, setArmed] = useState(effect !== 'fibers')
 
   useEffect(() => {
+    if (armed) return
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setArmed(true)
+      },
+      { rootMargin: '800px 0px' },
+    )
+    observer.observe(canvas)
+    return () => observer.disconnect()
+  }, [armed])
+
+  useEffect(() => {
+    if (!armed) return
     const canvas = canvasRef.current
     // alpha: true → si algo no se pinta, se ve el degradado CSS de atrás y no negro.
     // Sin powerPreference: 'low-power', que da lienzos negros con algunos drivers (equipos con 2 GPU).
@@ -62,11 +80,17 @@ export function AuroraBackground({ theme, effect = 'aurora', className }: Aurora
     const vertex = compile(gl, gl.VERTEX_SHADER, VERTEX)
     const fragment = compile(gl, gl.FRAGMENT_SHADER, SHADERS[effect])
     const program = gl.createProgram()
-    if (!vertex || !fragment || !program) return
+    // Si algo falla a mitad, se liberan los recursos ya creados (shaders y programa).
+    const release = () => {
+      if (program) gl.deleteProgram(program)
+      if (vertex) gl.deleteShader(vertex)
+      if (fragment) gl.deleteShader(fragment)
+    }
+    if (!vertex || !fragment || !program) return release()
     gl.attachShader(program, vertex)
     gl.attachShader(program, fragment)
     gl.linkProgram(program)
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return release()
     gl.useProgram(program)
 
     // Un triángulo que cubre toda la pantalla.
@@ -127,7 +151,8 @@ export function AuroraBackground({ theme, effect = 'aurora', className }: Aurora
     }
     let contextLost = false
     const update = () => {
-      const shouldPlay = !contextLost && onScreen && !document.hidden && !reduceMotion.matches
+      const paused = reduceMotion.matches || document.documentElement.dataset.motion === 'paused'
+      const shouldPlay = !contextLost && onScreen && !document.hidden && !paused
       // Al volver a la pestaña se repinta de inmediato (Chrome puede haber descartado el cuadro).
       if (!contextLost && !document.hidden) draw()
       if (shouldPlay && !frame) frame = requestAnimationFrame(loop)
@@ -143,6 +168,7 @@ export function AuroraBackground({ theme, effect = 'aurora', className }: Aurora
     visibilityObserver.observe(canvas)
     document.addEventListener('visibilitychange', update)
     reduceMotion.addEventListener('change', update)
+    window.addEventListener('motionchange', update)
 
     // Si Chrome pierde el contexto gráfico: se oculta (queda el degradado CSS) y, cuando lo
     // restaura, la aurora se vuelve a crear.
@@ -170,6 +196,7 @@ export function AuroraBackground({ theme, effect = 'aurora', className }: Aurora
       visibilityObserver.disconnect()
       document.removeEventListener('visibilitychange', update)
       reduceMotion.removeEventListener('change', update)
+      window.removeEventListener('motionchange', update)
       canvas.removeEventListener('webglcontextlost', onContextLost)
       canvas.removeEventListener('webglcontextrestored', onContextRestored)
       gl.deleteProgram(program)
@@ -177,7 +204,7 @@ export function AuroraBackground({ theme, effect = 'aurora', className }: Aurora
       gl.deleteShader(fragment)
       gl.deleteBuffer(buffer)
     }
-  }, [theme, effect, generation])
+  }, [theme, effect, generation, armed])
 
   return <canvas ref={canvasRef} className={className} aria-hidden="true" />
 }

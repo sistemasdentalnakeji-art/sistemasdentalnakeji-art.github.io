@@ -62,7 +62,7 @@
     opacity 0.2s var(--ease);
 }
 
-.carousel__button:hover:not(:disabled) {
+.carousel__button:hover:not([aria-disabled='true']) {
   color: var(--color-brand);
   box-shadow: var(--shadow-hover);
 }
@@ -71,7 +71,7 @@
   border-radius: 50%;
 }
 
-.carousel__button:disabled {
+.carousel__button[aria-disabled='true'] {
   opacity: 0.4;
   box-shadow: none;
   cursor: default;

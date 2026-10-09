@@ -35,6 +35,14 @@
   }
 }
 
+/* "Pausar animaciones" (botón del footer, WCAG 2.2.2). La historia animada se excluye: sus movimientos
+   dependen del scroll y, pausados, dejarían el texto a medio entrar. */
+html[data-motion='paused'] *:not(.story__line),
+html[data-motion='paused'] *:not(.story__line)::before,
+html[data-motion='paused'] *:not(.story__line)::after {
+  animation-play-state: paused !important;
+}
+
 @media (forced-colors: active) {
   .btn,
   .card,

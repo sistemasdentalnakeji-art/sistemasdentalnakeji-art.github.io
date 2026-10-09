@@ -59,6 +59,21 @@
   white-space: nowrap;
 }
 
+/* Pantallas de 320 px: logo + botón + menú no caben con los huecos normales. */
+@media (max-width: 359.98px) {
+  .site-header__bar {
+    gap: 8px;
+  }
+
+  .site-header__actions {
+    gap: 4px;
+  }
+
+  .site-header__actions .btn--sm {
+    padding-inline: 14px;
+  }
+}
+
 .social-links {
   display: flex;
   align-items: center;
@@ -89,9 +104,13 @@
   background: var(--color-sky);
 }
 
+/* La página actual se marca con color y subrayado (no solo con color). */
 .nav-link[aria-current='page'],
 .nav-link.is-active {
   color: var(--color-brand);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
 }
 
 .nav-chevron {

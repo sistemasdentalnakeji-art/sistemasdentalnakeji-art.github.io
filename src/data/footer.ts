@@ -38,9 +38,11 @@ export interface FooterColumn {
 const FOOTER_SERVICE_PATHS = [
   '/implantes-dentales-en-tijuana/',
   '/all-in-4-implants-en-tijuana/',
+  '/all-in-6-implants-en-tijuana/',
   '/coronas-en-tijuana/',
   '/carillasdentalesentijuana/',
   '/blanqueamiento-dental-en-tijuana/',
+  '/cosmetica-dental-en-tijuana/',
   '/limpieza-dental-en-tijuana/',
 ]
 

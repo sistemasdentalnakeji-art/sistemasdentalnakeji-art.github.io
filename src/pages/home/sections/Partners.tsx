@@ -24,7 +24,7 @@ function PartnerCard({ partner }: { partner: Partner }) {
           src={partner.logo.src}
           width={partner.logo.width}
           height={partner.logo.height}
-          alt={partner.name}
+          alt="" /* el nombre ya está en el texto visible de abajo */
           loading="lazy"
           decoding="async"
         />

@@ -41,7 +41,7 @@ export const SITE = {
    */
   hours: [] as { days: string; hours: string }[],
   social: {
-    facebook: 'https://www.facebook.com/DentalNakeji/?locale=es_LA',
+    facebook: 'https://www.facebook.com/DentalNakeji/',
     instagram: 'https://www.instagram.com/dentalnakeji/',
     whatsapp: 'https://wa.me/message/VVH7OKKWM2W7O1',
   },

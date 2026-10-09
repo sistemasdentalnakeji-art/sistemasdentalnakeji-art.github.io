@@ -52,7 +52,7 @@ function clinicJsonLd() {
           addressCountry: address.country,
         },
         hasMap: address.mapsUrl,
-        sameAs: ['https://www.facebook.com/DentalNakeji/', SITE.social.instagram],
+        sameAs: [SITE.social.facebook, SITE.social.instagram],
       },
       {
         '@type': 'WebSite',
@@ -73,8 +73,9 @@ export function buildHead(route: RouteDef, { indexable }: HeadOptions): string {
 
   tags.push(meta('name', 'robots', indexable ? 'index, follow, max-image-preview:large' : 'noindex, follow'))
 
-  if (route === HOME) {
-    const url = `${SITE.origin}${HOME.path}`
+  // Canonical y Open Graph: el homepage y toda página terminada ('ready'). El JSON-LD de la clínica, solo el homepage.
+  if (route === HOME || route.status === 'ready') {
+    const url = `${SITE.origin}${route.path}`
     tags.push(
       `<link rel="canonical" href="${url}" />`,
       meta('property', 'og:type', 'website'),
@@ -88,8 +89,10 @@ export function buildHead(route: RouteDef, { indexable }: HeadOptions): string {
       meta('property', 'og:image:height', String(SITE.logo.fullHeight)),
       meta('property', 'og:image:alt', `Logo de ${SITE.name}`),
       meta('name', 'twitter:card', 'summary'),
-      `<script type="application/ld+json">${JSON.stringify(clinicJsonLd()).replace(/</g, '\\u003c')}</script>`,
     )
+    if (route === HOME) {
+      tags.push(`<script type="application/ld+json">${JSON.stringify(clinicJsonLd()).replace(/</g, '\\u003c')}</script>`)
+    }
   }
 
   return tags.join('\n    ')

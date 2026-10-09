@@ -203,6 +203,12 @@
   }
 }
 
+/* SVG fuera de pantalla o con "Pausar animaciones": las animaciones CSS también se detienen. */
+.decor.is-paused *,
+.decor-rings.is-paused * {
+  animation-play-state: paused;
+}
+
 .decor-line {
   fill: none;
   stroke: currentColor;

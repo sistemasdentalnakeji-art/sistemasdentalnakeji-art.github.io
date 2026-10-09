@@ -65,7 +65,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.88);
   font-size: var(--text-small);
 }
 
@@ -93,11 +93,13 @@
 .service-hero__title {
   margin-top: 18px;
   color: var(--color-white);
-  font-size: clamp(2.5rem, 1.4rem + 4vw, 4.5rem);
+  font-size: clamp(2.25rem, 1.4rem + 4vw, 4.5rem);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.04em;
   text-wrap: balance;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .service-hero__title-accent {
@@ -163,7 +165,7 @@
 .service-hero__whatsapp {
   border-color: #25d366;
   background: #25d366;
-  color: var(--color-white);
+  color: var(--color-night); /* el blanco sobre este verde da solo 1.98:1; el azul marino, ~9:1 */
 }
 
 .service-hero__whatsapp:hover {
@@ -174,7 +176,7 @@
 /* Móvil: el texto ocupa todo el ancho, así que el velo cubre toda la foto. */
 @media (max-width: 767.98px) {
   .service-hero__scrim {
-    background: linear-gradient(180deg, rgba(var(--hero-scrim-rgb), 0.78), rgba(var(--hero-scrim-rgb), 0.62));
+    background: linear-gradient(180deg, rgba(var(--hero-scrim-rgb), 0.9), rgba(var(--hero-scrim-rgb), 0.8));
   }
 }
 
@@ -194,7 +196,7 @@
 
 .service-about__eyebrow {
   margin-bottom: 14px;
-  color: var(--color-brand);
+  color: #3768a8; /* --color-brand da 4.48:1 sobre el azul claro; este pasa 4.5:1 */
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.12em;

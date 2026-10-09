@@ -70,10 +70,20 @@ button {
   color: inherit;
 }
 
+/* Anillo de foco con `outline` (no con box-shadow): ningún estilo de botón lo pisa y se conserva en
+   modo de alto contraste. El halo blanco lo separa del elemento; en bandas oscuras el anillo es claro. */
 :focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
+  outline: 3px solid var(--color-brand);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--color-white);
   border-radius: 8px;
+}
+
+.hero :focus-visible,
+.service-hero :focus-visible,
+.site-footer :focus-visible {
+  outline-color: var(--color-white);
+  box-shadow: none;
 }
 
 main:focus {

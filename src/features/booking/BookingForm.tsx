@@ -47,6 +47,9 @@ interface ServerReply {
   fields?: string[]
 }
 
+/** Tiempo máximo de espera de la respuesta del Apps Script. */
+const SUBMIT_TIMEOUT_MS = 20_000
+
 // La fecha de hoy se lee solo en el navegador (en el HTML prerenderizado queda vacía).
 const subscribe = () => () => {}
 const getServerToday = () => ''
@@ -82,9 +85,12 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    if (state.status === 'sending') return
     const form = event.currentTarget
     const fields = readForm(new FormData(form))
-    const found = validate(fields, today || todayInClinic())
+    // La fecha de hoy se lee al enviar (no la del último render): evita validar contra "ayer" si la
+    // pestaña quedó abierta pasada la medianoche.
+    const found = validate(fields, todayInClinic())
     setErrors(found)
 
     const firstInvalid = Object.keys(found)[0]
@@ -125,12 +131,16 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
     if (!isBookingConfigured) return showSuccess(true)
 
     setState({ status: 'sending' })
+    // Si el servidor no responde a tiempo, se cancela y se ofrece reintentar o usar WhatsApp.
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), SUBMIT_TIMEOUT_MS)
     try {
       // text/plain evita la verificación CORS previa, que Apps Script no admite.
       const response = await fetch(BOOKING.endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload),
+        signal: controller.signal,
       })
       const reply = (await response.json()) as ServerReply
       if (reply.ok) return showSuccess()
@@ -144,6 +154,8 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       setState({ status: 'error', code: reply.error === 'busy' || reply.error === 'invalid' ? reply.error : 'network' })
     } catch {
       setState({ status: 'error', code: 'network' })
+    } finally {
+      window.clearTimeout(timeout)
     }
   }
 
@@ -296,10 +308,14 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       </div>
 
       <div className="booking-form__footer">
-        <button type="submit" className="btn btn--primary btn--lg" disabled={sending}>
+        {/* aria-disabled (no disabled): el botón conserva el foco mientras se envía. */}
+        <button type="submit" className="btn btn--primary btn--lg" aria-disabled={sending}>
           {sending ? 'Enviando…' : 'Solicitar cita'}
           {!sending && <Icon name="arrowRight" size={18} />}
         </button>
+        <span role="status" className="visually-hidden">
+          {sending ? 'Enviando solicitud…' : ''}
+        </span>
         <p className="booking-form__note">La cita queda sujeta a disponibilidad y confirmación.</p>
       </div>
 

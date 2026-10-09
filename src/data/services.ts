@@ -11,7 +11,7 @@
 // • blogHref: artículo del blog de cada servicio. Mientras no exista, apunta a /blog/.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { BLOG } from '@/config/routes'
+import { BLOG, SERVICE_ROUTES } from '@/config/routes'
 
 export interface ServiceContent {
   /** H1 en dos tonos: `title` en blanco y `titleAccent` en azul claro. */
@@ -109,4 +109,12 @@ export const SERVICE_PAGES: Record<string, ServiceContent> = {
     about: LOREM_ABOUT,
     blogHref: BLOG.path,
   },
+}
+
+// Falla al compilar (y al abrir la app) si una ruta marcada como servicio no tiene su contenido aquí:
+// sin él, App la dibujaría como página vacía y los botones "Agendar" apuntarían a una agenda inexistente.
+for (const route of SERVICE_ROUTES) {
+  if (route.template === 'service' && !SERVICE_PAGES[route.path]) {
+    throw new Error(`Falta el contenido de ${route.path} en src/data/services.ts`)
+  }
 }

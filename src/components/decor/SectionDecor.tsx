@@ -53,19 +53,36 @@ const MOBILE_FLOW: Line[] = Array.from({ length: 5 }, (_, i) => {
 const ARC_RADII = [150, 205, 260, 315, 370]
 const RING_RADII = [72, 122, 172, 222, 272]
 
-/** Detiene las animaciones SMIL del SVG cuando el usuario pide reducir movimiento. */
-function useSmilReducedMotion(ref: RefObject<SVGSVGElement | null>) {
+/**
+ * Detiene las animaciones del SVG (SMIL y CSS) cuando el usuario pide reducir movimiento, pulsa
+ * "Pausar animaciones" (evento `motionchange`) o el SVG está fuera de pantalla: así no gastan CPU
+ * donde nadie las ve.
+ */
+function useSmilMotion(ref: RefObject<SVGSVGElement | null>) {
   useEffect(() => {
     const svg = ref.current
     if (!svg) return
     const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let visible = true
     const apply = () => {
-      if (media.matches) svg.pauseAnimations()
+      const paused = media.matches || !visible || document.documentElement.dataset.motion === 'paused'
+      if (paused) svg.pauseAnimations()
       else svg.unpauseAnimations()
+      svg.classList.toggle('is-paused', paused)
     }
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      apply()
+    })
+    observer.observe(svg)
     apply()
     media.addEventListener('change', apply)
-    return () => media.removeEventListener('change', apply)
+    window.addEventListener('motionchange', apply)
+    return () => {
+      observer.disconnect()
+      media.removeEventListener('change', apply)
+      window.removeEventListener('motionchange', apply)
+    }
   }, [ref])
 }
 
@@ -77,7 +94,7 @@ interface AnimatedLinesProps {
 
 function AnimatedLines({ lines, className, viewBox }: AnimatedLinesProps) {
   const svgRef = useRef<SVGSVGElement>(null)
-  useSmilReducedMotion(svgRef)
+  useSmilMotion(svgRef)
 
   return (
     <svg ref={svgRef} className={className} viewBox={viewBox} preserveAspectRatio="none" aria-hidden="true" focusable="false">
@@ -111,7 +128,7 @@ function AnimatedLines({ lines, className, viewBox }: AnimatedLinesProps) {
 
 function Rings({ placement }: { placement: RingsPlacement }) {
   const svgRef = useRef<SVGSVGElement>(null)
-  useSmilReducedMotion(svgRef)
+  useSmilMotion(svgRef)
 
   return (
     <svg

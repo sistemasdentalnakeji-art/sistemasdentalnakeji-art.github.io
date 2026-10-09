@@ -112,6 +112,7 @@
   border-radius: 50%;
   background: conic-gradient(from 0deg, #7bc3eb, #3fb5c8, #ffffff, #2f63ad, #9fd8f5, #7bc3eb);
   filter: blur(5px);
+  will-change: transform;
   animation: orb-spin 9s linear infinite;
 }
 

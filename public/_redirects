@@ -1,0 +1,39 @@
+# Redirecciones 301 del sitio actual (nakejidental.com) al sitio nuevo.
+# Formato de Netlify y Cloudflare Pages (GitHub Pages las ignora: para producción hace falta uno de ellos).
+# BORRADOR: sale del sitemap del sitio actual (revisión de SEO, 8-oct-2026). Confirma cada destino con la clínica
+# y revisa el sitemap completo: faltan los ~28 artículos "blog-*" de la raíz, que irían a /blog/.
+# Las páginas retiradas llevan "-en-tijuana" en su URL real.
+
+# Servicios retirados del menú → página de servicios
+/odontologia-general-en-tijuana/   /servicios/                          301
+/periodoncia-en-tijuana/           /servicios/                          301
+/diseno-de-sonrisa-en-tijuana/     /cosmetica-dental-en-tijuana/        301
+/dentaduras-en-tijuana/            /servicios/                          301
+/coronas-dentales-tijuana/         /coronas-en-tijuana/                 301
+
+# Landings en inglés
+/dentist-in-tijuana/               /                                    301
+/dental-implants/                  /implantes-dentales-en-tijuana/      301
+/smile-makeover/                   /cosmetica-dental-en-tijuana/        301
+
+# Blog y artículos
+/blog2/                            /blog/                               301
+/blog-3/                           /blog/                               301
+/blog-4/                           /blog/                               301
+/blog-pagina2/                     /blog/                               301
+/cuidado-dental/                   /blog/                               301
+/lo-que-no-sabias-del-cuidado-dental/   /blog/                          301
+
+# Otras páginas del sitio actual
+/galeria/                          /nosotros/                           301
+/nuestro-laboratorio/              /nosotros/                           301
+/financiamiento/                   /nuestras-promociones/               301
+/sucursales/                       /contacto/                           301
+/testimoniales/                    /                                    301
+/nakeji-calle-nueve/               /nosotros/                           301
+
+# Restos de WordPress / tienda
+/inicio-clonado-211/               /                                    301
+/carrito/                          /                                    301
+/mi-cuenta/                        /                                    301
+/finalizar-compra/                 /                                    301

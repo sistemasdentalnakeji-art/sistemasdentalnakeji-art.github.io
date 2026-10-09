@@ -29,6 +29,9 @@ const assets = await fs.readdir(path.join(dist, 'assets'))
 const fontPreloads = assets
   .filter((file) => /^(manrope|inter)-latin-wght-normal-.+\.woff2$/.test(file))
   .map((file) => `<link rel="preload" href="/assets/${file}" as="font" type="font/woff2" crossorigin />`)
+if (fontPreloads.length === 0) {
+  console.warn('AVISO: no se encontraron las fuentes latinas para precargar (¿cambió el nombre de los archivos de @fontsource?).')
+}
 
 const written = []
 for (const route of [...ALL_ROUTES, NOT_FOUND]) {
@@ -45,12 +48,20 @@ for (const route of [...ALL_ROUTES, NOT_FOUND]) {
   written.push(`${indexable ? 'index  ' : 'noindex'}  ${path.relative(dist, file).replaceAll('\\', '/')}`)
 }
 
+// Seguro de producción: un build de producción nunca debe salir con el homepage en noindex.
+if (production) {
+  const home = await fs.readFile(path.join(dist, 'index.html'), 'utf8')
+  if (/name="robots" content="[^"]*noindex/.test(home)) {
+    throw new Error('Build de producción con el homepage en noindex: revisa buildHead / el status de HOME.')
+  }
+}
+
 // robots.txt y sitemap.xml: solo las páginas reales y terminadas.
+// Sin <lastmod>: la fecha del build no es la de la última modificación y daría una señal falsa a Google.
 const sitemapFile = path.join(dist, 'sitemap.xml')
 if (production) {
-  const today = new Date().toISOString().slice(0, 10)
   const urls = ALL_ROUTES.filter((route) => route.status === 'ready')
-    .map((route) => `  <url>\n    <loc>${SITE.origin}${route.path}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`)
+    .map((route) => `  <url>\n    <loc>${SITE.origin}${route.path}</loc>\n  </url>`)
     .join('\n')
   await fs.writeFile(
     sitemapFile,

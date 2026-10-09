@@ -38,7 +38,11 @@ const empty = (path: string, label: string): RouteDef => ({
  * Sigue en 'empty' (noindex) mientras la sección 2 tenga lorem ipsum; al tener los textos
  * definitivos, cambia su status a 'ready' para que se indexe y entre al sitemap.
  */
-const service = (path: string, label: string): RouteDef => ({ ...empty(path, label), template: 'service' })
+const service = (path: string, label: string, seo: { title: string; description: string }): RouteDef => ({
+  ...empty(path, label),
+  ...seo,
+  template: 'service',
+})
 
 export const SERVICES = empty('/servicios/', 'Servicios')
 
@@ -49,15 +53,47 @@ export const SERVICES = empty('/servicios/', 'Servicios')
  */
 export const SERVICE_ROUTES: RouteDef[] = [
   // Columna 1: implantes y rehabilitación (lo más solicitado)
-  service('/implantes-dentales-en-tijuana/', 'Implantes dentales'),
-  service('/all-in-4-implants-en-tijuana/', 'All on 4 implants'),
-  service('/all-in-6-implants-en-tijuana/', 'All on 6 implants'),
-  service('/coronas-en-tijuana/', 'Coronas'),
+  service('/implantes-dentales-en-tijuana/', 'Implantes dentales', {
+    title: 'Implantes dentales en Tijuana | Dental Nakeji',
+    description:
+      'Conoce los implantes dentales en Tijuana: qué son y cuándo se recomiendan. Agenda una valoración en Dental Nakeji, Zona Río.',
+  }),
+  service('/all-in-4-implants-en-tijuana/', 'All on 4 implants', {
+    title: 'All on 4 Implants en Tijuana | Dental Nakeji',
+    description:
+      'All on 4 en Tijuana: una opción para reemplazar una arcada completa de dientes. Agenda una valoración en Dental Nakeji, Zona Río.',
+  }),
+  service('/all-in-6-implants-en-tijuana/', 'All on 6 implants', {
+    title: 'All on 6 Implants en Tijuana | Dental Nakeji',
+    description:
+      'All on 6 en Tijuana: una opción para reemplazar una arcada completa con más puntos de apoyo. Agenda una valoración en Dental Nakeji.',
+  }),
+  service('/coronas-en-tijuana/', 'Coronas', {
+    title: 'Coronas dentales en Tijuana | Dental Nakeji',
+    description:
+      'Coronas dentales en Tijuana para proteger y restaurar dientes dañados. Agenda una valoración en Dental Nakeji, Zona Río.',
+  }),
   // Columna 2: estética y prevención
-  service('/carillasdentalesentijuana/', 'Carillas dentales'),
-  service('/blanqueamiento-dental-en-tijuana/', 'Blanqueamiento dental'),
-  service('/cosmetica-dental-en-tijuana/', 'Cosmética dental'),
-  service('/limpieza-dental-en-tijuana/', 'Limpieza dental'),
+  service('/carillasdentalesentijuana/', 'Carillas dentales', {
+    title: 'Carillas dentales en Tijuana | Dental Nakeji',
+    description:
+      'Carillas dentales en Tijuana para mejorar la forma y el color de tu sonrisa. Agenda una valoración en Dental Nakeji, Zona Río.',
+  }),
+  service('/blanqueamiento-dental-en-tijuana/', 'Blanqueamiento dental', {
+    title: 'Blanqueamiento dental en Tijuana | Dental Nakeji',
+    description:
+      'Blanqueamiento dental en Tijuana, con valoración previa en la clínica. Agenda tu visita en Dental Nakeji, Zona Río.',
+  }),
+  service('/cosmetica-dental-en-tijuana/', 'Cosmética dental', {
+    title: 'Cosmética dental en Tijuana | Dental Nakeji',
+    description:
+      'Cosmética dental en Tijuana: opciones para diseñar tu sonrisa. Agenda una valoración en Dental Nakeji, Zona Río.',
+  }),
+  service('/limpieza-dental-en-tijuana/', 'Limpieza dental', {
+    title: 'Limpieza dental en Tijuana | Dental Nakeji',
+    description:
+      'Limpieza dental en Tijuana para el cuidado de tus dientes y encías. Agenda tu visita en Dental Nakeji, Zona Río.',
+  }),
   // Columna 3: tratamientos y especialidades
   empty('/endodoncias-en-tijuana/', 'Endodoncias'),
   empty('/ortodoncia-en-tijuana/', 'Ortodoncia'),

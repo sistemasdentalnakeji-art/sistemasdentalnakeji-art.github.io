@@ -79,6 +79,11 @@ export function Header({ currentPath }: HeaderProps) {
     if (!menuOpen) return
     const previous = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    // El contenido tapado por el panel no debe recibir foco con Tab mientras el menú está abierto.
+    const covered = document.querySelectorAll<HTMLElement>('main, footer')
+    covered.forEach((element) => {
+      element.inert = true
+    })
     const desktop = window.matchMedia(DESKTOP_QUERY)
     const onChange = () => {
       if (desktop.matches) setMenuOpen(false)
@@ -86,6 +91,9 @@ export function Header({ currentPath }: HeaderProps) {
     desktop.addEventListener('change', onChange)
     return () => {
       document.body.style.overflow = previous
+      covered.forEach((element) => {
+        element.inert = false
+      })
       desktop.removeEventListener('change', onChange)
     }
   }, [menuOpen])

@@ -15,9 +15,11 @@ import { SectionDecor } from '@/components/decor/SectionDecor'
 import { AddressText } from '@/components/ui/AddressText'
 import { Icon } from '@/components/ui/Icon'
 import { Logo } from '@/components/layout/Logo'
+import { MotionToggle } from '@/components/ui/MotionToggle'
 import { SocialLinks } from '@/components/ui/SocialLinks'
 
-// Año calculado al cargar el módulo (no durante el render).
+// Año calculado al cargar el módulo (no durante el render). Queda fijo al del build del HTML estático;
+// `suppressHydrationWarning` solo evita el aviso si el navegador cambia de año.
 const YEAR = new Date().getFullYear()
 
 interface FooterProps {
@@ -99,9 +101,12 @@ export function Footer({ currentPath }: FooterProps) {
           <p>
             © <span suppressHydrationWarning>{YEAR}</span> {SITE.name}. Todos los derechos reservados.
           </p>
-          <a href={PRIVACY.path} aria-current={ariaCurrent(PRIVACY.path, currentPath)}>
-            {PRIVACY.label}
-          </a>
+          <div className="footer-bottom__links">
+            <MotionToggle />
+            <a href={PRIVACY.path} aria-current={ariaCurrent(PRIVACY.path, currentPath)}>
+              {PRIVACY.label}
+            </a>
+          </div>
         </div>
       </div>
     </footer>

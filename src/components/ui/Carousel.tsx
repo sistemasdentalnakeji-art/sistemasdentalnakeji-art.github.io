@@ -44,7 +44,13 @@ export function Carousel({ label, items, className }: CarouselProps) {
 
   return (
     <div className={cx('carousel', className)} role="region" aria-roledescription="carrusel" aria-label={label}>
-      <ul ref={trackRef} className="carousel__track" tabIndex={0} aria-label={`${label}: desliza para ver más`}>
+      {/* Solo entra en el orden de Tab si hay algo que desplazar. */}
+      <ul
+        ref={trackRef}
+        className="carousel__track"
+        tabIndex={canPrev || canNext ? 0 : undefined}
+        aria-label="Desliza para ver más"
+      >
         {items.map((item, index) => (
           <li key={index} className="carousel__item">
             {item}
@@ -52,11 +58,22 @@ export function Carousel({ label, items, className }: CarouselProps) {
         ))}
       </ul>
       <div className="carousel__controls" hidden={!canPrev && !canNext}>
-        <button type="button" className="carousel__button" onClick={() => scroll(-1)} disabled={!canPrev}>
+        {/* aria-disabled (no disabled): el botón pulsado conserva el foco al llegar al extremo. */}
+        <button
+          type="button"
+          className="carousel__button"
+          onClick={() => canPrev && scroll(-1)}
+          aria-disabled={!canPrev}
+        >
           <Icon name="chevronLeft" size={20} />
           <span className="visually-hidden">Anterior</span>
         </button>
-        <button type="button" className="carousel__button" onClick={() => scroll(1)} disabled={!canNext}>
+        <button
+          type="button"
+          className="carousel__button"
+          onClick={() => canNext && scroll(1)}
+          aria-disabled={!canNext}
+        >
           <Icon name="chevronRight" size={20} />
           <span className="visually-hidden">Siguiente</span>
         </button>

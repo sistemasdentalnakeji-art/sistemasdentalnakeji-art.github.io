@@ -9,7 +9,7 @@ interface SocialLinksProps {
 
 export function SocialLinks({ className, iconSize = 20 }: SocialLinksProps) {
   return (
-    <ul className={cx('social-links', className)}>
+    <ul className={cx('social-links', className)} aria-label="Redes sociales">
       {SOCIAL_LINKS.map((link) => (
         <li key={link.id}>
           <a className="icon-button" href={link.href} target="_blank" rel="noopener">

@@ -12,7 +12,9 @@ React 19 + Vite + TypeScript. Sin backend propio y sin router. Encargo original:
   y `main.tsx` (navegador). Por eso **todo componente debe poder renderizarse en Node**: nada de `window`/`document`/`Date.now()`
   durante el render; ese código va en `useEffect`. Un render distinto entre servidor y cliente rompe la hidratación.
 - `findRoute(path)` en `config/routes.ts` decide la página; `route.status` (`'ready'` | `'empty'`) decide si es indexable
-  (solo con `--production`) y si entra al sitemap. Para "publicar" una página interna hay que cambiar su `status` y elegirla en `App.tsx`.
+  (solo con `--production`) y si entra al sitemap. Para "publicar" una página interna hay que cambiar su `status`; las rutas con `template: 'service'` se dibujan solas con la plantilla
+  (y `data/services.ts` falla al compilar si a una le falta su contenido); las demás se eligen en `App.tsx`.
+  Antes de pasar un servicio a `ready`: quitar el lorem ipsum (tiene título y descripción SEO propios en `routes.ts`; el canonical y Open Graph se emiten solos).
   Página nueva: `pages/<nombre>/<Nombre>Page.tsx` + `styles/pages/<nombre>.css` (importada en `styles/index.css`).
 - `index.html` contiene los marcadores `<!--app-head-->` y `<div id="root"><!--app-html--></div>`; `prerender.mjs` falla si cambian.
   Las etiquetas `<head>` salen de `buildHead` (`seo/head.ts`) al compilar y de `applyHead` en desarrollo.
@@ -32,7 +34,7 @@ Header → Hero → Historia animada (`CareStory`) → Agendar (con formulario) 
 - Aseguranzas/convenios y reseñas: **solo marcadores** ("Aseguranza N", "Empresa N", "Paciente N"). No investigar empresas, no inventar reseñas.
 
 ## Decisiones
-- **URLs**: se conservan las del sitio actual (`src/config/routes.ts`), con barra final. Nuevas: `/convenios/`, `/aviso-de-privacidad/`, `/limpieza-dental-en-tijuana/`, `/blog/`.
+- **URLs**: se conservan las del sitio actual (`src/config/routes.ts`), con barra final. Nuevas: `/convenios/`, `/aviso-de-privacidad/`, `/blog/`.
 - **Servicios**: 12 en `SERVICE_ROUTES`, ordenados por prioridad (doctores + demanda); el submenú los llena por columnas de 4.
 - **Navegación MPA**: enlaces `<a>`; cada ruta tiene HTML prerenderizado. `main.tsx` hidrata si `#root[data-path]` coincide.
 - **Prerender** (`scripts/prerender.mjs`): `vite build` + `vite build --ssr` + `renderToString` → `dist/<ruta>/index.html`, `404.html`, `robots.txt`, `sitemap.xml`.
@@ -100,8 +102,12 @@ Verificación rápida: `dist/index.html` debe contener el H1, "Solicita tu cita"
 - Reseñas reales: Google Places API o widget, respetando la atribución de Google (`src/data/reviews.ts`).
 - Nombres/logos reales de aseguranzas y convenios (`src/data/partners.ts`).
 - Fotos reales de la clínica y una imagen para compartir de 1200×630 (hoy `og:image` es el logo). Favicons PNG/ICO opcionales.
-- Al publicar: redirigir (301) las URLs de servicios retiradas del menú (odontologia-general, periodoncia, diseno-de-sonrisa,
-  dentaduras) a `/servicios/` o a la página más cercana. Nuevas: `/limpieza-dental-en-tijuana/`, `/blog/` (vacías).
+- Al publicar: redirecciones 301 del sitio actual. Borrador en `public/_redirects` (formato Netlify / Cloudflare Pages; GitHub Pages
+  no las aplica). Los slugs retirados llevan `-en-tijuana` (odontologia-general-en-tijuana, periodoncia-en-tijuana,
+  diseno-de-sonrisa-en-tijuana, dentaduras-en-tijuana). Faltan por mapear ~28 artículos `blog-*` de la raíz (van a `/blog/`).
+  `build:prod` falla si el homepage sale con noindex.
+- SEO pendiente: imagen para compartir 1200×630 (hoy `og:image` es el logo, `twitter:card` summary), favicons PNG/ICO y
+  `apple-touch-icon` PNG de 180 px, JSON-LD de servicio (`Service` + `BreadcrumbList`) cuando las páginas tengan contenido.
 - **No publicar** hasta tener las páginas internas: sus URLs ya están indexadas en el sitio actual y aquí serían noindex.
 - Publicación: hosting estático que sirva `dist/<ruta>/index.html` y `404.html`; `X-Robots-Tag: noindex` en vistas previas.
 - Search Console, Google Business Profile (NAP idéntico a `site.ts`) y analítica (el sitio actual usa GA4 `G-25XL0E88DQ`).
@@ -115,3 +121,11 @@ Rules:
 - If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
 - After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+
+## Accesibilidad y movimiento (revisión de oct. 2026)
+- Foco: `:focus-visible` usa `outline` (no box-shadow) en `global/base.css`; en bandas oscuras (hero, hero de servicio, footer) es blanco.
+- Botón "Pausar animaciones" en el footer (`components/ui/MotionToggle.tsx`): pone `html[data-motion='paused']` (CSS) y emite el
+  evento `motionchange` que escuchan `SectionDecor` (SMIL/CSS) y `AuroraBackground` (WebGL). La historia animada no se pausa.
+- Los SVG animados se pausan fuera de pantalla; el WebGL del footer solo se inicia a ~800 px de verse.
+- Menú móvil abierto: `main` y `footer` quedan `inert`. Carrusel y botón de envío usan `aria-disabled` (conservan el foco).
+- El texto del botón de WhatsApp es azul marino sobre `#25D366` (el blanco daba 1.98:1).
