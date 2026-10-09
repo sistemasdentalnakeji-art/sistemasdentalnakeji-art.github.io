@@ -1,0 +1,180 @@
+/* ==========================================================================
+   Footer — fondo azul marino con hilos de luz animados (mismos colores y
+   tipografía que el hero). Contenido compacto: logo + columnas + contacto.
+   ========================================================================== */
+.site-footer.band {
+  margin-bottom: var(--band-gap);
+  /* Arriba: espacio normal + la ola blanca que une con la sección anterior. */
+  padding-block: calc(clamp(44px, 5vw, 72px) + clamp(44px, 6.3vw, 98px)) 22px;
+  border-radius: 0 0 var(--band-radius) var(--band-radius);
+  color: rgba(255, 255, 255, 0.78);
+  /* Sin azul en los 2 px de arriba (quedan bajo la ola blanca): evita una línea fina en la unión. */
+  background: linear-gradient(transparent 2px, var(--color-night) 2px);
+}
+
+/* Ola superior: del blanco de la sección anterior, por encima de los hilos y el velo. */
+.site-footer .decor--wave {
+  z-index: 0;
+  color: var(--color-white);
+}
+
+/* Hilos de luz (canvas WebGL); si no hay WebGL queda el azul marino de la banda. */
+.site-footer__fibers {
+  position: absolute;
+  inset: 2px 0 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease);
+}
+
+.site-footer__fibers.is-ready {
+  opacity: 1;
+}
+
+/* Velo a la izquierda para que el texto se lea sobre los hilos. */
+.site-footer__scrim {
+  position: absolute;
+  inset: 2px 0 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(var(--hero-scrim-rgb), 0.7) 0%, rgba(var(--hero-scrim-rgb), 0.35) 55%, transparent 85%);
+  pointer-events: none;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 24px;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  grid-column: 1 / -1;
+}
+
+/* Logo oficial en blanco sobre el fondo oscuro. */
+.footer-brand .logo__img {
+  filter: brightness(0) invert(1);
+}
+
+.footer-brand__text {
+  max-width: 34ch;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-social {
+  margin-left: -10px;
+}
+
+.footer-social .icon-button {
+  color: var(--color-white);
+}
+
+.footer-social .icon-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-brand-light);
+}
+
+/* Botón claro, igual que el principal del hero. */
+.footer-brand .btn--primary {
+  background: var(--color-white);
+  color: var(--color-ink);
+}
+
+.footer-brand .btn--primary:hover {
+  background: var(--color-sky);
+}
+
+.footer-title {
+  margin-bottom: 10px;
+  color: var(--color-white);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.footer-links,
+.footer-contact {
+  display: grid;
+  gap: 0;
+}
+
+.footer-links a,
+.footer-contact a {
+  display: inline-flex;
+  gap: 10px;
+  padding: 5px 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  text-decoration: none;
+}
+
+.footer-links a:hover,
+.footer-contact a:hover {
+  color: var(--color-white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer-links a[aria-current='page'] {
+  color: var(--color-brand-light);
+  font-weight: 600;
+}
+
+.footer-contact a {
+  overflow-wrap: anywhere;
+}
+
+.footer-contact svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--color-brand-light);
+}
+
+.footer-column:last-child {
+  grid-column: 1 / -1;
+}
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-top: 32px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: var(--text-small);
+}
+
+.footer-bottom a {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.footer-bottom a:hover {
+  color: var(--color-white);
+}
+
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .footer-grid {
+    grid-template-columns: 1.3fr 1fr 0.8fr 0.8fr 1.3fr;
+  }
+
+  .footer-brand,
+  .footer-column:last-child {
+    grid-column: auto;
+  }
+}

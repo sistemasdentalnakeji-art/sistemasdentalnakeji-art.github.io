@@ -1,0 +1,123 @@
+/* ==========================================================================
+   Sección animada debajo del hero (CareStory)
+   Cada línea entra ligada al scroll con una animación CSS (animation-timeline: view()):
+   solo transform y opacity, sin JavaScript. Si el navegador no la soporta, o con
+   "reducir movimiento", el texto se ve completo y en su lugar final.
+   ========================================================================== */
+/* `overflow: clip` (no hidden): hidden crearía un contenedor de scroll y la animación no avanzaría. */
+.story.band {
+  padding-block: clamp(72px, 10vw, 140px);
+  overflow: clip;
+}
+
+.story__inner {
+  display: grid;
+  gap: clamp(72px, 11vw, 160px);
+}
+
+.story__item {
+  margin: 0;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1rem + 3.2vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.story__line {
+  display: block;
+}
+
+.story__accent {
+  color: var(--color-brand);
+}
+
+/* Mensaje 1: un poco más grande que los demás. */
+.story__item--left {
+  font-size: clamp(2.25rem, 1.1rem + 4.4vw, 4.5rem);
+  text-align: left;
+}
+
+.story__item--right {
+  text-align: right;
+}
+
+/* Mensaje central: punto de pausa. Primera línea mayor y en azul; la segunda la completa. */
+.story__item--up {
+  max-width: 22ch;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.story__item--up .story__line:first-child {
+  font-size: clamp(2.25rem, 1.1rem + 5vw, 5.25rem);
+}
+
+.story__item--up .story__line + .story__line {
+  margin-top: 0.4em;
+  color: var(--color-text);
+  font-size: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* --- Movimiento ligado al scroll ----------------------------------------- */
+@keyframes story-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--from-x, 0), var(--from-y, 0));
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  /* Las tres frases usan la misma animación. Cada línea tiene su propio recorrido:
+     la segunda empieza un poco después de la primera. */
+  .story__line {
+    /* Velocidad constante: sigue al scroll sin arranques bruscos. */
+    animation: story-in linear both;
+    /* El 30 % inferior de la pantalla no cuenta: la frase sigue invisible mientras esté ahí
+       (también en pantallas grandes, donde ya se verían al abrir la página) y empieza a
+       desvanecerse y moverse solo cuando el visitante llega a esa zona. */
+    animation-timeline: view(block 0px 30%);
+    /* Recorrido largo (~62 % del trayecto de la frase por la pantalla): más scroll por cada
+       tramo de movimiento, o sea, una entrada más lenta. */
+    animation-range: cover 0% cover 62%;
+  }
+
+  /* Izquierda y derecha: llegan desde el borde de la pantalla. */
+  .story__item--left {
+    --from-x: -85vw;
+  }
+
+  .story__item--right {
+    --from-x: 85vw;
+  }
+
+  /* Centro: sube desde abajo. */
+  .story__item--up {
+    --from-y: 200px;
+  }
+
+  @media (max-width: 767.98px) {
+    .story__item--up {
+      --from-y: 130px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story__line {
+    animation: none;
+  }
+}

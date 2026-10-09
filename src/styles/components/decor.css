@@ -1,0 +1,240 @@
+/* ==========================================================================
+   Decoraciones de fondo (SectionDecor)
+   ========================================================================== */
+/* Decoraciones curvas de fondo (SectionDecor) */
+.decor {
+  position: absolute;
+  z-index: -1;
+  color: var(--color-brand-light);
+  pointer-events: none;
+}
+
+.decor--arcs {
+  width: clamp(200px, 30vw, 440px);
+  height: auto;
+}
+
+.decor--wave {
+  left: 0;
+  width: 100%;
+  height: clamp(64px, 9vw, 140px);
+}
+
+.band--tint .decor--wave {
+  color: var(--color-white);
+}
+
+.band--white .decor--wave {
+  color: var(--color-tint);
+}
+
+/* La ola inferior del hero toma el tono de la sección que sigue (CareStory, banda azul clara). */
+.hero .decor--wave {
+  height: clamp(48px, 6vw, 96px);
+  color: var(--color-tint);
+}
+
+.decor--wave.decor--top {
+  top: -1px;
+  transform: scaleY(-1);
+}
+
+.decor--wave.decor--bottom {
+  bottom: -1px;
+}
+
+/* Ola rellena por encima de la curva (ya viene dibujada así: no se voltea). */
+.decor--wave.decor--top.decor--inverse {
+  transform: none;
+}
+
+.decor--wave.decor--top.decor--flip {
+  transform: scale(-1, -1);
+}
+
+.decor--wave.decor--bottom.decor--flip {
+  transform: scaleX(-1);
+}
+
+/* Curvas de esquina a esquina: por debajo del contenido */
+.decor--flow-desktop {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Móvil y tableta: franja al pie de la sección, sin cruzar el texto */
+.decor--flow-mobile {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+}
+
+.decor--flow-mobile .decor-line__light {
+  stroke-dasharray: 90 1100;
+  animation-name: decor-light-short;
+  animation-duration: 9s;
+}
+
+@keyframes decor-light-short {
+  from {
+    stroke-dashoffset: 90;
+  }
+
+  to {
+    stroke-dashoffset: -1100;
+  }
+}
+
+@media (max-width: 959.98px) {
+  .decor--flow-desktop {
+    display: none;
+  }
+
+  .band--has-flow {
+    padding-bottom: calc(var(--band-padding) + 96px);
+  }
+}
+
+@media (min-width: 960px) {
+  .decor--flow-mobile {
+    display: none;
+  }
+}
+
+/* Círculo y anillos (Aseguranzas, Contacto). Se colocan por su centro (--cx, --cy). */
+.decor-rings {
+  --rings-scale: 0.5;
+  --rings-size: calc(600px * var(--rings-scale));
+  position: absolute;
+  z-index: -2; /* por debajo de las olas: los anillos "salen" de la curva */
+  width: var(--rings-size);
+  max-width: none;
+  height: var(--rings-size);
+  color: var(--color-brand-light);
+  pointer-events: none;
+}
+
+.decor-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  opacity: calc(0.5 - var(--i) * 0.08);
+}
+
+.decor-ring__light {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 45 955;
+  opacity: 0.9;
+  animation: decor-ring-light 20s linear infinite;
+  animation-delay: calc(var(--i) * -3.3s);
+}
+
+@keyframes decor-ring-light {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+.decor-rings__dot {
+  fill: currentColor;
+  fill-opacity: 0.3;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-opacity: 0.7;
+}
+
+/* Aseguranzas: arriba a la izquierda; los arcos van de la ola al borde izquierdo */
+.decor-rings--partners {
+  --cx: 36px;
+  --cy: 100px;
+  top: calc(var(--cy) - var(--rings-size) / 2);
+  left: calc(var(--cx) - var(--rings-size) / 2);
+}
+
+/* Contacto (móvil y tableta): a la derecha de "Síguenos", centrado con la fila de redes */
+.decor-rings--contact-mobile {
+  --cx: 44px;
+  top: calc(50% - var(--rings-size) / 2);
+  right: calc(var(--cx) - var(--rings-size) / 2);
+}
+
+.decor-rings--contact {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .decor-rings {
+    --rings-scale: 0.7;
+  }
+
+  .decor-rings--partners {
+    --cx: 52px;
+    --cy: 118px;
+  }
+}
+
+@media (min-width: 960px) {
+  .decor-rings {
+    --rings-scale: 1;
+  }
+
+  .decor-rings--partners {
+    --cx: 72px;
+    --cy: 150px;
+  }
+
+  /* Contacto (escritorio): arriba a la derecha; los arcos van de la ola al borde derecho */
+  .decor-rings--contact {
+    --cx: 72px;
+    --cy: 150px;
+    display: block;
+    top: calc(var(--cy) - var(--rings-size) / 2);
+    right: calc(var(--cx) - var(--rings-size) / 2);
+  }
+
+  .decor-rings--contact-mobile {
+    display: none;
+  }
+}
+
+.decor-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  opacity: calc(0.6 - var(--i) * 0.06);
+}
+
+/* Destello que recorre cada curva lentamente */
+.decor-line__light {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 140 2600;
+  stroke-dashoffset: 140;
+  opacity: 0.9;
+  animation: decor-light 12s linear infinite;
+  animation-delay: calc(var(--i) * -2.1s);
+}
+
+@keyframes decor-light {
+  from {
+    stroke-dashoffset: 140;
+  }
+
+  to {
+    stroke-dashoffset: -2600;
+  }
+}
+
+/* Arcos de la esquina superior derecha (Servicios, páginas vacías). */
+.decor--arcs.decor--top-right {
+  top: 0;
+  right: 0;
+}

@@ -1,0 +1,374 @@
+/* ==========================================================================
+   Hero (aurora GLSL + orbe luminoso + etiquetas ambientales)
+   Diseño inspirado en "Hero 21" de React Bits Pro, recreado con código propio
+   y los azules de la clínica.
+   ========================================================================== */
+.hero {
+  --hero-bg: #0a1529;
+  --hero-text: #ffffff;
+  --hero-muted: rgba(255, 255, 255, 0.62);
+  --hero-soft: rgba(255, 255, 255, 0.8);
+  --hero-glass: rgba(255, 255, 255, 0.07);
+  --hero-glass-border: rgba(255, 255, 255, 0.16);
+  --hero-scrim: 10, 21, 41;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: clamp(600px, calc(100svh - var(--header-height) - 24px), 860px);
+  margin: var(--band-gap) var(--band-gap) 0;
+  padding-block: clamp(56px, 8vw, 96px) clamp(76px, 8vw, 116px);
+  overflow: hidden;
+  border-radius: var(--band-radius) var(--band-radius) 0 0;
+  background:
+    radial-gradient(55% 60% at 70% 45%, rgba(47, 99, 173, 0.55), transparent 70%),
+    radial-gradient(40% 45% at 82% 70%, rgba(63, 181, 200, 0.22), transparent 70%),
+    var(--hero-bg);
+  color: var(--hero-text);
+}
+
+.hero--light {
+  --hero-bg: #f5f7fb;
+  --hero-text: var(--color-ink);
+  --hero-muted: #5a6b88;
+  --hero-soft: var(--color-text);
+  --hero-glass: rgba(255, 255, 255, 0.65);
+  --hero-glass-border: rgba(42, 66, 105, 0.12);
+  --hero-scrim: 245, 247, 251;
+  background:
+    radial-gradient(55% 60% at 70% 45%, rgba(123, 195, 235, 0.45), transparent 70%),
+    radial-gradient(40% 45% at 82% 70%, rgba(173, 228, 234, 0.4), transparent 70%),
+    var(--hero-bg);
+}
+
+.hero__aurora {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease);
+}
+
+.hero__aurora.is-ready {
+  opacity: 1;
+}
+
+/* Velo para asegurar el contraste del texto sobre la aurora. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: rgba(var(--hero-scrim), 0.35);
+  pointer-events: none;
+}
+
+.hero__inner {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 640px;
+  text-align: center;
+}
+
+/* Orbe luminoso con el isotipo de la clínica */
+.hero-orb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, #18305a, #070f1e 72%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Halo que "respira" */
+.hero-orb::before {
+  content: '';
+  position: absolute;
+  inset: -34px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(123, 195, 235, 0.5), rgba(47, 99, 173, 0.18) 45%, transparent 68%);
+  animation: orb-breathe 6s ease-in-out infinite;
+}
+
+/* Anillo iridiscente que gira */
+.hero-orb::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  z-index: -1;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #7bc3eb, #3fb5c8, #ffffff, #2f63ad, #9fd8f5, #7bc3eb);
+  filter: blur(5px);
+  animation: orb-spin 9s linear infinite;
+}
+
+.hero-orb__mark {
+  width: 46px;
+  height: 46px;
+  filter: drop-shadow(0 0 10px rgba(123, 195, 235, 0.55));
+}
+
+.hero__eyebrow {
+  margin-top: 26px;
+  color: var(--hero-soft);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.hero__title {
+  margin-top: 16px;
+  color: var(--hero-text);
+  font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4.125rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  text-wrap: initial;
+}
+
+.hero__title-lead,
+.hero__title-muted {
+  display: block;
+}
+
+.hero__title-muted {
+  color: var(--hero-muted);
+}
+
+.hero__lead {
+  max-width: 54ch;
+  margin-top: 22px;
+  color: var(--hero-soft);
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.hero__cta {
+  background: var(--color-white);
+  color: var(--color-ink);
+  box-shadow: 0 10px 30px rgba(3, 10, 24, 0.28);
+}
+
+.hero__cta:hover {
+  background: #eaf3fb;
+  transform: translateY(-1px);
+}
+
+.hero__cta-alt {
+  border-color: var(--hero-glass-border);
+  background: var(--hero-glass);
+  color: var(--hero-text);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.hero__cta-alt:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.hero--light .hero__cta {
+  background: var(--color-ink);
+  color: var(--color-white);
+}
+
+.hero--light .hero__cta:hover {
+  background: var(--color-ink-strong);
+}
+
+.hero--light .hero__cta-alt:hover {
+  background: var(--color-white);
+}
+
+.hero__note {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 0;
+  margin-top: 26px;
+  color: var(--hero-muted);
+  font-size: var(--text-small);
+}
+
+.hero__note li + li::before {
+  content: '·';
+  margin-inline: 10px;
+}
+
+/* Etiquetas ambientales (decorativas) */
+.hero__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: none;
+  pointer-events: none;
+}
+
+.ambient-label {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px 12px 12px;
+  border: 1px solid var(--hero-glass-border);
+  border-radius: var(--radius-pill);
+  background: var(--hero-glass);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--hero-text);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 10px 30px rgba(3, 10, 24, 0.18);
+  opacity: 0;
+  animation: ambient-label 12s var(--ease) infinite;
+  animation-delay: calc(var(--i) * 2s);
+}
+
+.ambient-label svg {
+  box-sizing: content-box;
+  padding: 4px;
+  border-radius: 50%;
+  background: rgba(123, 195, 235, 0.24);
+  color: #9fd8f5;
+  stroke-width: 2.6;
+}
+
+.hero--light .ambient-label svg {
+  background: var(--color-sky-strong);
+  color: var(--color-brand);
+}
+
+/* Posiciones en el lado derecho (el texto ocupa la izquierda). */
+.ambient-label:nth-child(1) {
+  top: 13%;
+  right: 7%;
+}
+
+.ambient-label:nth-child(2) {
+  top: 26%;
+  right: 20%;
+}
+
+.ambient-label:nth-child(3) {
+  top: 39%;
+  right: 4%;
+}
+
+.ambient-label:nth-child(4) {
+  top: 52%;
+  right: 17%;
+}
+
+.ambient-label:nth-child(5) {
+  top: 64%;
+  right: 6%;
+}
+
+.ambient-label:nth-child(6) {
+  top: 75%;
+  right: 21%;
+}
+
+@keyframes ambient-label {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+
+  10%,
+  45% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  56%,
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+}
+
+@keyframes orb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orb-breathe {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(0.94);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+/* Escritorio: contenido a la izquierda; burbujas sobre la aurora a la derecha */
+@media (min-width: 1080px) {
+  .hero__scrim {
+    background: linear-gradient(90deg, rgba(var(--hero-scrim), 0.62) 0%, rgba(var(--hero-scrim), 0.28) 45%, transparent 72%);
+  }
+
+  .hero__inner {
+    justify-content: flex-start;
+  }
+
+  .hero__content {
+    align-items: flex-start;
+    max-width: 680px;
+    text-align: left;
+  }
+
+  .hero__actions,
+  .hero__note {
+    justify-content: flex-start;
+  }
+}
+
+/* Las burbujas solo caben sin tocar el texto a partir de 1280 px. */
+@media (min-width: 1280px) {
+  .hero__ambient {
+    display: block;
+  }
+}
+
+@media (max-width: 519.98px) {
+  .hero__actions {
+    flex-direction: column;
+    align-self: stretch;
+  }
+
+  .hero__note {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero__note li + li::before {
+    content: none;
+  }
+}

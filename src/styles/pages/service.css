@@ -1,0 +1,229 @@
+/* ==========================================================================
+   Páginas de servicio (plantilla: src/pages/service/ServicePage.tsx)
+   Hero con foto de borde a borde + información breve + agenda.
+   Usa los colores, fuentes y botones del homepage.
+   ========================================================================== */
+
+/* --- 1. Hero ------------------------------------------------------------- */
+.service-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: clamp(560px, calc(100svh - var(--header-height) - 24px), 760px);
+  margin: var(--band-gap) var(--band-gap) 0;
+  padding-block: clamp(48px, 7vw, 88px) clamp(76px, 8vw, 116px);
+  overflow: hidden;
+  border-radius: var(--band-radius) var(--band-radius) 0 0;
+  /* Fondo sin foto (o mientras carga): los mismos azules del hero del homepage. */
+  background:
+    radial-gradient(55% 60% at 70% 45%, rgba(47, 99, 173, 0.55), transparent 70%),
+    radial-gradient(40% 45% at 82% 70%, rgba(63, 181, 200, 0.22), transparent 70%),
+    var(--color-night);
+  color: var(--color-white);
+}
+
+.service-hero__image {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Degradado: intenso a la izquierda (texto) y transparente a la derecha (foto). */
+.service-hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--hero-scrim-rgb), 0.92) 0%,
+    rgba(var(--hero-scrim-rgb), 0.72) 38%,
+    rgba(var(--hero-scrim-rgb), 0.18) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.service-hero .decor--wave {
+  height: clamp(48px, 6vw, 96px);
+  color: var(--color-tint); /* une con la sección 2 (banda azul clara) */
+}
+
+.service-hero__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 600px;
+}
+
+.service-hero__crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--text-small);
+}
+
+.service-hero__crumbs li + li::before {
+  content: '/';
+  margin-inline: 8px;
+}
+
+.service-hero__crumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.service-hero__crumbs a:hover {
+  color: var(--color-white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.service-hero__crumbs [aria-current] {
+  color: var(--color-white);
+  font-weight: 600;
+}
+
+.service-hero__title {
+  margin-top: 18px;
+  color: var(--color-white);
+  font-size: clamp(2.5rem, 1.4rem + 4vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.service-hero__title-accent {
+  display: block;
+  color: var(--color-brand-light);
+}
+
+.service-hero__subtitle {
+  margin-top: 18px;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.service-hero__list {
+  display: grid;
+  gap: 10px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.service-hero__list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.service-hero__list svg {
+  box-sizing: content-box;
+  flex: none;
+  padding: 4px;
+  border-radius: 50%;
+  background: var(--color-brand-light);
+  color: var(--color-night);
+  stroke-width: 3;
+}
+
+.service-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+/* Mismos botones que el hero del homepage: claro (principal) y de vidrio (secundario). */
+.service-hero__cta {
+  background: var(--color-white);
+  color: var(--color-ink);
+  box-shadow: 0 10px 30px rgba(3, 10, 24, 0.28);
+}
+
+.service-hero__cta:hover {
+  background: var(--color-sky);
+  transform: translateY(-1px);
+}
+
+/* Verde oficial de WhatsApp. */
+.service-hero__whatsapp {
+  border-color: #25d366;
+  background: #25d366;
+  color: var(--color-white);
+}
+
+.service-hero__whatsapp:hover {
+  border-color: #1ebe5b;
+  background: #1ebe5b;
+}
+
+/* Móvil: el texto ocupa todo el ancho, así que el velo cubre toda la foto. */
+@media (max-width: 767.98px) {
+  .service-hero__scrim {
+    background: linear-gradient(180deg, rgba(var(--hero-scrim-rgb), 0.78), rgba(var(--hero-scrim-rgb), 0.62));
+  }
+}
+
+@media (max-width: 519.98px) {
+  .service-hero__actions {
+    flex-direction: column;
+    align-self: stretch;
+  }
+}
+
+/* --- 2. Información + espacio 3D ----------------------------------------- */
+.service-about {
+  display: grid;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+}
+
+.service-about__eyebrow {
+  margin-bottom: 14px;
+  color: var(--color-brand);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.service-about__text .section-text {
+  max-width: 52ch;
+}
+
+.service-about__cta {
+  margin-top: 28px;
+}
+
+/* Contenedor de la futura animación 3D: medidas fijas, sin contenido ni fondo. */
+.service-about__media {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1 / 1;
+  justify-self: center;
+}
+
+@media (min-width: 960px) {
+  .service-about {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .service-about__media {
+    justify-self: end;
+  }
+}

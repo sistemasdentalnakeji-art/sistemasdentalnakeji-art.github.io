@@ -1,0 +1,122 @@
+/* ==========================================================================
+   Contacto y ubicación
+   ========================================================================== */
+
+/* Lista de contacto (sección Contacto y ubicación) */
+.contact-list {
+  display: grid;
+  gap: 12px;
+}
+
+.contact-item {
+  display: flex;
+  gap: 14px;
+  padding: clamp(16px, 2vw, 20px);
+  border-radius: var(--radius-card);
+  background: var(--color-porcelain);
+}
+
+.contact-item__icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--color-white);
+  color: var(--color-brand);
+}
+
+.contact-item__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.contact-item__label {
+  color: var(--color-muted);
+  font-size: var(--text-small);
+}
+
+.contact-item__value {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 1.1875rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+a.contact-item__value:hover {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.contact-item__value--text,
+.contact-item__value--email {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.contact-item__value--text {
+  margin-bottom: 6px;
+}
+
+.contact-item__value--email {
+  overflow-wrap: anywhere;
+}
+
+.contact {
+  display: grid;
+  gap: clamp(28px, 4vw, 48px);
+}
+
+.contact address {
+  margin-top: 28px;
+}
+
+.contact__social {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Escritorio: debajo del correo, alineado a la derecha; "Síguenos" centrado con las redes */
+@media (min-width: 960px) {
+  .contact__social {
+    justify-content: flex-end;
+  }
+}
+
+.contact__social .icon-button {
+  background: var(--color-porcelain);
+}
+
+.contact__map {
+  min-height: 340px;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--color-porcelain);
+}
+
+.contact__map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 340px;
+  border: 0;
+}
+
+@media (min-width: 960px) {
+  .contact {
+    grid-template-columns: 1fr 1.1fr;
+  }
+}

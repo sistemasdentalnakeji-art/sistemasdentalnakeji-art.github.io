@@ -1,0 +1,74 @@
+/* ==========================================================================
+   Aseguranzas y convenios
+   ========================================================================== */
+.partner-groups {
+  display: grid;
+  gap: 16px;
+}
+
+.partner-group {
+  display: grid;
+  gap: 20px;
+  padding: clamp(20px, 3vw, 32px);
+  border-radius: var(--radius-card);
+  background: var(--color-tint);
+}
+
+.partner-group__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.partner-group__title {
+  font-size: 1.5rem;
+}
+
+.partner-group__intro .text-link {
+  margin-top: 14px;
+}
+
+.partner-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 100%;
+  min-height: 132px;
+  padding: 20px 12px;
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  text-align: center;
+}
+
+.partner-card__placeholder {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 140px;
+  height: 56px;
+  border-radius: var(--radius-tag);
+  background: var(--color-porcelain);
+  color: #7d8aa1;
+}
+
+.partner-card__logo {
+  width: auto;
+  max-width: 140px;
+  max-height: 56px;
+  object-fit: contain;
+}
+
+.partner-card__name {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+@media (min-width: 960px) {
+  .partner-group {
+    grid-template-columns: minmax(220px, 0.8fr) 2fr;
+    align-items: center;
+    gap: 32px;
+  }
+}

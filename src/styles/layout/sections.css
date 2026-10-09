@@ -1,0 +1,52 @@
+/* ==========================================================================
+   Secciones comunes (encabezados, tarjetas, CTA)
+   ========================================================================== */
+.section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 640px;
+  margin: 0 auto clamp(32px, 4vw, 48px);
+  text-align: center;
+}
+
+.section-title {
+  font-size: var(--text-heading);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.icon-badge + .section-title {
+  margin-top: 20px;
+}
+
+.section-text {
+  margin-top: 14px;
+  color: var(--color-muted);
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+}
+
+.section-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(32px, 4vw, 48px);
+}
+
+.card {
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+}
+
+.card-title {
+  font-size: var(--text-card-title);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.card-text {
+  margin-top: 8px;
+  color: var(--color-muted);
+  line-height: 1.55;
+}

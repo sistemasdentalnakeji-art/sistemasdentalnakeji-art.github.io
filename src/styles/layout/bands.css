@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Bandas (hoja continua)
+   ========================================================================== */
+/* Banda: cada sección ocupa el mismo ancho que el hero. Las bandas van pegadas
+   (una sola hoja continua): el cambio de color y las olas marcan la separación.
+   El contenido interior sigue centrado a 1200 px. */
+.band {
+  position: relative;
+  isolation: isolate;
+  /* -1px: se superpone a la banda anterior para evitar costuras de subpíxel. */
+  margin: -1px var(--band-gap) 0;
+  padding-block: var(--band-padding);
+  overflow: hidden;
+}
+
+.band--wave-top {
+  padding-top: calc(var(--band-padding) + clamp(12px, 2.5vw, 36px));
+}
+
+.band--wave-bottom {
+  padding-bottom: calc(var(--band-padding) + clamp(12px, 2.5vw, 36px));
+}
+
+/* Inicio de la hoja en páginas sin hero. */
+main > .band:first-child {
+  margin-top: var(--band-gap);
+  border-radius: var(--band-radius) var(--band-radius) 0 0;
+}
+
+.band--white {
+  background: var(--color-white);
+}
+
+.band--tint {
+  background: var(--color-tint);
+}
+
+.band--night {
+  background: var(--color-night);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --band-gap: 12px;
+  }
+}

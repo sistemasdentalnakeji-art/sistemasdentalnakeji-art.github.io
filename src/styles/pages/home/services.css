@@ -1,0 +1,84 @@
+/* ==========================================================================
+   Servicios destacados
+   ========================================================================== */
+.service-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.service-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  height: 100%;
+  padding: 28px;
+  box-shadow: var(--shadow);
+  transition:
+    box-shadow 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.service-card:hover,
+.service-card:focus-within {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.service-card__body {
+  flex: 1;
+}
+
+.service-card__link {
+  text-decoration: none;
+}
+
+/* Toda la tarjeta es clicable; el nombre accesible es el título. */
+.service-card__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-card);
+}
+
+.service-card__link:focus-visible {
+  box-shadow: none;
+}
+
+.service-card__link:focus-visible::after {
+  box-shadow: var(--focus-ring);
+}
+
+.service-card__arrow {
+  flex: none;
+  margin-top: 4px;
+  color: var(--color-brand);
+  transition: transform 0.25s var(--ease);
+}
+
+.service-card:hover .service-card__arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 519.98px) {
+  .service-card {
+    flex-wrap: wrap;
+    padding: 24px;
+  }
+
+  .service-card__arrow {
+    order: 1;
+    margin-left: auto;
+  }
+
+  .service-card__body {
+    order: 2;
+    flex-basis: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .service-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

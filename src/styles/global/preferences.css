@@ -1,0 +1,44 @@
+/* ==========================================================================
+   Preferencias del usuario
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Hero: etiquetas fijas (sin aparecer/desaparecer) y orbe sin giro. */
+  .ambient-label {
+    animation: none !important;
+    opacity: 1;
+  }
+
+  .ambient-label:nth-child(n + 4) {
+    display: none;
+  }
+
+  .hero-orb::before,
+  .hero-orb::after {
+    animation: none !important;
+  }
+
+  .decor-line__light,
+  .decor-ring__light {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .btn,
+  .card,
+  .dropdown {
+    border: 1px solid CanvasText;
+  }
+}

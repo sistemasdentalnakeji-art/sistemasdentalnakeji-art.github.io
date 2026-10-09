@@ -1,0 +1,110 @@
+/* ==========================================================================
+   Reseñas de Google
+   ========================================================================== */
+.section-title--spaced {
+  margin-top: 20px;
+}
+
+.reviews {
+  display: grid;
+  gap: 16px;
+}
+
+.reviews-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.reviews-summary__score {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.reviews-summary .card-text {
+  margin-top: 0;
+}
+
+.reviews-summary .btn {
+  margin-top: 8px;
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  padding: 24px;
+}
+
+.review-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-card__avatar {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-sky);
+  color: var(--color-brand);
+  font-weight: 700;
+  object-fit: cover;
+}
+
+.review-card__author {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.review-card__author a {
+  text-decoration: none;
+}
+
+.review-card__author a:hover {
+  text-decoration: underline;
+}
+
+.review-card__time {
+  color: var(--color-muted);
+  font-size: var(--text-small);
+}
+
+.review-card__text {
+  line-height: 1.6;
+}
+
+.stars {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--color-star);
+}
+
+.star.is-filled {
+  fill: currentColor;
+}
+
+.stars--empty {
+  color: #a3aec0;
+}
+
+@media (min-width: 960px) {
+  .reviews {
+    grid-template-columns: 280px minmax(0, 1fr);
+    align-items: start;
+  }
+}

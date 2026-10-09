@@ -1,0 +1,34 @@
+/* Fuentes autoalojadas (variables). El navegador solo descarga el subconjunto latino. */
+@import '@fontsource-variable/manrope/wght.css';
+@import '@fontsource-variable/inter/wght.css';
+
+/* ==========================================================================
+   ÍNDICE DE ESTILOS
+   Carpetas:
+     global/      → variables de diseño (colores, fuentes, medidas), base, botones y accesibilidad
+     layout/      → piezas presentes en todas las páginas (header, footer, bandas, encabezados)
+     components/  → piezas reutilizables (decoraciones de fondo, carrusel)
+     pages/home/  → una hoja por sección del homepage
+     pages/       → otras páginas (página vacía / 404)
+   El orden de los @import es el orden de la cascada: no lo cambies.
+   Un archivo nuevo se agrega en el lugar de su carpeta, antes de global/preferences.css.
+   ========================================================================== */
+@import './global/tokens.css';
+@import './global/base.css';
+@import './global/controls.css';
+@import './layout/header.css';
+@import './pages/home/hero.css';
+@import './layout/bands.css';
+@import './components/decor.css';
+@import './layout/sections.css';
+@import './pages/home/story.css';
+@import './pages/home/schedule.css';
+@import './pages/home/services.css';
+@import './components/carousel.css';
+@import './pages/home/partners.css';
+@import './pages/home/reviews.css';
+@import './pages/home/contact.css';
+@import './layout/footer.css';
+@import './pages/service.css';
+@import './pages/empty.css';
+@import './global/preferences.css';

@@ -1,0 +1,56 @@
+/* ==========================================================================
+   Tokens
+   Estructura inspirada en la referencia de Refero (DESIGN.md: lienzo porcelana,
+   tarjetas blancas sin bordes, radios 24/40 px, una sola sombra), con los
+   colores del logo oficial de Dental Nakeji en lugar del violeta de la referencia.
+   ========================================================================== */
+:root {
+  /* Colores de marca (tomados del logo) */
+  --color-ink: #2a4269; /* azul marino del logotipo: titulares y botones */
+  --color-ink-strong: #1d3152; /* hover del botón principal */
+  --color-brand: #3a70b0; /* azul del isotipo (ajustado a contraste AA): enlaces y acentos */
+  --color-brand-light: #7bc3eb; /* azul claro del isotipo: solo decorativo */
+  --color-sky: #eaf3fb; /* fondo suave de iconos */
+  --color-sky-strong: #d5e8f6;
+
+  /* Neutros */
+  --color-text: #33415a; /* texto de párrafo (AA sobre blanco y porcelana) */
+  --color-muted: #5a6880; /* texto secundario (AA) */
+  --color-porcelain: #f5f7fb; /* lienzo de la página */
+  --color-white: #ffffff;
+  --color-tint: #eaf1fa; /* bandas alternas */
+  --color-fog: #dde3ec; /* divisores y marcadores */
+  --color-field-border: #8592a7; /* bordes de campos (contraste 3:1) */
+  --color-error: #b42318;
+  --color-error-soft: #fdeceb;
+  --color-success: #11795a;
+  --color-success-soft: #e2f5ec;
+  --color-star: #c48300; /* estrellas de calificación (contraste 3:1) */
+
+  /* Tipografía */
+  --font-display: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --text-heading: clamp(1.875rem, 1.5rem + 1.6vw, 2.75rem);
+  --text-card-title: 1.25rem;
+  --text-body-lg: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+
+  /* Espaciado y forma */
+  --container: 1200px;
+  --gutter: clamp(16px, 4vw, 32px);
+  --radius-tag: 12px;
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --shadow: 0 8px 34px rgba(36, 36, 41, 0.07), 0 1px 2px rgba(37, 36, 41, 0.09);
+  --shadow-hover: 0 14px 40px rgba(42, 66, 105, 0.12), 0 1px 2px rgba(37, 36, 41, 0.09);
+  --focus-ring: 0 0 0 3px var(--color-white), 0 0 0 5px var(--color-brand);
+  --header-height: 75px;
+  --band-gap: 8px; /* separación y margen lateral de las bandas (igual que el hero) */
+  --band-radius: clamp(24px, 3vw, 36px);
+  --band-padding: clamp(44px, 5vw, 76px);
+  /* Azul marino del hero y del footer (y su versión RGB para velos con transparencia). */
+  --color-night: #0a1529;
+  --hero-scrim-rgb: 10, 21, 41;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}

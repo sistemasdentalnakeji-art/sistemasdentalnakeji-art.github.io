@@ -1,0 +1,98 @@
+/* ==========================================================================
+   Carrusel (aseguranzas, convenios y reseñas)
+   ========================================================================== */
+.carousel {
+  position: relative;
+  min-width: 0;
+}
+
+.carousel__track {
+  --slide: 80%;
+  display: grid;
+  grid-auto-columns: var(--slide);
+  grid-auto-flow: column;
+  gap: 16px;
+  padding: 4px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 4px;
+  scrollbar-width: none;
+}
+
+.carousel__track::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel__track:focus-visible {
+  border-radius: var(--radius-card);
+}
+
+.carousel__item {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.carousel__controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.carousel__controls[hidden] {
+  display: none;
+}
+
+.carousel__button {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-ink);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition:
+    box-shadow 0.2s var(--ease),
+    color 0.2s var(--ease),
+    opacity 0.2s var(--ease);
+}
+
+.carousel__button:hover:not(:disabled) {
+  color: var(--color-brand);
+  box-shadow: var(--shadow-hover);
+}
+
+.carousel__button:focus-visible {
+  border-radius: 50%;
+}
+
+.carousel__button:disabled {
+  opacity: 0.4;
+  box-shadow: none;
+  cursor: default;
+}
+
+.carousel--partners .carousel__track {
+  --slide: calc((100% - 16px) / 2);
+}
+
+.carousel--reviews .carousel__track {
+  --slide: 86%;
+}
+
+@media (min-width: 600px) {
+  .carousel--partners .carousel__track {
+    --slide: calc((100% - 32px) / 3);
+  }
+}
+
+@media (min-width: 700px) {
+  .carousel--reviews .carousel__track {
+    --slide: calc((100% - 16px) / 2);
+  }
+}
