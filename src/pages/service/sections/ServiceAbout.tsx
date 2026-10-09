@@ -17,7 +17,7 @@ interface ServiceAboutProps {
 
 export function ServiceAbout({ content }: ServiceAboutProps) {
   return (
-    <Band tone="tint" labelledBy="servicio-info-titulo" waveBottom="plain">
+    <Band tone="tint" labelledBy="servicio-info-titulo">
       <div className="container">
         <div className="service-about">
           <div className="service-about__text">
