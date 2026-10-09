@@ -30,6 +30,18 @@
   display: block;
 }
 
+/* Mensajes 1 y 3: cada línea mide lo que mide su texto. Así el desplazamiento (en % de su propio
+   ancho) es simétrico: las dos frases asoman y llegan al mismo ritmo, una por cada lado. */
+.story__item--left .story__line,
+.story__item--right .story__line {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.story__item--right .story__line {
+  margin-left: auto;
+}
+
 .story__accent {
   color: var(--color-brand);
 }
@@ -95,23 +107,24 @@
     animation-range: cover 0% cover 62%;
   }
 
-  /* Izquierda y derecha: llegan desde el borde de la pantalla. */
+  /* Izquierda y derecha: cada línea arranca justo fuera de la pantalla (110 % de su propio ancho)
+     y entra hacia su lugar; el mismo valor a cada lado para que vayan a la par. */
   .story__item--left {
-    --from-x: -85vw;
+    --from-x: -110%;
   }
 
   .story__item--right {
-    --from-x: 85vw;
+    --from-x: 110%;
   }
 
-  /* Centro: sube desde abajo. */
+  /* Centro: sube desde bastante más abajo. */
   .story__item--up {
-    --from-y: 200px;
+    --from-y: 320px;
   }
 
   @media (max-width: 767.98px) {
     .story__item--up {
-      --from-y: 130px;
+      --from-y: 200px;
     }
   }
 }

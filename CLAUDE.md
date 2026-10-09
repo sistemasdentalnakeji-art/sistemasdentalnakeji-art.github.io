@@ -48,7 +48,7 @@ Header → Hero → Historia animada (`CareStory`) → Agendar (con formulario) 
 - **Historia animada** (`pages/home/sections/CareStory.tsx`, textos e imagen en `data/story.ts`, estilos `styles/pages/home/story.css`):
   tres mensajes bajo el hero que entran con el scroll (1 desde la izquierda, 2 desde abajo al centro, 3 desde la derecha) con
   animaciones CSS `animation-timeline: view()`, solo transform/opacity, sin librerías ni JS. Los mensajes 1 y 3 llegan desde
-  el borde de la pantalla (±85vw) y las tres aparecen con desvanecido; siguen invisibles mientras estén en el 35 % inferior
+  fuera de la pantalla (cada línea mide lo que su texto y se desplaza 110 % de su ancho, así van a la par; el 2 sube 320 px) y las tres aparecen con desvanecido; siguen invisibles mientras estén en el 35 % inferior
   de la pantalla (`view(block 0px 35%)`), así que no se ven al abrir la página ni en pantallas 2K. El `overflow` de esa banda es `clip` (con `hidden` la animación no avanza). Sin soporte
   (p. ej. Firefox) o con "reducir movimiento" todo se ve estático. Sin imagen. La banda es azul claro: la ola del hero es de
   ese tono y Agendar lleva ola superior.
