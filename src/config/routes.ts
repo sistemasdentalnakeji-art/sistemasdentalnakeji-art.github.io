@@ -95,10 +95,26 @@ export const SERVICE_ROUTES: RouteDef[] = [
       'Limpieza dental en Tijuana para el cuidado de tus dientes y encías. Agenda tu visita en Dental Nakeji, Zona Río.',
   }),
   // Columna 3: tratamientos y especialidades
-  empty('/endodoncias-en-tijuana/', 'Endodoncias'),
-  empty('/ortodoncia-en-tijuana/', 'Ortodoncia'),
-  empty('/invisalign-in-tijuana/', 'Invisalign / Alineadores'),
-  empty('/odontologia-pediatrica-en-tijuana/', 'Odontopediatría'),
+  service('/endodoncias-en-tijuana/', 'Endodoncias', {
+    title: 'Endodoncias en Tijuana | Dental Nakeji',
+    description:
+      'Endodoncias en Tijuana: tratamiento de conductos para atender el interior del diente. Agenda una valoración en Dental Nakeji, Zona Río.',
+  }),
+  service('/ortodoncia-en-tijuana/', 'Ortodoncia', {
+    title: 'Ortodoncia en Tijuana | Dental Nakeji',
+    description:
+      'Ortodoncia en Tijuana con brackets o alineadores, según tu caso. Agenda una valoración en Dental Nakeji, Zona Río.',
+  }),
+  service('/invisalign-in-tijuana/', 'Invisalign / Alineadores', {
+    title: 'Invisalign y alineadores en Tijuana | Dental Nakeji',
+    description:
+      'Invisalign y alineadores transparentes en Tijuana para alinear tus dientes. Agenda una valoración en Dental Nakeji, Zona Río.',
+  }),
+  service('/odontologia-pediatrica-en-tijuana/', 'Odontopediatría', {
+    title: 'Odontopediatría en Tijuana | Dental Nakeji',
+    description:
+      'Odontopediatría en Tijuana: cuidado dental para niños. Agenda la visita de tu hijo en Dental Nakeji, Zona Río.',
+  }),
 ]
 
 /** Submenú de Beneficios. /convenios/ es nueva; las otras dos ya existen. */

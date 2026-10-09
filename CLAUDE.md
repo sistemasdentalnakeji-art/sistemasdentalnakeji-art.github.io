@@ -22,9 +22,9 @@ React 19 + Vite + TypeScript. Sin backend propio y sin router. Encargo original:
 
 ## Alcance (estructura aprobada)
 Header → Hero → Historia animada (`CareStory`) → Agendar (con formulario) → Servicios destacados → Aseguranzas y convenios → Reseñas de Google → Contacto y ubicación → Footer.
-- Las páginas internas (beneficios, contacto, nosotros, aviso de privacidad y los demás servicios) son **destinos vacíos** (`EmptyPage`): noindex, fuera del sitemap.
+- Las páginas internas (beneficios, contacto, nosotros, aviso de privacidad) son **destinos vacíos** (`EmptyPage`): noindex, fuera del sitemap.
 - **Páginas de servicio** (plantilla `pages/service/ServicePage.tsx`, estilos `styles/pages/service.css`): columnas 1 y 2 del
-  submenú (implantes, all on 4, all on 6, coronas, carillas, blanqueamiento, cosmética, limpieza). Columna 3 pendiente. Rutas creadas con `service(...)` en `routes.ts` (`template: 'service'`);
+  los 12 servicios del submenú (las 3 columnas). Rutas creadas con `service(...)` en `routes.ts` (`template: 'service'`);
   textos, imagen y enlace al blog en `src/data/services.ts`. Estructura fija: 1) hero con foto de borde a borde + degradado,
   título, gancho, 3 frases, botones WhatsApp / Reservar cita; 2) info breve (hoy lorem ipsum) + botón al blog + contenedor
   vacío para animación 3D (`.service-about__media`, solo un comentario); 3) `Schedule` con el servicio preseleccionado.

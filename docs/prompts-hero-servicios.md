@@ -44,5 +44,9 @@ Composición: la acción en la mitad DERECHA; el tercio izquierdo más simple y 
 | Blanqueamiento dental | Paciente recostado visto desde atrás del sillón, lámpara dental encendida sobre él; la dentista de perfil a su lado. Ambiente tranquilo, luz azul suave. | `blanqueamiento-dental.png` |
 | Cosmética dental | La dentista, de perfil parcial, muestra a la paciente (de espaldas, sentada en el sillón) un diseño de sonrisa en una tableta. | `cosmetica-dental.png` |
 | Limpieza dental | Higienista dental de perfil realiza una limpieza con el instrumental al paciente recostado, visto desde atrás del sillón. | `limpieza-dental.png` |
+| Endodoncias | El dentista, de perfil y con lupas de aumento, trabaja con instrumental fino; el paciente recostado visto desde atrás del sillón. | `endodoncias.png` |
+| Ortodoncia | Primer plano de las manos enguantadas del dentista mostrando un modelo dental con brackets junto al sillón; ventanales desenfocados. | `ortodoncia.png` |
+| Invisalign / Alineadores | La dentista, de perfil parcial, entrega un alineador transparente a la paciente sentada de espaldas en el sillón. | `invisalign-alineadores.png` |
+| Odontopediatría | Un niño sentado en el sillón visto desde atrás (se ve su cabello); la dentista de perfil le muestra un espejo dental, ambiente tranquilo. | `odontopediatria.png` |
 
 Consejo: genera 3–4 variantes por servicio y elige la que tenga manos, guantes e instrumental sin deformaciones.

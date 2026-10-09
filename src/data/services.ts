@@ -109,6 +109,39 @@ export const SERVICE_PAGES: Record<string, ServiceContent> = {
     about: LOREM_ABOUT,
     blogHref: BLOG.path,
   },
+  // Columna 3
+  '/endodoncias-en-tijuana/': {
+    title: 'Tratamiento de',
+    titleAccent: 'endodoncia',
+    subtitle: 'Atiende el interior de tu diente.',
+    highlights: ['Tratamiento de conductos', 'Busca conservar tu pieza', 'Valoración personalizada'],
+    about: LOREM_ABOUT,
+    blogHref: BLOG.path,
+  },
+  '/ortodoncia-en-tijuana/': {
+    title: 'Ortodoncia',
+    titleAccent: 'para tu sonrisa',
+    subtitle: 'Alinea tus dientes y mejora tu mordida.',
+    highlights: ['Brackets o alineadores', 'Corrige la posición dental', 'Plan a tu medida'],
+    about: LOREM_ABOUT,
+    blogHref: BLOG.path,
+  },
+  '/invisalign-in-tijuana/': {
+    title: 'Invisalign y',
+    titleAccent: 'alineadores',
+    subtitle: 'Alinea tu sonrisa con alineadores transparentes.',
+    highlights: ['Casi imperceptibles', 'Removibles para comer', 'Valoración personalizada'],
+    about: LOREM_ABOUT,
+    blogHref: BLOG.path,
+  },
+  '/odontologia-pediatrica-en-tijuana/': {
+    title: 'Odontopediatría',
+    titleAccent: 'para niños',
+    subtitle: 'Cuidado dental para los más pequeños.',
+    highlights: ['Atención para niños', 'Prevención desde temprano', 'Revisiones periódicas'],
+    about: LOREM_ABOUT,
+    blogHref: BLOG.path,
+  },
 }
 
 // Falla al compilar (y al abrir la app) si una ruta marcada como servicio no tiene su contenido aquí:
