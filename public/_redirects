@@ -4,11 +4,9 @@
 # y revisa el sitemap completo: faltan los ~28 artículos "blog-*" de la raíz, que irían a /blog/.
 # Las páginas retiradas llevan "-en-tijuana" en su URL real.
 
-# Servicios retirados del menú → página de servicios
+# Servicios retirados → página de servicios
+# (periodoncia, diseño de sonrisa y dentaduras ya tienen página propia: no se redirigen)
 /odontologia-general-en-tijuana/   /servicios/                          301
-/periodoncia-en-tijuana/           /servicios/                          301
-/diseno-de-sonrisa-en-tijuana/     /cosmetica-dental-en-tijuana/        301
-/dentaduras-en-tijuana/            /servicios/                          301
 /coronas-dentales-tijuana/         /coronas-en-tijuana/                 301
 
 # Landings en inglés

@@ -2,20 +2,6 @@
 // siempre lo aporta el elemento que los contiene.
 
 const PATHS = {
-  facebook: (
-    <path
-      fill="currentColor"
-      stroke="none"
-      d="M13.6 21.5v-8.2h2.8l.4-3.3h-3.2V7.9c0-.9.3-1.6 1.6-1.6h1.7V3.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.4v3.3h2.8v8.2h3.4z"
-    />
-  ),
-  instagram: (
-    <>
-      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
-      <circle cx="12" cy="12" r="3.8" />
-      <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
-    </>
-  ),
   whatsapp: (
     <>
       <path d="M3.6 20.4l1.3-4.2a8.4 8.4 0 1 1 3.2 3z" />
@@ -73,11 +59,48 @@ const PATHS = {
       <path d="M9.8 11.6h4.4M10 14.4h4M10.2 17.1h3.6" />
     </>
   ),
+  // Alineadores: tres dientes dentro de una férula transparente (contorno punteado).
   aligner: (
     <>
-      <path d="M3.5 9.5c2.2 6.2 14.8 6.2 17 0" />
-      <path d="M3.5 9.5h17" />
-      <path d="M7.5 9.5v2.9M12 9.5v3.8M16.5 9.5v2.9" />
+      <rect x="1.8" y="3.8" width="20.4" height="16.4" rx="5.5" strokeDasharray="2.2 2.4" />
+      <rect x="5" y="7.2" width="3.8" height="9.6" rx="1.9" />
+      <rect x="10.1" y="7.2" width="3.8" height="9.6" rx="1.9" />
+      <rect x="15.2" y="7.2" width="3.8" height="9.6" rx="1.9" />
+    </>
+  ),
+  // Ortodoncia: tres dientes con brackets y alambre.
+  braces: (
+    <>
+      <rect x="2.5" y="5" width="5.5" height="13" rx="2.3" />
+      <rect x="9.25" y="5" width="5.5" height="13" rx="2.3" />
+      <rect x="16" y="5" width="5.5" height="13" rx="2.3" />
+      <path d="M1.5 11.5h21" />
+      <rect x="4" y="10.2" width="2.5" height="2.6" rx=".5" fill="currentColor" />
+      <rect x="10.75" y="10.2" width="2.5" height="2.6" rx=".5" fill="currentColor" />
+      <rect x="17.5" y="10.2" width="2.5" height="2.6" rx=".5" fill="currentColor" />
+    </>
+  ),
+  // All on 4 / All on 6: puente de dientes fijo sobre 4 o 6 implantes.
+  bridge4: (
+    <>
+      <path d="M2.5 8C6 10.4 18 10.4 21.5 8v5C18 15.4 6 15.4 2.5 13z" />
+      <path d="M8.2 9.6v5M12 9.8v5M15.8 9.6v5" strokeWidth={1.2} />
+      <path
+        fill="currentColor"
+        stroke="none"
+        d="M4.1 13.9h1.8v4.2L5 19.8l-.9-1.7zM8.8 14.5h1.8v3.6l-.9 1.7-.9-1.7zM13.4 14.5h1.8v3.6l-.9 1.7-.9-1.7zM18.1 13.9h1.8v4.2l-.9 1.7-.9-1.7z"
+      />
+    </>
+  ),
+  bridge6: (
+    <>
+      <path d="M2.5 8C6 10.4 18 10.4 21.5 8v5C18 15.4 6 15.4 2.5 13z" />
+      <path d="M8.2 9.6v5M12 9.8v5M15.8 9.6v5" strokeWidth={1.2} />
+      <path
+        fill="currentColor"
+        stroke="none"
+        d="M3.6 13.8h1.8v4.3L4.5 19.8l-.9-1.7zM6.6 14.4h1.8v3.7l-.9 1.7-.9-1.7zM9.6 14.8h1.8v3.3l-.9 1.7-.9-1.7zM12.6 14.8h1.8v3.3l-.9 1.7-.9-1.7zM15.6 14.4h1.8v3.7l-.9 1.7-.9-1.7zM18.6 13.8h1.8v4.3l-.9 1.7-.9-1.7z"
+      />
     </>
   ),
   sparkle: (
@@ -95,6 +118,69 @@ const PATHS = {
   building: (
     <path d="M4.5 20.5V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v15.5M14.5 9h4a1 1 0 0 1 1 1v10.5M3 20.5h18M8 8h3M8 12h3M8 16h3" />
   ),
+  crown: (
+    <>
+      <path d="M5 18.5L3.5 9.5 8 13l4-7 4 7 4.5-3.5L19 18.5z" />
+      <path d="M6 21.5h12" />
+    </>
+  ),
+  smile: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M8.2 13.6c1 1.8 2.3 2.6 3.8 2.6s2.8-.8 3.8-2.6M9 9.6v.6M15 9.6v.6" />
+    </>
+  ),
+  pause: <path d="M8.5 6v12M15.5 6v12" />,
+  play: <path d="M8 5.5v13l10.5-6.5z" />,
+  // Persona (Odontopediatría en el catálogo, campo "Nombre" del formulario).
+  user: (
+    <>
+      <circle cx="12" cy="8" r="3.5" />
+      <path d="M5.5 20.5c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5" />
+    </>
+  ),
+  // Tecnología: microchip.
+  chip: (
+    <>
+      <rect x="6" y="6" width="12" height="12" rx="2.5" />
+      <rect x="9.5" y="9.5" width="5" height="5" rx="1" />
+      <path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3" />
+    </>
+  ),
+  // Especialistas: dos personas.
+  users: (
+    <>
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3.5 19c.4-3 2.6-4.8 5.5-4.8s5.1 1.8 5.5 4.8" />
+      <circle cx="17" cy="9" r="2.4" />
+      <path d="M16.5 14.4c2.3-.1 4 1.3 4.5 3.8" />
+    </>
+  ),
+  // Endodoncia: molar con una lima entrando por el conducto (mango, tope y punta).
+  endo: (
+    <>
+      <path
+        transform="translate(1 3.2) scale(.85)"
+        d="M7.6 3.6c-2.4 0-4 1.9-4 4.4 0 2 .8 3.4 1.3 5.3.6 2.3.7 7.2 2.7 7.2 1.7 0 1.6-4.7 4.4-4.7s2.7 4.7 4.4 4.7c2 0 2.1-4.9 2.7-7.2.5-1.9 1.3-3.3 1.3-5.3 0-2.5-1.6-4.4-4-4.4-1.8 0-2.7 1-4.4 1s-2.6-1-4.4-1z"
+      />
+      <path d="M15.9 4.6L10.8 15.6" strokeWidth={1.3} />
+      <path d="M17.7 1.5l-1.5 2.7" strokeWidth={2.8} />
+      <path d="M13 7.3l2.9 1.3" strokeWidth={1.3} />
+    </>
+  ),
+  // Dentaduras: dentadura postiza (encía y cuatro dientes) dentro de un vaso con agua.
+  denture: (
+    <>
+      <path d="M3.2 4.5h17.6l-1.9 14.7a2 2 0 0 1-2 1.8H7.1a2 2 0 0 1-2-1.8z" />
+      <rect x="6.5" y="7.6" width="11" height="2.8" rx="1.4" />
+      <path
+        d="M6.7 10.4v2.1a1.2 1.2 0 0 0 2.4 0v-2.1M9.5 10.4v2.1a1.2 1.2 0 0 0 2.4 0v-2.1M12.3 10.4v2.1a1.2 1.2 0 0 0 2.4 0v-2.1M15.1 10.4v2.1a1.2 1.2 0 0 0 2.4 0v-2.1"
+        strokeWidth={1.2}
+      />
+      <path d="M4.4 15.6c1.9-1.1 3.8-1.1 5.7 0s3.8 1.1 5.7 0 2.8-.9 3.9-.3" strokeWidth={1.3} />
+    </>
+  ),
+  drop: <path d="M12 3.5c3.2 3.9 5.5 6.8 5.5 9.6a5.5 5.5 0 0 1-11 0c0-2.8 2.3-5.7 5.5-9.6z" />,
 } as const
 
 export type IconName = keyof typeof PATHS

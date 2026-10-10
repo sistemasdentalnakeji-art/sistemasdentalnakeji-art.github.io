@@ -2,6 +2,7 @@
 // Para completar: cambia `name` y agrega `logo` (archivo en /public, p. ej. '/partners/empresa.webp')
 // con su ancho y alto reales. No se incluyen en el JSON-LD.
 
+import { AGREEMENTS, INSURANCE } from '@/config/routes'
 import { SITE } from '@/config/site'
 
 export interface Partner {
@@ -26,14 +27,14 @@ export const PARTNER_GROUPS: PartnerGroup[] = [
     title: 'Aseguranzas',
     // "Aceptamos aseguranzas americanas" está publicado en el sitio oficial.
     text: 'Aceptamos aseguranzas americanas. Escríbenos y revisamos si tu plan aplica para tu tratamiento.',
-    link: { label: 'Ver aseguranzas', href: '/insurance/' },
+    link: { label: 'Ver aseguranzas', href: INSURANCE.path },
     items: placeholders('Aseguranza', 6),
   },
   {
     id: 'convenios',
     title: 'Convenios',
     text: 'Si tu empresa tiene convenio con nuestra clínica, pregúntanos por los beneficios para colaboradores.',
-    link: { label: 'Ver convenios', href: '/convenios/' },
+    link: { label: 'Ver convenios', href: AGREEMENTS.path },
     items: placeholders('Empresa', 6),
   },
 ]

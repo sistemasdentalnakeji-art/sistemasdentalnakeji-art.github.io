@@ -90,9 +90,11 @@
   font-weight: 600;
 }
 
+/* El brillo blanco perla lo da .shiny-text (styles/components/shiny-text.css); width: el degradado mide lo que el texto. */
 .service-hero__title {
+  width: fit-content;
+  max-width: 100%;
   margin-top: 18px;
-  color: var(--color-white);
   font-size: clamp(2.25rem, 1.4rem + 4vw, 4.5rem);
   font-weight: 700;
   line-height: 1;
@@ -100,11 +102,6 @@
   text-wrap: balance;
   overflow-wrap: break-word;
   hyphens: auto;
-}
-
-.service-hero__title-accent {
-  display: block;
-  color: var(--color-brand-light);
 }
 
 .service-hero__subtitle {

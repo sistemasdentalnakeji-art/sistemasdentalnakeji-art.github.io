@@ -15,7 +15,26 @@ const dist = path.join(root, 'dist')
 const production = process.argv.includes('--production') || process.env.SITE_ENV === 'production'
 
 const serverEntry = pathToFileURL(path.join(root, 'dist-server', 'entry-server.js')).href
-const { render, ALL_ROUTES, NOT_FOUND, SITE } = await import(serverEntry)
+const { render, ALL_ROUTES, NOT_FOUND, SITE, BOOKING } = await import(serverEntry)
+
+// Seguro del formulario: el Apps Script valida al final, así que sus listas deben coincidir con las del sitio.
+// Sin esto, cambiar SERVICES de config/booking.ts (u otras listas) sin actualizar Code.gs haría que el script rechace citas.
+const codeGs = await fs.readFile(path.join(root, 'integrations', 'google-calendar', 'Code.gs'), 'utf8')
+const gsList = (key) =>
+  [...(codeGs.match(new RegExp(`${key}: \\[([^\\]]*)\\]`))?.[1] ?? '').matchAll(/'([^']*)'|(\d+)/g)].map(
+    (match) => match[1] ?? Number(match[2]),
+  )
+const mismatches = [
+  ['SERVICES', BOOKING.services],
+  ['SLOTS', BOOKING.slots],
+  ['CLOSED_WEEKDAYS', BOOKING.closedWeekdays],
+]
+  .filter(([key, list]) => JSON.stringify(gsList(key)) !== JSON.stringify(list))
+  .map(([key]) => key)
+if (codeGs.match(/DAYS_AHEAD: (\d+)/)?.[1] !== String(BOOKING.daysAhead)) mismatches.push('DAYS_AHEAD')
+if (mismatches.length > 0) {
+  throw new Error(`Code.gs no coincide con src/config/booking.ts en: ${mismatches.join(', ')}`)
+}
 
 const template = await fs.readFile(path.join(dist, 'index.html'), 'utf8')
 const HEAD_SLOT = '<!--app-head-->'

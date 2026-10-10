@@ -16,15 +16,15 @@ import type { AuroraTheme } from '@/components/decor/AuroraBackground'
 export const HERO = {
   /** 'dark' (azul marino, como la referencia) o 'light' (porcelana). */
   theme: 'dark' as AuroraTheme,
-  eyebrow: 'Clínica dental · Zona Río, Tijuana',
   // El H1 se muestra en dos tonos: la primera parte resaltada y la segunda atenuada.
   titleLead: 'Dentistas en Tijuana',
-  titleMuted: 'para cuidar tu sonrisa.',
-  lead: 'En Dental Nakeji te atendemos en la Zona Urbana Río Tijuana con odontología general y especialidades como implantes, ortodoncia y blanqueamiento dental.',
+  titleMuted: 'para ti vivas en donde vivas.',
+  // SEO: "clínica dental", "Zona Río" y "Tijuana" van aquí (antes estaban en una línea sobre el título) junto a los servicios más buscados.
+  lead: 'Dental Nakeji es una clínica dental fronteriza en la Zona Río de Tijuana. Aquí encuentras todos los servicios, desde limpieza dental, blanqueamiento dental e implantes dentales. ¿Qué sonrisa quieres tener el próximo año?',
   primaryCta: 'Agendar visita',
   secondaryCta: 'Escríbenos por WhatsApp',
   // Frases publicadas en el sitio oficial. Confírmalas con la clínica antes de publicar.
-  highlights: ['Dentistas certificados', 'Más de 35 años de experiencia', 'Aceptamos aseguranzas americanas'],
+  highlights: ['Dentistas certificados', 'Más de 35 años cuidando sonrisas', 'Trabajamos con aseguranzas americanas'],
   // Etiquetas decorativas que aparecen y desaparecen sobre la aurora (solo escritorio).
   ambientLabels: ['Implantes dentales', 'Coronas', 'Carillas dentales', 'Blanqueamiento dental', 'Limpieza dental', 'Ortodoncia'],
 }

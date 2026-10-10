@@ -24,8 +24,9 @@
     display: none;
   }
 
-  .hero-orb::before,
-  .hero-orb::after {
+  .hero-orb__halo,
+  .siri::before,
+  .siri::after {
     animation: none !important;
   }
 
@@ -35,12 +36,25 @@
   }
 }
 
-/* "Pausar animaciones" (botón del footer, WCAG 2.2.2). La historia animada se excluye: sus movimientos
+/* "Pausar animaciones" (botón del footer, WCAG 2.2.2). La historia animada se excluye (todo elemento con una clase
+   story__…: líneas, palabras, subrayado, hilo y diente, más la máscara .decor-reveal que dibuja el hilo): sus movimientos
    dependen del scroll y, pausados, dejarían el texto a medio entrar. */
-html[data-motion='paused'] *:not(.story__line),
-html[data-motion='paused'] *:not(.story__line)::before,
-html[data-motion='paused'] *:not(.story__line)::after {
+html[data-motion='paused'] *:not([class*='story__'], .decor-reveal),
+html[data-motion='paused'] *:not([class*='story__'], .decor-reveal)::before,
+html[data-motion='paused'] *:not([class*='story__'], .decor-reveal)::after {
   animation-play-state: paused !important;
+}
+
+/* La palomita de confirmación del formulario es una entrada de una sola vez que parte de opacity 0 y de un trazo sin dibujar:
+   pausada a mitad de camino se quedaría invisible. Con las animaciones pausadas se muestra ya terminada. */
+html[data-motion='paused'] .booking-success__check,
+html[data-motion='paused'] .booking-success__check::after,
+html[data-motion='paused'] .booking-success__check path {
+  animation: none !important;
+}
+
+html[data-motion='paused'] .booking-success__check path {
+  stroke-dashoffset: 0;
 }
 
 @media (forced-colors: active) {

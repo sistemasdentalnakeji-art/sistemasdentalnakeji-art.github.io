@@ -8,7 +8,7 @@
 // • Estilos → src/styles/layout/header.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react'
+import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react'
 import { flushSync } from 'react-dom'
 import { MAIN_NAV, type NavMenu } from '@/config/navigation'
 import { ariaCurrent, HOME, scheduleHref } from '@/config/routes'
@@ -173,6 +173,31 @@ function NavDropdown({ item, currentPath, open, onToggle, onOpen, onClose }: Nav
   const { children } = item
   const isActive = children.some((child) => child.path === currentPath) || item.overview?.href === currentPath
 
+  // Escritorio con mouse: el submenú se abre al pasar el cursor. Se cierra con un breve retraso porque entre el
+  // botón y el panel hay un hueco de 10 px; volver a entrar (al panel) cancela el cierre. Táctil y teclado: clic.
+  const hovering = useRef(false)
+  const closeTimer = useRef<number | undefined>(undefined)
+  useEffect(() => () => window.clearTimeout(closeTimer.current), [])
+
+  const onPointerEnter = (event: ReactPointerEvent<HTMLLIElement>) => {
+    if (event.pointerType !== 'mouse' || !window.matchMedia(DESKTOP_QUERY).matches) return
+    window.clearTimeout(closeTimer.current)
+    hovering.current = true
+    onOpen()
+  }
+
+  const onPointerLeave = (event: ReactPointerEvent<HTMLLIElement>) => {
+    if (event.pointerType !== 'mouse') return
+    hovering.current = false
+    window.clearTimeout(closeTimer.current)
+    closeTimer.current = window.setTimeout(onClose, 150)
+  }
+
+  // Un clic de mouse sobre un submenú ya abierto por el cursor no lo cierra.
+  const onButtonClick = () => {
+    if (!hovering.current) onToggle()
+  }
+
   const links = (container: HTMLElement) =>
     Array.from(container.querySelectorAll<HTMLAnchorElement>(`#${panelId(item.id)} a`))
 
@@ -211,14 +236,20 @@ function NavDropdown({ item, currentPath, open, onToggle, onOpen, onClose }: Nav
   }
 
   return (
-    <li className={cx('nav-item has-dropdown', open && 'is-open')} onKeyDown={onKeyDown} onBlur={onBlur}>
+    <li
+      className={cx('nav-item has-dropdown', open && 'is-open')}
+      onKeyDown={onKeyDown}
+      onBlur={onBlur}
+      onPointerEnter={onPointerEnter}
+      onPointerLeave={onPointerLeave}
+    >
       <button
         id={buttonId(item.id)}
         type="button"
         className={cx('nav-link nav-button', isActive && 'is-active')}
         aria-expanded={open}
         aria-controls={panelId(item.id)}
-        onClick={onToggle}
+        onClick={onButtonClick}
       >
         {item.label}
         <Icon name="chevronDown" size={16} className="nav-chevron" />

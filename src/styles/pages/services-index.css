@@ -1,0 +1,433 @@
+/* ==========================================================================
+   Página /servicios/: tarjetas de todos los servicios (pages/services/ServicesPage.tsx)
+   Inspirada en la referencia "Features 6" de React Bits Pro. Código propio, con los colores de la marca.
+   ========================================================================== */
+/* Fondo de plasma (components/decor/PlasmaBackground.tsx, con ogl). El plasma calcula su perspectiva con las
+   proporciones del lienzo, así que se dibuja del tamaño de la pantalla (100svh) y se queda fijo (sticky) detrás del
+   contenido mientras se hace scroll por la sección. Si no hay WebGL 2 o no se pinta, queda el blanco de la banda. */
+.catalog.band {
+  /* clip (no hidden): hidden convertiría la banda en contenedor de scroll y el sticky dejaría de funcionar. */
+  overflow: clip;
+  /* Poco relleno abajo: la ola blanca del footer ya aporta separación y así las tarjetas quedan cerca del footer. */
+  padding-bottom: 16px;
+}
+
+.catalog__plasma {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Arriba (encabezado) el plasma va atenuado para que no tape el título; abajo se desvanece solo en los últimos 90 px:
+     sin eso termina en un borde recto justo antes del footer (blanco) y se ve como un bloque aparte. */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0, #000 780px, #000 calc(100% - 90px), transparent 100%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0, #000 780px, #000 calc(100% - 90px), transparent 100%);
+}
+
+.catalog__plasma-view {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease);
+}
+
+.catalog__plasma-view.is-ready {
+  opacity: 1;
+}
+
+/* Más ancho que el resto del sitio para que las tarjetas llenen la página. */
+.catalog .container {
+  max-width: calc(1360px + 2 * var(--gutter));
+}
+
+/* Encabezado: texto a la izquierda y espacio para la foto a la derecha (en móvil, uno bajo el otro). */
+.catalog-hero {
+  display: grid;
+  gap: 32px;
+  align-items: center;
+  margin-bottom: clamp(32px, 4vw, 56px);
+}
+
+.catalog-hero__eyebrow {
+  display: inline-block;
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--color-sky-strong);
+  color: var(--color-brand);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.catalog-hero__title {
+  margin-top: 20px;
+  color: var(--color-ink-strong);
+  font-size: clamp(2.4rem, 1.4rem + 3.6vw, 4.25rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+/* "dentales" va en la segunda línea y del mismo azul oscuro que "Más servicios". */
+.catalog-hero__accent {
+  display: block;
+}
+
+.catalog-hero__lead {
+  margin-top: 20px;
+  max-width: 34rem;
+  color: var(--color-muted);
+  font-size: var(--text-body-lg);
+  line-height: 1.55;
+}
+
+.catalog-hero__features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 12px;
+  margin-top: 28px;
+}
+
+.catalog-hero__features li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-text);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.catalog-hero__feature-icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--color-sky);
+  color: var(--color-brand);
+}
+
+/* Espacio de la foto (vacío): fondo suave hasta que se agregue una imagen. */
+.catalog-hero__photo {
+  position: relative;
+  min-height: 280px;
+  overflow: hidden;
+  border-radius: 28px;
+  background: linear-gradient(135deg, var(--color-tint), var(--color-sky-strong));
+}
+
+.catalog-hero__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Tarjeta flotante sobre la foto. */
+.catalog-hero__card {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+  max-width: 280px;
+  margin-left: auto;
+  padding: 18px 18px 16px;
+  border-radius: 18px;
+  background: var(--color-white);
+  box-shadow: var(--shadow-hover);
+}
+
+.catalog-hero__card-title {
+  color: var(--color-ink-strong);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.catalog-hero__card-text {
+  margin-top: 6px;
+  color: var(--color-muted);
+  font-size: var(--text-small);
+  line-height: 1.45;
+}
+
+.catalog-hero__card-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-brand);
+  box-shadow: 0 2px 10px rgba(42, 66, 105, 0.16);
+}
+
+.catalog-hero__card-line {
+  grid-column: 1 / -1;
+  width: 32px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-brand);
+}
+
+@media (min-width: 900px) {
+  .catalog-hero {
+    grid-template-columns: 1.25fr 1fr;
+    gap: clamp(32px, 4vw, 64px);
+  }
+
+  .catalog-hero__photo {
+    min-height: 340px;
+  }
+}
+
+@media (min-width: 1360px) {
+  .catalog-hero__features {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+.catalog-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.catalog-card {
+  position: relative;
+  /* isolation: el degradado (z-index -1) queda sobre el fondo de la tarjeta y bajo su contenido. */
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  height: 100%;
+  min-height: 210px;
+  padding: 22px 24px;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--color-tint);
+  transition:
+    box-shadow 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+
+.catalog-card:hover,
+.catalog-card:focus-within {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.catalog-card__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Icono con contorno luminoso (.siri). Quieto hasta que se pasa el cursor sobre la tarjeta. */
+.catalog-card__icon {
+  --siri-width: 2.5px;
+  --siri-blur: 8px;
+  --siri-d: #9fd8f5;
+  background: var(--color-white);
+}
+
+.catalog-card .siri::before,
+.catalog-card .siri::after {
+  animation-play-state: paused;
+}
+
+.catalog-card:hover .siri::before,
+.catalog-card:hover .siri::after,
+.catalog-card:focus-within .siri::before,
+.catalog-card:focus-within .siri::after {
+  animation-play-state: running;
+}
+
+.catalog-card__title {
+  font-size: var(--text-card-title);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.catalog-card__text {
+  margin-top: 14px;
+  color: var(--color-muted);
+  font-size: var(--text-small);
+  line-height: 1.55;
+  transition: color 0.3s var(--ease);
+}
+
+/* Sobre el degradado el texto pasa a un tono más oscuro (contraste). */
+.catalog-card:hover .catalog-card__text,
+.catalog-card:focus-within .catalog-card__text {
+  color: var(--color-text);
+}
+
+/* Degradado de color: sube desde abajo, llena la tarjeta y se mueve como la aurora del hero.
+   Las manchas (::before y ::after) solo se animan mientras la tarjeta está activa. */
+.catalog-card__glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background:
+    radial-gradient(70% 90% at 100% 0%, rgba(58, 112, 176, 0.16), transparent 70%),
+    linear-gradient(0deg, rgba(123, 195, 235, 0.55), rgba(173, 228, 234, 0.25) 60%, transparent 100%);
+  opacity: 0;
+  transform: translateY(35%);
+  transition:
+    opacity 0.5s var(--ease),
+    transform 0.7s var(--ease);
+  pointer-events: none;
+}
+
+.catalog-card__glow::before,
+.catalog-card__glow::after {
+  content: '';
+  position: absolute;
+  width: 85%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.catalog-card__glow::before {
+  bottom: -45%;
+  left: -20%;
+  background: radial-gradient(circle, rgba(173, 228, 234, 0.95), transparent 68%);
+}
+
+.catalog-card__glow::after {
+  right: -20%;
+  bottom: -30%;
+  background: radial-gradient(circle, rgba(123, 195, 235, 0.85), transparent 68%);
+}
+
+.catalog-card:hover .catalog-card__glow,
+.catalog-card:focus-within .catalog-card__glow {
+  opacity: 1;
+  transform: none;
+}
+
+.catalog-card:hover .catalog-card__glow::before,
+.catalog-card:focus-within .catalog-card__glow::before {
+  animation: catalog-drift-a 4.8s ease-in-out infinite alternate;
+}
+
+.catalog-card:hover .catalog-card__glow::after,
+.catalog-card:focus-within .catalog-card__glow::after {
+  animation: catalog-drift-b 6.2s ease-in-out infinite alternate;
+}
+
+@keyframes catalog-drift-a {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(45%, -28%) scale(1.15);
+  }
+
+  100% {
+    transform: translate(12%, 10%) scale(0.95);
+  }
+}
+
+@keyframes catalog-drift-b {
+  0% {
+    transform: translate(0, 0) scale(1.05);
+  }
+
+  50% {
+    transform: translate(-50%, -22%) scale(0.9);
+  }
+
+  100% {
+    transform: translate(-14%, 12%) scale(1.12);
+  }
+}
+
+/* Sin cursor (celulares y tabletas): el degradado queda visible y quieto, más suave. */
+@media (hover: none) {
+  .catalog-card__glow {
+    opacity: 0.6;
+    transform: none;
+  }
+}
+
+.catalog-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.catalog-card__cta {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+/* Lo único clicable de la tarjeta. */
+.catalog-card__arrow {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-brand);
+  box-shadow: 0 2px 8px rgba(42, 66, 105, 0.12);
+  text-decoration: none;
+  transition:
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.catalog-card__arrow:hover,
+.catalog-card__arrow:focus-visible {
+  background: var(--color-ink);
+  color: var(--color-white);
+  box-shadow: 0 8px 20px rgba(42, 66, 105, 0.3);
+  transform: scale(1.12);
+}
+
+.catalog-card__arrow:focus-visible {
+  border-radius: 50%;
+}
+
+.catalog-card__arrow svg {
+  transition: transform 0.25s var(--ease);
+}
+
+.catalog-card__arrow:hover svg,
+.catalog-card__arrow:focus-visible svg {
+  transform: translateX(3px);
+}
+
+@media (min-width: 600px) {
+  .catalog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Escritorio: filas de 4 servicios. */
+@media (min-width: 1080px) {
+  .catalog-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}

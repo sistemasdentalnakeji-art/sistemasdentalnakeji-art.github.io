@@ -1,0 +1,62 @@
+/* ==========================================================================
+   Texto con brillo (clase .shiny-text)
+   Inspirado en "Shiny Text" de React Bits (código propio): una franja de luz diagonal cruza el texto de
+   izquierda a derecha y hace una pausa antes de repetir. Aquí en blanco perla, con un degradado muy suave hacia el azul claro de la marca (sutil: el fondo ya tiene su propia animación).
+   • Color base del texto: --shiny-base. Ángulo: --shiny-angle. Duración del ciclo (barrido + pausa): --shiny-speed.
+   • Usa background-clip: text, así que el elemento debe medir lo mismo que su texto en ancho (display: block o
+     inline-block dentro de un contenedor ajustado al texto).
+   ========================================================================== */
+.shiny-text {
+  --shiny-base: #c9c7c2;
+  --shiny-angle: 119deg;
+  --shiny-speed: 4.2s;
+  background-image:
+    linear-gradient(
+      var(--shiny-angle),
+      transparent 18%,
+      rgba(123, 195, 235, 0.3) 34%,
+      rgba(200, 228, 248, 0.85) 44%,
+      #ffffff 50%,
+      rgba(200, 228, 248, 0.85) 56%,
+      rgba(123, 195, 235, 0.3) 66%,
+      transparent 82%
+    ),
+    linear-gradient(var(--shiny-base), var(--shiny-base));
+  background-repeat: no-repeat;
+  background-size:
+    250% 100%,
+    100% 100%;
+  background-position:
+    103% 0,
+    0 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shiny-sweep var(--shiny-speed) ease-in-out infinite;
+}
+
+@keyframes shiny-sweep {
+  0% {
+    background-position:
+      103% 0,
+      0 0;
+  }
+
+  65%,
+  100% {
+    background-position:
+      -3% 0,
+      0 0;
+  }
+}
+
+/* Modo de alto contraste: sin fondos, el texto usaría su color normal. */
+@media (forced-colors: active) {
+  .shiny-text {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: CanvasText;
+    animation: none;
+  }
+}

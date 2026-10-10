@@ -1,0 +1,792 @@
+/* ==========================================================================
+   Página /beneficios/ (pages/benefits/BenefitsPage.tsx). Estructura parecida a /servicios/: encabezado con lista y
+   espacio de foto, tres tarjetas y una franja de contacto. Fondo de plasma igual que /servicios/.
+   Idea visual: "cuentas claras". Las tarjetas y la franja de cierre son boletos con perforación; al pasar el cursor por
+   su botón, el renglón punteado se "recorta" en rojo y se marca la silueta del boleto, como una promoción por recortar.
+   El espacio de la foto de recepción (derecha del encabezado) está vacío y lleva el contorno luminoso .siri.
+   ========================================================================== */
+/* Radio de las muescas de los boletos; se anima a 0 al arrancar el talón. */
+@property --notch {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 13px;
+}
+
+.benefits.band {
+  --promo-red: #e0262d;
+  /* clip (no hidden): hidden convertiría la banda en contenedor de scroll y el sticky del plasma dejaría de funcionar. */
+  overflow: clip;
+  padding-bottom: 16px;
+}
+
+.benefits__plasma {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Se desvanece al final para que no quede un borde recto antes del footer. */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0, #000 620px, #000 calc(100% - 90px), transparent 100%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0, #000 620px, #000 calc(100% - 90px), transparent 100%);
+}
+
+.benefits__plasma-view {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease);
+}
+
+.benefits__plasma-view.is-ready {
+  opacity: 1;
+}
+
+/* ---------- Encabezado: texto a la izquierda, espacio de foto a la derecha ---------- */
+.benefits-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+  margin-bottom: clamp(44px, 5vw, 72px);
+}
+
+.benefits-hero__eyebrow {
+  display: inline-block;
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+  color: var(--color-brand);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* El titular domina: primera línea en peso medio, segunda en extranegrita. */
+.benefits-hero__title {
+  margin-top: 22px;
+  color: var(--color-ink-strong);
+  font-size: clamp(2.4rem, 1.2rem + 4vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.benefits-hero__lead-line {
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+.benefits-hero__accent {
+  display: block;
+  margin-top: 0.08em;
+}
+
+.benefits-hero__lead {
+  max-width: 34rem;
+  margin-top: 24px;
+  color: var(--color-text);
+  font-size: var(--text-body-lg);
+  line-height: 1.6;
+}
+
+/* Lista como renglones de un recibo: separadores punteados. */
+.benefits-hero__features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 32px;
+  margin-top: 28px;
+  color: var(--color-ink);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.benefits-hero__features li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1.5px dashed rgba(42, 66, 105, 0.28);
+}
+
+.benefits-hero__feature-icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+  color: var(--color-brand);
+}
+
+/* Espacio para la foto de recepción: vacío por ahora. El contorno luminoso (.siri, el mismo de los iconos) gira solo;
+   el marco interior recorta la foto a la forma redondeada sin cortar el resplandor. */
+.benefits-hero__photo {
+  --siri-width: 3px;
+  --siri-blur: 14px;
+  min-height: 380px;
+  border-radius: 32px;
+  background: var(--color-white);
+}
+
+.benefits-hero__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.benefits-hero__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- Tarjetas: boletos con perforación ----------
+   El recorte lateral (máscara) y el renglón punteado marcan dónde termina la información y empieza la acción.
+   La sombra va en el <li> (drop-shadow) porque una máscara recortaría un box-shadow. */
+.benefit-grid {
+  --ticket-foot: 92px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  counter-reset: ticket;
+}
+
+.benefit-grid__item {
+  counter-increment: ticket;
+  filter: drop-shadow(0 12px 18px rgba(42, 66, 105, 0.1)) drop-shadow(0 1px 1px rgba(37, 36, 41, 0.1));
+  transition: transform 0.35s var(--ease);
+}
+
+.benefit-grid__item:hover,
+.benefit-grid__item:focus-within {
+  transform: translateY(-5px);
+}
+
+.benefit-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 380px;
+  border-radius: 28px;
+  transition: --notch 0.3s var(--ease);
+}
+
+/* Al arrancar el talón las muescas desaparecen (si no, se ven círculos sueltos donde se separan las piezas). */
+.benefit-grid__item:has(.benefit-card__arrow:hover, .benefit-card__arrow:focus-visible) .benefit-card {
+  --notch: 0.1px;
+}
+
+/* Pieza de arriba del boleto: la información. Muescas en sus esquinas de abajo (donde se arranca el talón). */
+.benefit-card__top {
+  position: relative;
+  display: grid;
+  flex: 1;
+  gap: 16px;
+  align-content: start;
+  padding: 26px 28px 24px;
+  border-radius: 28px 28px 0 0;
+  background: var(--color-white);
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000) 0 0 / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000) 100% 0 / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000) 0 0 / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000) 100% 0 / 51% 100% no-repeat;
+}
+
+/* Contorno rojo de esta pieza (punteado, con la forma de la pieza: su borde de abajo queda recto, donde se rasgó). El talón
+   tiene el suyo (.benefit-card__outline). Solo aparecen al pasar el cursor por el botón de la tarjeta. */
+.benefit-card__top::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px dashed var(--promo-red);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+
+.benefit-grid__item:has(.benefit-card__arrow:hover, .benefit-card__arrow:focus-visible) .benefit-card__top::after,
+.benefit-grid__item:has(.benefit-card__arrow:hover, .benefit-card__arrow:focus-visible) .benefit-card__outline {
+  opacity: 1;
+}
+
+/* Número de boleto (decorativo, generado por CSS). */
+.benefit-card__top::before {
+  content: 'Nº ' counter(ticket, decimal-leading-zero) / '';
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.benefit-card__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.benefit-card__icon {
+  --siri-width: 2px;
+  --siri-blur: 7px;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: var(--color-white);
+  color: var(--color-brand);
+}
+
+/* El contorno luminoso solo se mueve con el cursor o el foco, como en /servicios/. */
+.benefit-card .siri::before,
+.benefit-card .siri::after {
+  animation-play-state: paused;
+}
+
+.benefit-grid__item:hover .siri::before,
+.benefit-grid__item:hover .siri::after,
+.benefit-grid__item:focus-within .siri::before,
+.benefit-grid__item:focus-within .siri::after {
+  animation-play-state: running;
+}
+
+html[data-motion='paused'] .benefit-grid__item:hover .siri::before,
+html[data-motion='paused'] .benefit-grid__item:hover .siri::after,
+html[data-motion='paused'] .benefit-grid__item:focus-within .siri::before,
+html[data-motion='paused'] .benefit-grid__item:focus-within .siri::after {
+  animation-play-state: paused !important;
+}
+
+.benefit-card__title {
+  color: var(--color-ink-strong);
+  font-size: 1.4rem;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+/* Sello "Próximamente": rojo, borde punteado, ligeramente girado; se sacude sutilmente de lado a lado cada pocos segundos. */
+.benefit-card__badge {
+  justify-self: start;
+  padding: 5px 14px;
+  border: 1.5px dashed var(--color-error);
+  border-radius: var(--radius-pill);
+  background: var(--color-error-soft);
+  color: var(--color-error);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-2.5deg);
+  animation: benefits-shake 3.6s ease-in-out 1s infinite;
+}
+
+@keyframes benefits-shake {
+  0%,
+  62%,
+  100% {
+    transform: translateX(0) rotate(-2.5deg);
+  }
+
+  67% {
+    transform: translateX(-3px) rotate(-4deg);
+  }
+
+  73% {
+    transform: translateX(3px) rotate(-1deg);
+  }
+
+  79% {
+    transform: translateX(-2px) rotate(-3.5deg);
+  }
+
+  85% {
+    transform: translateX(2px) rotate(-1.5deg);
+  }
+
+  91% {
+    transform: translateX(-1px) rotate(-2.5deg);
+  }
+}
+
+/* Quieto con "reducir movimiento" y con "Pausar animaciones" (si no, quedaría a medio sacudir). */
+@media (prefers-reduced-motion: reduce) {
+  .benefit-card__badge {
+    animation: none;
+  }
+}
+
+html[data-motion='paused'] .benefit-card__badge {
+  animation: none;
+}
+
+.benefit-card__text {
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+
+/* Talón del boleto: contenedor que gira al arrancarse. Al pasar el cursor por el botón se arranca de derecha a izquierda:
+   la bisagra queda en la esquina izquierda y el lado derecho (el del botón) se despega y cae. Dentro van la pieza con el
+   botón (.benefit-card__footer, recortada), su contorno rojo y el doblez; esos dos no se recortan, por eso viven aquí. */
+.benefit-card__stub {
+  --fold: 36px;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+/* Pieza del talón: renglón punteado en la perforación; lo único clicable es el botón redondo. Su esquina superior derecha
+   se corta (y se dobla: .ticket-fold) al arrancarse. */
+.benefit-card__footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: var(--ticket-foot);
+  padding: 0 28px;
+  border-radius: 0 0 28px 28px;
+  background: var(--color-white);
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000) 0 0 / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000) 100% 0 / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000) 0 0 / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000) 100% 0 / 51% 100% no-repeat;
+  /* En reposo el polígono cubre toda la caja; al arrancar se corta la esquina superior derecha. */
+  clip-path: polygon(0 0, 100% 0, 100% 0, 100% 100%, 0 100%);
+  transition: clip-path 0.45s var(--ease);
+}
+
+.benefit-card__footer::before,
+.benefit-card__footer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 20px;
+  left: 20px;
+  border-top: 2px dashed var(--color-fog);
+  transition: border-color 0.3s var(--ease);
+}
+
+.benefit-grid__item:hover .benefit-card__footer::before,
+.benefit-grid__item:focus-within .benefit-card__footer::before {
+  border-color: var(--color-brand-light);
+}
+
+/* Renglón rojo (el borde de arriba del talón): se "recorta" de derecha a izquierda sobre el gris al pasar el cursor por el
+   botón. Ocupa todo el ancho porque al arrancarse las muescas desaparecen. */
+.benefit-card__footer::after {
+  right: 0;
+  left: 0;
+  border-color: var(--promo-red);
+  clip-path: inset(0 0 0 100%);
+  transition: clip-path 0.55s var(--ease);
+}
+
+.benefit-grid__item:has(.benefit-card__arrow:hover, .benefit-card__arrow:focus-visible) .benefit-card__footer::after {
+  clip-path: inset(0);
+}
+
+/* Se arranca el talón: se corta la esquina de la pieza y gira el contenedor. */
+.benefit-grid__item:has(.benefit-card__arrow:hover, .benefit-card__arrow:focus-visible) .benefit-card__footer {
+  clip-path: polygon(0 0, calc(100% - var(--fold)) 0, 100% var(--fold), 100% 100%, 0 100%);
+}
+
+.benefit-grid__item:has(.benefit-card__arrow:hover, .benefit-card__arrow:focus-visible) .benefit-card__stub {
+  transform: translateY(3px) rotate(3deg);
+}
+
+/* Contorno rojo del talón: izquierda, abajo y derecha con el borde punteado (la parte de arriba la pone el renglón rojo) y
+   la esquina cortada con una diagonal. Sigue la forma real de la pieza, no un rectángulo. */
+.benefit-card__outline {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border: 2px dashed var(--promo-red);
+  border-top: 0;
+  border-radius: 0 0 28px 28px;
+  clip-path: polygon(0 0, calc(100% - var(--fold)) 0, 100% var(--fold), 100% 100%, 0 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+
+.benefit-card__outline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(100% - var(--fold));
+  width: calc(var(--fold) * 1.4142);
+  border-top: 2px dashed var(--promo-red);
+  transform: rotate(45deg);
+  transform-origin: 0 0;
+}
+
+.benefit-card__cta {
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+.benefit-card__arrow {
+  position: relative;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  color: var(--color-white);
+  transition:
+    transform 0.3s var(--ease),
+    background-color 0.3s var(--ease);
+}
+
+/* Zona de contacto más grande que el botón: al arrancarse el talón el botón baja unos píxeles y así no se pierde el hover. */
+.benefit-card__arrow::after,
+.benefits-cta__btn::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+}
+
+.benefit-grid__item:hover .benefit-card__arrow {
+  background: var(--color-brand);
+  transform: translateX(4px);
+}
+
+.benefit-grid__item .benefit-card__arrow:hover {
+  background: var(--color-ink-strong);
+}
+
+/* ---------- Doblez de la esquina superior derecha del talón ----------
+   Al arrancarse el talón se corta la esquina (clip-path del talón) y aparece el reverso doblado: un triángulo con degradado
+   (papel), la línea del pliegue y una sombra sobre la hoja. Crece desde la esquina. El tamaño sale de --fold del talón. */
+.ticket-fold {
+  --fold-a: #ffffff;
+  --fold-b: #e6edf6;
+  --fold-c: #c5d2e6;
+  --fold-line: rgba(42, 66, 105, 0.45);
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: var(--fold);
+  height: var(--fold);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.2);
+  transform-origin: 100% 0;
+  /* La sombra va en este contenedor: un filter sobre el triángulo recortado también se recortaría. */
+  filter: drop-shadow(-2px 3px 3px rgba(15, 28, 50, 0.38));
+  transition:
+    opacity 0.2s var(--ease),
+    transform 0.45s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+.ticket-fold::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top right, #0000 calc(50% - 1px), var(--fold-line) 50%, #0000 calc(50% + 1px)),
+    linear-gradient(225deg, var(--fold-a) 0%, var(--fold-b) 55%, var(--fold-c) 100%);
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.benefit-grid__item:has(.benefit-card__arrow:hover, .benefit-card__arrow:focus-visible) .ticket-fold,
+.benefits-cta:has(.benefits-cta__btn:hover, .benefits-cta__btn:focus-visible) .ticket-fold {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------- Cierre: talón oscuro de WhatsApp ---------- */
+/* Dos piezas, como las tarjetas: el cuerpo y el talón con el botón. Cada una lleva su fondo y sus muescas; al pasar el
+   cursor por el botón el talón se arranca por la línea punteada y cada pieza queda marcada con su contorno punteado,
+   en el verde de WhatsApp (el de las tarjetas es rojo, como una promoción). */
+.benefits-cta {
+  --wa-green: #25d366; /* verde oficial de WhatsApp */
+  --stub: 112px;
+  --cta-mid: color-mix(in srgb, var(--color-ink), var(--color-night));
+  position: relative;
+  display: grid;
+  margin-top: clamp(48px, 6vw, 80px);
+  color: var(--color-white);
+  /* Sombra en el contenedor (como en las tarjetas): da profundidad al talón cuando se despega. */
+  filter: drop-shadow(0 12px 18px rgba(42, 66, 105, 0.14)) drop-shadow(0 1px 1px rgba(37, 36, 41, 0.12));
+  transition: --notch 0.3s var(--ease);
+}
+
+/* Al arrancar el talón las muescas desaparecen, igual que en las tarjetas. */
+.benefits-cta:has(.benefits-cta__btn:hover, .benefits-cta__btn:focus-visible) {
+  --notch: 0.1px;
+}
+
+.benefits-cta__body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 30px clamp(24px, 3vw, 44px);
+  border-radius: 28px 28px 0 0;
+  background: linear-gradient(120deg, var(--color-ink), var(--cta-mid));
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000) 0 0 / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000) 100% 0 / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000) 0 0 / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000) 100% 0 / 51% 100% no-repeat;
+}
+
+/* Contorno verde del cuerpo (punteado, con la forma de la pieza). El del talón es .benefits-cta__outline. Solo aparecen al
+   pasar el cursor por el botón. */
+.benefits-cta__body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px dashed var(--wa-green);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+
+.benefits-cta:has(.benefits-cta__btn:hover, .benefits-cta__btn:focus-visible) .benefits-cta__body::after,
+.benefits-cta:has(.benefits-cta__btn:hover, .benefits-cta__btn:focus-visible) .benefits-cta__outline {
+  opacity: 1;
+}
+
+.benefits-cta__icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--wa-green); /* igual que el botón de las páginas de servicio */
+  color: var(--color-ink);
+}
+
+.benefits-cta__title {
+  color: var(--color-white);
+  font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem);
+  letter-spacing: -0.025em;
+}
+
+.benefits-cta__text {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.84);
+  line-height: 1.5;
+}
+
+/* Talón: contenedor que gira al pasar el cursor por el botón. Se despega un poco por el lado derecho (alrededor de su
+   esquina izquierda en celular o inferior izquierda en escritorio) y sigue pegado por el otro. Dentro van la pieza con el
+   botón (.benefits-cta__stub, recortada), su contorno verde y el doblez; esos dos no se recortan, por eso viven aquí. */
+.benefits-cta__tear {
+  --fold: 34px;
+  position: relative;
+  display: grid;
+  transform-origin: 0 0;
+  transition: transform 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.benefits-cta:has(.benefits-cta__btn:hover, .benefits-cta__btn:focus-visible) .benefits-cta__tear {
+  transform: translateY(2px) rotate(1.8deg);
+}
+
+/* Pieza del talón: su esquina superior derecha se corta (y se dobla: .ticket-fold) al arrancarse. */
+.benefits-cta__stub {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: var(--stub);
+  padding: 0 clamp(24px, 3vw, 36px);
+  border-radius: 0 0 28px 28px;
+  background:
+    radial-gradient(60% 140% at 100% 100%, rgba(63, 181, 200, 0.28), transparent 70%),
+    linear-gradient(120deg, var(--cta-mid), var(--color-night));
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000) 0 0 / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000) 100% 0 / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000) 0 0 / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000) 100% 0 / 51% 100% no-repeat;
+  clip-path: polygon(0 0, 100% 0, 100% 0, 100% 100%, 0 100%);
+  transition: clip-path 0.45s var(--ease);
+}
+
+.benefits-cta__stub::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 22px;
+  left: 22px;
+  border-top: 2px dashed rgba(255, 255, 255, 0.32);
+}
+
+.benefits-cta:has(.benefits-cta__btn:hover, .benefits-cta__btn:focus-visible) .benefits-cta__stub {
+  clip-path: polygon(0 0, calc(100% - var(--fold)) 0, 100% var(--fold), 100% 100%, 0 100%);
+}
+
+/* Contorno verde del talón: sigue la forma real de la pieza (con la esquina cortada en diagonal), no un rectángulo. */
+.benefits-cta__outline {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border: 2px dashed var(--wa-green);
+  border-radius: 0 0 28px 28px;
+  clip-path: polygon(0 0, calc(100% - var(--fold)) 0, 100% var(--fold), 100% 100%, 0 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease);
+}
+
+.benefits-cta__outline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(100% - var(--fold));
+  width: calc(var(--fold) * 1.4142);
+  border-top: 2px dashed var(--wa-green);
+  transform: rotate(45deg);
+  transform-origin: 0 0;
+}
+
+/* El doblez sobre la tela oscura: el reverso se ve más claro, con la línea del pliegue en blanco. */
+.benefits-cta__tear .ticket-fold {
+  --fold-a: #6b82a6;
+  --fold-b: #46608a;
+  --fold-c: #2f4a74;
+  --fold-line: rgba(255, 255, 255, 0.5);
+}
+
+.benefits-cta__btn {
+  position: relative;
+  gap: 10px;
+  background: var(--color-white);
+  color: var(--color-ink-strong);
+  font-weight: 700;
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease),
+    background-color 0.25s var(--ease);
+}
+
+/* Al pasar el cursor (o enfocar con el teclado) el botón se pinta del verde de WhatsApp; el texto sigue en tinta oscura
+   (el blanco sobre este verde da 1.98:1, la tinta 5.1:1). */
+.benefits-cta__btn:hover,
+.benefits-cta__btn:focus-visible {
+  background: var(--wa-green);
+  box-shadow: 0 10px 28px rgba(37, 211, 102, 0.45);
+  transform: translateY(-2px);
+}
+
+/* ---------- Tableta y celular ---------- */
+@media (min-width: 760px) {
+  /* En escritorio el talón queda a la derecha: la perforación es vertical y las muescas van arriba y abajo. */
+  .benefits-cta {
+    grid-template-columns: minmax(0, 1fr) 320px;
+  }
+
+  .benefits-cta__body {
+    border-radius: 28px 0 0 28px;
+    -webkit-mask:
+      radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000) 0 0 / 100% 51% no-repeat,
+      radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000) 0 100% / 100% 51% no-repeat;
+    mask:
+      radial-gradient(circle var(--notch) at 100% 0, #0000 97%, #000) 0 0 / 100% 51% no-repeat,
+      radial-gradient(circle var(--notch) at 100% 100%, #0000 97%, #000) 0 100% / 100% 51% no-repeat;
+  }
+
+  .benefits-cta__stub {
+    height: auto;
+    min-height: var(--stub);
+    border-radius: 0 28px 28px 0;
+    -webkit-mask:
+      radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000) 0 0 / 100% 51% no-repeat,
+      radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000) 0 100% / 100% 51% no-repeat;
+    mask:
+      radial-gradient(circle var(--notch) at 0 0, #0000 97%, #000) 0 0 / 100% 51% no-repeat,
+      radial-gradient(circle var(--notch) at 0 100%, #0000 97%, #000) 0 100% / 100% 51% no-repeat;
+  }
+
+  .benefits-cta__tear {
+    --fold: 44px;
+    transform-origin: 0 100%;
+  }
+
+  .benefits-cta__outline {
+    border-radius: 0 28px 28px 0;
+  }
+
+  .benefits-cta__stub::before {
+    inset: 22px auto 22px 0;
+    border-top: 0;
+    border-left: 2px dashed rgba(255, 255, 255, 0.32);
+  }
+
+  /* Bisagra abajo a la izquierda: se abre un poco por arriba y a la derecha, sin separarse del todo. */
+  .benefits-cta:has(.benefits-cta__btn:hover, .benefits-cta__btn:focus-visible) .benefits-cta__tear {
+    transform: rotate(2.2deg);
+  }
+}
+
+@media (max-width: 1023.98px) {
+  .benefit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 899.98px) {
+  .benefits-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .benefits-hero__photo {
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 639.98px) {
+  .benefit-grid,
+  .benefits-hero__features {
+    grid-template-columns: 1fr;
+  }
+
+  .benefit-card {
+    min-height: 0;
+  }
+
+  .benefits-cta__body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .benefits-cta__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Sin desprendimiento con "reducir movimiento" ni con "Pausar animaciones" (quedan los contornos y el color, que no se mueven).
+   Va al final: tiene que ganar a las reglas de hover de arriba. */
+@media (prefers-reduced-motion: reduce) {
+  .benefit-grid__item:has(.benefit-card__arrow:hover, .benefit-card__arrow:focus-visible) .benefit-card__stub,
+  .benefits-cta:has(.benefits-cta__btn:hover, .benefits-cta__btn:focus-visible) .benefits-cta__tear {
+    transform: none;
+  }
+}
+
+html[data-motion='paused'] .benefit-grid__item:has(.benefit-card__arrow:hover, .benefit-card__arrow:focus-visible) .benefit-card__stub,
+html[data-motion='paused'] .benefits-cta:has(.benefits-cta__btn:hover, .benefits-cta__btn:focus-visible) .benefits-cta__tear {
+  transform: none;
+}

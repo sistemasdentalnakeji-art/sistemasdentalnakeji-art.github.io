@@ -1,3 +1,13 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// FORMULARIO DE CITAS (compartido: homepage y las páginas de servicio, vía pages/home/sections/Schedule.tsx)
+//
+// Tres pasos agrupados: 1) Tus datos · 2) Tu cita (servicio, fecha, horario en botones y primera visita) · 3) Para terminar.
+// • La lógica (lectura, validación y envío al Apps Script) está en features/booking/booking.ts y aquí abajo; el diseño es solo
+//   de presentación. Los nombres de los campos y las reglas no cambian.
+// • En páginas de servicio, `defaultService` preselecciona el servicio y adapta el texto de apoyo.
+// • Estilos → src/styles/pages/home/schedule.css (contorno luminoso del icono: styles/components/siri.css).
+// ─────────────────────────────────────────────────────────────────────────────
+
 import { useRef, useState, useSyncExternalStore, type FormEvent, type ReactNode } from 'react'
 import { BOOKING, isBookingConfigured } from '@/config/booking'
 import { PRIVACY } from '@/config/routes'
@@ -16,9 +26,9 @@ import {
 } from '@/features/booking/booking'
 import { cx } from '@/lib/cx'
 import { ExternalLink } from '@/components/ui/ExternalLink'
-import { Icon } from '@/components/ui/Icon'
+import { Icon, type IconName } from '@/components/ui/Icon'
 
-type ErrorCode = 'busy' | 'invalid' | 'network'
+type ErrorCode = 'busy' | 'invalid' | 'limit' | 'network'
 
 interface Summary {
   name: string
@@ -38,6 +48,11 @@ type FormState =
 const ERROR_MESSAGES: Record<ErrorCode, { text: string; offerWhatsApp: boolean }> = {
   busy: { text: 'Ese horario ya está ocupado. Elige otra fecha u hora, por favor.', offerWhatsApp: false },
   invalid: { text: 'Revisa los datos del formulario e inténtalo de nuevo.', offerWhatsApp: false },
+  // El Apps Script limita las solicitudes por teléfono (unas horas) y por hora en total.
+  limit: {
+    text: 'Ya recibimos una solicitud reciente desde este teléfono. Para agendar otra cita, escríbenos por WhatsApp.',
+    offerWhatsApp: true,
+  },
   network: { text: 'No pudimos enviar tu solicitud. Inténtalo de nuevo o escríbenos por WhatsApp.', offerWhatsApp: true },
 }
 
@@ -102,7 +117,8 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
 
     // El orden de las claves es el que espera el Apps Script.
     const payload = {
-      name: fields.name,
+      firstName: fields.firstName,
+      lastName: fields.lastName,
       phone: fields.phone,
       email: fields.email,
       service: fields.service,
@@ -116,10 +132,9 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
     }
 
     const showSuccess = (demo = false) => {
-      const firstName = payload.name.split(' ')[0]
       setState({
         status: 'success',
-        summary: { name: firstName, service: payload.service, date: payload.date, time: payload.time },
+        summary: { name: payload.firstName, service: payload.service, date: payload.date, time: payload.time },
         demo,
       })
       form.reset()
@@ -151,7 +166,8 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
         for (const name of reply.fields ?? []) if (isFieldName(name)) serverErrors[name] = SERVER_FIELD_ERROR
         setErrors(serverErrors)
       }
-      setState({ status: 'error', code: reply.error === 'busy' || reply.error === 'invalid' ? reply.error : 'network' })
+      const known = reply.error === 'busy' || reply.error === 'invalid' || reply.error === 'limit'
+      setState({ status: 'error', code: known ? (reply.error as ErrorCode) : 'network' })
     } catch {
       setState({ status: 'error', code: 'network' })
     } finally {
@@ -166,18 +182,33 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
 
   if (state.status === 'success') {
     const { summary, demo } = state
+    const details: { icon: IconName; label: string; value: string }[] = [
+      { icon: 'tooth', label: 'Servicio', value: summary.service },
+      { icon: 'calendar', label: 'Fecha', value: formatDate(summary.date) },
+      { icon: 'clock', label: 'Hora', value: formatTime(summary.time) },
+    ]
     return (
       <div ref={successRef} className="booking-success" role="status" tabIndex={-1}>
-        <span className="icon-badge icon-badge--success">
-          <Icon name="check" size={26} />
+        <span className="booking-success__check" aria-hidden="true">
+          <Icon name="check" size={34} />
         </span>
-        <h3 className="card-title">¡Gracias, {summary.name}! Recibimos tu solicitud.</h3>
-        <p className="card-text">
-          {summary.service} · {formatDate(summary.date)} · {formatTime(summary.time)}
-        </p>
-        <p className="card-text">Te contactaremos por teléfono o WhatsApp para confirmar tu cita.</p>
+        <h3 className="booking-success__title">¡Gracias, {summary.name}! Recibimos tu solicitud.</h3>
+        <dl className="booking-ticket">
+          {details.map((detail) => (
+            <div key={detail.label}>
+              <dt>
+                <span className="booking-ticket__icon" aria-hidden="true">
+                  <Icon name={detail.icon} size={18} />
+                </span>
+                {detail.label}
+              </dt>
+              <dd>{detail.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="booking-success__text">Te contactaremos por teléfono o WhatsApp para confirmar tu cita.</p>
         {demo && (
-          <p className="card-text">
+          <p className="booking-success__text">
             <strong>Vista previa:</strong> esta es una demostración, no se envió ninguna solicitud.
           </p>
         )}
@@ -192,6 +223,9 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
   const maxDate = today ? addDays(today, BOOKING.daysAhead) : undefined
   const sending = state.status === 'sending'
   const alert = state.status === 'error' ? ERROR_MESSAGES[state.code] : null
+  const lead = defaultService
+    ? `Elige el día y la hora que mejor te acomoden para tu cita de ${defaultService}.`
+    : 'Elige el servicio, el día y la hora que mejor te acomoden.'
 
   return (
     <form
@@ -201,28 +235,47 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       onChange={(event) => clearError((event.nativeEvent.target as HTMLInputElement).name)}
       aria-labelledby="cita-titulo"
     >
-      <h3 ref={titleRef} id="cita-titulo" className="booking-form__title" tabIndex={-1}>
-        Solicita tu cita
-      </h3>
+      <header className="booking-form__head">
+        <span className="booking-form__badge siri" aria-hidden="true">
+          <Icon name="calendar" size={24} />
+        </span>
+        <div>
+          <p className="booking-form__eyebrow">Reserva en línea</p>
+          <h3 ref={titleRef} id="cita-titulo" className="booking-form__title" tabIndex={-1}>
+            Solicita tu cita
+          </h3>
+          <p className="booking-form__lead">{lead}</p>
+        </div>
+      </header>
       <p className="booking-form__note">
         Los campos con <span aria-hidden="true">*</span>
         <span className="visually-hidden">asterisco</span> son obligatorios.
       </p>
 
-      <div className="form-grid">
-        <Field name="name" label="Nombre completo" required error={errors.name}>
-          <input {...fieldProps('name')} type="text" autoComplete="name" maxLength={80} required />
-        </Field>
+      <Group step={1} title="Tus datos">
+        <div className="form-grid">
+          <Field name="firstName" label="Nombre(s)" icon="user" required error={errors.firstName}>
+            <input {...fieldProps('firstName')} type="text" autoComplete="given-name" maxLength={50} required />
+          </Field>
 
-        <Field name="phone" label="Teléfono o WhatsApp" required error={errors.phone}>
-          <input {...fieldProps('phone')} type="tel" autoComplete="tel" inputMode="tel" maxLength={20} required />
-        </Field>
+          <Field name="lastName" label="Apellidos" icon="user" required error={errors.lastName}>
+            <input {...fieldProps('lastName')} type="text" autoComplete="family-name" maxLength={50} required />
+          </Field>
+        </div>
 
-        <Field name="email" label="Correo electrónico" error={errors.email}>
-          <input {...fieldProps('email')} type="email" autoComplete="email" maxLength={120} />
-        </Field>
+        <div className="form-grid">
+          <Field name="phone" label="Teléfono o WhatsApp" icon="phone" required error={errors.phone}>
+            <input {...fieldProps('phone')} type="tel" autoComplete="tel" inputMode="tel" maxLength={20} required />
+          </Field>
 
-        <Field name="service" label="Servicio de interés" required error={errors.service}>
+          <Field name="email" label="Correo electrónico" icon="mail" error={errors.email}>
+            <input {...fieldProps('email')} type="email" autoComplete="email" maxLength={120} />
+          </Field>
+        </div>
+      </Group>
+
+      <Group step={2} title="Tu cita">
+        <Field name="service" label="Servicio de interés" icon="tooth" required error={errors.service}>
           <select {...fieldProps('service')} defaultValue={defaultService} required>
             <option value="" disabled>
               Selecciona un servicio
@@ -239,84 +292,102 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
           <input {...fieldProps('date')} type="date" min={minDate} max={maxDate} required />
         </Field>
 
-        <Field name="time" label="Horario preferido" required error={errors.time}>
-          <select {...fieldProps('time')} defaultValue="" required>
-            <option value="" disabled>
-              Selecciona un horario
-            </option>
-            {BOOKING.slots.map((slot) => (
-              <option key={slot} value={slot}>
-                {formatTime(slot)}
-              </option>
+        {/* Horario: mismos valores que antes (BOOKING.slots), ahora como botones en lugar de una lista desplegable. */}
+        <fieldset
+          className={cx('field field--slots', errors.time && 'has-error')}
+          aria-describedby={errors.time ? 'cita-time-error' : undefined}
+        >
+          <legend className="field__label">
+            Horario preferido <span aria-hidden="true">*</span>
+          </legend>
+          <div className="slot-grid">
+            {BOOKING.slots.map((slot, index) => (
+              <label key={slot} className="slot">
+                <input
+                  type="radio"
+                  name="time"
+                  value={slot}
+                  id={index === 0 ? 'cita-time' : undefined}
+                  aria-invalid={errors.time ? true : undefined}
+                  required
+                />
+                <span>{formatTime(slot)}</span>
+              </label>
             ))}
-          </select>
+          </div>
+          <FieldError name="time" error={errors.time} />
+        </fieldset>
+
+        <fieldset
+          className={cx('field field--choice', errors.firstVisit && 'has-error')}
+          aria-describedby={errors.firstVisit ? 'cita-firstVisit-error' : undefined}
+        >
+          <legend className="field__label">
+            ¿Es tu primera visita? <span aria-hidden="true">*</span>
+          </legend>
+          <div className="choice-row">
+            {[
+              { value: 'si', label: 'Sí, soy paciente nuevo' },
+              { value: 'no', label: 'No, ya soy paciente' },
+            ].map((option, index) => (
+              <label key={option.value} className="choice">
+                <input
+                  type="radio"
+                  name="firstVisit"
+                  value={option.value}
+                  id={index === 0 ? 'cita-firstVisit' : undefined}
+                  aria-invalid={errors.firstVisit ? true : undefined}
+                  required
+                />
+                {option.label}
+              </label>
+            ))}
+          </div>
+          <FieldError name="firstVisit" error={errors.firstVisit} />
+        </fieldset>
+      </Group>
+
+      <Group step={3} title="Para terminar">
+        <Field name="comments" label="Comentarios" hint="Cuéntanos brevemente el motivo de tu visita.">
+          <textarea id="cita-comments" name="comments" rows={3} maxLength={500} aria-describedby="cita-comments-ayuda" />
         </Field>
-      </div>
 
-      <fieldset
-        className={cx('field field--choice', errors.firstVisit && 'has-error')}
-        aria-describedby={errors.firstVisit ? 'cita-firstVisit-error' : undefined}
-      >
-        <legend className="field__label">
-          ¿Es tu primera visita? <span aria-hidden="true">*</span>
-        </legend>
-        <div className="choice-row">
-          {[
-            { value: 'si', label: 'Sí, soy paciente nuevo' },
-            { value: 'no', label: 'No, ya soy paciente' },
-          ].map((option, index) => (
-            <label key={option.value} className="choice">
-              <input
-                type="radio"
-                name="firstVisit"
-                value={option.value}
-                id={index === 0 ? 'cita-firstVisit' : undefined}
-                aria-invalid={errors.firstVisit ? true : undefined}
-                required
-              />
-              {option.label}
-            </label>
-          ))}
+        {/* Trampa anti-spam: oculta para personas; si se llena, la solicitud se descarta. */}
+        <div className="hp-field" aria-hidden="true">
+          <label>
+            Sitio web
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+          </label>
         </div>
-        <FieldError name="firstVisit" error={errors.firstVisit} />
-      </fieldset>
 
-      <Field name="comments" label="Comentarios" hint="Cuéntanos brevemente el motivo de tu visita.">
-        <textarea id="cita-comments" name="comments" rows={3} maxLength={500} aria-describedby="cita-comments-ayuda" />
-      </Field>
-
-      {/* Trampa anti-spam: oculta para personas; si se llena, la solicitud se descarta. */}
-      <div className="hp-field" aria-hidden="true">
-        <label>
-          Sitio web
-          <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-        </label>
-      </div>
-
-      <div className={cx('field field--consent', errors.consent && 'has-error')}>
-        <label className="choice">
-          <input {...fieldProps('consent')} type="checkbox" required />
-          <span>
-            Acepto el{' '}
-            <ExternalLink className="text-link" href={PRIVACY.path}>
-              aviso de privacidad
-            </ExternalLink>{' '}
-            y autorizo que me contacten para agendar. <span aria-hidden="true">*</span>
-          </span>
-        </label>
-        <FieldError name="consent" error={errors.consent} />
-      </div>
+        <div className={cx('field field--consent', errors.consent && 'has-error')}>
+          <label className="choice">
+            <input {...fieldProps('consent')} type="checkbox" required />
+            <span>
+              Acepto el{' '}
+              <ExternalLink className="text-link" href={PRIVACY.path}>
+                aviso de privacidad
+              </ExternalLink>{' '}
+              y autorizo que me contacten para agendar. <span aria-hidden="true">*</span>
+            </span>
+          </label>
+          <FieldError name="consent" error={errors.consent} />
+        </div>
+      </Group>
 
       <div className="booking-form__footer">
         {/* aria-disabled (no disabled): el botón conserva el foco mientras se envía. */}
-        <button type="submit" className="btn btn--primary btn--lg" aria-disabled={sending}>
+        <button type="submit" className="btn btn--primary btn--lg booking-form__submit" aria-disabled={sending}>
           {sending ? 'Enviando…' : 'Solicitar cita'}
           {!sending && <Icon name="arrowRight" size={18} />}
         </button>
         <span role="status" className="visually-hidden">
           {sending ? 'Enviando solicitud…' : ''}
         </span>
-        <p className="booking-form__note">La cita queda sujeta a disponibilidad y confirmación.</p>
+        <p className="booking-form__fine">
+          <Icon name="shield" size={16} />
+          La cita queda sujeta a disponibilidad y confirmación.
+        </p>
       </div>
 
       <div className="booking-form__status" role="alert">
@@ -335,6 +406,22 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
   )
 }
 
+/** Bloque numerado del formulario (Tus datos · Tu cita · Para terminar). */
+function Group({ step, title, children }: { step: number; title: string; children: ReactNode }) {
+  const id = `cita-grupo-${step}`
+  return (
+    <div className="booking-group" role="group" aria-labelledby={id}>
+      <h4 id={id} className="booking-group__title">
+        <span className="booking-group__num" aria-hidden="true">
+          {step}
+        </span>
+        {title}
+      </h4>
+      <div className="booking-group__body">{children}</div>
+    </div>
+  )
+}
+
 function FieldError({ name, error }: { name: string; error?: string }) {
   if (!error) return null
   return (
@@ -350,17 +437,22 @@ interface FieldProps {
   required?: boolean
   hint?: string
   error?: string
+  /** Icono a la izquierda del campo (opcional). */
+  icon?: IconName
   children: ReactNode
 }
 
-function Field({ name, label, required, hint, error, children }: FieldProps) {
+function Field({ name, label, required, hint, error, icon, children }: FieldProps) {
   return (
-    <div className={cx('field', error && 'has-error')}>
+    <div className={cx('field', error && 'has-error', icon && 'field--icon')}>
       <label className="field__label" htmlFor={`cita-${name}`}>
         {label}
         {required ? <span aria-hidden="true"> *</span> : <span className="field__optional"> (opcional)</span>}
       </label>
-      {children}
+      <div className="field__control">
+        {icon && <Icon name={icon} size={18} className="field__icon" />}
+        {children}
+      </div>
       {hint && (
         <p id={`cita-${name}-ayuda`} className="field__hint">
           {hint}

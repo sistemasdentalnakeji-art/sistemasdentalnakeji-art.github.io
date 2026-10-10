@@ -105,10 +105,11 @@ export const SERVICE_ROUTES: RouteDef[] = [
     description:
       'Ortodoncia en Tijuana con brackets o alineadores, según tu caso. Agenda una valoración en Dental Nakeji, Zona Río.',
   }),
-  service('/invisalign-in-tijuana/', 'Invisalign / Alineadores', {
-    title: 'Invisalign y alineadores en Tijuana | Dental Nakeji',
+  // La URL conserva "invisalign" (es la del sitio actual); el nombre visible ya no lleva la marca.
+  service('/invisalign-in-tijuana/', 'Alineadores', {
+    title: 'Alineadores transparentes en Tijuana | Dental Nakeji',
     description:
-      'Invisalign y alineadores transparentes en Tijuana para alinear tus dientes. Agenda una valoración en Dental Nakeji, Zona Río.',
+      'Alineadores transparentes en Tijuana para alinear tus dientes. Agenda una valoración en Dental Nakeji, Zona Río.',
   }),
   service('/odontologia-pediatrica-en-tijuana/', 'Odontopediatría', {
     title: 'Odontopediatría en Tijuana | Dental Nakeji',
@@ -117,12 +118,41 @@ export const SERVICE_ROUTES: RouteDef[] = [
   }),
 ]
 
-/** Submenú de Beneficios. /convenios/ es nueva; las otras dos ya existen. */
-export const BENEFIT_ROUTES: RouteDef[] = [
-  empty('/nuestras-promociones/', 'Promociones'),
-  empty('/convenios/', 'Convenios'),
-  empty('/insurance/', 'Aseguranzas'),
+/**
+ * Servicios con página propia que NO van en el submenú (queda en 12) pero sí en la página /servicios/ y en el
+ * formulario de citas. Mismo orden de prioridad: de mayor a menor.
+ */
+export const MORE_SERVICE_ROUTES: RouteDef[] = [
+  service('/diseno-de-sonrisa-en-tijuana/', 'Diseño de sonrisa', {
+    title: 'Diseño de sonrisa en Tijuana | Dental Nakeji',
+    description:
+      'Diseño de sonrisa en Tijuana: un plan a tu medida para mejorar la apariencia de tus dientes. Agenda una valoración en Dental Nakeji, Zona Río.',
+  }),
+  service('/dentaduras-en-tijuana/', 'Dentaduras', {
+    title: 'Dentaduras en Tijuana | Dental Nakeji',
+    description:
+      'Dentaduras en Tijuana para reemplazar dientes faltantes. Agenda una valoración en Dental Nakeji, Zona Río.',
+  }),
+  service('/periodoncia-en-tijuana/', 'Periodoncia', {
+    title: 'Periodoncia en Tijuana | Dental Nakeji',
+    description:
+      'Periodoncia en Tijuana: atención de las encías y del soporte de tus dientes. Agenda una valoración en Dental Nakeji, Zona Río.',
+  }),
+  service('/extracciones-dentales-en-tijuana/', 'Extracciones simples y de juicio', {
+    title: 'Extracciones dentales en Tijuana | Dental Nakeji',
+    description:
+      'Extracciones simples y de muelas del juicio en Tijuana, con valoración previa. Agenda tu visita en Dental Nakeji, Zona Río.',
+  }),
 ]
+
+/** Página /beneficios/: promociones, convenios y aseguranzas en una sola página (pages/benefits/BenefitsPage.tsx). */
+export const BENEFITS = empty('/beneficios/', 'Beneficios')
+
+/** Submenú de Beneficios. /convenios/ es nueva; las otras dos ya existen. */
+export const AGREEMENTS = empty('/convenios/', 'Convenios')
+export const INSURANCE = empty('/insurance/', 'Aseguranzas')
+export const PROMOTIONS_PAGE = empty('/nuestras-promociones/', 'Promociones')
+export const BENEFIT_ROUTES: RouteDef[] = [PROMOTIONS_PAGE, AGREEMENTS, INSURANCE]
 
 export const CONTACT = empty('/contacto/', 'Contacto')
 export const ABOUT = empty('/nosotros/', 'Nosotros')
@@ -137,7 +167,18 @@ export const NOT_FOUND: RouteDef = {
   status: 'empty',
 }
 
-export const ALL_ROUTES: RouteDef[] = [HOME, SERVICES, ...SERVICE_ROUTES, ...BENEFIT_ROUTES, CONTACT, ABOUT, BLOG, PRIVACY]
+export const ALL_ROUTES: RouteDef[] = [
+  HOME,
+  SERVICES,
+  BENEFITS,
+  ...SERVICE_ROUTES,
+  ...MORE_SERVICE_ROUTES,
+  ...BENEFIT_ROUTES,
+  CONTACT,
+  ABOUT,
+  BLOG,
+  PRIVACY,
+]
 
 /** Normaliza la ruta: sin "index.html" y siempre con "/" final (igual que el sitio actual). */
 function normalizePath(pathname: string): string {

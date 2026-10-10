@@ -20,6 +20,8 @@
 @import './pages/home/hero.css';
 @import './layout/bands.css';
 @import './components/decor.css';
+@import './components/siri.css';
+@import './components/shiny-text.css';
 @import './layout/sections.css';
 @import './pages/home/story.css';
 @import './pages/home/schedule.css';
@@ -30,5 +32,7 @@
 @import './pages/home/contact.css';
 @import './layout/footer.css';
 @import './pages/service.css';
+@import './pages/services-index.css';
+@import './pages/benefits.css';
 @import './pages/empty.css';
 @import './global/preferences.css';

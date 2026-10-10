@@ -92,28 +92,22 @@
     0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Halo que "respira" */
-.hero-orb::before {
-  content: '';
+/* Contorno luminoso estilo Siri (componente .siri, styles/components/siri.css): más grueso y con blanco para
+   que destaque sobre el fondo oscuro. */
+.hero-orb {
+  --siri-width: 4px;
+  --siri-blur: 14px;
+  --siri-d: #ffffff;
+}
+
+/* Halo grande que "respira" */
+.hero-orb__halo {
   position: absolute;
   inset: -34px;
   z-index: -1;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(123, 195, 235, 0.5), rgba(47, 99, 173, 0.18) 45%, transparent 68%);
-  animation: orb-breathe 6s ease-in-out infinite;
-}
-
-/* Anillo iridiscente que gira */
-.hero-orb::after {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  z-index: -1;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg, #7bc3eb, #3fb5c8, #ffffff, #2f63ad, #9fd8f5, #7bc3eb);
-  filter: blur(5px);
-  will-change: transform;
-  animation: orb-spin 9s linear infinite;
+  animation: orb-breathe 3.2s ease-in-out infinite;
 }
 
 .hero-orb__mark {
@@ -122,16 +116,8 @@
   filter: drop-shadow(0 0 10px rgba(123, 195, 235, 0.55));
 }
 
-.hero__eyebrow {
-  margin-top: 26px;
-  color: var(--hero-soft);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
 .hero__title {
-  margin-top: 16px;
+  margin-top: 26px;
   color: var(--hero-text);
   font-size: clamp(2.5rem, 1.5rem + 3.6vw, 4.125rem);
   font-weight: 600;
@@ -145,8 +131,9 @@
   display: block;
 }
 
-.hero__title-muted {
-  color: var(--hero-muted);
+/* Ambas líneas llevan el brillo (.shiny-text, styles/components/shiny-text.css): la segunda, sobre un tono atenuado. */
+.hero__title-muted.shiny-text {
+  --shiny-base: var(--hero-muted);
 }
 
 .hero__lead {
@@ -176,16 +163,16 @@
   transform: translateY(-1px);
 }
 
+/* WhatsApp en verde. El texto es azul marino: el blanco sobre este verde da solo 1.98:1 (el azul, ~9:1). */
 .hero__cta-alt {
-  border-color: var(--hero-glass-border);
-  background: var(--hero-glass);
-  color: var(--hero-text);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  border-color: #25d366;
+  background: #25d366;
+  color: var(--color-night);
 }
 
 .hero__cta-alt:hover {
-  background: rgba(255, 255, 255, 0.14);
+  border-color: #1ebe5b;
+  background: #1ebe5b;
 }
 
 .hero--light .hero__cta {
@@ -197,23 +184,26 @@
   background: var(--color-ink-strong);
 }
 
-.hero--light .hero__cta-alt:hover {
-  background: var(--color-white);
-}
-
+/* Frases de confianza en forma de lista, con marca de verificación. */
 .hero__note {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   justify-content: center;
-  gap: 4px 0;
+  gap: 10px;
   margin-top: 26px;
-  color: var(--hero-muted);
-  font-size: var(--text-small);
+  color: var(--hero-soft);
+  font-size: 0.9375rem;
 }
 
-.hero__note li + li::before {
-  content: '·';
-  margin-inline: 10px;
+.hero__note li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+}
+
+.hero__note svg {
+  flex: none;
+  color: var(--color-brand-light);
 }
 
 /* Etiquetas ambientales (decorativas) */
@@ -310,12 +300,6 @@
   }
 }
 
-@keyframes orb-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes orb-breathe {
   0%,
   100% {
@@ -362,14 +346,5 @@
   .hero__actions {
     flex-direction: column;
     align-self: stretch;
-  }
-
-  .hero__note {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .hero__note li + li::before {
-    content: none;
   }
 }

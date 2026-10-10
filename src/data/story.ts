@@ -6,29 +6,34 @@
 //   1. desire   → entra desde la izquierda.
 //   2. priority → sube desde abajo y queda centrado.
 //   3. decision → entra desde la derecha.
-// Los mensajes 1 y 2 son generales: no prometen resultados, técnicas ni procesos concretos.
-// El mensaje 3 usa las frases publicadas en el sitio oficial (igual que HERO.highlights en data/home.ts):
-// confirma "Dentistas certificados" y "Más de 35 años" con la clínica antes de publicar.
+// Los tres mensajes son generales: no prometen resultados, técnicas ni procesos concretos, ni afirman datos de la clínica
+// (las frases verificables, como "Dentistas certificados" o "Más de 35 años", están en HERO.highlights de data/home.ts).
+// Para que la animación se vea igual conviene mantener el largo parecido: ~8 palabras en los mensajes 1 y 3, ~11 en el 2.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface StorySegment {
   text: string
   accent?: boolean
+  /** Texto cuyo ancho se deja en blanco antes del fragmento: la línea empieza justo debajo de esas palabras. */
+  indent?: string
 }
 
 export type StoryLines = StorySegment[][]
 
 export const STORY: Record<'desire' | 'priority' | 'decision', StoryLines> = {
+  // Sin puntos finales: las frases se leen como un hilo, no como oraciones sueltas.
   desire: [
-    [{ text: 'Disfrutar lo que comes.' }],
-    [{ text: 'Reír en las fotos. ' }, { text: 'Sentirte tú.', accent: true }],
+    [{ text: 'Sonreír sin pensarlo' }],
+    [{ text: 'Platicar sin taparte,' }],
+    // "Con confianza" empieza justo debajo de "taparte": se deja en blanco el ancho de "Platicar sin ".
+    [{ text: 'Con confianza', accent: true, indent: 'Platicar sin ' }],
   ],
   priority: [
-    [{ text: 'Salud, función y estética.', accent: true }],
-    [{ text: 'Cada una importa en el cuidado de tu sonrisa.' }],
+    [{ text: 'Cuidar tu sonrisa es cuidarte', accent: true }],
+    [{ text: 'Cada visita suma a tu bienestar' }],
   ],
   decision: [
-    [{ text: 'Dentistas certificados.' }],
-    [{ text: 'Más de 35 años de trayectoria.', accent: true }],
+    [{ text: 'Te explicamos, tú decides' }],
+    [{ text: 'En la Zona Río de Tijuana', accent: true }],
   ],
 }

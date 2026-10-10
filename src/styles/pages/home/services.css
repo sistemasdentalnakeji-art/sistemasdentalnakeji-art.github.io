@@ -1,84 +1,444 @@
 /* ==========================================================================
-   Servicios destacados
+   Servicios destacados: carrusel conectado (components/ui/ConnectedCarousel.tsx + sections/FeaturedServices.tsx)
+   Inspirado en "Connected Carousel" de 21st.dev. Código propio, con los colores de la marca.
+   Todas las tarjetas están en una fila: 2 activas al centro (1 en celular), una vecina colapsada a cada lado y las
+   demás ocultas. La posición (--x), el tamaño (--w, --h) y la opacidad (--o) de cada una los pone el componente según su
+   papel, y aquí se animan con transiciones.
    ========================================================================== */
-.service-grid {
-  display: grid;
-  gap: 16px;
+.fc {
+  --fc-card: var(--color-white);
+  --fc-radius: 36px;
+  --fc-interval: 8000ms;
+  /* Efecto de resorte suave (con un leve rebote) para el movimiento de las tarjetas. */
+  --fc-spring: cubic-bezier(0.22, 1.12, 0.36, 1);
 }
 
-.service-card {
+.fc__viewport {
   position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  height: 100%;
-  padding: 28px;
+  /* El ancho disponible (cqw) sirve para calcular el tamaño de las tarjetas activas. */
+  container-type: inline-size;
+  /* Escritorio: 2 tarjetas activas + una vecina colapsada a cada lado. */
+  --peek: 72px;
+  --gap: 20px;
+  --active: calc((100cqw - 2 * (var(--peek) + var(--gap)) - var(--gap)) / 2);
+  --card-h: 500px;
+  --peek-h: 340px;
+  /* Tarjetas más anchas: la fila se ensancha hasta 100 px por lado, según lo que alcance la pantalla (598 px de ancho por
+     tarjeta en pantallas grandes). */
+  margin-inline: calc(-1 * min(100px, max(0px, (100vw - 100%) / 2 - 24px)));
+}
+
+.fc__stage {
+  position: relative;
+  height: var(--card-h);
+}
+
+/* ---------- Tarjeta (contenedor que se mueve y cambia de tamaño) ---------- */
+.fc__card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--w);
+  height: var(--h);
+  border-radius: var(--fc-radius);
+  background: var(--fc-card);
   box-shadow: var(--shadow);
+  opacity: var(--o);
+  translate: var(--x) -50%;
   transition:
-    box-shadow 0.25s var(--ease),
-    transform 0.25s var(--ease);
+    translate 0.75s var(--fc-spring),
+    width 0.75s var(--fc-spring),
+    height 0.75s var(--fc-spring),
+    opacity 0.45s var(--ease);
+  will-change: translate, width, height;
 }
 
-.service-card:hover,
-.service-card:focus-within {
-  box-shadow: var(--shadow-hover);
-  transform: translateY(-2px);
+.fc__card[data-role='far-left'],
+.fc__card[data-role='far-right'] {
+  pointer-events: none;
 }
 
-.service-card__body {
-  flex: 1;
+/* Recorta el contenido a la forma de la tarjeta. */
+.fc__clip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
 }
 
-.service-card__link {
-  text-decoration: none;
+/* Cara activa: de tamaño fijo y centrada; al crecer la tarjeta se va revelando (sin reacomodar el texto). */
+.fc__face {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--active);
+  height: var(--card-h);
+  translate: -50% -50%;
+  transition: opacity 0.35s var(--ease) 0.15s;
 }
 
-/* Toda la tarjeta es clicable; el nombre accesible es el título. */
-.service-card__link::after {
-  content: '';
+.fc__card:not([data-role='active']) .fc__face {
+  opacity: 0;
+  pointer-events: none;
+  transition-delay: 0s;
+}
+
+/* Cara colapsada: botón que ocupa la tarjeta (con margen interior, como en la referencia). */
+.fc__peek {
+  position: absolute;
+  inset: 8px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: calc(var(--fc-radius) - 8px);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(123, 195, 235, 0.55), transparent 62%),
+    linear-gradient(160deg, var(--color-tint), var(--color-sky-strong));
+  cursor: pointer;
+  transition: opacity 0.35s var(--ease);
+}
+
+.fc__card[data-role='active'] .fc__peek {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fc__peek img {
   position: absolute;
   inset: 0;
-  border-radius: var(--radius-card);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.service-card__link:focus-visible {
-  box-shadow: none;
-}
-
-.service-card__link:focus-visible::after {
-  box-shadow: var(--focus-ring);
-}
-
-.service-card__arrow {
-  flex: none;
-  margin-top: 4px;
+.fc__peek-icon {
+  position: absolute;
+  top: 16px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--color-white);
+  box-shadow: 0 6px 16px -8px rgba(42, 66, 105, 0.5);
   color: var(--color-brand);
   transition: transform 0.25s var(--ease);
 }
 
-.service-card:hover .service-card__arrow {
-  transform: translateX(4px);
+.fc__peek-label {
+  position: absolute;
+  bottom: 18px;
+  z-index: 1;
+  max-height: calc(50% - 40px); /* no pisa la flecha del centro */
+  overflow: hidden;
+  color: var(--color-ink-strong);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
 }
 
-@media (max-width: 519.98px) {
-  .service-card {
-    flex-wrap: wrap;
-    padding: 24px;
-  }
+.fc__peek:hover .fc__peek-icon {
+  transform: scale(1.08);
+}
 
-  .service-card__arrow {
-    order: 1;
-    margin-left: auto;
-  }
+.fc__peek:focus-visible {
+  outline-offset: -3px;
+}
 
-  .service-card__body {
-    order: 2;
-    flex-basis: 100%;
+/* ---------- Contenido de la tarjeta activa ---------- */
+.fc-card {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+}
+
+.fc-card__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: clamp(22px, 2.6vw, 32px);
+}
+
+.fc-card__badge {
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--color-sky-strong);
+  color: var(--color-brand);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fc-card__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Icono con contorno luminoso (.siri): gira solo en las tarjetas activas. */
+.fc-card__icon {
+  --siri-width: 2.5px;
+  --siri-blur: 9px;
+  --siri-d: #9fd8f5;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: var(--color-white);
+  color: var(--color-brand);
+}
+
+.fc__card:not([data-role='active']) .fc-card__icon.siri::before,
+.fc__card:not([data-role='active']) .fc-card__icon.siri::after {
+  animation-play-state: paused;
+}
+
+.fc-card__title {
+  color: var(--color-ink-strong);
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.fc-card__text {
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.fc-card__list {
+  display: grid;
+  gap: 9px;
+}
+
+.fc-card__list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+.fc-card__check {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: var(--color-white);
+}
+
+/* Lo único clicable de la tarjeta: el botón. */
+.fc-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: auto;
+  padding: 6px 6px 6px 22px;
+  border-radius: var(--radius-pill);
+  background: var(--color-ink);
+  box-shadow: 0 14px 26px -14px rgba(42, 66, 105, 0.8);
+  color: var(--color-white);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    background-color 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.fc-card__arrow {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-brand);
+  transition: transform 0.25s var(--ease);
+}
+
+.fc-card__cta:hover {
+  background: var(--color-ink-strong);
+  transform: translateY(-2px);
+}
+
+.fc-card__cta:hover .fc-card__arrow {
+  transform: translateX(3px);
+}
+
+/* Espacio de la foto: se funde con el contenido por la izquierda. Vacío por ahora (sin fondo de color). */
+.fc-card__media {
+  position: relative;
+}
+
+.fc-card__media::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(90deg, var(--fc-card) 0%, rgba(255, 255, 255, 0) 42%);
+  pointer-events: none;
+}
+
+.fc-card__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- Flechas: sobre el borde de las vecinas colapsadas ---------- */
+.fc__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: 0 12px 26px -10px rgba(42, 66, 105, 0.5);
+  color: var(--color-ink);
+  translate: 0 -50%;
+  cursor: pointer;
+  transition:
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease),
+    transform 0.2s var(--ease);
+}
+
+.fc__nav--prev {
+  left: calc(var(--peek) - 44px);
+}
+
+.fc__nav--next {
+  right: calc(var(--peek) - 44px);
+}
+
+.fc__nav:hover {
+  background: var(--color-ink);
+  color: var(--color-white);
+  transform: scale(1.08);
+}
+
+.fc__nav:focus-visible {
+  border-radius: 50%;
+}
+
+/* ---------- Botón de pausa y cronómetro del autoplay ---------- */
+.fc__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+/* Elemento invisible: el fin de su animación marca cuándo avanzar. */
+.fc__tick {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  animation: fc-tick var(--fc-interval) linear forwards;
+}
+
+/* Pausa con el cursor encima o con foco de teclado dentro. */
+.fc:hover .fc__tick,
+.fc:has(:focus-visible) .fc__tick {
+  animation-play-state: paused;
+}
+
+@keyframes fc-tick {
+  to {
+    opacity: 0;
   }
 }
 
-@media (min-width: 768px) {
-  .service-grid {
-    grid-template-columns: repeat(2, 1fr);
+.fc__pause {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: 0 2px 8px rgba(42, 66, 105, 0.14);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition:
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.fc__pause:hover {
+  background: var(--color-ink);
+  color: var(--color-white);
+}
+
+/* ---------- Celular y tableta: 1 tarjeta activa y vecinas delgadas, foto arriba ---------- */
+@media (max-width: 899.98px) {
+  .fc__viewport {
+    --peek: 30px;
+    --gap: 14px;
+    --active: calc(100cqw - 2 * (var(--peek) + var(--gap)));
+    --card-h: 590px;
+    --peek-h: 420px;
+    margin-inline: 0;
+  }
+
+  .fc-card {
+    grid-template-columns: 1fr;
+    grid-template-rows: 150px 1fr;
+  }
+
+  .fc-card__media {
+    order: -1;
+  }
+
+  .fc-card__media::before {
+    background: linear-gradient(0deg, var(--fc-card) 0%, rgba(255, 255, 255, 0) 55%);
+  }
+
+  /* Las vecinas son muy delgadas: solo el fondo, sin icono ni nombre. */
+  .fc__peek {
+    inset: 5px;
+  }
+
+  .fc__peek-icon,
+  .fc__peek-label {
+    display: none;
+  }
+
+  /* Las flechas van sobre la franja de la foto, dentro de la tarjeta activa, para no tapar el texto. */
+  .fc__nav {
+    top: 75px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .fc__nav--prev {
+    left: calc(var(--peek) + var(--gap) + 10px);
+  }
+
+  .fc__nav--next {
+    right: calc(var(--peek) + var(--gap) + 10px);
   }
 }

@@ -53,14 +53,8 @@ export function ServiceHero({ label, content }: ServiceHeroProps) {
             </ol>
           </nav>
 
-          <h1 id="servicio-titulo" className="service-hero__title">
+          <h1 id="servicio-titulo" className="service-hero__title shiny-text">
             {content.title}
-            {content.titleAccent && (
-              <>
-                {' '}
-                <span className="service-hero__title-accent">{content.titleAccent}</span>
-              </>
-            )}
           </h1>
 
           <p className="service-hero__subtitle">{content.subtitle}</p>

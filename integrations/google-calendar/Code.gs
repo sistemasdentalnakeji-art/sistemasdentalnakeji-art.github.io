@@ -25,9 +25,10 @@ const CONFIG = {
   NOTIFY_EMAIL: '',
   /** Color del evento en Calendar (amarillo = por confirmar). */
   EVENT_COLOR: CalendarApp.EventColor.YELLOW,
-  /** Servicios aceptados: deben coincidir con BOOKING.services de src/config/booking.ts. */
+  /** Servicios aceptados: deben coincidir, en el mismo orden, con SERVICES de src/config/booking.ts. */
   SERVICES: [
-    'Valoración general / no estoy seguro',
+    'Valoración general',
+    'Limpieza dental',
     'Implantes dentales',
     'All on 4 implants',
     'All on 6 implants',
@@ -35,11 +36,14 @@ const CONFIG = {
     'Carillas dentales',
     'Blanqueamiento dental',
     'Cosmética dental',
-    'Limpieza dental',
     'Endodoncias',
     'Ortodoncia',
-    'Invisalign / Alineadores',
+    'Alineadores',
     'Odontopediatría',
+    'Diseño de sonrisa',
+    'Dentaduras',
+    'Periodoncia',
+    'Extracciones simples y de juicio',
   ],
   /** Límite global de solicitudes por hora (frena que un script llene el calendario). */
   MAX_REQUESTS_PER_HOUR: 30,
@@ -77,15 +81,18 @@ function doPost(e) {
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
     try {
-      if (CONFIG.CHECK_CONFLICTS && calendar.getEvents(start, end).length > 0) {
+      // Los eventos de todo el día (cumpleaños, festivos) no ocupan horario.
+      const busy = calendar.getEvents(start, end).filter((event) => !event.isAllDayEvent());
+      if (CONFIG.CHECK_CONFLICTS && busy.length > 0) {
         return json_({ ok: false, error: 'busy' });
       }
 
-      const event = calendar.createEvent(`Solicitud de cita: ${clean_(data.service)} — ${clean_(data.name)}`, start, end, {
+      const event = calendar.createEvent(`Solicitud de cita: ${clean_(data.service)} — ${fullName_(data)}`, start, end, {
         description: [
           'Solicitud enviada desde el sitio web (pendiente de confirmar).',
           '',
-          `Paciente: ${clean_(data.name)}`,
+          `Nombre(s): ${clean_(data.firstName)}`,
+          `Apellidos: ${clean_(data.lastName)}`,
           `Teléfono: ${clean_(data.phone)}`,
           `Correo: ${clean_(data.email) || '—'}`,
           `Servicio: ${clean_(data.service)}`,
@@ -108,8 +115,8 @@ function doPost(e) {
       try {
         MailApp.sendEmail({
           to: CONFIG.NOTIFY_EMAIL,
-          subject: `Nueva solicitud de cita: ${clean_(data.name)}`,
-          body: `${clean_(data.name)} solicitó ${clean_(data.service)} el ${data.date} a las ${data.time}.\nTeléfono: ${clean_(data.phone)}\nRevisa Google Calendar para confirmar.`,
+          subject: `Nueva solicitud de cita: ${fullName_(data)}`,
+          body: `${fullName_(data)} solicitó ${clean_(data.service)} el ${data.date} a las ${data.time}.\nTeléfono: ${clean_(data.phone)}\nRevisa Google Calendar para confirmar.`,
         });
       } catch (mailError) {
         console.error(mailError);
@@ -132,7 +139,8 @@ function validate_(data) {
   const errors = [];
   const text = (value) => String(value || '').trim();
 
-  if (text(data.name).length < 3 || text(data.name).length > 80) errors.push('name');
+  if (text(data.firstName).length < 2 || text(data.firstName).length > 50) errors.push('firstName');
+  if (text(data.lastName).length < 2 || text(data.lastName).length > 50) errors.push('lastName');
   const digits = text(data.phone).replace(/\D/g, '');
   if (digits.length < 10 || digits.length > 15) errors.push('phone');
   if (text(data.email) && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(text(data.email))) errors.push('email');
@@ -160,6 +168,11 @@ function toDate_(date, time) {
   const [y, m, d] = String(date).split('-').map(Number);
   const [h, min] = String(time).split(':').map(Number);
   return new Date(y, m - 1, d, h, min, 0);
+}
+
+/** Nombre completo para el título del evento y el aviso por correo (en los datos van separados). */
+function fullName_(data) {
+  return clean_(data.firstName) + ' ' + clean_(data.lastName);
 }
 
 function clean_(value) {

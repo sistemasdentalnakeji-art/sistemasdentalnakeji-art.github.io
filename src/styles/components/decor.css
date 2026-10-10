@@ -9,11 +9,6 @@
   pointer-events: none;
 }
 
-.decor--arcs {
-  width: clamp(200px, 30vw, 440px);
-  height: auto;
-}
-
 .decor--wave {
   left: 0;
   width: 100%;
@@ -56,11 +51,14 @@
   transform: scaleX(-1);
 }
 
-/* Curvas de esquina a esquina: por debajo del contenido */
+/* Curvas de esquina a esquina: por debajo del contenido. Altura fija y anclada arriba (no 100 %): así no se
+   estiran ni se mueven cuando la sección crece (p. ej. al ampliar el cuadro de comentarios del formulario). */
 .decor--flow-desktop {
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
+  /* Depende del ancho de la ventana, no del contenido. */
+  height: clamp(1000px, 115vw, 1700px);
 }
 
 /* Móvil y tableta: franja al pie de la sección, sin cruzar el texto */
@@ -237,10 +235,4 @@
   to {
     stroke-dashoffset: -2600;
   }
-}
-
-/* Arcos de la esquina superior derecha (Servicios, páginas vacías). */
-.decor--arcs.decor--top-right {
-  top: 0;
-  right: 0;
 }

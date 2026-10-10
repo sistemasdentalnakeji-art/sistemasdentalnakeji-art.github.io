@@ -35,15 +35,14 @@ export function Hero() {
 
       <div className="container hero__inner">
         <div className="hero__content">
-          <div className="hero-orb" aria-hidden="true">
+          <div className="hero-orb siri" aria-hidden="true">
+            <span className="hero-orb__halo" />
             <img className="hero-orb__mark" src="/favicon-192.webp" width={192} height={192} alt="" decoding="async" />
           </div>
 
-          <p className="hero__eyebrow">{HERO.eyebrow}</p>
-
           <h1 id="hero-titulo" className="hero__title">
-            <span className="hero__title-lead">{HERO.titleLead}</span>{' '}
-            <span className="hero__title-muted">{HERO.titleMuted}</span>
+            <span className="hero__title-lead shiny-text">{HERO.titleLead}</span>{' '}
+            <span className="hero__title-muted shiny-text">{HERO.titleMuted}</span>
           </h1>
 
           <p className="hero__lead">{HERO.lead}</p>
@@ -61,7 +60,10 @@ export function Hero() {
 
           <ul className="hero__note">
             {HERO.highlights.map((text) => (
-              <li key={text}>{text}</li>
+              <li key={text}>
+                <Icon name="check" size={16} />
+                {text}
+              </li>
             ))}
           </ul>
         </div>

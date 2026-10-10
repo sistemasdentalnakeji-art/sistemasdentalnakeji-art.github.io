@@ -17,10 +17,6 @@
   padding-top: calc(var(--band-padding) + clamp(12px, 2.5vw, 36px));
 }
 
-.band--wave-bottom {
-  padding-bottom: calc(var(--band-padding) + clamp(12px, 2.5vw, 36px));
-}
-
 /* Inicio de la hoja en páginas sin hero. */
 main > .band:first-child {
   margin-top: var(--band-gap);

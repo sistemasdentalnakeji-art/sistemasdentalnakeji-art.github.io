@@ -9,7 +9,7 @@
 //  • Agregar una columna nueva → añade otro objeto a FOOTER_COLUMNS (id único, título y enlaces).
 //    En escritorio el footer usa 5 columnas fijas: con una columna más, ajusta
 //    grid-template-columns en styles/layout/footer.css (bloque "@media (min-width: 1080px)").
-//  • Cambiar los servicios listados → edita FOOTER_SERVICE_PATHS (se muestran en ese orden).
+//  • Cambiar los servicios listados → se toman de los 8 primeros de SERVICE_ROUTES (config/routes.ts).
 //
 // La columna "Contacto" (dirección, teléfonos, correo) se llena sola con config/site.ts.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -34,21 +34,8 @@ export interface FooterColumn {
   links: FooterLink[]
 }
 
-/** Servicios que se listan en el footer, en este orden (el resto, en "Ver todos los servicios"). */
-const FOOTER_SERVICE_PATHS = [
-  '/implantes-dentales-en-tijuana/',
-  '/all-in-4-implants-en-tijuana/',
-  '/all-in-6-implants-en-tijuana/',
-  '/coronas-en-tijuana/',
-  '/carillasdentalesentijuana/',
-  '/blanqueamiento-dental-en-tijuana/',
-  '/cosmetica-dental-en-tijuana/',
-  '/limpieza-dental-en-tijuana/',
-]
-
-const serviceLinks: FooterLink[] = FOOTER_SERVICE_PATHS.flatMap((path) =>
-  SERVICE_ROUTES.filter((route) => route.path === path).map((route) => ({ label: route.label, href: route.path })),
-)
+/** Servicios del footer: los 8 primeros de SERVICE_ROUTES (columnas 1 y 2); el resto, en "Ver todos los servicios". */
+const serviceLinks: FooterLink[] = SERVICE_ROUTES.slice(0, 8).map((route) => ({ label: route.label, href: route.path }))
 
 export const FOOTER_COLUMNS: FooterColumn[] = [
   {

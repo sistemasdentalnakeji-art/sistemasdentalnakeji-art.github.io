@@ -5,7 +5,6 @@ import { cx } from '@/lib/cx'
 // - flow: curvas de esquina a esquina que pasan por debajo del contenido, con movimiento lento.
 //         En escritorio cruzan la banda; en móvil y tableta forman una franja al pie de la sección.
 // - rings: círculo azul completo con arcos concéntricos que respiran y llevan un destello.
-// - arcs: arcos concéntricos estáticos en la esquina superior derecha.
 // - wave: ola a todo lo ancho; une una banda con la siguiente.
 
 export type FlowLayout = 'schedule'
@@ -15,11 +14,10 @@ type RingsPlacement = 'partners' | 'contact' | 'contact-mobile'
 type SectionDecorProps =
   | { variant: 'flow'; layout: FlowLayout }
   | { variant: 'rings'; placement: RingsPlacement }
-  | { variant: 'arcs' }
   /** inverse: rellena por encima de la curva (sin voltear); lo usa el footer para que sus hilos lleguen a la ola. */
   | { variant: 'wave'; position: 'top' | 'bottom'; flip?: boolean; inverse?: boolean }
 
-interface Line {
+export interface Line {
   /** Forma inicial y forma intermedia de la curva (se alternan suavemente). */
   a: string
   b: string
@@ -50,7 +48,6 @@ const MOBILE_FLOW: Line[] = Array.from({ length: 5 }, (_, i) => {
   }
 })
 
-const ARC_RADII = [150, 205, 260, 315, 370]
 const RING_RADII = [72, 122, 172, 222, 272]
 
 /**
@@ -90,38 +87,54 @@ interface AnimatedLinesProps {
   lines: Line[]
   className: string
   viewBox: string
+  /**
+   * Opcional (hilo de la historia animada): id de una máscara que sigue las mismas curvas. Su trazo (`.decor-reveal`,
+   * `pathLength` 1) se anima desde CSS con `stroke-dashoffset` para ir mostrando las curvas a lo largo de su recorrido.
+   */
+  revealId?: string
 }
 
-function AnimatedLines({ lines, className, viewBox }: AnimatedLinesProps) {
+/** Curvas animadas (ondulan y las recorre una luz). Las usan las curvas de Agendar y el hilo de la historia animada. */
+export function AnimatedLines({ lines, className, viewBox, revealId }: AnimatedLinesProps) {
   const svgRef = useRef<SVGSVGElement>(null)
   useSmilMotion(svgRef)
 
+  const wave = (line: Line, index: number) => (
+    <animate
+      attributeName="d"
+      values={`${line.a};${line.b};${line.a}`}
+      keyTimes="0;0.5;1"
+      calcMode="spline"
+      keySplines={EASE_IN_OUT}
+      dur={`${14 + index * 1.7}s`}
+      begin={`-${index * 2.3}s`}
+      repeatCount="indefinite"
+    />
+  )
+
   return (
     <svg ref={svgRef} className={className} viewBox={viewBox} preserveAspectRatio="none" aria-hidden="true" focusable="false">
-      {lines.map((line, index) => {
-        const wave = (
-          <animate
-            attributeName="d"
-            values={`${line.a};${line.b};${line.a}`}
-            keyTimes="0;0.5;1"
-            calcMode="spline"
-            keySplines={EASE_IN_OUT}
-            dur={`${14 + index * 1.7}s`}
-            begin={`-${index * 2.3}s`}
-            repeatCount="indefinite"
-          />
-        )
-        return (
+      {revealId && (
+        <mask id={revealId} maskUnits="userSpaceOnUse" x="-5000" y="-5000" width="10000" height="10000">
+          {lines.map((line, index) => (
+            <path key={index} className="decor-reveal" d={line.a} pathLength={1}>
+              {wave(line, index)}
+            </path>
+          ))}
+        </mask>
+      )}
+      <g mask={revealId && `url(#${revealId})`}>
+        {lines.map((line, index) => (
           <g key={index} style={{ '--i': index } as CSSProperties}>
             <path className="decor-line" d={line.a} vectorEffect="non-scaling-stroke">
-              {wave}
+              {wave(line, index)}
             </path>
             <path className="decor-line__light" d={line.a} vectorEffect="non-scaling-stroke">
-              {wave}
+              {wave(line, index)}
             </path>
           </g>
-        )
-      })}
+        ))}
+      </g>
     </svg>
   )
 }
@@ -206,25 +219,6 @@ export function SectionDecor(props: SectionDecorProps) {
             fill="currentColor"
             d={props.inverse ? 'M0 110C220 40 470 40 720 96s500 100 720 20V0H0z' : 'M0 110C220 40 470 40 720 96s500 100 720 20v84H0z'}
           />
-        </svg>
-      )
-
-    case 'arcs':
-      return (
-        <svg className="decor decor--arcs decor--top-right" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
-          <circle cx="400" cy="0" r="96" fill="currentColor" opacity="0.14" />
-          {ARC_RADII.map((radius, index) => (
-            <circle
-              key={radius}
-              cx="400"
-              cy="0"
-              r={radius}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              opacity={0.38 - index * 0.06}
-            />
-          ))}
         </svg>
       )
   }

@@ -3,7 +3,7 @@
 
 import { BOOKING } from '@/config/booking'
 
-export const FIELD_NAMES = ['name', 'phone', 'email', 'service', 'date', 'time', 'firstVisit', 'consent'] as const
+export const FIELD_NAMES = ['firstName', 'lastName', 'phone', 'email', 'service', 'date', 'time', 'firstVisit', 'consent'] as const
 export type FieldName = (typeof FIELD_NAMES)[number]
 export type FieldErrors = Partial<Record<FieldName, string>>
 
@@ -11,7 +11,9 @@ export const isFieldName = (value: string): value is FieldName => (FIELD_NAMES a
 
 /** Valores del formulario ya leídos y recortados. */
 export interface BookingFields {
-  name: string
+  /** Nombre(s) y apellidos van separados para poder guardarlos en columnas distintas (Google Sheets). */
+  firstName: string
+  lastName: string
   phone: string
   email: string
   service: string
@@ -28,7 +30,8 @@ export interface BookingFields {
 export function readForm(formData: FormData): BookingFields {
   const text = (name: string) => String(formData.get(name) ?? '').trim()
   return {
-    name: text('name'),
+    firstName: text('firstName'),
+    lastName: text('lastName'),
     phone: text('phone'),
     email: text('email'),
     service: text('service'),
@@ -83,7 +86,8 @@ export const formatDate = (iso: string) =>
 export function validate(fields: BookingFields, today: string): FieldErrors {
   const errors: FieldErrors = {}
 
-  if (fields.name.length < 3) errors.name = 'Escribe tu nombre completo.'
+  if (fields.firstName.length < 2) errors.firstName = 'Escribe tu nombre.'
+  if (fields.lastName.length < 2) errors.lastName = 'Escribe tus apellidos.'
 
   const digits = fields.phone.replace(/\D/g, '')
   if (digits.length < 10 || digits.length > 15) errors.phone = 'Escribe un teléfono de al menos 10 dígitos.'

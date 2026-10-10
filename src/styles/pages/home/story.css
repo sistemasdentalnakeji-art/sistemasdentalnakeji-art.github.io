@@ -1,8 +1,12 @@
 /* ==========================================================================
-   Sección animada debajo del hero (CareStory)
-   Cada línea entra ligada al scroll con una animación CSS (animation-timeline: view()):
-   solo transform y opacity, sin JavaScript. Si el navegador no la soporta, o con
-   "reducir movimiento", el texto se ve completo y en su lugar final.
+   Sección animada debajo del hero (CareStory) — "un hilo de sonrisa"
+   Todo va ligado al scroll con animaciones CSS (animation-timeline: view()), sin JavaScript:
+   • cada línea entra por su lado enfocándose (de borrosa a nítida);
+   • las palabras se encienden una tras otra (--i es el número de la palabra dentro del mensaje);
+   • las frases en azul se subrayan con un trazo de marcador que se dibuja;
+   • un hilo curvo se dibuja de un mensaje al siguiente.
+   Si el navegador no lo soporta, o con "reducir movimiento", todo se ve completo y en su lugar final
+   (los estilos base son el estado final de cada animación).
    ========================================================================== */
 /* `overflow: clip` (no hidden): hidden crearía un contenedor de scroll y la animación no avanzaría. */
 .story.band {
@@ -11,6 +15,7 @@
 }
 
 .story__inner {
+  position: relative;
   display: grid;
   gap: clamp(72px, 11vw, 160px);
 }
@@ -30,6 +35,11 @@
   display: block;
 }
 
+/* Cada palabra es inline-block para poder moverse (transform) sin romper el salto de línea. */
+.story__word {
+  display: inline-block;
+}
+
 /* Mensajes 1 y 3: cada línea mide lo que mide su texto. Así el desplazamiento (en % de su propio
    ancho) es simétrico: las dos frases asoman y llegan al mismo ritmo, una por cada lado. */
 .story__item--left .story__line,
@@ -42,8 +52,21 @@
   margin-left: auto;
 }
 
+/* Frase en azul con una línea fina y sutil POR DEBAJO de las letras (se dibuja con el scroll; en varias líneas se
+   repite en cada una). El padding inferior separa la línea de las letras para que no las toque. */
 .story__accent {
+  padding-bottom: 0.1em;
   color: var(--color-brand);
+  background: linear-gradient(90deg, rgba(58, 112, 176, 0.55), rgba(123, 195, 235, 0.45)) no-repeat 0 100% / 100% 0.055em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Mensaje central: su frase en azul va sin línea inferior (solo el color). */
+.story__item--up .story__accent {
+  padding-bottom: 0;
+  background: none;
+  animation: none;
 }
 
 /* Mensaje 1: un poco más grande que los demás. */
@@ -75,15 +98,190 @@
   letter-spacing: -0.02em;
 }
 
+/* Sangría invisible: ocupa el ancho de unas palabras (data-indent) para que la línea empiece justo debajo de ellas. */
+.story__line[data-indent]::before {
+  content: attr(data-indent);
+  white-space: pre;
+  visibility: hidden;
+}
+
+/* Hilo de curvas detrás de los mensajes (se estira al alto de la sección). Son las mismas curvas animadas de la sección de
+   Agendar (clases .decor, .decor-line y .decor-line__light de components/decor.css: ondulan y las recorre una luz). */
+.story__thread {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Punta del hilo (CareStory.tsx → ThreadTip): caja que se centra sobre la curva (`offset-path`, en píxeles, lo pone el
+   componente) y queda derecha (`offset-rotate: 0deg`). Sin scroll animado se queda al final del hilo. Lleva los destellos. */
+.story__tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: clamp(64px, 5vw + 30px, 96px);
+  aspect-ratio: 1;
+  visibility: hidden;
+  offset-distance: 100%;
+  offset-rotate: 0deg;
+  pointer-events: none;
+}
+
+.story__tip[data-ready] {
+  visibility: visible;
+}
+
+/* Diente de caricatura con volumen (CareStory.tsx → Tooth): capas SVG apiladas en Z. La sombra va en el contenedor porque un
+   `filter` sobre el elemento con `preserve-3d` aplanaría las capas. */
+.story__tooth {
+  position: absolute;
+  inset: 4%;
+  perspective: 500px;
+  filter: drop-shadow(0 10px 12px rgba(42, 66, 105, 0.22));
+}
+
+.story__tooth-defs {
+  position: absolute;
+}
+
+.story__tooth-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.story__tooth-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: #eef4fb;
+  transform: translateZ(calc(var(--z) * 1.5px));
+}
+
+.story__tooth-layer--face {
+  fill: url(#story-tooth-face);
+  stroke: rgba(70, 120, 180, 0.4);
+  stroke-width: 1.2px;
+  stroke-linejoin: round;
+}
+
+.story__tooth-gloss {
+  fill: #fff;
+  stroke: none;
+  opacity: 0.95;
+}
+
+path.story__tooth-gloss {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.4px;
+  stroke-linecap: round;
+}
+
+/* Se mece cada vez menos y termina de frente. */
+@keyframes story-tooth-sway {
+  0% {
+    transform: rotateY(-34deg) rotateZ(-6deg);
+  }
+
+  30% {
+    transform: rotateY(28deg) rotateZ(5deg);
+  }
+
+  60% {
+    transform: rotateY(-18deg) rotateZ(-3deg);
+  }
+
+  85% {
+    transform: rotateY(6deg) rotateZ(1deg);
+  }
+
+  100% {
+    transform: rotateY(0deg) rotateZ(0deg);
+  }
+}
+
+/* Destellos de cuatro puntas alrededor del diente: titilan por turnos. */
+.tooth-sparkle {
+  position: absolute;
+  width: 28%;
+  height: 28%;
+  overflow: visible;
+  fill: #fff;
+  filter: drop-shadow(0 0 2px rgba(58, 112, 176, 0.9)) drop-shadow(0 0 8px rgba(123, 195, 235, 0.95));
+  animation: tooth-twinkle 2.4s ease-in-out infinite;
+}
+
+/* El destello grande: interior blanco y solo el contorno amarillo (con halo cálido); los otros dos, blancos con halo azul. */
+.tooth-sparkle--1 {
+  top: 2%;
+  right: 4%;
+  stroke: #ffc928;
+  stroke-width: 0.6px;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 2px rgba(214, 150, 0, 0.8)) drop-shadow(0 0 7px rgba(255, 210, 80, 0.7));
+}
+
+.tooth-sparkle--2 {
+  top: 30%;
+  left: -10%;
+  width: 18%;
+  height: 18%;
+  animation-delay: -0.8s;
+}
+
+.tooth-sparkle--3 {
+  right: -8%;
+  bottom: 14%;
+  width: 20%;
+  height: 20%;
+  animation-delay: -1.6s;
+}
+
+@keyframes tooth-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.45) rotate(0deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
+  }
+}
+
 /* --- Movimiento ligado al scroll ----------------------------------------- */
 @keyframes story-in {
   from {
     opacity: 0;
-    transform: translate(var(--from-x, 0), var(--from-y, 0));
+    transform: translate(var(--from-x, 0), var(--from-y, 0)) scale(var(--from-scale, 1));
+    filter: blur(12px);
   }
 
-  60% {
+  55% {
     opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes story-word {
+  from {
+    opacity: 0.14;
+    transform: translateY(0.42em);
   }
 
   to {
@@ -92,19 +290,83 @@
   }
 }
 
+@keyframes story-mark {
+  from {
+    background-size: 0% 0.055em;
+  }
+
+  to {
+    background-size: 100% 0.055em;
+  }
+}
+
+/* Máscara del hilo (SectionDecor → revealId): trazo blanco ancho sobre la misma curva (pathLength 1). Con `stroke-dashoffset`
+   de 1 a 0 se va dibujando a lo largo del recorrido, al mismo ritmo que avanza el diente. Base = hilo completo. */
+.story__thread .decor-reveal {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 80px;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+}
+
+@keyframes story-reveal {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Invisible hasta que arranca el recorrido (con `both` el estado inicial también cubre el tiempo previo) y aparece
+   en el primer tramo, ya con el hilo dibujándose. */
+@keyframes story-tooth-path {
+  from {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+
+  6% {
+    opacity: 1;
+  }
+
+  to {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+}
+
 @supports (animation-timeline: view()) {
-  /* Las tres frases usan la misma animación. Cada línea tiene su propio recorrido:
-     la segunda empieza un poco después de la primera. */
+  /* Cada mensaje tiene su propia línea de tiempo (la comparten sus palabras y su subrayado). El 30 % inferior de la
+     pantalla no cuenta: el texto sigue invisible mientras esté ahí (también en pantallas grandes, donde ya se verían al
+     abrir la página) y empieza a moverse solo cuando el visitante llega a esa zona. */
+  .story__item {
+    view-timeline: --beat block;
+    view-timeline-inset: 0px 30%;
+  }
+
+  /* Entrada de cada línea: llega desde su lado y se enfoca. Más rápida que antes (primer tercio del recorrido):
+     el resto del recorrido lo ocupan las palabras y el subrayado. */
   .story__line {
-    /* Velocidad constante: sigue al scroll sin arranques bruscos. */
-    animation: story-in linear both;
-    /* El 30 % inferior de la pantalla no cuenta: la frase sigue invisible mientras esté ahí
-       (también en pantallas grandes, donde ya se verían al abrir la página) y empieza a
-       desvanecerse y moverse solo cuando el visitante llega a esa zona. */
-    animation-timeline: view(block 0px 30%);
-    /* Recorrido largo (~62 % del trayecto de la frase por la pantalla): más scroll por cada
-       tramo de movimiento, o sea, una entrada más lenta. */
-    animation-range: cover 0% cover 62%;
+    animation: story-in cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-timeline: --beat;
+    animation-range: cover 0% cover 40%;
+  }
+
+  /* Palabras: se encienden en cascada mientras el mensaje sube por la pantalla. */
+  .story__word {
+    animation: story-word linear both;
+    animation-timeline: --beat;
+    animation-range: cover calc(8% + var(--i) * 3.2%) cover calc(38% + var(--i) * 3.2%);
+  }
+
+  /* Línea inferior: se dibuja cuando el mensaje ya está legible. */
+  .story__accent {
+    animation: story-mark linear both;
+    animation-timeline: --beat;
+    animation-range: cover 48% cover 90%;
   }
 
   /* Izquierda y derecha: cada línea arranca justo fuera de la pantalla (110 % de su propio ancho)
@@ -117,9 +379,43 @@
     --from-x: 110%;
   }
 
-  /* Centro: sube desde bastante más abajo. */
+  /* Centro: sube desde bastante más abajo y crece un poco al llegar. */
   .story__item--up {
     --from-y: 320px;
+    --from-scale: 0.92;
+  }
+
+  /* Hilo: se va revelando a lo largo de toda la sección. Su línea de tiempo (--thread) la comparte el diente, que es su
+     hermano: por eso `timeline-scope` en el contenedor común. */
+  .story__inner {
+    timeline-scope: --thread;
+  }
+
+  /* Como en los mensajes, el 30 % inferior de la pantalla no cuenta: el hilo y el diente no arrancan hasta que la sección
+     ya está bien dentro (si no, el diente se ve al abrir la página, sin haber llegado a la historia). */
+  .story__thread {
+    view-timeline: --thread block;
+    view-timeline-inset: 0px 30%;
+  }
+
+  .story__thread .decor-reveal {
+    animation: story-reveal linear both;
+    animation-timeline: --thread;
+    animation-range: cover 12% cover 80%;
+  }
+
+  /* El diente se mece de lado a lado con el mismo avance y termina de frente... */
+  .story__tooth-body {
+    animation: story-tooth-sway ease-in-out both;
+    animation-timeline: --thread;
+    animation-range: cover 12% cover 80%;
+  }
+
+  /* Punta: avanza por el hilo al mismo ritmo que se dibuja y se detiene donde termina. */
+  .story__tip {
+    animation: story-tooth-path linear both;
+    animation-timeline: --thread;
+    animation-range: cover 12% cover 80%;
   }
 
   @media (max-width: 767.98px) {
@@ -130,7 +426,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .story__line {
+  .story__line,
+  .story__word,
+  .story__accent,
+  .story__thread .decor-reveal,
+  .story__tip,
+  .story__tooth-body,
+  .tooth-sparkle {
     animation: none;
   }
 }
