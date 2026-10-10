@@ -89,7 +89,9 @@ Header → Hero → Historia animada (`CareStory`) → Agendar (con formulario) 
   usan vía `Schedule` (en servicios, `defaultService` preselecciona el servicio y adapta el texto de apoyo). Estilos en `styles/pages/home/schedule.css`.
   Propuesta y rúbrica del rediseño en `gan-harness/`.
 - **Datos del formulario** (pensados para pasarlos a Google Sheets): el envío al Apps Script lleva `firstName` y `lastName` por separado (no hay campo `name`),
-  más `phone`, `email`, `service`, `date` (AAAA-MM-DD), `time` (HH:MM), `firstVisit` (booleano), `comments`, `consent`, `website` (trampa anti-spam) y `source` (URL).
+  más `phone`, `email`, `service`, `date` (AAAA-MM-DD), `time` (HH:MM), `firstVisit` (booleano), `comments`, `consent`, `hp_x` (trampa anti-spam; nombre raro a propósito para que el autocompletado no lo rellene) y `source` (URL; el script solo la guarda si empieza por un dominio de `SOURCE_PREFIXES` de `Code.gs`).
+  El script rechaza teléfonos con letras o símbolos (`^[+\d\s()-]{10,20}$`), correos de más de 120 caracteres y `firstVisit` que no sea booleano; quita `<` y `>` de todo texto; lee los límites anti-abuso dentro del candado;
+  y **las solicitudes pendientes (amarillas) no bloquean horario**: solo lo ocupan las citas confirmadas, así un script no puede llenar el calendario con solicitudes falsas (a cambio, dos pacientes pueden pedir la misma hora y la clínica elige).
   Reglas: nombre y apellidos de 2 a 50 caracteres (en `booking.ts` y en `validate_` de `Code.gs`); el script los une solo para el título del evento.
 - **Formulario de citas**: `src/features/booking/BookingForm.tsx` (lógica en `booking.ts`) → POST (text/plain, JSON) a una aplicación web de Google Apps Script
   (`integrations/google-calendar/`) que crea el evento en Google Calendar. URL en `VITE_BOOKING_ENDPOINT` (copiar `.env.example` a `.env.local` en desarrollo o `.env.production` al compilar).

@@ -259,13 +259,6 @@
   animation-play-state: running;
 }
 
-html[data-motion='paused'] .benefit-grid__item:hover .siri::before,
-html[data-motion='paused'] .benefit-grid__item:hover .siri::after,
-html[data-motion='paused'] .benefit-grid__item:focus-within .siri::before,
-html[data-motion='paused'] .benefit-grid__item:focus-within .siri::after {
-  animation-play-state: paused !important;
-}
-
 .benefit-card__title {
   color: var(--color-ink-strong);
   font-size: 1.4rem;
@@ -317,13 +310,8 @@ html[data-motion='paused'] .benefit-grid__item:focus-within .siri::after {
   }
 }
 
-/* Quieto con "reducir movimiento" y con "Pausar animaciones" (si no, quedaría a medio sacudir). */
-@media (prefers-reduced-motion: reduce) {
-  .benefit-card__badge {
-    animation: none;
-  }
-}
-
+/* Con "reducir movimiento" ya lo cubre preferences.css (una iteración de 0.01 ms). Con "Pausar animaciones" se quedaría
+   a medio sacudir, así que se apaga del todo. */
 html[data-motion='paused'] .benefit-card__badge {
   animation: none;
 }

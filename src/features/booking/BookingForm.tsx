@@ -127,7 +127,7 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       firstVisit: fields.firstVisit === 'si',
       comments: fields.comments,
       consent: true,
-      website: fields.website,
+      hp_x: fields.hp_x,
       source: window.location.href,
     }
 
@@ -141,7 +141,7 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       requestAnimationFrame(() => successRef.current?.focus())
     }
 
-    if (payload.website) return showSuccess()
+    if (payload.hp_x) return showSuccess()
     // Sin Apps Script conectado (vista previa): no se envía nada, solo se muestra la confirmación.
     if (!isBookingConfigured) return showSuccess(true)
 
@@ -356,7 +356,7 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
         <div className="hp-field" aria-hidden="true">
           <label>
             Sitio web
-            <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+            <input type="text" name="hp_x" tabIndex={-1} autoComplete="off" />
           </label>
         </div>
 

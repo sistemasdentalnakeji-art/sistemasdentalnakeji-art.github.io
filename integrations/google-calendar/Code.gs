@@ -19,7 +19,7 @@ const CONFIG = {
   SLOTS: ['09:00', '10:00', '11:00', '12:00', '13:00', '15:00', '16:00', '17:00'],
   /** Hasta cuántos días adelante se aceptan solicitudes. */
   DAYS_AHEAD: 60,
-  /** Rechazar si ya hay un evento en ese horario. */
+  /** Rechazar si ya hay una cita confirmada en ese horario (las solicitudes pendientes, en amarillo, no bloquean). */
   CHECK_CONFLICTS: true,
   /** Correo que recibe un aviso por cada solicitud (opcional). */
   NOTIFY_EMAIL: '',
@@ -45,6 +45,12 @@ const CONFIG = {
     'Periodoncia',
     'Extracciones simples y de juicio',
   ],
+  /** Páginas desde donde se acepta el campo "source" (cualquier otra cosa se guarda como "—"). */
+  SOURCE_PREFIXES: [
+    'https://nakejidental.com/',
+    'https://www.nakejidental.com/',
+    'https://sistemasdentalnakeji-art.github.io/',
+  ],
   /** Límite global de solicitudes por hora (frena que un script llene el calendario). */
   MAX_REQUESTS_PER_HOUR: 30,
   /** Horas en las que un mismo teléfono no puede pedir otra cita. */
@@ -56,19 +62,11 @@ function doPost(e) {
     const data = JSON.parse((e && e.postData && e.postData.contents) || '{}');
 
     // Trampa anti-spam: si el campo oculto viene lleno, se responde "ok" sin crear nada.
-    if (data.website) return json_({ ok: true });
+    // Se llama hp_x (y no "website", "url"…) para que el autocompletado del navegador no lo rellene.
+    if (data.hp_x) return json_({ ok: true });
 
     const errors = validate_(data);
     if (errors.length) return json_({ ok: false, error: 'invalid', fields: errors });
-
-    // Límites anti-abuso (se guardan unas horas en la caché del script).
-    const cache = CacheService.getScriptCache();
-    const hourKey = 'count-' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMddHH');
-    const phoneKey = 'phone-' + String(data.phone).replace(/\D/g, '');
-    const requestsThisHour = Number(cache.get(hourKey) || 0);
-    if (requestsThisHour >= CONFIG.MAX_REQUESTS_PER_HOUR || cache.get(phoneKey)) {
-      return json_({ ok: false, error: 'limit' });
-    }
 
     const start = toDate_(data.date, data.time);
     const end = new Date(start.getTime() + CONFIG.DURATION_MINUTES * 60 * 1000);
@@ -77,16 +75,28 @@ function doPost(e) {
       : CalendarApp.getDefaultCalendar();
     if (!calendar) throw new Error('Calendario no encontrado: revisa CALENDAR_ID');
 
-    // Evita que dos solicitudes simultáneas ocupen el mismo horario.
+    // Los límites se leen y se escriben dentro del candado: dos solicitudes simultáneas no pasan ambas el tope.
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
     try {
-      // Los eventos de todo el día (cumpleaños, festivos) no ocupan horario.
-      const busy = calendar.getEvents(start, end).filter((event) => !event.isAllDayEvent());
+      const cache = CacheService.getScriptCache();
+      const hourKey = 'count-' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMddHH');
+      const phoneKey = 'phone-' + String(data.phone).replace(/\D/g, '');
+      const requestsThisHour = Number(cache.get(hourKey) || 0);
+      if (requestsThisHour >= CONFIG.MAX_REQUESTS_PER_HOUR || cache.get(phoneKey)) {
+        return json_({ ok: false, error: 'limit' });
+      }
+
+      // Los eventos de todo el día (cumpleaños, festivos) y las solicitudes pendientes no ocupan horario: así un
+      // script no puede bloquear todos los horarios con solicitudes falsas.
+      const busy = calendar
+        .getEvents(start, end)
+        .filter((event) => !event.isAllDayEvent() && event.getColor() !== CONFIG.EVENT_COLOR);
       if (CONFIG.CHECK_CONFLICTS && busy.length > 0) {
         return json_({ ok: false, error: 'busy' });
       }
 
+      const source = clean_(data.source);
       const event = calendar.createEvent(`Solicitud de cita: ${clean_(data.service)} — ${fullName_(data)}`, start, end, {
         description: [
           'Solicitud enviada desde el sitio web (pendiente de confirmar).',
@@ -100,7 +110,7 @@ function doPost(e) {
           `Comentarios: ${clean_(data.comments) || '—'}`,
           '',
           `Aceptó el aviso de privacidad: Sí`,
-          `Página: ${clean_(data.source)}`,
+          `Página: ${CONFIG.SOURCE_PREFIXES.some((prefix) => source.indexOf(prefix) === 0) ? source : '—'}`,
         ].join('\n'),
       });
       event.setColor(CONFIG.EVENT_COLOR);
@@ -141,10 +151,13 @@ function validate_(data) {
 
   if (text(data.firstName).length < 2 || text(data.firstName).length > 50) errors.push('firstName');
   if (text(data.lastName).length < 2 || text(data.lastName).length > 50) errors.push('lastName');
-  const digits = text(data.phone).replace(/\D/g, '');
-  if (digits.length < 10 || digits.length > 15) errors.push('phone');
-  if (text(data.email) && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(text(data.email))) errors.push('email');
+  // Solo dígitos y los signos normales de un teléfono: sin letras ni etiquetas HTML.
+  if (!/^[+\d\s()-]{10,20}$/.test(text(data.phone))) errors.push('phone');
+  if (text(data.email) && (text(data.email).length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(text(data.email)))) {
+    errors.push('email');
+  }
   if (CONFIG.SERVICES.indexOf(text(data.service)) === -1) errors.push('service');
+  if (typeof data.firstVisit !== 'boolean') errors.push('firstVisit');
   if (text(data.comments).length > 500) errors.push('comments');
   if (data.consent !== true) errors.push('consent');
   if (CONFIG.SLOTS.indexOf(text(data.time)) === -1) errors.push('time');
@@ -175,8 +188,9 @@ function fullName_(data) {
   return clean_(data.firstName) + ' ' + clean_(data.lastName);
 }
 
+/** Quita caracteres de control y `<` `>` (Calendar muestra HTML en la descripción) y acota el largo. */
 function clean_(value) {
-  return String(value || '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, 500);
+  return String(value || '').replace(/[\u0000-\u001f<>]/g, ' ').trim().slice(0, 500);
 }
 
 function json_(payload) {

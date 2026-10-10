@@ -24,7 +24,7 @@ export interface BookingFields {
   comments: string
   consent: boolean
   /** Trampa anti-spam: debe llegar vacía. */
-  website: string
+  hp_x: string
 }
 
 export function readForm(formData: FormData): BookingFields {
@@ -40,7 +40,7 @@ export function readForm(formData: FormData): BookingFields {
     firstVisit: text('firstVisit'),
     comments: text('comments'),
     consent: formData.get('consent') === 'on',
-    website: String(formData.get('website') ?? ''),
+    hp_x: String(formData.get('hp_x') ?? ''),
   }
 }
 
@@ -90,7 +90,9 @@ export function validate(fields: BookingFields, today: string): FieldErrors {
   if (fields.lastName.length < 2) errors.lastName = 'Escribe tus apellidos.'
 
   const digits = fields.phone.replace(/\D/g, '')
-  if (digits.length < 10 || digits.length > 15) errors.phone = 'Escribe un teléfono de al menos 10 dígitos.'
+  if (digits.length < 10 || digits.length > 15 || !/^[+\d\s()-]+$/.test(fields.phone.trim())) {
+    errors.phone = 'Escribe un teléfono de al menos 10 dígitos, solo con números.'
+  }
 
   if (fields.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(fields.email)) errors.email = 'Revisa el formato del correo.'
 
