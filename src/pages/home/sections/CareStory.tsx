@@ -211,13 +211,19 @@ const needsScrub = () =>
  * pantalla) y lo deja en `--story-p`. Devuelve `true` cuando está activo. Con "reducir movimiento" no se activa.
  * Para probarlo en un navegador moderno: añadir `?story-scrub` a la dirección.
  */
-function useScrollScrub(areaRef: RefObject<HTMLDivElement | null>) {
+function useScrollScrub(areaRef: RefObject<HTMLDivElement | null>, threadD?: string) {
   // En el servidor (prerender) vale false; ya en el navegador se calcula una vez (sin setState dentro de un efecto).
   const scrub = useSyncExternalStore(noSubscribe, needsScrub, () => false)
 
   useEffect(() => {
     const area = areaRef.current
     if (!area || !scrub) return
+
+    // La punta (diente) se coloca con JS sobre la misma curva: `offset-path` no es fiable en todos los navegadores (en el
+    // iPhone del cliente el diente salía fuera del trazo). `getPointAtLength` da el punto exacto de la curva.
+    const curve = threadD ? document.createElementNS('http://www.w3.org/2000/svg', 'path') : null
+    curve?.setAttribute('d', threadD ?? '')
+    const length = curve ? curve.getTotalLength() : 0
 
     let frame = 0
     const update = () => {
@@ -227,6 +233,12 @@ function useScrollScrub(areaRef: RefObject<HTMLDivElement | null>) {
       const cover = (end - top) / (height + end)
       const progress = Math.min(1, Math.max(0, (cover - 0.12) / 0.68))
       area.style.setProperty('--story-p', progress.toFixed(4))
+      if (curve) {
+        const point = curve.getPointAtLength(progress * length)
+        area.style.setProperty('--tip-x', `${point.x.toFixed(1)}px`)
+        area.style.setProperty('--tip-y', `${point.y.toFixed(1)}px`)
+        area.style.setProperty('--tip-o', Math.min(1, progress / 0.06).toFixed(3))
+      }
     }
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update)
@@ -242,20 +254,20 @@ function useScrollScrub(areaRef: RefObject<HTMLDivElement | null>) {
       cancelAnimationFrame(frame)
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
-      area.style.removeProperty('--story-p')
+      for (const name of ['--story-p', '--tip-x', '--tip-y', '--tip-o']) area.style.removeProperty(name)
     }
-  }, [areaRef, scrub])
+  }, [areaRef, scrub, threadD])
 
   return scrub
 }
 
 export function CareStory() {
   const [areaRef, size] = useAreaSize()
-  const scrub = useScrollScrub(areaRef)
   const scaleX = size ? size.width / 100 : 1
   const scaleY = size ? size.height / 100 : 1
   const joints = size && size.width < NARROW_AREA ? THREAD_JOINTS_NARROW : THREAD_JOINTS
   const thread: Line[] = [{ a: threadPath(joints, 0, scaleX, scaleY), b: threadPath(joints, 0.2, scaleX, scaleY) }]
+  const scrub = useScrollScrub(areaRef, size ? thread[0].a : undefined)
 
   return (
     <Band tone="tint" className="story" labelledBy="historia-titulo">
