@@ -502,7 +502,7 @@ html[data-motion='paused'] .benefit-card__badge {
    cursor por el botón el talón se arranca por la línea punteada y cada pieza queda marcada con su contorno punteado,
    en el verde de WhatsApp (el de las tarjetas es rojo, como una promoción). */
 .benefits-cta {
-  --wa-green: #25d366; /* verde oficial de WhatsApp */
+  --wa-green: var(--color-whatsapp);
   --stub: 112px;
   --cta-mid: color-mix(in srgb, var(--color-ink), var(--color-night));
   position: relative;

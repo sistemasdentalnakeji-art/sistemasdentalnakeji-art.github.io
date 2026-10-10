@@ -28,7 +28,7 @@ export interface FooterLink {
   schedule?: boolean
 }
 
-export interface FooterColumn {
+interface FooterColumn {
   id: string
   title: string
   links: FooterLink[]

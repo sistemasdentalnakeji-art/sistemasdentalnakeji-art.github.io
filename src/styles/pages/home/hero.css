@@ -165,14 +165,14 @@
 
 /* WhatsApp en verde. El texto es azul marino: el blanco sobre este verde da solo 1.98:1 (el azul, ~9:1). */
 .hero__cta-alt {
-  border-color: #25d366;
-  background: #25d366;
+  border-color: var(--color-whatsapp);
+  background: var(--color-whatsapp);
   color: var(--color-night);
 }
 
 .hero__cta-alt:hover {
-  border-color: #1ebe5b;
-  background: #1ebe5b;
+  border-color: var(--color-whatsapp-hover);
+  background: var(--color-whatsapp-hover);
 }
 
 .hero--light .hero__cta {

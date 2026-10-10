@@ -3,14 +3,14 @@
 
 import { BOOKING } from '@/config/booking'
 
-export const FIELD_NAMES = ['firstName', 'lastName', 'phone', 'email', 'service', 'date', 'time', 'firstVisit', 'consent'] as const
+const FIELD_NAMES = ['firstName', 'lastName', 'phone', 'email', 'service', 'date', 'time', 'firstVisit', 'consent'] as const
 export type FieldName = (typeof FIELD_NAMES)[number]
 export type FieldErrors = Partial<Record<FieldName, string>>
 
 export const isFieldName = (value: string): value is FieldName => (FIELD_NAMES as readonly string[]).includes(value)
 
 /** Valores del formulario ya leídos y recortados. */
-export interface BookingFields {
+interface BookingFields {
   /** Nombre(s) y apellidos van separados para poder guardarlos en columnas distintas (Google Sheets). */
   firstName: string
   lastName: string

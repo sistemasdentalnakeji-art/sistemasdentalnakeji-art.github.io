@@ -35,7 +35,7 @@ export interface NavMenu {
   overview?: { label: string; href: string }
 }
 
-export type NavItem = NavLink | NavMenu
+type NavItem = NavLink | NavMenu
 
 export const MAIN_NAV: NavItem[] = [
   { kind: 'link', id: 'inicio', label: HOME.label, href: HOME.path },

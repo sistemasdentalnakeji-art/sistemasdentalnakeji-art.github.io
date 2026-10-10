@@ -11,7 +11,7 @@
 // Para que la animación se vea igual conviene mantener el largo parecido: ~8 palabras en los mensajes 1 y 3, ~11 en el 2.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export interface StorySegment {
+interface StorySegment {
   text: string
   accent?: boolean
   /** Texto cuyo ancho se deja en blanco antes del fragmento: la línea empieza justo debajo de esas palabras. */

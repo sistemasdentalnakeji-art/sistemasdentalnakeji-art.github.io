@@ -10,7 +10,7 @@ export interface Partner {
   logo?: { src: string; width: number; height: number }
 }
 
-export interface PartnerGroup {
+interface PartnerGroup {
   id: string
   title: string
   text: string

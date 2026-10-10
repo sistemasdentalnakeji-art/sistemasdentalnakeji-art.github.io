@@ -10,7 +10,7 @@ import { FIBERS_FRAGMENT, FRAGMENT, VERTEX } from '@/components/decor/auroraShad
 
 export type AuroraTheme = 'dark' | 'light'
 /** aurora: luces difusas (hero) · fibers: hilos de luz (footer). */
-export type AuroraEffect = 'aurora' | 'fibers'
+type AuroraEffect = 'aurora' | 'fibers'
 
 const SHADERS: Record<AuroraEffect, string> = { aurora: FRAGMENT, fibers: FIBERS_FRAGMENT }
 
