@@ -8,10 +8,13 @@
 //   subrayan con una línea fina; y un hilo de curvas (las mismas que las de la sección de Agendar: ondulan y las recorre
 //   una luz) se va cargando con el scroll de un mensaje al siguiente.
 // • Textos → src/data/story.ts.
-// • Movimiento y estilos → src/styles/pages/home/story.css (animaciones CSS ligadas al scroll, sin JavaScript).
+// • Movimiento y estilos → src/styles/pages/home/story.css (animaciones CSS ligadas al scroll). Navegadores sin
+//   `animation-timeline` (Safari anterior a 26, p. ej. iPhone 12): un efecto mide el scroll y pone `--story-p` (0 a 1) en el
+//   área; story.css lo usa para mover el hilo y el diente (clase `story--scrub`).
+// • En pantallas angostas el hilo usa otro trazado (THREAD_JOINTS_NARROW) que pasa por los huecos entre mensajes.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { Fragment, useEffect, useRef, useState, type CSSProperties } from 'react'
+import { Fragment, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type RefObject } from 'react'
 import { STORY, type StoryLines } from '@/data/story'
 import { AnimatedLines, type Line } from '@/components/decor/SectionDecor'
 import { Band } from '@/components/decor/Band'
@@ -33,16 +36,32 @@ const THREAD_JOINTS: [x: number, y: number, dx: number, dy: number][] = [
   [31, 105, -1, 0],
 ]
 
+// Pantallas angostas (celular): el texto ocupa casi todo el ancho, así que el hilo baja por los costados y cruza de un lado
+// al otro por los huecos entre mensajes (≈ 33–48 % y 71–86 % de la altura), y termina bajo el último.
+const THREAD_JOINTS_NARROW: typeof THREAD_JOINTS = [
+  [74, -14, 0.3, 1],
+  [93, 14, 0, 1],
+  [58, 40.5, -1, 0.05],
+  [7, 60, 0, 1],
+  [45, 79, 1, 0.05],
+  [93, 90, 0, 1],
+  [62, 108, -1, 0.02],
+  [28, 107, -1, 0],
+]
+
+/** Ancho del área (px) por debajo del cual se usa el trazado de celular. */
+const NARROW_AREA = 740
+
 /** `scaleX`/`scaleY` pasan la curva de 0–100 a píxeles (el ancho y alto del área divididos entre 100). */
-const threadPath = (wave: number, scaleX = 1, scaleY = 1) => {
+const threadPath = (joints: typeof THREAD_JOINTS, wave: number, scaleX = 1, scaleY = 1) => {
   const turn = (dx: number, dy: number, index: number) => {
     const angle = wave * (index % 2 ? 1 : -1)
     return [dx * Math.cos(angle) - dy * Math.sin(angle), dx * Math.sin(angle) + dy * Math.cos(angle)]
   }
   const n = (x: number, y: number) => `${(x * scaleX).toFixed(2)} ${(y * scaleY).toFixed(2)}`
-  return THREAD_JOINTS.map(([x, y, dx, dy], i) => {
+  return joints.map(([x, y, dx, dy], i) => {
     if (i === 0) return `M${n(x, y)}`
-    const [px, py, pdx, pdy] = THREAD_JOINTS[i - 1]
+    const [px, py, pdx, pdy] = joints[i - 1]
     const reach = Math.hypot(x - px, y - py) * 0.4
     const [ox, oy] = turn(pdx, pdy, i - 1)
     const [ix, iy] = turn(dx, dy, i)
@@ -179,15 +198,68 @@ function StoryText({ lines }: { lines: StoryLines }) {
   ))
 }
 
+const noSubscribe = () => () => {}
+
+/** ¿Hace falta el respaldo? Sí si el navegador no tiene `animation-timeline` (o con `?story-scrub`), salvo "reducir movimiento". */
+const needsScrub = () =>
+  (new URLSearchParams(window.location.search).has('story-scrub') || !CSS.supports('animation-timeline', 'view()')) &&
+  !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+/**
+ * Respaldo del scroll para navegadores sin `animation-timeline` (Safari anterior a 26): calcula el mismo avance que la línea
+ * de tiempo `view()` de story.css (hilo y diente: del 12 % al 80 % del recorrido, ignorando el 30 % inferior de la
+ * pantalla) y lo deja en `--story-p`. Devuelve `true` cuando está activo. Con "reducir movimiento" no se activa.
+ * Para probarlo en un navegador moderno: añadir `?story-scrub` a la dirección.
+ */
+function useScrollScrub(areaRef: RefObject<HTMLDivElement | null>) {
+  // En el servidor (prerender) vale false; ya en el navegador se calcula una vez (sin setState dentro de un efecto).
+  const scrub = useSyncExternalStore(noSubscribe, needsScrub, () => false)
+
+  useEffect(() => {
+    const area = areaRef.current
+    if (!area || !scrub) return
+
+    let frame = 0
+    const update = () => {
+      frame = 0
+      const { top, height } = area.getBoundingClientRect()
+      const end = window.innerHeight * 0.7
+      const cover = (end - top) / (height + end)
+      const progress = Math.min(1, Math.max(0, (cover - 0.12) / 0.68))
+      area.style.setProperty('--story-p', progress.toFixed(4))
+    }
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    // El área puede cambiar de alto sin scroll ni resize (p. ej. al cargar las fuentes): se recalcula el avance.
+    const resizeObserver = new ResizeObserver(onScroll)
+    resizeObserver.observe(area)
+    return () => {
+      resizeObserver.disconnect()
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      area.style.removeProperty('--story-p')
+    }
+  }, [areaRef, scrub])
+
+  return scrub
+}
+
 export function CareStory() {
   const [areaRef, size] = useAreaSize()
+  const scrub = useScrollScrub(areaRef)
   const scaleX = size ? size.width / 100 : 1
   const scaleY = size ? size.height / 100 : 1
-  const thread: Line[] = [{ a: threadPath(0, scaleX, scaleY), b: threadPath(0.2, scaleX, scaleY) }]
+  const joints = size && size.width < NARROW_AREA ? THREAD_JOINTS_NARROW : THREAD_JOINTS
+  const thread: Line[] = [{ a: threadPath(joints, 0, scaleX, scaleY), b: threadPath(joints, 0.2, scaleX, scaleY) }]
 
   return (
     <Band tone="tint" className="story" labelledBy="historia-titulo">
-      <div ref={areaRef} className="container story__inner">
+      <div ref={areaRef} className={scrub ? 'container story__inner story--scrub' : 'container story__inner'}>
         {/* Hilo decorativo: curva animada como las de Agendar, que se va dibujando con el scroll (máscara .decor-reveal)
             con el diente en la punta. */}
         <AnimatedLines

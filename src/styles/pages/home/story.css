@@ -132,6 +132,13 @@
   pointer-events: none;
 }
 
+/* Celular: diente más chico para que no se corte contra el borde de la pantalla al pasar por los costados. */
+@media (max-width: 767.98px) {
+  .story__tip {
+    width: 48px;
+  }
+}
+
 .story__tip[data-ready] {
   visibility: visible;
 }
@@ -422,6 +429,26 @@ path.story__tooth-gloss {
     .story__item--up {
       --from-y: 200px;
     }
+  }
+}
+
+/* Respaldo para navegadores sin `animation-timeline` (Safari anterior a 26): CareStory.tsx mide el scroll y deja el avance
+   (0 a 1) en `--story-p`. Una animación pausada con retraso negativo se "arrastra" a ese punto: -1s × avance de una de 1s.
+   Mismas animaciones que arriba (hilo, punta y mecer del diente); sin soporte y sin JS (prerender) todo queda en su estado final. */
+@media (prefers-reduced-motion: no-preference) {
+  .story--scrub .story__thread .decor-reveal {
+    animation: story-reveal 1s linear both paused;
+    animation-delay: calc(var(--story-p, 0) * -1s);
+  }
+
+  .story--scrub .story__tooth-body {
+    animation: story-tooth-sway 1s ease-in-out both paused;
+    animation-delay: calc(var(--story-p, 0) * -1s);
+  }
+
+  .story--scrub .story__tip {
+    animation: story-tooth-path 1s linear both paused;
+    animation-delay: calc(var(--story-p, 0) * -1s);
   }
 }
 
