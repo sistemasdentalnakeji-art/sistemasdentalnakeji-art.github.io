@@ -2,14 +2,13 @@
 // CONTENIDO DEL FOOTER (pie de página de todas las páginas)
 //
 // Cómo editar:
-//  • Cambiar el texto bajo el logo → FOOTER.description.
 //  • Agregar un enlace a una columna → añade { label: 'Texto', href: '/ruta/' } a su lista `links`.
 //    - Para una página que ya existe en config/routes.ts, usa su ruta (p. ej. CONTACT.path).
 //    - Para un enlace externo, usa la URL completa: { label: 'Blog', href: 'https://…' }.
 //  • Agregar una columna nueva → añade otro objeto a FOOTER_COLUMNS (id único, título y enlaces).
 //    En escritorio el footer usa 5 columnas fijas: con una columna más, ajusta
 //    grid-template-columns en styles/layout/footer.css (bloque "@media (min-width: 1080px)").
-//  • Cambiar los servicios listados → se toman de los 8 primeros de SERVICE_ROUTES (config/routes.ts).
+//  • Cambiar los servicios listados → edita FOOTER_SERVICE_PATHS (4 rutas de SERVICE_ROUTES, config/routes.ts).
 //
 // La columna "Contacto" (dirección, teléfonos, correo) se llena sola con config/site.ts.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -34,8 +33,16 @@ interface FooterColumn {
   links: FooterLink[]
 }
 
-/** Servicios del footer: los 8 primeros de SERVICE_ROUTES (columnas 1 y 2); el resto, en "Ver todos los servicios". */
-const serviceLinks: FooterLink[] = SERVICE_ROUTES.slice(0, 8).map((route) => ({ label: route.label, href: route.path }))
+/** Servicios del footer: solo estos 4 (All on 4 y All on 6 no van juntos); el resto, en "Ver todos los servicios". */
+const FOOTER_SERVICE_PATHS = [
+  '/implantes-dentales-en-tijuana/',
+  '/all-in-4-implants-en-tijuana/',
+  '/coronas-en-tijuana/',
+  '/carillasdentalesentijuana/',
+]
+const serviceLinks: FooterLink[] = SERVICE_ROUTES.filter((route) => FOOTER_SERVICE_PATHS.includes(route.path)).map(
+  (route) => ({ label: route.label, href: route.path }),
+)
 
 export const FOOTER_COLUMNS: FooterColumn[] = [
   {

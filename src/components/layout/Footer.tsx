@@ -9,12 +9,11 @@
 
 import { ariaCurrent, HOME, PRIVACY, scheduleHref } from '@/config/routes'
 import { SITE } from '@/config/site'
-import { FOOTER, FOOTER_COLUMNS, type FooterLink } from '@/data/footer'
+import { FOOTER_COLUMNS, type FooterLink } from '@/data/footer'
 import { AuroraBackground } from '@/components/decor/AuroraBackground'
 import { SectionDecor } from '@/components/decor/SectionDecor'
 import { AddressText } from '@/components/ui/AddressText'
 import { Icon } from '@/components/ui/Icon'
-import { Logo } from '@/components/layout/Logo'
 import { MotionToggle } from '@/components/ui/MotionToggle'
 import { SocialLinks } from '@/components/ui/SocialLinks'
 
@@ -40,13 +39,11 @@ export function Footer({ currentPath }: FooterProps) {
       <SectionDecor variant="wave" position="top" inverse />
       <div className="container">
         <div className="footer-grid">
-          {/* Marca: logo, descripción, redes sociales y botón de agenda */}
+          {/* Marca: isotipo (corazón) en blanco, a la izquierda de las listas */}
           <div className="footer-brand">
-            <Logo isHome={currentPath === HOME.path} loading="lazy" />
-            <p className="footer-brand__text">{FOOTER.description}</p>
-            <SocialLinks className="footer-social" />
-            <a className="btn btn--primary btn--sm" href={agendaHref}>
-              Agendar visita
+            <a className="footer-brand__mark" href={HOME.path}>
+              <img src="/images/logo-isotipo-blanco.png" width={321} height={284} alt="" loading="lazy" decoding="async" />
+              <span className="footer-brand__name">{SITE.name}</span>
             </a>
           </div>
 
@@ -101,6 +98,7 @@ export function Footer({ currentPath }: FooterProps) {
           <p>
             © <span suppressHydrationWarning>{YEAR}</span> {SITE.name}. Todos los derechos reservados.
           </p>
+          <SocialLinks className="footer-social" iconSize={26} />
           <div className="footer-bottom__links">
             <MotionToggle />
             <a href={PRIVACY.path} aria-current={ariaCurrent(PRIVACY.path, currentPath)}>

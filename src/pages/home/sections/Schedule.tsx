@@ -19,12 +19,14 @@ import { SectionIntro } from '@/components/ui/SectionIntro'
 interface ScheduleProps {
   /** Servicio preseleccionado en el formulario (se usa en las páginas de servicio). */
   service?: string
+  /** Curvas animadas de fondo. Las páginas de servicio las apagan (fondo sin animación). */
+  flow?: boolean
 }
 
 /** También es la sección 3 de las páginas de servicio (src/pages/service/ServicePage.tsx). */
-export function Schedule({ service }: ScheduleProps) {
+export function Schedule({ service, flow = true }: ScheduleProps) {
   return (
-    <Band id={SCHEDULE_ANCHOR} tone="white" labelledBy="agendar-titulo" waveTop="plain" flow="schedule">
+    <Band id={SCHEDULE_ANCHOR} tone="white" labelledBy="agendar-titulo" waveTop="plain" flow={flow ? 'schedule' : undefined}>
       <div className="container">
         <div className="schedule">
           <div className="schedule__intro">
@@ -44,7 +46,7 @@ export function Schedule({ service }: ScheduleProps) {
             <div className="schedule__alt">
               <p className="schedule__alt-title">{SCHEDULE.alternative}</p>
               <div className="schedule__alt-actions">
-                <ExternalLink className="btn btn--secondary" href={SITE.social.whatsapp}>
+                <ExternalLink className="btn btn--secondary schedule__whatsapp" href={SITE.social.whatsapp}>
                   <Icon name="whatsapp" size={20} />
                   {SCHEDULE.whatsappCta}
                 </ExternalLink>

@@ -1,74 +1,298 @@
 /* ==========================================================================
-   Aseguranzas y convenios
+   Aseguranzas y convenios: dos "cintas" continuas (Partners.tsx)
+   Aseguranzas avanza hacia la izquierda y Convenios hacia la derecha. Solo transform (GPU).
+   "Pausar animaciones" lo cubre global/preferences.css; "reducir movimiento" se resuelve abajo.
    ========================================================================== */
-.partner-groups {
+.rails {
   display: grid;
-  gap: 16px;
+  gap: clamp(20px, 3vw, 32px);
 }
 
-.partner-group {
+.rail {
   display: grid;
   gap: 20px;
-  padding: clamp(20px, 3vw, 32px);
+  align-items: center;
+  --rail-pad: clamp(20px, 3vw, 34px);
+  padding: var(--rail-pad);
+  border: 1px solid var(--color-sky-strong);
   border-radius: var(--radius-card);
-  background: var(--color-tint);
+  /* Luz celeste en la esquina del panel izquierdo sobre el tono de la banda. */
+  background:
+    radial-gradient(circle at 0 0, rgba(123, 195, 235, 0.32), transparent 52%),
+    var(--color-tint);
+  overflow: hidden;
 }
 
-.partner-group__intro {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+/* Aseguranzas: fondo claro con borde; Convenios: fondo blanco con borde punteado, para distinguirlas de un vistazo. */
+.rail--convenios {
+  border-style: dashed;
+  background:
+    radial-gradient(circle at 0 0, rgba(123, 195, 235, 0.2), transparent 52%),
+    var(--color-white);
 }
 
-.partner-group__title {
-  font-size: 1.5rem;
-}
-
-.partner-group__intro .text-link {
-  margin-top: 14px;
-}
-
-.partner-card {
+/* Panel izquierdo: icono con degradado, chip, título grande y texto. En celular va centrado; el botón va después de la cinta. */
+.rail__head {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 12px;
-  height: 100%;
-  min-height: 132px;
-  padding: 20px 12px;
-  border-radius: var(--radius-card);
-  background: var(--color-white);
   text-align: center;
 }
 
-.partner-card__placeholder {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  max-width: 140px;
-  height: 56px;
-  border-radius: var(--radius-tag);
-  background: var(--color-porcelain);
-  color: #7d8aa1;
+/* Icono y chip en una fila (el chip a la derecha del icono), centrados en celular. */
+.rail__top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 100%;
 }
 
-.partner-card__logo {
-  width: auto;
-  max-width: 140px;
-  max-height: 56px;
-  object-fit: contain;
+.rail__top .rail__icon {
+  flex: none;
+  width: 48px;
+  height: 48px;
 }
 
-.partner-card__name {
-  color: var(--color-ink);
-  font-weight: 600;
+/* Celular: el chip cabe en una sola línea junto al icono (la etiqueta más larga es "Beneficios para tu equipo"). */
+.rail__badge {
+  white-space: nowrap;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
 }
 
 @media (min-width: 960px) {
-  .partner-group {
-    grid-template-columns: minmax(220px, 0.8fr) 2fr;
-    align-items: center;
-    gap: 32px;
+  .rail__top .rail__icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .rail__badge {
+    white-space: normal;
+    font-size: 0.7rem;
+    letter-spacing: 0.07em;
+  }
+}
+
+.rail__cta {
+  justify-self: center;
+  margin-top: 4px;
+}
+
+.rail__icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--color-brand), var(--color-ink));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 12px 24px -12px rgba(42, 66, 105, 0.7);
+  color: var(--color-white);
+}
+
+/* Chip con punto de color de marca. */
+.rail__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 5px 12px 5px 10px;
+  border: 1px solid var(--color-sky-strong);
+  border-radius: 18px;
+  background: var(--color-white);
+  color: var(--color-brand);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.rail__badge::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3fb5c8;
+  box-shadow: 0 0 0 3px rgba(63, 181, 200, 0.25);
+}
+
+.rail__title {
+  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.25rem);
+  letter-spacing: -0.03em;
+  color: var(--color-ink);
+}
+
+.rail__text {
+  max-width: 38ch;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+/* Ventana de la cinta: los bordes se desvanecen. */
+.rail__marquee {
+  min-width: 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.rail__track {
+  display: flex;
+  width: max-content;
+  animation: rail-scroll 38s linear infinite;
+  will-change: transform;
+}
+
+.rail__marquee[data-dir='right'] .rail__track {
+  animation-direction: reverse;
+}
+
+.rail__list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@keyframes rail-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Placa: logo o marcador con icono, y el nombre. El margen (no gap) mantiene exacto el desplazamiento de -50 %. */
+.plate {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 12px;
+  width: 220px;
+  height: 84px;
+  margin-right: 16px;
+  padding: 0 18px 0 14px;
+  border-radius: 20px;
+  background: var(--color-white);
+  box-shadow: 0 1px 0 rgba(42, 66, 105, 0.06), 0 8px 20px -12px rgba(42, 66, 105, 0.35);
+  color: var(--color-ink);
+}
+
+.plate__mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--color-tint);
+  color: var(--color-brand);
+}
+
+.plate__mark img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+.plate__name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* Logo suelto (aseguranzas): sin tarjeta ni sombra; el área se iguala con la proporción (--ar) sea ancho o alto. */
+.plate--logo {
+  justify-content: center;
+  width: 370px;
+  height: 148px;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* Solo los logos con su propio cuadro de fondo (Xolo Girls) llevan esquinas redondas: en los demás recortaría las esquinas. */
+.plate--logo img.is-framed {
+  border-radius: 12px;
+}
+
+.plate--logo img {
+  /* --w: ancho real del archivo; un logo chico no se estira más allá de él (se pixelaría). */
+  width: min(312px, calc(94px * sqrt(var(--ar, 4))), calc(var(--w, 480) * 1px));
+  height: auto;
+  max-height: 120px;
+  object-fit: contain;
+}
+
+@media (min-width: 960px) {
+  .rail {
+    grid-template-columns: minmax(260px, 0.85fr) 2fr;
+    grid-template-rows: auto auto;
+    gap: 40px;
+  }
+
+  /* Escritorio: panel a la izquierda (título y botón apilados) y la cinta ocupa las dos filas. */
+  .rail__head {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: stretch;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .rail__top {
+    justify-content: flex-start;
+  }
+
+  /* La línea va de borde a borde de la tarjeta: el encabezado se extiende por el padding y ocupa las dos filas. */
+  .rail__head {
+    margin-block: calc(-1 * var(--rail-pad));
+    padding: var(--rail-pad) 40px calc(var(--rail-pad) + 64px) 0;
+    border-right: 1px dashed var(--color-brand);
+  }
+
+  .rail__marquee {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  /* Botón fijo abajo a la izquierda: el encabezado deja espacio para él, así no se empalma con el texto. */
+  .rail {
+    position: relative;
+  }
+
+  .rail__cta {
+    position: absolute;
+    left: var(--rail-pad);
+    bottom: var(--rail-pad);
+  }
+
+  .rail__text {
+    margin-inline: 0;
+  }
+
+}
+
+/* Sin movimiento: la cinta se queda quieta, sin la copia, y se desplaza con el dedo o el trackpad. */
+@media (prefers-reduced-motion: reduce) {
+  .rail__marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .rail__track {
+    animation: none;
+  }
+
+  .rail__list--copy {
+    display: none;
   }
 }

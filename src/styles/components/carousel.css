@@ -1,5 +1,8 @@
 /* ==========================================================================
-   Carrusel (aseguranzas, convenios y reseñas)
+   Carrusel (reseñas, servicios destacados y promociones)
+   Cada carrusel solo cambia variables de la pista: --per-view (tarjetas completas por vista), --gap y --pad. Así el ancho
+   de la tarjeta, la separación y el relleno no se desfasan (la siguiente nunca asoma). --slide se puede fijar a mano
+   (promociones). Carousel.tsx avanza una página exacta: ancho útil + gap.
    ========================================================================== */
 .carousel {
   position: relative;
@@ -7,17 +10,26 @@
 }
 
 .carousel__track {
-  --slide: 80%;
+  --per-view: 1;
+  --gap: 16px;
+  --pad: 4px;
+  --slide: calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
   display: grid;
   grid-auto-columns: var(--slide);
   grid-auto-flow: column;
-  gap: 16px;
-  padding: 4px;
+  gap: var(--gap);
+  padding: var(--pad);
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
-  scroll-padding-inline: 4px;
+  scroll-padding-inline: var(--pad);
   scrollbar-width: none;
+}
+
+@media (min-width: 700px) {
+  .carousel__track {
+    --per-view: 2;
+  }
 }
 
 .carousel__track::-webkit-scrollbar {
@@ -35,9 +47,9 @@
 
 .carousel__controls {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 12px;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
 }
 
 .carousel__controls[hidden] {
@@ -75,24 +87,4 @@
   opacity: 0.4;
   box-shadow: none;
   cursor: default;
-}
-
-.carousel--partners .carousel__track {
-  --slide: calc((100% - 16px) / 2);
-}
-
-.carousel--reviews .carousel__track {
-  --slide: 86%;
-}
-
-@media (min-width: 600px) {
-  .carousel--partners .carousel__track {
-    --slide: calc((100% - 32px) / 3);
-  }
-}
-
-@media (min-width: 700px) {
-  .carousel--reviews .carousel__track {
-    --slide: calc((100% - 16px) / 2);
-  }
 }

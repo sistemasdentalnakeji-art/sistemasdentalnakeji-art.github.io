@@ -35,8 +35,7 @@ const empty = (path: string, label: string): RouteDef => ({
 
 /**
  * Página de servicio con la plantilla (hero + información + agenda).
- * Sigue en 'empty' (noindex) mientras la sección 2 tenga lorem ipsum; al tener los textos
- * definitivos, cambia su status a 'ready' para que se indexe y entre al sitemap.
+ * Sigue en 'empty' (noindex) hasta publicar: cambia su status a 'ready' para que se indexe y entre al sitemap.
  */
 const service = (path: string, label: string, seo: { title: string; description: string }): RouteDef => ({
   ...empty(path, label),
@@ -44,11 +43,16 @@ const service = (path: string, label: string, seo: { title: string; description:
   template: 'service',
 })
 
-export const SERVICES = empty('/servicios/', 'Servicios')
+export const SERVICES: RouteDef = {
+  ...empty('/servicios/', 'Servicios'),
+  title: 'Servicios dentales en Tijuana | Dental Nakeji',
+  description:
+    'Implantes, coronas, carillas, blanqueamiento, ortodoncia, limpieza, endodoncia y más servicios dentales en Tijuana. Conoce cada tratamiento en Dental Nakeji.',
+}
 
 /**
- * Submenú de Servicios: los 12 más importantes, de mayor a menor relevancia.
- * En escritorio el submenú llena primero la 1.ª columna (4 por columna), luego la 2.ª y la 3.ª.
+ * Servicios con página propia, de mayor a menor relevancia (los 12 del submenú van en 3 columnas de 4).
+ * El menú de Servicios usa 9 de ellos: ver MENU_SERVICE_PATHS en config/navigation.ts.
  * Prioridad acordada con los doctores + búsquedas más frecuentes (implantes, carillas, coronas).
  */
 export const SERVICE_ROUTES: RouteDef[] = [
@@ -84,11 +88,6 @@ export const SERVICE_ROUTES: RouteDef[] = [
     description:
       'Blanqueamiento dental en Tijuana, con valoración previa en la clínica. Agenda tu visita en Dental Nakeji, Zona Río.',
   }),
-  service('/cosmetica-dental-en-tijuana/', 'Cosmética dental', {
-    title: 'Cosmética dental en Tijuana | Dental Nakeji',
-    description:
-      'Cosmética dental en Tijuana: opciones para diseñar tu sonrisa. Agenda una valoración en Dental Nakeji, Zona Río.',
-  }),
   service('/limpieza-dental-en-tijuana/', 'Limpieza dental', {
     title: 'Limpieza dental en Tijuana | Dental Nakeji',
     description:
@@ -123,11 +122,6 @@ export const SERVICE_ROUTES: RouteDef[] = [
  * formulario de citas. Mismo orden de prioridad: de mayor a menor.
  */
 export const MORE_SERVICE_ROUTES: RouteDef[] = [
-  service('/diseno-de-sonrisa-en-tijuana/', 'Diseño de sonrisa', {
-    title: 'Diseño de sonrisa en Tijuana | Dental Nakeji',
-    description:
-      'Diseño de sonrisa en Tijuana: un plan a tu medida para mejorar la apariencia de tus dientes. Agenda una valoración en Dental Nakeji, Zona Río.',
-  }),
   service('/dentaduras-en-tijuana/', 'Dentaduras', {
     title: 'Dentaduras en Tijuana | Dental Nakeji',
     description:
@@ -154,7 +148,12 @@ export const INSURANCE = empty('/insurance/', 'Aseguranzas')
 export const PROMOTIONS_PAGE = empty('/nuestras-promociones/', 'Promociones')
 export const BENEFIT_ROUTES: RouteDef[] = [PROMOTIONS_PAGE, AGREEMENTS, INSURANCE]
 
-export const CONTACT = empty('/contacto/', 'Contacto')
+export const CONTACT: RouteDef = {
+  ...empty('/contacto/', 'Contacto'),
+  title: 'Contacto y ubicación | Dental Nakeji, Zona Río Tijuana',
+  description:
+    'Llama, escribe o visita Dental Nakeji en la Zona Río de Tijuana. Teléfonos de México y Estados Unidos, dirección y correo. Agenda tu cita.',
+}
 export const ABOUT = empty('/nosotros/', 'Nosotros')
 export const BLOG = empty('/blog/', 'Blog')
 /** Requerido por el formulario de citas (LFPDPPP). Falta el texto legal de la clínica. */

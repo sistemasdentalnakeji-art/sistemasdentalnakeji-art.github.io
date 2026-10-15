@@ -27,6 +27,25 @@
   color: var(--color-brand);
 }
 
+/* Contorno luminoso (.siri) de la fila y del ícono: el mismo de las tarjetas de servicios, más fino.
+   Sin contexto de apilamiento (el brillo va detrás con z-index -1). Con "reducir movimiento" se queda quieto (siri.css). */
+.contact-item.siri {
+  --siri-width: 2px;
+  --siri-blur: 4px;
+}
+
+.contact-item__icon.siri {
+  --siri-width: 2px;
+  --siri-blur: 4px;
+}
+
+/* Sin el "respiro" (escala y brillo) y con un resplandor corto: así no se encima con la fila vecina. */
+.contact-item.siri::before,
+.contact-item__icon.siri::before {
+  opacity: 0.6;
+  animation: siri-spin 3.4s linear infinite reverse;
+}
+
 .contact-item__body {
   display: flex;
   flex-direction: column;
@@ -100,23 +119,59 @@ a.contact-item__value:hover {
   background: var(--color-porcelain);
 }
 
+/* Recuadro de la tarjeta de ubicación (components/ui/LocationMap.tsx): mantiene el espacio que ocupaba el mapa de Google;
+   la tarjeta se centra y, al expandirse, lo llena por completo. */
 .contact__map {
-  min-height: 340px;
+  position: relative;
+  min-height: 360px;
   overflow: hidden;
   border-radius: var(--radius-card);
-  background: var(--color-porcelain);
+  background: var(--color-tint);
 }
 
-.contact__map iframe {
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-height: 340px;
-  border: 0;
+/* Una columna ancha (tableta): más alto, para que el plano recortado conserve el pin y su nombre a la vista. */
+@media (min-width: 600px) and (max-width: 959.98px) {
+  .contact__map {
+    min-height: 520px;
+  }
 }
 
 @media (min-width: 960px) {
   .contact {
     grid-template-columns: 1fr 1.1fr;
+  }
+}
+
+/* Celular y tableta (una columna): el mapa va entre el texto y las tarjetas de contacto.
+   .contact__info deja de ser caja (display: contents) para que sus hijos se ordenen en la columna. */
+@media (max-width: 959.98px) {
+  .contact__info {
+    display: contents;
+  }
+
+  .contact__map {
+    order: 1;
+  }
+
+  .contact address {
+    order: 2;
+    margin-top: 0;
+  }
+
+  .contact__social {
+    order: 3;
+  }
+}
+
+/* Celular: cerrado, el recuadro se ajusta a la tarjeta (140 px + pista); expandido, recupera la altura del escritorio
+   para que el plano no quede recortado. */
+@media (max-width: 599.98px) {
+  .contact__map {
+    min-height: 220px;
+    transition: min-height 0.7s cubic-bezier(0.22, 1.1, 0.36, 1);
+  }
+
+  .contact__map:has(.loc[data-expanded]) {
+    min-height: 360px;
   }
 }

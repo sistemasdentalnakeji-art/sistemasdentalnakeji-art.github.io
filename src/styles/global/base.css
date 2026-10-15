@@ -90,6 +90,25 @@ main:focus {
   outline: none;
 }
 
+/* Páginas cortas de una sola banda (Beneficios internas, páginas vacías): la banda se estira para que el footer
+   quede al fondo de la pantalla y no a media pantalla. */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+main:has(> .band:only-child) {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+}
+
+main > .band:only-child {
+  flex: 1 0 auto;
+}
+
 .container {
   width: 100%;
   max-width: calc(var(--container) + 2 * var(--gutter));

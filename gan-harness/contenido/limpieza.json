@@ -1,0 +1,45 @@
+{
+  "slug": "limpieza",
+  "path": "/limpieza-dental-en-tijuana/",
+  "highlights": [
+    "Retira sarro y placa acumulados.",
+    "Pulido de manchas superficiales.",
+    "Revisión de dientes y encías."
+  ],
+  "aboutTitle": "Limpieza dental profesional",
+  "aboutText": "El cepillo no siempre limpia todas las áreas. Una limpieza dental es una forma sencilla de cuidar la salud de tus dientes y encías para mantener una sonrisa fresca y saludable. Es un cuidado que realmente importa y que muchas personas omiten.",
+  "sources": [
+    {
+      "name": "MouthHealthy (ADA) - Glosario: profilaxis y extracción",
+      "url": "https://www.mouthhealthy.org/glossary",
+      "used_for": "Definición de profilaxis (retirar placa, sarro y manchas) como procedimiento de consultorio"
+    },
+    {
+      "name": "MouthHealthy (ADA) - Plaque",
+      "url": "https://www.mouthhealthy.org/en/all-topics-a-z/plaque",
+      "used_for": "Placa que se endurece en sarro; sarro sobre la encía y gingivitis; visitas regulares"
+    },
+    {
+      "name": "Cleveland Clinic - What Happens During a Dental Cleaning?",
+      "url": "https://my.clevelandclinic.org/health/treatments/11187-dental-check-up",
+      "used_for": "Pasos generales (raspado y pulido), pasos opcionales como flúor o radiografías (contraste secundario)"
+    },
+    {
+      "name": "MouthHealthy (ADA) - Scaling and Root Planing",
+      "url": "https://www.mouthhealthy.org/az-topics/s/scaling-and-root-planing",
+      "used_for": "Cuándo una limpieza común es suficiente y cuándo se necesita una limpieza más profunda"
+    },
+    {
+      "name": "NIDCR - Periodontal (Gum) Disease",
+      "url": "https://www.nidcr.nih.gov/health-info/gum-disease",
+      "used_for": "El sarro solo lo retira un profesional; signos de encías inflamadas; importancia de limpiezas y revisiones"
+    }
+  ],
+  "originalityCheck": "Busqueda web (13-oct-2026) de las frases entre comillas \"una capa pegajosa llena de bacterias ... el cepillo ya no logra quitar\" y \"quedan rincones que solo el instrumental profesional alcanza\": 0 coincidencias exactas ni casi iguales en otros sitios. Redaccion propia a partir de lo consultado, sin copiar estructura de ninguna fuente.",
+  "claimsToConfirmWithClinic": [
+    "Frecuencia de limpieza que recomienda la clínica (no se afirmó ningún intervalo)",
+    "Si realizan la limpieza con ultrasonido, instrumental manual o ambos, y si aplican flúor o toman radiografías de rutina",
+    "Si la limpieza la hace un higienista, el dentista o ambos",
+    "Si incluyen revisión o valoración en la misma visita"
+  ]
+}

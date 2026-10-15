@@ -1,0 +1,47 @@
+{
+  "slug": "all-on-4",
+  "path": "/all-in-4-implants-en-tijuana/",
+  "highlights": [
+    "Arcada completa sobre 4 implantes.",
+    "Dientes fijos en una sola prótesis.",
+    "Estudio del hueso de cada arcada."
+  ],
+  "aboutTitle": "All-on-4: arcada completa fija",
+  "aboutText": "Si te faltan casi todos los dientes de una arcada, All-on-4 la reemplaza con una prótesis fija sobre cuatro implantes. Es una cirugía con anestesia. El dentista valora tu hueso.",
+  "sources": [
+    {
+      "name": "Cleveland Clinic - Implant-supported dentures",
+      "url": "https://my.clevelandclinic.org/health/treatments/24303-implant-supported-dentures",
+      "used_for": "Prótesis fija sobre implantes frente a removible, All-on-4 como nombre comercial de arcada completa con cuatro implantes, candidatos (pocos o ningún diente, hueso suficiente), etapas generales y cuidado; contraste secundario"
+    },
+    {
+      "name": "MouthHealthy (ADA) - Implants",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/implants",
+      "used_for": "Principios generales del implante: poste en el hueso, cicatrización, restauración final, salud general y tabaquismo"
+    },
+    {
+      "name": "American Academy of Periodontology - Peri-Implant Diseases",
+      "url": "https://www.perio.org/for-patients/periodontal-treatments-and-procedures/dental-implant-procedures/peri-implant-diseases/",
+      "used_for": "Mantenimiento: higiene diaria, revisiones, inflamación alrededor de los implantes y factores de riesgo"
+    },
+    {
+      "name": "PubMed - Overview of systematic reviews: rehabilitation of the edentulous maxilla with implant-supported prostheses (PMID 33571327)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33571327/",
+      "used_for": "Una prótesis fija de arcada completa puede apoyarse en cuatro implantes (dos anteriores axiales y dos posteriores inclinados) o en seis a ocho axiales; la evidencia sobre el número de implantes es limitada. Dato localizado en resultados de búsqueda; la página no abrió con el lector automático (pide cookies), conviene abrirla en navegador"
+    },
+    {
+      "name": "American College of Prosthodontists - Dentures",
+      "url": "https://www.gotoapro.org/dentures/",
+      "used_for": "Los implantes pueden estabilizar prótesis y existen alternativas con coronas y puentes sobre implantes; recomendación de consultar a un prostodoncista"
+    }
+  ],
+  "originalityCheck": "Se buscaron entre comillas \"se atornilla a esos cuatro puntos\" y \"dientes fijos y no una dentadura removible\". Sin coincidencias literales ni casi literales (solo resultados temáticos de All-on-Four y puentes fijos vs removibles con redacción distinta). Sin reescritura necesaria.",
+  "claimsToConfirmWithClinic": [
+    "Que la clínica realmente ofrece la técnica All-on-4 con cuatro implantes (y si usa implantes inclinados)",
+    "Si se coloca una prótesis provisional el mismo día (carga inmediata) o después de la cicatrización",
+    "Marcas de implantes y materiales de la prótesis (acrílico, zirconia, etc.)",
+    "Tecnología de planeación (tomografía 3D, cirugía guiada)",
+    "Si se hacen injertos o extracciones en el mismo procedimiento",
+    "Quién realiza la cirugía y quién la prótesis"
+  ]
+}

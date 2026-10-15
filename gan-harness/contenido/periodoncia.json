@@ -1,0 +1,45 @@
+{
+  "slug": "periodoncia",
+  "path": "/periodoncia-en-tijuana/",
+  "highlights": [
+    "Atención a encías que sangran.",
+    "Medición de bolsas en encías.",
+    "Mantenimiento tras el tratamiento."
+  ],
+  "aboutTitle": "Periodoncia",
+  "aboutText": "Si te sangran las encías al cepillarte, puede haber inflamación. La periodoncia atiende encías y hueso y busca frenar el daño. El dentista mide el espacio entre encía y diente.",
+  "sources": [
+    {
+      "name": "American Academy of Periodontology - Gum Disease Information",
+      "url": "https://www.perio.org/for-patients/gum-disease-information/",
+      "used_for": "Gingivitis vs. periodontitis, bolsas, daño a tejido y hueso, síntomas, estadificación"
+    },
+    {
+      "name": "NIDCR - Periodontal (Gum) Disease",
+      "url": "https://www.nidcr.nih.gov/health-info/gum-disease",
+      "used_for": "Factores de riesgo, diagnóstico con sonda y radiografías, opciones de tratamiento, importancia del mantenimiento"
+    },
+    {
+      "name": "CDC - About Periodontal (Gum) Disease",
+      "url": "https://www.cdc.gov/oral-health/about/gum-periodontal-disease.html",
+      "used_for": "Gingivitis reversible; periodontitis controlable pero no reversible; referencia a periodoncista; prevención"
+    },
+    {
+      "name": "MouthHealthy (ADA) - Scaling and Root Planing",
+      "url": "https://www.mouthhealthy.org/az-topics/s/scaling-and-root-planing",
+      "used_for": "Limpieza profunda bajo la encía y revisión posterior de la cicatrización"
+    },
+    {
+      "name": "Harvard Health - Treating gum disease: Save your smile, help your heart?",
+      "url": "https://www.health.harvard.edu/heart-health/treating-gum-disease-save-your-smile-help-your-heart",
+      "used_for": "Contraste secundario (resultado de búsqueda, no abierto completo): tratamiento por etapas y mantenimiento posterior"
+    }
+  ],
+  "originalityCheck": "Busqueda web (13-oct-2026) de \"lo que sostiene a tus dientes: las encias y el hueso que los rodea\" y \"la periodontitis puede reactivarse ... citas de control ayudan a mantenerla vigilada\": 0 coincidencias exactas; solo resultados tematicos con redaccion distinta (concepto comun de periodonto y mantenimiento, inevitable). Sin cambios necesarios.",
+  "claimsToConfirmWithClinic": [
+    "Si cuentan con periodoncista propio o refieren a uno externo",
+    "Si realizan cirugía periodontal, injertos de encía o uso de láser (no se afirmó nada de esto)",
+    "Si usan medicamentos locales o enjuagues como parte del tratamiento",
+    "Intervalo de las citas de mantenimiento que indica la clínica"
+  ]
+}

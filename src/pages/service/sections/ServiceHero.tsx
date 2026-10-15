@@ -29,7 +29,7 @@ export function ServiceHero({ label, content }: ServiceHeroProps) {
           Sin foto queda el azul marino de la marca. */}
       {image && (
         <img
-          className="service-hero__image"
+          className={image.flip ? 'service-hero__image service-hero__image--flip' : 'service-hero__image'}
           src={image.src}
           width={image.width}
           height={image.height}
@@ -62,7 +62,7 @@ export function ServiceHero({ label, content }: ServiceHeroProps) {
           <ul className="service-hero__list">
             {content.highlights.map((text) => (
               <li key={text}>
-                <Icon name="check" size={16} />
+                <Icon name="check" size={18} />
                 {text}
               </li>
             ))}

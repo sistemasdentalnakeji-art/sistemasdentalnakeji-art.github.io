@@ -22,11 +22,13 @@
 @import './components/decor.css';
 @import './components/siri.css';
 @import './components/shiny-text.css';
+@import './components/spin-shutter.css';
 @import './layout/sections.css';
 @import './pages/home/story.css';
 @import './pages/home/schedule.css';
 @import './pages/home/services.css';
 @import './components/carousel.css';
+@import './components/location-map.css';
 @import './pages/home/partners.css';
 @import './pages/home/reviews.css';
 @import './pages/home/contact.css';
@@ -34,5 +36,10 @@
 @import './pages/service.css';
 @import './pages/services-index.css';
 @import './pages/benefits.css';
+@import './pages/benefit-pages.css';
+@import './pages/promotions.css';
+@import './pages/agreements.css';
+@import './pages/insurance.css';
+@import './pages/contact.css';
 @import './pages/empty.css';
 @import './global/preferences.css';

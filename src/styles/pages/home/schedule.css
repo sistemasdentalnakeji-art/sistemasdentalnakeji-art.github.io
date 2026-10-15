@@ -83,15 +83,41 @@
   pointer-events: none;
 }
 
+/* Botón de WhatsApp en verde (el de la clase base es blanco). Texto azul marino, igual que el hero. */
+.schedule__whatsapp {
+  border-color: var(--color-whatsapp);
+  background: var(--color-whatsapp);
+  color: var(--color-night);
+}
+
+.schedule__whatsapp:hover {
+  border-color: var(--color-whatsapp-hover);
+  background: var(--color-whatsapp-hover);
+}
+
 /* Móvil: el bloque de WhatsApp y teléfono va debajo del formulario.
    Se sacan los hijos de .schedule__intro a la cuadrícula y se ordenan con `order`. */
 @media (max-width: 959.98px) {
+  /* Los hijos de .schedule__intro son elementos sueltos de la cuadrícula: sin gap entre ellos, el espacio va en cada margen. */
+  .schedule {
+    gap: 0;
+  }
+
   .schedule__intro {
     display: contents;
   }
 
+  .schedule__intro .icon-badge + .section-title {
+    margin-top: 14px;
+  }
+
+  .schedule__intro .steps {
+    margin-top: 16px;
+  }
+
   .schedule__form {
     order: 1;
+    margin-top: 28px;
   }
 
   .schedule__alt {
@@ -123,7 +149,6 @@
 .booking-form__badge {
   --siri-width: 2.5px;
   --siri-blur: 9px;
-  --siri-d: #9fd8f5;
   display: inline-grid;
   flex: none;
   place-items: center;
@@ -733,6 +758,26 @@
 @media (min-width: 520px) {
   .choice-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Celular: bloques y campos más juntos (en escritorio no cambia). */
+@media (max-width: 599.98px) {
+  .booking-form {
+    gap: 22px;
+  }
+
+  .booking-group,
+  .booking-group__body {
+    gap: 12px;
+  }
+
+  .form-grid {
+    gap: 10px;
+  }
+
+  .booking-form__head {
+    gap: 14px;
   }
 }
 

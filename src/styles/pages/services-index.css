@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Página /servicios/: tarjetas de todos los servicios (pages/services/ServicesPage.tsx)
+   Página /servicios/: servicios en 5 categorías con riel y tarjetas (pages/services/ServicesPage.tsx)
    Inspirada en la referencia "Features 6" de React Bits Pro. Código propio, con los colores de la marca.
    ========================================================================== */
 /* Fondo de plasma (components/decor/PlasmaBackground.tsx, con ogl). El plasma calcula su perspectiva con las
@@ -36,9 +36,10 @@
   opacity: 1;
 }
 
-/* Más ancho que el resto del sitio para que las tarjetas llenen la página. */
+/* Mucho más ancho que el resto del sitio (hasta 1800 px) para que héroe y cartas llenen la pantalla sin aire vacío a los lados. */
 .catalog .container {
-  max-width: calc(1360px + 2 * var(--gutter));
+  --hero-gap: clamp(32px, 4vw, 56px); /* espacio entre el héroe y la primera categoría (también lo usa la pila de cartas) */
+  max-width: calc(1800px + 2 * var(--gutter));
 }
 
 /* Encabezado: texto a la izquierda y espacio para la foto a la derecha (en móvil, uno bajo el otro). */
@@ -46,7 +47,7 @@
   display: grid;
   gap: 32px;
   align-items: center;
-  margin-bottom: clamp(32px, 4vw, 56px);
+  margin-bottom: var(--hero-gap);
 }
 
 .catalog-hero__eyebrow {
@@ -64,60 +65,110 @@
 .catalog-hero__title {
   margin-top: 20px;
   color: var(--color-ink-strong);
-  font-size: clamp(2.4rem, 1.4rem + 3.6vw, 4.25rem);
+  font-size: clamp(2.4rem, 1.4rem + 2.8vw, 3.75rem);
   font-weight: 800;
   line-height: 1.02;
   letter-spacing: -0.04em;
 }
 
-/* "dentales" va en la segunda línea y del mismo azul oscuro que "Más servicios". */
+/* La parte final del título va en la segunda línea. */
 .catalog-hero__accent {
   display: block;
 }
 
 .catalog-hero__lead {
-  margin-top: 20px;
-  max-width: 34rem;
+  margin-top: 22px;
+  max-width: 40rem;
   color: var(--color-muted);
-  font-size: var(--text-body-lg);
-  line-height: 1.55;
+  font-size: calc(var(--text-body-lg) + 4px);
+  line-height: 1.5;
 }
 
+/* Beneficios: chips compactos con icono. */
 .catalog-hero__features {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px 12px;
-  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
 }
 
 .catalog-hero__features li {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  color: var(--color-text);
-  font-size: var(--text-small);
-  font-weight: 500;
-  line-height: 1.3;
+  gap: 10px;
+  padding: 10px 20px 10px 14px;
+  border: 1px solid var(--color-sky-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-size: 1.0625rem;
+  font-weight: 600;
 }
 
-.catalog-hero__feature-icon {
-  display: inline-grid;
-  flex: none;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: var(--color-sky);
+.catalog-hero__features svg {
+  width: 22px;
+  height: 22px;
   color: var(--color-brand);
 }
 
-/* Espacio de la foto (vacío): fondo suave hasta que se agregue una imagen. */
+/* Índice de categorías: lista numerada (contador CSS) con enlaces a cada carta. */
+.catalog-hero__index {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1.5px dashed var(--color-brand);
+}
+
+.catalog-hero__index-label {
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Columnas que se llenan hacia abajo (1-2-3 en la primera, 4-5 en la segunda) en escritorio. */
+.catalog-hero__index ol {
+  display: grid;
+  gap: 4px 28px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: cat;
+}
+
+.catalog-hero__index a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 0;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  counter-increment: cat;
+}
+
+.catalog-hero__index a::before {
+  content: counter(cat, decimal-leading-zero);
+  color: var(--color-brand);
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.catalog-hero__index a:hover {
+  color: var(--color-brand);
+}
+
+/* Foto del laboratorio sola, con el contorno luminoso azul .siri (el mismo de los iconos y del orbe del hero). No lleva overflow:hidden
+   (recortaría el contorno, que va por fuera): la imagen se redondea por su cuenta. */
 .catalog-hero__photo {
+  --siri-width: 3px;
+  --siri-blur: 14px;
   position: relative;
-  min-height: 280px;
-  overflow: hidden;
+  aspect-ratio: 16 / 11;
+  margin: 0;
   border-radius: 28px;
-  background: linear-gradient(135deg, var(--color-tint), var(--color-sky-strong));
+  background: var(--color-tint);
 }
 
 .catalog-hero__image {
@@ -125,82 +176,47 @@
   inset: 0;
   width: 100%;
   height: 100%;
+  border-radius: inherit;
   object-fit: cover;
 }
 
-/* Tarjeta flotante sobre la foto. */
-.catalog-hero__card {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  left: 16px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px 12px;
-  max-width: 280px;
-  margin-left: auto;
-  padding: 18px 18px 16px;
-  border-radius: 18px;
-  background: var(--color-white);
-  box-shadow: var(--shadow-hover);
+/* Contorno de la foto: giro normal, pero la "respiración" (siri-pulse) es más suave para no pelear con el fondo animado. */
+.catalog-hero__photo.siri::before {
+  animation:
+    siri-spin 3.4s linear infinite reverse,
+    catalog-photo-breathe 4.2s ease-in-out infinite alternate;
 }
 
-.catalog-hero__card-title {
-  color: var(--color-ink-strong);
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+@keyframes catalog-photo-breathe {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0.9;
+    transform: scale(1.015);
+  }
 }
 
-.catalog-hero__card-text {
-  margin-top: 6px;
-  color: var(--color-muted);
-  font-size: var(--text-small);
-  line-height: 1.45;
+@media (min-width: 560px) {
+  .catalog-hero__index ol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(3, auto);
+    grid-auto-flow: column;
+  }
 }
 
-.catalog-hero__card-icon {
-  display: inline-grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--color-white);
-  color: var(--color-brand);
-  box-shadow: 0 2px 10px rgba(42, 66, 105, 0.16);
-}
-
-.catalog-hero__card-line {
-  grid-column: 1 / -1;
-  width: 32px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--color-brand);
-}
-
+/* Escritorio: la foto se lleva la mayor parte del ancho y se hace más panorámica. */
 @media (min-width: 900px) {
   .catalog-hero {
-    grid-template-columns: 1.25fr 1fr;
-    gap: clamp(32px, 4vw, 64px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: clamp(32px, 3.5vw, 64px);
   }
 
   .catalog-hero__photo {
-    min-height: 340px;
+    aspect-ratio: 16 / 9;
   }
-}
-
-@media (min-width: 1360px) {
-  .catalog-hero__features {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
-  }
-}
-
-.catalog-grid {
-  display: grid;
-  gap: 16px;
 }
 
 .catalog-card {
@@ -213,7 +229,7 @@
   gap: 20px;
   height: 100%;
   min-height: 210px;
-  padding: 22px 24px;
+  padding: 24px;
   overflow: hidden;
   border-radius: var(--radius-card);
   background: var(--color-tint);
@@ -238,7 +254,6 @@
 .catalog-card__icon {
   --siri-width: 2.5px;
   --siri-blur: 8px;
-  --siri-d: #9fd8f5;
   background: var(--color-white);
 }
 
@@ -366,6 +381,30 @@
   }
 }
 
+
+/* Un solo enlace por tarjeta: el nombre del servicio, estirado a toda la tarjeta. */
+.catalog-card__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.catalog-card__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* El foco se dibuja en la tarjeta entera (el enlace es solo el título). */
+.catalog-card__link:focus-visible {
+  outline: none;
+}
+
+.catalog-card:has(.catalog-card__link:focus-visible) {
+  outline: 3px solid var(--color-brand); /* igual que el :focus-visible global (base.css) */
+  outline-offset: 3px;
+}
+
 .catalog-card__footer {
   display: flex;
   align-items: center;
@@ -378,7 +417,7 @@
   font-weight: 600;
 }
 
-/* Lo único clicable de la tarjeta. */
+/* Flecha decorativa (no es un enlace): se mueve cuando la tarjeta está activa. */
 .catalog-card__arrow {
   display: inline-grid;
   flex: none;
@@ -389,45 +428,265 @@
   background: var(--color-white);
   color: var(--color-brand);
   box-shadow: 0 2px 8px rgba(42, 66, 105, 0.12);
-  text-decoration: none;
-  transition:
-    background-color 0.25s var(--ease),
-    color 0.25s var(--ease),
-    box-shadow 0.25s var(--ease),
-    transform 0.25s var(--ease);
-}
-
-.catalog-card__arrow:hover,
-.catalog-card__arrow:focus-visible {
-  background: var(--color-ink);
-  color: var(--color-white);
-  box-shadow: 0 8px 20px rgba(42, 66, 105, 0.3);
-  transform: scale(1.12);
-}
-
-.catalog-card__arrow:focus-visible {
-  border-radius: 50%;
-}
-
-.catalog-card__arrow svg {
   transition: transform 0.25s var(--ease);
 }
 
-.catalog-card__arrow:hover svg,
-.catalog-card__arrow:focus-visible svg {
-  transform: translateX(3px);
+.catalog-card:hover .catalog-card__arrow,
+.catalog-card:focus-within .catalog-card__arrow {
+  transform: translateX(4px);
+}
+
+/* Categorías: sin contenedor, línea fina arriba. Riel (título, intro) + rejilla. */
+.catalog-group {
+  display: grid;
+  gap: 24px;
+  margin-top: 56px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(42, 66, 105, 0.16);
+}
+
+.catalog-group__title {
+  color: var(--color-ink-strong);
+  font-size: clamp(1.625rem, 1rem + 1.4vw, 2.375rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.catalog-group__intro,
+.catalog-group__body {
+  margin-top: 12px;
+  color: var(--color-muted);
+  font-size: var(--text-small);
+  line-height: 1.55;
+}
+
+.catalog-grid {
+  display: grid;
+  gap: 16px;
+  grid-auto-rows: 1fr; /* las tarjetas llenan toda la altura de la carta (en categorías de 2 servicios, alargadas) */
 }
 
 @media (min-width: 600px) {
   .catalog-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-}
 
-/* Escritorio: filas de 4 servicios. */
-@media (min-width: 1080px) {
-  .catalog-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+  /* Grupo de 3: la última (impar) ocupa las 2 columnas. */
+  .catalog-grid > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
 }
+
+@media (min-width: 900px) {
+  .catalog-group {
+    grid-template-columns: 300px 1fr;
+    gap: 40px;
+    margin-top: 72px;
+    padding-top: 48px;
+  }
+
+  .catalog-group__rail {
+    position: sticky;
+    top: 112px;
+    align-self: start;
+  }
+}
+
+@media (min-width: 1280px) {
+  .catalog-group {
+    grid-template-columns: 380px 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catalog-card,
+  .catalog-card__glow,
+  .catalog-card__arrow {
+    transition: none;
+  }
+
+  .catalog-card:hover,
+  .catalog-card:focus-within,
+  .catalog-card:hover .catalog-card__arrow,
+  .catalog-card:focus-within .catalog-card__arrow {
+    transform: none;
+  }
+}
+
+/* Cartas apiladas DENTRO de una ventana (escritorio, sin "reducir movimiento"): héroe, ventana y footer son tres bloques quietos uno
+   debajo del otro. La ventana (.catalog-groups) mide una carta + los 4 desfases y tiene su propio scroll: con la rueda sobre ella, cada
+   carta sube y se fija (sticky) 25 px más abajo que la anterior, que se encoge hacia atrás; al terminar, la rueda sigue con la página.
+   Nada se monta sobre el héroe ni empuja al footer. Fuera de eso (móvil, pantalla baja, reduced-motion) queda como lista normal.
+   Cuentas: alto = 5 cartas, ventana = 1 carta + 4 x 25 px, así el scroll máximo deja las 5 fijas justo al final. */
+@media (min-width: 900px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+  /* Las medidas viven en el contenedor de las dos secciones: el Spin Shutter (hermano de la ventana) mide lo mismo que ella. */
+  .catalog-split {
+    --card-h: 41rem;
+    --deck-h: calc(var(--card-h) + 4 * 25px);
+  }
+
+  .catalog-groups {
+    timeline-scope: --g1, --g2, --g3, --g4;
+    height: var(--deck-h);
+    overflow-y: auto;
+    border-radius: 32px;
+    scrollbar-width: none;
+  }
+
+  .catalog-groups::-webkit-scrollbar {
+    display: none;
+  }
+
+  .catalog-group {
+    position: sticky;
+    --top: calc(var(--i) * 25px); /* cada carta 25 px más abajo que la anterior, dentro de la ventana */
+    top: var(--top);
+    margin: 0;
+    padding: 44px 56px;
+    /* Más ancha la columna del texto y gap mayor (la sección se veía chica frente a la pantalla). */
+    grid-template-columns: clamp(340px, 26%, 460px) 1fr;
+    gap: 56px;
+    /* Todas igual de altas: así la de encima tapa por completo a la de atrás. */
+    height: var(--card-h);
+    align-items: stretch;
+    border: 1px solid rgba(42, 66, 105, 0.12);
+    border-radius: 32px;
+    background: var(--color-white);
+    box-shadow: 0 -12px 40px -16px rgba(42, 66, 105, 0.28);
+    transform-origin: 50% 0;
+    view-timeline-name: var(--tl);
+  }
+
+  /* Separación entre cartas > los 4 desfases (100 px) de la ventana: la siguiente carta queda fuera de la ventana mientras espera el
+     scroll. Va como margen SUPERIOR (uno inferior limitaría hasta dónde puede seguir fija cada carta y desharía el escalonado final). */
+  .catalog-group + .catalog-group {
+    margin-top: 120px;
+  }
+
+  /* Letras y tarjetas más grandes dentro de la ventana de cartas. */
+  .catalog-group__title {
+    font-size: clamp(2.25rem, 1.2rem + 1.6vw, 3.25rem);
+  }
+
+  .catalog-group__intro,
+  .catalog-group__body {
+    margin-top: 16px;
+    font-size: 1.0625rem;
+  }
+
+  .catalog-grid {
+    gap: 20px;
+  }
+
+  .catalog-card {
+    gap: 24px;
+    padding: 32px;
+  }
+
+  .catalog-card__title {
+    font-size: 1.5rem;
+  }
+
+  .catalog-card__text {
+    font-size: 1.0625rem;
+  }
+
+  .catalog-card__cta {
+    font-size: 1.0625rem;
+  }
+
+  .catalog-card__arrow {
+    width: 52px;
+    height: 52px;
+  }
+
+  .catalog-group__rail {
+    position: static;
+  }
+
+  /* Una animación no puede leer la línea de tiempo de su propio ancestro: la carta i se encoge con la vista de la i+1 (hermana).
+     La línea de tiempo es la de la ventana (su scroll): el rango termina justo cuando la siguiente queda fija = alto de la ventana - su "top". */
+  @supports (animation-timeline: view()) {
+    .catalog-group:not(:last-child) {
+      animation: catalog-recede linear both;
+      animation-timeline: var(--tl-next);
+      animation-range: cover 0% cover calc(var(--deck-h) - var(--top) - 25px);
+    }
+  }
+}
+
+@keyframes catalog-recede {
+  to {
+    transform: scale(var(--scale));
+  }
+}
+
+/* Spin Shutter (components/ui/SpinShutter.tsx): sección aparte, bajo las cartas en pantallas menores a 1440 px. */
+.catalog-showcase {
+  height: 620px;
+  margin-top: 32px;
+}
+
+/* Pantallas anchas (con el apilado activo): las cartas (1) a la izquierda y el Spin Shutter (2) a la derecha, del mismo alto que la ventana.
+   Las cartas quedan más angostas: el riel (título e intro) se estrecha, se oculta el párrafo de relleno y las tarjetas se compactan.
+   La altura de las cartas no cambia, así el apilado de arriba funciona igual. */
+@media (min-width: 1440px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+  .catalog-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+
+  .catalog-showcase {
+    height: var(--deck-h);
+    margin-top: 0;
+  }
+
+  .catalog-split .catalog-group {
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+    padding: 36px 32px;
+  }
+
+  .catalog-split .catalog-group__title {
+    font-size: clamp(1.5rem, 1rem + 0.8vw, 2rem);
+  }
+
+  .catalog-split .catalog-group__intro {
+    margin-top: 10px;
+    font-size: 0.9375rem;
+  }
+
+  .catalog-split .catalog-group__body {
+    display: none;
+  }
+
+  .catalog-split .catalog-grid {
+    gap: 14px;
+  }
+
+  .catalog-split .catalog-card {
+    gap: 12px;
+    padding: 20px;
+  }
+
+  .catalog-split .catalog-card__title {
+    font-size: 1.1875rem;
+  }
+
+  .catalog-split .catalog-card__text {
+    font-size: 0.9375rem;
+  }
+
+  .catalog-split .catalog-card__cta {
+    font-size: 0.9375rem;
+  }
+
+  .catalog-split .catalog-card__arrow {
+    width: 40px;
+    height: 40px;
+  }
+}
+

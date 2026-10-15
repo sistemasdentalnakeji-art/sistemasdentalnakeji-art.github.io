@@ -1,0 +1,247 @@
+/* ==========================================================================
+   /insurance/ — "Tablero" (InsurancePage.tsx)
+   Encabezado con tarjeta de pasos y, debajo, todas las aseguranzas en una rejilla de líneas finas con
+   marcas "+" en los cruces interiores. Los logos son estáticos; solo se mueve la línea de luz "Snake" sobre las líneas de la rejilla.
+   ========================================================================== */
+.insurance__head {
+  display: grid;
+  gap: clamp(28px, 4vw, 56px);
+  align-items: end;
+}
+
+@media (min-width: 960px) {
+  .insurance__head {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  }
+}
+
+/* Tarjeta de los 3 pasos + botón. */
+.insurance__steps-card {
+  display: grid;
+  gap: 22px;
+  justify-items: start;
+  padding: clamp(20px, 3vw, 28px);
+  border: 1px solid var(--color-sky-strong);
+  border-radius: 28px;
+  background: var(--color-tint);
+}
+
+.insurance__steps {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.insurance__steps li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--color-ink);
+  font-weight: 600;
+  counter-increment: step;
+}
+
+.insurance__steps li::before {
+  content: counter(step);
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--color-brand);
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-brand);
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+/* ---- Tablero de aseguranzas ---- */
+.insurers {
+  --cols: 2;
+  --line: var(--color-sky-strong);
+  --logo-size: 50px;
+  margin-top: clamp(40px, 6vw, 72px);
+}
+
+.insurers__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 24px;
+  margin-bottom: 18px;
+}
+
+.insurers__count {
+  color: var(--color-ink);
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.625rem);
+  letter-spacing: -0.02em;
+}
+
+.insurers__ask {
+  color: var(--color-brand);
+  font-size: var(--text-small);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.insurers__ask:hover {
+  color: var(--color-ink);
+}
+
+/* Las líneas son el fondo asomando por el hueco de 1 px entre celdas; overflow recorta las esquinas. */
+.insurers__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--line);
+  list-style: none;
+}
+
+.insurers__cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(92px, 10vw, 128px);
+  padding: 16px;
+  background: var(--color-white);
+  transition: background-color 0.2s var(--ease);
+}
+
+.insurers__cell:hover {
+  background: var(--color-tint);
+}
+
+/* Línea de luz "Snake": InsuranceGrid.tsx dibuja un trazo SVG sobre las líneas de la rejilla (máx. 4 casillas). Crece desde su
+   inicio y se borra por la cola, como una serpiente que avanza. dasharray "1 2" + offsets de ±1.02 (el .02 evita un punto
+   suelto de la punta redondeada cuando el trazo está vacío). 1.9s = BEAM_MS en el .tsx. */
+.insurers__board {
+  position: relative;
+}
+
+.insurers__beams {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.insurers__beam {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 1.02;
+  filter: drop-shadow(0 0 3px rgba(63, 181, 200, 0.9));
+  animation: insurers-beam 1.9s ease-in-out both;
+}
+
+@keyframes insurers-beam {
+  0% {
+    stroke-dashoffset: 1.02;
+  }
+
+  45% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: -1.02;
+  }
+}
+
+/* Logo con área parecida sea ancho o alto: ancho = tamaño base × √proporción. */
+.insurers__cell img {
+  width: min(86%, calc(var(--logo-size) * sqrt(var(--ar, 4))));
+  height: auto;
+  max-height: var(--logo-size);
+  object-fit: contain;
+}
+
+/* Marca "+" en la esquina inferior derecha de cada celda; no va en la última columna ni en la última fila. */
+.insurers__cell::after {
+  content: '';
+  position: absolute;
+  right: -7px;
+  bottom: -7px;
+  z-index: 1;
+  width: 13px;
+  height: 13px;
+  background:
+    linear-gradient(var(--color-brand), var(--color-brand)) center / 100% 1.5px no-repeat,
+    linear-gradient(var(--color-brand), var(--color-brand)) center / 1.5px 100% no-repeat;
+  pointer-events: none;
+}
+
+.insurers__cell:nth-child(2n)::after,
+.insurers__cell:nth-last-child(-n + 2)::after {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .insurers__beams {
+    display: none;
+  }
+}
+
+/* Las celdas de 24 llenan filas completas en 2, 3, 4 y 6 columnas. */
+@media (min-width: 560px) {
+  .insurers {
+    --cols: 3;
+    --logo-size: 56px;
+  }
+
+  .insurers__cell:nth-child(n)::after {
+    display: block;
+  }
+
+  .insurers__cell:nth-child(3n)::after,
+  .insurers__cell:nth-last-child(-n + 3)::after {
+    display: none;
+  }
+}
+
+@media (min-width: 900px) {
+  .insurers {
+    --cols: 4;
+    --logo-size: 60px;
+  }
+
+  .insurers__cell:nth-child(n)::after {
+    display: block;
+  }
+
+  .insurers__cell:nth-child(4n)::after,
+  .insurers__cell:nth-last-child(-n + 4)::after {
+    display: none;
+  }
+}
+
+@media (min-width: 1200px) {
+  .insurers {
+    --cols: 6;
+  }
+
+  .insurers__cell:nth-child(n)::after {
+    display: block;
+  }
+
+  .insurers__cell:nth-child(6n)::after,
+  .insurers__cell:nth-last-child(-n + 6)::after {
+    display: none;
+  }
+}

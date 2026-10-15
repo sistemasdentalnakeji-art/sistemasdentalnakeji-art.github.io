@@ -1,0 +1,418 @@
+/* ==========================================================================
+   Tarjeta de ubicación expandible (components/ui/LocationMap.tsx)
+   Reemplaza al mapa de Google. Azul oscuro de la marca (--color-ink → --color-night) con trazos celestes.
+   Contraída: tarjeta centrada que se inclina con el puntero. Expandida: llena todo el recuadro (.contact__map).
+   Movimiento con transform/opacity y el tamaño de la tarjeta; "reducir movimiento" lo resume global/preferences.css.
+   ========================================================================== */
+.loc {
+  --loc-spring: cubic-bezier(0.22, 1.1, 0.36, 1);
+  --loc-line: 123, 195, 235; /* celeste de la marca (--color-brand-light) en RGB */
+  --loc-pin: #ea4335; /* rojo del pin de ubicación */
+  --loc-pin-dot: #8f1d14;
+  position: absolute;
+  inset: 0;
+  perspective: 1000px;
+}
+
+.loc__card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 240px;
+  height: 140px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--loc-line), 0.28);
+  border-radius: 24px;
+  background: linear-gradient(155deg, var(--color-ink) 0%, var(--color-night) 100%);
+  box-shadow: 0 24px 48px -24px rgba(10, 21, 41, 0.75);
+  color: var(--color-white);
+  translate: -50% -50%;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition:
+    width 0.7s var(--loc-spring),
+    height 0.7s var(--loc-spring),
+    border-radius 0.7s var(--loc-spring),
+    transform 0.2s var(--ease);
+}
+
+.loc[data-expanded] .loc__card {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border-color: transparent;
+  transform: none;
+}
+
+/* ---------- Cuadrícula tenue (solo contraída) ---------- */
+.loc__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(var(--loc-line), 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--loc-line), 0.12) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.6;
+  transition: opacity 0.3s var(--ease);
+}
+
+.loc[data-expanded] .loc__grid {
+  opacity: 0;
+}
+
+/* ---------- Plano (aparece al expandir): ilustración propia de las calles de alrededor, ver data/locationMap.ts ---------- */
+.loc__map {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+  pointer-events: none;
+}
+
+.loc[data-expanded] .loc__map {
+  opacity: 1;
+  transition-delay: 0.1s;
+}
+
+.loc__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.loc__terrain {
+  fill: rgba(var(--loc-line), 0.07);
+}
+
+.loc__park {
+  fill: rgba(var(--loc-line), 0.12);
+}
+
+.loc__river {
+  fill: none;
+  stroke: rgba(var(--loc-line), 0.6);
+  stroke-linecap: round;
+  stroke-width: 7;
+}
+
+/* Bloques: aparecen escalonados con un pequeño escalado (--i lo pone el componente). */
+.loc__block {
+  opacity: 0;
+  scale: 0.88;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 0.5s var(--ease) calc(0.35s + var(--i, 0) * 0.04s),
+    scale 0.5s var(--ease) calc(0.35s + var(--i, 0) * 0.04s);
+}
+
+.loc__block--a {
+  fill: rgba(255, 255, 255, 0.07);
+}
+
+.loc__block--b {
+  fill: rgba(var(--loc-line), 0.14);
+}
+
+.loc[data-expanded] .loc__block {
+  opacity: 1;
+  scale: 1;
+}
+
+/* Calles: se trazan una a una (stroke-dashoffset con pathLength=1). El grosor escala junto con el plano. */
+.loc__road {
+  fill: none;
+  stroke-dasharray: 1 2;
+  stroke-dashoffset: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke-dashoffset 0.9s var(--ease) calc(0.15s + var(--i, 0) * 0.07s);
+}
+
+.loc__road--arterial {
+  stroke: rgba(var(--loc-line), 0.4);
+}
+
+.loc__road--primary {
+  stroke: rgba(var(--loc-line), 0.3);
+}
+
+.loc__road--minor {
+  stroke: rgba(var(--loc-line), 0.22);
+}
+
+.loc[data-expanded] .loc__road {
+  stroke-dashoffset: 0;
+}
+
+/* Nombres de las calles: aparecen cuando las calles ya están trazadas. */
+.loc__label {
+  fill: rgba(255, 255, 255, 0.66);
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-anchor: middle;
+  dominant-baseline: central;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease) 0.9s;
+}
+
+.loc[data-expanded] .loc__label {
+  opacity: 1;
+}
+
+/* Pin de la clínica (protagonista): cae con rebote, lleva un halo celeste y un anillo que se expande en su base. */
+.loc__pin {
+  color: var(--loc-pin);
+  filter: drop-shadow(0 0 12px rgba(234, 67, 53, 0.55));
+  opacity: 0;
+  scale: 0;
+  translate: 0 -40px;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transition:
+    translate 0.6s var(--loc-spring) 0.7s,
+    scale 0.6s var(--loc-spring) 0.7s,
+    opacity 0.3s var(--ease) 0.7s;
+}
+
+.loc[data-expanded] .loc__pin {
+  opacity: 1;
+  scale: 1;
+  translate: 0 0;
+}
+
+.loc__pin-label {
+  fill: var(--color-white);
+  font-family: var(--font-display);
+  text-anchor: end;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  paint-order: stroke;
+  stroke: var(--color-night);
+  stroke-linejoin: round;
+  stroke-width: 7px;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease) 1s;
+}
+
+.loc[data-expanded] .loc__pin-label {
+  opacity: 1;
+}
+
+.loc__halo {
+  fill: none;
+  stroke: var(--loc-pin);
+  stroke-width: 2;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.loc[data-expanded] .loc__halo {
+  animation: loc-halo 2.4s var(--ease) 1.2s infinite;
+}
+
+@keyframes loc-halo {
+  from {
+    opacity: 0.8;
+    scale: 0.4;
+  }
+
+  to {
+    opacity: 0;
+    scale: 3.4;
+  }
+}
+
+/* ---------- Cara contraída ---------- */
+.loc__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px 20px;
+  opacity: 1;
+  transition: opacity 0.25s var(--ease) 0.1s;
+  pointer-events: none;
+}
+
+.loc[data-expanded] .loc__face {
+  opacity: 0;
+  transition-delay: 0s;
+}
+
+.loc__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.loc__icon {
+  display: grid;
+  color: var(--color-brand-light);
+  filter: drop-shadow(0 0 4px rgba(var(--loc-line), 0.35));
+  transition: filter 0.3s var(--ease);
+}
+
+.loc:hover:not([data-expanded]) .loc__icon {
+  filter: drop-shadow(0 0 9px rgba(var(--loc-line), 0.7));
+}
+
+.loc__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Punto con un anillo que se expande (solo transform y opacity). */
+.loc__dot {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-brand-light);
+}
+
+.loc__dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--color-brand-light);
+  animation: loc-ping 2s var(--ease) infinite;
+}
+
+@keyframes loc-ping {
+  from {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
+
+.loc__bottom {
+  display: grid;
+  gap: 6px;
+}
+
+.loc__name {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: translate 0.3s var(--ease);
+}
+
+.loc:hover:not([data-expanded]) .loc__name {
+  translate: 4px 0;
+}
+
+/* Línea de acento: corta en reposo, se alarga con el cursor. */
+.loc__line {
+  display: block;
+  width: 30%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(var(--loc-line), 0.8), rgba(var(--loc-line), 0.2), transparent);
+  transition: width 0.4s var(--ease);
+}
+
+.loc:hover:not([data-expanded]) .loc__line {
+  width: 100%;
+}
+
+/* ---------- Botón que alterna y botón de cierre ---------- */
+.loc__toggle {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.loc[data-expanded] .loc__toggle {
+  cursor: zoom-out;
+}
+
+.loc__toggle:focus-visible {
+  outline: 3px solid var(--color-white);
+  outline-offset: -6px;
+  box-shadow: none;
+}
+
+/* Cierre decorativo (el botón entero lo hace): aparece al expandir. */
+.loc__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--color-white);
+  opacity: 0;
+  scale: 0.8;
+  transition:
+    opacity 0.3s var(--ease) 0.4s,
+    scale 0.3s var(--ease) 0.4s;
+  pointer-events: none;
+}
+
+.loc[data-expanded] .loc__close {
+  opacity: 1;
+  scale: 1;
+}
+
+/* Pista debajo de la tarjeta: con el cursor encima (o siempre en pantallas táctiles). */
+.loc__hint {
+  position: absolute;
+  top: calc(50% + 70px + 14px);
+  left: 50%;
+  color: var(--color-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  opacity: 0;
+  translate: -50% 4px;
+  transition:
+    opacity 0.25s var(--ease),
+    translate 0.25s var(--ease);
+  pointer-events: none;
+}
+
+.loc:hover:not([data-expanded]) .loc__hint {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+@media (hover: none) {
+  .loc:not([data-expanded]) .loc__hint {
+    opacity: 1;
+    translate: -50% 0;
+  }
+}
+
+.loc[data-expanded] .loc__hint {
+  opacity: 0;
+}

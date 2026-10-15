@@ -12,24 +12,26 @@
   align-items: center;
   min-height: clamp(560px, calc(100svh - var(--header-height) - 24px), 760px);
   margin: var(--band-gap) var(--band-gap) 0;
-  padding-block: clamp(48px, 7vw, 88px) clamp(76px, 8vw, 116px);
+  padding-block: clamp(48px, 7vw, 88px) clamp(32px, 4vw, 52px);
   overflow: hidden;
   border-radius: var(--band-radius) var(--band-radius) 0 0;
-  /* Fondo sin foto (o mientras carga): los mismos azules del hero del homepage. */
-  background:
-    radial-gradient(55% 60% at 70% 45%, rgba(47, 99, 173, 0.55), transparent 70%),
-    radial-gradient(40% 45% at 82% 70%, rgba(63, 181, 200, 0.22), transparent 70%),
-    var(--color-night);
+  /* Fondo sin foto (o mientras carga): azul de marca, más intenso a la derecha. En escritorio, este azul es lo que se ve a la izquierda de la foto. */
+  background: linear-gradient(95deg, #0f2a57 0%, #1d4c95 32%, #2f63ad 62%, var(--color-brand) 100%);
   color: var(--color-white);
 }
 
 .service-hero__image {
   position: absolute;
   inset: 0;
-  z-index: -3;
+  z-index: -4;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Foto espejada: la persona queda a la derecha y el texto a la izquierda. */
+.service-hero__image--flip {
+  transform: scaleX(-1);
 }
 
 /* Degradado: intenso a la izquierda (texto) y transparente a la derecha (foto). */
@@ -37,13 +39,6 @@
   position: absolute;
   inset: 0;
   z-index: -2;
-  background: linear-gradient(
-    90deg,
-    rgba(var(--hero-scrim-rgb), 0.92) 0%,
-    rgba(var(--hero-scrim-rgb), 0.72) 38%,
-    rgba(var(--hero-scrim-rgb), 0.18) 70%,
-    transparent 100%
-  );
   pointer-events: none;
 }
 
@@ -56,7 +51,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 600px;
+  max-width: 820px;
 }
 
 .service-hero__crumbs ol {
@@ -95,9 +90,9 @@
   width: fit-content;
   max-width: 100%;
   margin-top: 18px;
-  font-size: clamp(2.25rem, 1.4rem + 4vw, 4.5rem);
+  font-size: clamp(2.75rem, 1.5rem + 5.5vw, 6rem);
   font-weight: 700;
-  line-height: 1;
+  line-height: 0.95;
   letter-spacing: -0.04em;
   text-wrap: balance;
   overflow-wrap: break-word;
@@ -105,10 +100,10 @@
 }
 
 .service-hero__subtitle {
-  margin-top: 18px;
-  color: rgba(255, 255, 255, 0.92);
+  margin-top: 22px;
+  color: rgba(255, 255, 255, 0.95);
   font-family: var(--font-display);
-  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.02em;
@@ -116,11 +111,12 @@
 
 .service-hero__list {
   display: grid;
-  gap: 10px;
-  margin: 24px 0 0;
+  gap: 12px;
+  margin: 26px 0 0;
   padding: 0;
   list-style: none;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(1.0625rem, 0.95rem + 0.5vw, 1.375rem);
 }
 
 .service-hero__list li {
@@ -171,9 +167,36 @@
 }
 
 /* Móvil: el texto ocupa todo el ancho, así que el velo cubre toda la foto. */
+/* Escritorio: la foto empieza a ~28 % del ancho (no de borde a borde), con el borde izquierdo difuminado; así no se estira ni se pixela y la izquierda queda en azul para el texto. */
+@media (min-width: 768px) {
+  .service-hero__image {
+    inset: 0 0 0 28%;
+    width: 72%;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+  }
+
+  /* La foto espejada también espeja su máscara: se invierte para que el difuminado siga quedando a la izquierda. */
+  .service-hero__image--flip {
+    -webkit-mask-image: linear-gradient(270deg, transparent 0%, #000 22%);
+    mask-image: linear-gradient(270deg, transparent 0%, #000 22%);
+  }
+
+  .service-hero__scrim {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(var(--hero-scrim-rgb), 0.35) 32%,
+      rgba(var(--hero-scrim-rgb), 0.4) 46%,
+      rgba(var(--hero-scrim-rgb), 0.1) 72%,
+      transparent 100%
+    );
+  }
+}
+
 @media (max-width: 767.98px) {
   .service-hero__scrim {
-    background: linear-gradient(180deg, rgba(var(--hero-scrim-rgb), 0.9), rgba(var(--hero-scrim-rgb), 0.8));
+    background: linear-gradient(180deg, rgba(var(--hero-scrim-rgb), 0.82), rgba(var(--hero-scrim-rgb), 0.62) 45%, rgba(var(--hero-scrim-rgb), 0.88));
   }
 }
 
@@ -215,6 +238,13 @@
   max-width: 520px;
   aspect-ratio: 1 / 1;
   justify-self: center;
+}
+
+/* Una columna (celular y tableta): la caja vacía bajaría el botón 327 px sin aportar nada; solo se muestra en escritorio. */
+@media (max-width: 959.98px) {
+  .service-about__media {
+    display: none;
+  }
 }
 
 @media (min-width: 960px) {

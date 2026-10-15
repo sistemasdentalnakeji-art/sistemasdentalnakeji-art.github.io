@@ -1,0 +1,82 @@
+/* ==========================================================================
+   /nuestras-promociones/ — "Carteles" (PromotionsPage.tsx)
+   Carrusel de scroll-snap (components/carousel.css) con carteles: contorno azul marino grueso y sombra sólida.
+   No son enlaces: sin efecto hover. Sin fondo propio.
+   ========================================================================== */
+.promotions__head {
+  max-width: 760px;
+  margin-bottom: clamp(32px, 5vw, 56px);
+}
+
+/* Carteles completos por vista (1 / 2 / 3, como Servicios destacados); la pista deja aire para que la sombra sólida no se recorte. */
+.carousel--promos .carousel__track {
+  --gap: 20px;
+  --pad: 6px;
+  padding: 6px 16px 18px 6px;
+}
+
+@media (min-width: 1100px) {
+  .carousel--promos .carousel__track {
+    --per-view: 3;
+  }
+}
+
+.promo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 2px solid var(--color-ink);
+  border-radius: 28px;
+  background: var(--color-white);
+  box-shadow: 6px 6px 0 var(--color-sky-strong);
+}
+
+.promo__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Numeral hueco (decorativo). */
+.promo__num {
+  color: transparent;
+  font-family: var(--font-display);
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1;
+  -webkit-text-stroke: 1.5px var(--color-ink);
+}
+
+.promo__badge {
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--color-error-soft);
+  color: var(--color-error);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+/* Espacio de imagen vacío. */
+.promo__media {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  border: 2px dashed var(--color-brand-light);
+  border-radius: 18px;
+  color: var(--color-brand);
+}
+
+.promo__title {
+  color: var(--color-ink);
+  font-size: var(--text-card-title);
+}
+
+.promo__period {
+  margin: -8px 0 0;
+  color: var(--color-muted);
+  font-size: var(--text-small);
+}

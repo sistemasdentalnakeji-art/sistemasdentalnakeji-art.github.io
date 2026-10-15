@@ -1,40 +1,49 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// SECCIÓN "ASEGURANZAS Y CONVENIOS": dos grupos, cada uno con texto, enlace y carrusel de logos.
+// SECCIÓN "ASEGURANZAS Y CONVENIOS": dos carruseles independientes (uno por grupo) en forma de "cinta" continua.
 //
-// • Empresas, logos y textos de cada grupo → src/data/partners.ts.
+// • Cada cinta avanza sola y despacio: Aseguranzas hacia la izquierda y Convenios hacia la derecha. Se pausa con el
+//   cursor y con "Pausar animaciones" (footer); con "reducir movimiento" no se mueve y se desplaza con el dedo/trackpad.
+// • Es solo CSS (sin JS): la lista se repite dos veces y la copia va oculta para lectores de pantalla (aria-hidden + inert).
+// • Aseguranzas (8, las elige HOME_INSURANCES) y Convenios (todos): logos reales sueltos, sin tarjeta ni nombre.
+//   Logos y textos de cada grupo → src/data/partners.ts.
 // • Título y texto de la sección → src/data/home.ts (PARTNERS_SECTION).
-// • Estilos → src/styles/pages/home/partners.css (carrusel: src/styles/components/carousel.css).
+// • Estilos → src/styles/pages/home/partners.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import type { CSSProperties } from 'react'
 import { PARTNER_GROUPS, PARTNERS_CTA, type Partner } from '@/data/partners'
 import { PARTNERS_SECTION } from '@/data/home'
-import { Carousel } from '@/components/ui/Carousel'
 import { Band } from '@/components/decor/Band'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon } from '@/components/ui/Icon'
 import { SectionDecor } from '@/components/decor/SectionDecor'
 import { SectionIntro } from '@/components/ui/SectionIntro'
 
-function PartnerCard({ partner }: { partner: Partner }) {
-  return (
-    <div className="partner-card">
-      {partner.logo ? (
+/** Con logo real: solo el logo, sin tarjeta ni nombre (el nombre va en el alt). Sin logo: marcador con icono y nombre. */
+function Plate({ partner, icon }: { partner: Partner; icon: 'shield' | 'building' }) {
+  if (partner.logo) {
+    return (
+      <li className="plate plate--logo">
         <img
-          className="partner-card__logo"
+          className={partner.logo.framed ? 'is-framed' : undefined}
           src={partner.logo.src}
           width={partner.logo.width}
           height={partner.logo.height}
-          alt="" /* el nombre ya está en el texto visible de abajo */
+          alt={partner.name}
+          style={{ '--ar': partner.logo.width / partner.logo.height, '--w': partner.logo.width } as CSSProperties}
           loading="lazy"
           decoding="async"
         />
-      ) : (
-        <span className="partner-card__placeholder" aria-hidden="true">
-          <Icon name="building" size={28} />
-        </span>
-      )}
-      <span className="partner-card__name">{partner.name}</span>
-    </div>
+      </li>
+    )
+  }
+  return (
+    <li className="plate">
+      <span className="plate__mark" aria-hidden="true">
+        <Icon name={icon} size={22} />
+      </span>
+      <span className="plate__name">{partner.name}</span>
+    </li>
   )
 }
 
@@ -51,28 +60,53 @@ export function Partners() {
           <SectionIntro icon="shield" id="aseguranzas-titulo" title={PARTNERS_SECTION.title} text={PARTNERS_SECTION.text} />
         </header>
 
-        <div className="partner-groups">
-          {PARTNER_GROUPS.map((group) => (
-            <div key={group.id} className="partner-group">
-              <div className="partner-group__intro">
-                <h3 className="card-title partner-group__title">
-                  {group.title}
-                </h3>
-                <p className="card-text">{group.text}</p>
-                <a className="text-link" href={group.link.href}>
+        <div className="rails">
+          {PARTNER_GROUPS.map((group, index) => {
+            const icon = group.id === 'aseguranzas' ? 'shield' : 'building'
+            return (
+              <section key={group.id} className={`rail rail--${group.id}`} aria-labelledby={`rail-${group.id}`}>
+                <div className="rail__head">
+                  <div className="rail__top">
+                    <span className="rail__icon" aria-hidden="true">
+                      <Icon name={icon} size={26} />
+                    </span>
+                    <p className="rail__badge">{group.badge}</p>
+                  </div>
+                  <h3 id={`rail-${group.id}`} className="rail__title">
+                    {group.title}
+                  </h3>
+                  <p className="rail__text">{group.text}</p>
+                </div>
+
+                <div
+                  className="rail__marquee"
+                  role="region"
+                  aria-roledescription="carrusel"
+                  aria-label={group.title}
+                  data-dir={index % 2 === 0 ? 'left' : 'right'}
+                >
+                  <div className="rail__track">
+                    <ul className="rail__list">
+                      {group.items.map((partner) => (
+                        <Plate key={partner.name} partner={partner} icon={icon} />
+                      ))}
+                    </ul>
+                    {/* Copia para el bucle continuo: invisible para lectores de pantalla y sin foco. */}
+                    <ul className="rail__list rail__list--copy" aria-hidden="true" inert>
+                      {group.items.map((partner) => (
+                        <Plate key={partner.name} partner={partner} icon={icon} />
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <a className="btn btn--secondary btn--sm rail__cta" href={group.link.href}>
                   {group.link.label}
                   <Icon name="arrowRight" size={16} />
                 </a>
-              </div>
-              <Carousel
-                label={group.title}
-                className="carousel--partners"
-                items={group.items.map((partner) => (
-                  <PartnerCard partner={partner} />
-                ))}
-              />
-            </div>
-          ))}
+              </section>
+            )
+          })}
         </div>
 
         <div className="section-cta">

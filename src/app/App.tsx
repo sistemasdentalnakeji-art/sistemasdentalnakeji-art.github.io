@@ -6,12 +6,14 @@
 // • "/" → HomePage (src/pages/home/HomePage.tsx).
 // • "/servicios/" → ServicesPage (tarjetas de todos los servicios, src/pages/services/ServicesPage.tsx).
 // • "/beneficios/" → BenefitsPage (promociones, convenios y aseguranzas, src/pages/benefits/BenefitsPage.tsx).
+// • "/nuestras-promociones/", "/convenios/" y "/insurance/" → PromotionsPage, AgreementsPage e InsurancePage (cada una con su diseño).
+// • "/contacto/" → ContactPage (teléfonos, dirección y redes, src/pages/contact/ContactPage.tsx).
 // • Rutas con template 'service' y textos en src/data/services.ts → ServicePage (plantilla de servicio).
 // • Cualquier otra ruta conocida → EmptyPage (destino en construcción, noindex).
 // • Ruta desconocida → EmptyPage con el mensaje de "página no encontrada".
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { BENEFITS, findRoute, HOME, NOT_FOUND, SERVICES } from '@/config/routes'
+import { AGREEMENTS, BENEFITS, CONTACT, findRoute, HOME, INSURANCE, NOT_FOUND, PROMOTIONS_PAGE, SERVICES } from '@/config/routes'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { HomePage } from '@/pages/home/HomePage'
@@ -19,6 +21,10 @@ import { EmptyPage } from '@/pages/empty/EmptyPage'
 import { ServicePage } from '@/pages/service/ServicePage'
 import { ServicesPage } from '@/pages/services/ServicesPage'
 import { BenefitsPage } from '@/pages/benefits/BenefitsPage'
+import { PromotionsPage } from '@/pages/promotions/PromotionsPage'
+import { AgreementsPage } from '@/pages/agreements/AgreementsPage'
+import { ContactPage } from '@/pages/contact/ContactPage'
+import { InsurancePage } from '@/pages/insurance/InsurancePage'
 import { SERVICE_PAGES } from '@/data/services'
 
 interface AppProps {
@@ -42,6 +48,14 @@ export function App({ path }: AppProps) {
           <ServicesPage />
         ) : route === BENEFITS ? (
           <BenefitsPage />
+        ) : route === PROMOTIONS_PAGE ? (
+          <PromotionsPage />
+        ) : route === AGREEMENTS ? (
+          <AgreementsPage />
+        ) : route === INSURANCE ? (
+          <InsurancePage />
+        ) : route === CONTACT ? (
+          <ContactPage />
         ) : service ? (
           <ServicePage route={route} content={service} />
         ) : (

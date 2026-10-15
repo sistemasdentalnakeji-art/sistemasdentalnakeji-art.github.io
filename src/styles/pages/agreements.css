@@ -1,0 +1,373 @@
+/* ==========================================================================
+   /convenios/ — "Muro de marcas" (AgreementsPage.tsx + BrandWall.tsx)
+   Tarjeta con título + fichas con el logo de cada empresa. El estado "encendido" lo pone BrandWall (data-lit="true"): una ficha
+   cada 2 s sola (ciclo automático) y la que tenga el cursor encima. Encendida: logo a color, nombre en blanco sobre un chip de
+   la marca, contorno estilo Siri que gira (como los iconos de /servicios/, pero en el color de la marca), ola que respira
+   (como las categorías de /servicios/) y sombra, todo con --brand (el color más llamativo del logo, inline en cada ficha).
+   Depende de siri.css (@property --siri-angle y @keyframes siri-spin). Táctil, "reducir movimiento" y "Pausar animaciones":
+   logos siempre a color, sin ola ni contorno.
+   ========================================================================== */
+.agreements__head {
+  max-width: 760px;
+}
+
+/* 2 / 3 / 6 columnas; la tarjeta del título ocupa 2 / 3 / 3 celdas: con 15 fichas son 18 celdas, filas completas en tableta y escritorio. */
+.brand-wall {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 1.4vw, 16px);
+  margin: clamp(32px, 5vw, 56px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 700px) {
+  .brand-wall {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .brand-wall__summary {
+    grid-column: span 3;
+  }
+}
+
+@media (min-width: 1100px) {
+  .brand-wall {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+/* Tarjeta del título: azul marino con luz celeste en la esquina. */
+.brand-wall__summary {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  min-height: 200px;
+  padding: clamp(20px, 2.4vw, 30px);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(123, 195, 235, 0.35), transparent 55%),
+    linear-gradient(150deg, var(--color-ink), var(--color-night));
+  color: var(--color-white);
+}
+
+.brand-wall__title {
+  max-width: 14ch;
+  color: var(--color-white);
+  font-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.brand-wall__summary-text {
+  max-width: 34ch;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* Ficha de una empresa (estado base = a color y sin efectos: táctil, sin movimiento). */
+.brand-tile {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  place-items: center;
+  min-height: 200px;
+  padding: 22px 14px 14px;
+  border: 1px solid var(--color-sky-strong);
+  border-radius: 24px;
+  background: var(--color-white);
+}
+
+/* Los efectos solo existen con mouse y movimiento permitido. */
+.brand-tile__clip,
+.brand-tile__ring {
+  display: none;
+}
+
+/* Mismo tamaño visual para logos anchos y cuadrados: el área se iguala con la proporción (--ar).
+   Nunca más ancho que el archivo (--w): los logos chicos (Nissan, Real Inn) no se pixelan. */
+.brand-tile__logo {
+  position: relative;
+  z-index: 1;
+  width: min(84%, calc(82px * sqrt(var(--ar, 2))), calc(var(--w, 480) * 1px));
+  height: auto;
+  max-height: 118px;
+  object-fit: contain;
+}
+
+/* Solo los logos con su propio cuadro de fondo (Xolo Girls): un radio en los demás les recorta las esquinas. */
+.brand-tile__logo.is-framed {
+  border-radius: 12px;
+}
+
+.brand-tile__name {
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .brand-tile {
+    transition:
+      border-color 0.45s ease,
+      box-shadow 0.45s ease,
+      translate 0.45s var(--ease);
+  }
+
+  .brand-tile__logo {
+    filter: grayscale(1);
+    opacity: 0.78;
+    transition:
+      filter 0.45s ease,
+      opacity 0.45s ease,
+      scale 0.45s var(--ease);
+  }
+
+  .brand-tile__name {
+    transition:
+      background-color 0.45s ease,
+      color 0.45s ease;
+  }
+
+  /* Recorte de la ola: queda dentro de la ficha (la ficha no recorta, para que el contorno pueda salirse un poco). */
+  .brand-tile__clip {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: block;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  /* Ola de color: sube desde abajo, llena la ficha y se mueve despacio (mismo recurso que las categorías de /servicios/).
+     Las manchas solo se mueven mientras la ficha está encendida (pausadas, no quitadas: así no saltan al apagarse). */
+  .brand-tile__glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(70% 90% at 100% 0%, color-mix(in srgb, var(--brand) 16%, transparent), transparent 70%),
+      linear-gradient(0deg, color-mix(in srgb, var(--brand) 30%, transparent), color-mix(in srgb, var(--brand) 12%, transparent) 60%, transparent 100%);
+    opacity: 0;
+    transform: translateY(35%);
+    transition:
+      opacity 0.5s var(--ease),
+      transform 0.7s var(--ease);
+  }
+
+  .brand-tile__glow::before,
+  .brand-tile__glow::after {
+    content: '';
+    position: absolute;
+    width: 85%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    animation-play-state: paused;
+  }
+
+  .brand-tile__glow::before {
+    bottom: -45%;
+    left: -20%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--brand) 38%, transparent), transparent 68%);
+    animation: brand-drift-a 4.8s ease-in-out infinite alternate paused;
+  }
+
+  .brand-tile__glow::after {
+    right: -20%;
+    bottom: -30%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--brand) 30%, transparent), transparent 68%);
+    animation: brand-drift-b 6.2s ease-in-out infinite alternate paused;
+  }
+
+  /* Contorno estilo Siri: degradado cónico que gira, recortado a un anillo (colores derivados de --brand). */
+  .brand-tile__ring {
+    --ring-width: 2px;
+    --siri-a: color-mix(in srgb, var(--brand) 55%, #fff);
+    --siri-b: var(--brand);
+    --siri-c: color-mix(in srgb, var(--brand) 70%, #000);
+    --siri-d: color-mix(in srgb, var(--brand) 35%, #fff);
+    position: absolute;
+    inset: calc(var(--ring-width) * -1);
+    z-index: 2;
+    display: block;
+    padding: var(--ring-width);
+    border-radius: calc(24px + var(--ring-width));
+    background: conic-gradient(
+      from var(--siri-angle),
+      var(--siri-a),
+      var(--siri-b),
+      var(--siri-c),
+      var(--siri-d),
+      var(--siri-a)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    animation: siri-spin 2.2s linear infinite paused;
+    pointer-events: none;
+  }
+
+  /* Encendida. */
+  .brand-tile[data-lit='true'] {
+    border-color: transparent;
+    box-shadow: 0 18px 36px -22px color-mix(in srgb, var(--brand) 85%, transparent);
+    translate: 0 -3px;
+  }
+
+  .brand-tile[data-lit='true'] .brand-tile__logo {
+    filter: none;
+    opacity: 1;
+    scale: 1.06;
+  }
+
+  /* Nombre: blanco sobre un chip del color de la marca (oscurecido un poco: naranja o rosa puros no dan contraste con blanco). */
+  .brand-tile[data-lit='true'] .brand-tile__name {
+    background: color-mix(in srgb, var(--brand) 72%, var(--color-ink));
+    color: var(--color-white);
+  }
+
+  .brand-tile[data-lit='true'] .brand-tile__glow {
+    opacity: 1;
+    transform: none;
+  }
+
+  .brand-tile[data-lit='true'] .brand-tile__glow::before,
+  .brand-tile[data-lit='true'] .brand-tile__glow::after {
+    animation-play-state: running;
+  }
+
+  .brand-tile[data-lit='true'] .brand-tile__ring {
+    opacity: 1;
+    animation-play-state: running;
+  }
+
+  /* Entrada al llegar con el scroll: aparecen subiendo un poco (estado final = estilos base). */
+  @supports (animation-timeline: view()) {
+    .brand-wall > li {
+      animation: brand-tile-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+  }
+}
+
+@keyframes brand-drift-a {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(45%, -28%) scale(1.15);
+  }
+
+  100% {
+    transform: translate(12%, 10%) scale(0.95);
+  }
+}
+
+@keyframes brand-drift-b {
+  0% {
+    transform: translate(0, 0) scale(1.05);
+  }
+
+  50% {
+    transform: translate(-40%, -22%) scale(0.9);
+  }
+
+  100% {
+    transform: translate(-10%, 8%) scale(1.12);
+  }
+}
+
+@keyframes brand-tile-in {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+  }
+}
+
+/* Pausar animaciones: sin entrada, ola ni contorno; logos a color y quietos (BrandWall tampoco avanza el ciclo). */
+html[data-motion='paused'] .brand-wall > li {
+  animation: none !important;
+}
+
+html[data-motion='paused'] .brand-tile__clip,
+html[data-motion='paused'] .brand-tile__ring {
+  display: none;
+}
+
+/* Aunque BrandWall siga marcando una ficha como encendida (el cursor está encima), aquí se ve como las demás. */
+html[data-motion='paused'] .brand-tile {
+  border-color: var(--color-sky-strong) !important;
+  box-shadow: none !important;
+}
+
+html[data-motion='paused'] .brand-tile__name {
+  background: none !important;
+  color: var(--color-text) !important;
+}
+
+html[data-motion='paused'] .brand-tile,
+html[data-motion='paused'] .brand-tile * {
+  transition: none !important;
+  translate: none !important;
+  scale: none !important;
+}
+
+html[data-motion='paused'] .brand-tile__logo {
+  filter: none;
+  opacity: 1;
+}
+
+/* Celular (2 columnas): 15 fichas dejan una celda suelta; la última ocupa la fila completa. */
+@media (max-width: 699px) {
+  .brand-tile:last-child {
+    grid-column: span 2;
+  }
+
+  .brand-tile {
+    min-height: 160px;
+  }
+}
+
+/* Franja final: ¿tu empresa aún no tiene convenio? */
+.agreements__join {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+  margin-top: clamp(40px, 6vw, 72px);
+  padding: clamp(22px, 3vw, 32px);
+  border-radius: 28px;
+  background: var(--color-tint);
+}
+
+.agreements__join-title {
+  color: var(--color-ink);
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.625rem);
+  letter-spacing: -0.02em;
+}
+
+.agreements__join-text {
+  margin-top: 6px;
+  color: var(--color-text);
+}

@@ -30,9 +30,6 @@ export const SITE = {
     region: 'B.C.',
     country: 'MX',
     mapsUrl: 'https://maps.app.goo.gl/8yYpDMNXzJLRXzhV8',
-    // Mapa embebido (mismo que usa el sitio actual). Para un pin exacto, reemplázalo por la URL
-    // de Google Maps → Compartir → Insertar un mapa.
-    mapEmbedUrl: 'https://www.google.com/maps?q=nakeji%20dental&t=m&z=15&output=embed&iwloc=near',
   },
   /**
    * Horario de atención. PENDIENTE: no está publicado en el sitio oficial.

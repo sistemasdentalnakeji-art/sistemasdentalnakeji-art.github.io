@@ -39,10 +39,19 @@
 /* "Pausar animaciones" (botón del footer, WCAG 2.2.2). La historia animada se excluye (todo elemento con una clase
    story__…: líneas, palabras, subrayado, hilo y diente, más la máscara .decor-reveal que dibuja el hilo): sus movimientos
    dependen del scroll y, pausados, dejarían el texto a medio entrar. */
-html[data-motion='paused'] *:not([class*='story__'], .decor-reveal),
-html[data-motion='paused'] *:not([class*='story__'], .decor-reveal)::before,
-html[data-motion='paused'] *:not([class*='story__'], .decor-reveal)::after {
+html[data-motion='paused'] *:not([class*='story__'], .decor-reveal, .catalog-group),
+html[data-motion='paused'] *:not([class*='story__'], .decor-reveal, .catalog-group)::before,
+html[data-motion='paused'] *:not([class*='story__'], .decor-reveal, .catalog-group)::after {
   animation-play-state: paused !important;
+}
+
+/* /servicios/: las animaciones (glow, .siri) ya quedan pausadas arriba; aquí también se quietan las transiciones de
+   tarjetas y flecha para que nada se mueva al pasar el cursor. */
+html[data-motion='paused'] .catalog-card,
+html[data-motion='paused'] .catalog-card__glow,
+html[data-motion='paused'] .catalog-card__arrow {
+  transition: none !important;
+  transform: none !important;
 }
 
 /* La palomita de confirmación del formulario es una entrada de una sola vez que parte de opacity 0 y de un trazo sin dibujar:

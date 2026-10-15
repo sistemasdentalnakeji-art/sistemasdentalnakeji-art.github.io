@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// SECCIÓN "CONTACTO Y UBICACIÓN": datos de contacto, redes sociales y mapa de Google.
+// SECCIÓN "CONTACTO Y UBICACIÓN": datos de contacto, redes sociales y la tarjeta de ubicación expandible (reemplaza al mapa de Google).
 //
-// • Dirección, teléfonos, correo, horario y mapa → src/config/site.ts.
+// • Dirección, teléfonos, correo y horario → src/config/site.ts (mapsUrl alimenta "Cómo llegar").
 // • Título y texto → src/data/home.ts (CONTACT_SECTION).
 // • Estilos → src/styles/pages/home/contact.css.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -12,6 +12,8 @@ import { AddressText } from '@/components/ui/AddressText'
 import { Band } from '@/components/decor/Band'
 import { ContactItem } from '@/components/ui/ContactItem'
 import { ExternalLink } from '@/components/ui/ExternalLink'
+import { Icon } from '@/components/ui/Icon'
+import { LocationMap } from '@/components/ui/LocationMap'
 import { SectionDecor } from '@/components/decor/SectionDecor'
 import { SectionIntro } from '@/components/ui/SectionIntro'
 import { SocialLinks } from '@/components/ui/SocialLinks'
@@ -34,22 +36,23 @@ export function ContactLocation() {
 
             <address>
               <ul className="contact-list">
-                <ContactItem icon="pin" label="Dirección">
+                <ContactItem icon="pin" label="Dirección" siri>
                   <span className="contact-item__value contact-item__value--text">
                     <AddressText />
                   </span>
-                  <ExternalLink className="text-link" href={address.mapsUrl}>
+                  <ExternalLink className="btn btn--secondary btn--sm" href={address.mapsUrl}>
                     Cómo llegar
+                    <Icon name="arrowRight" size={16} />
                   </ExternalLink>
                 </ContactItem>
                 {SITE.phones.map((phone) => (
-                  <ContactItem key={phone.href} icon="phone" label={phone.label}>
+                  <ContactItem key={phone.href} icon="phone" label={phone.label} siri>
                     <a className="contact-item__value" href={phone.href}>
                       {phone.display}
                     </a>
                   </ContactItem>
                 ))}
-                <ContactItem icon="mail" label="Correo">
+                <ContactItem icon="mail" label="Correo" siri>
                   <a className="contact-item__value contact-item__value--email" href={`mailto:${SITE.email}`}>
                     {SITE.email}
                   </a>
@@ -73,16 +76,9 @@ export function ContactLocation() {
             </div>
           </div>
 
+          {/* Reemplaza al mapa de Google: tarjeta que se expande y llena el recuadro (components/ui/LocationMap.tsx). */}
           <div className="contact__map">
-            <iframe
-              title={`Mapa de ubicación de ${SITE.name} en ${address.city}`}
-              src={address.mapEmbedUrl}
-              width={600}
-              height={480}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-            />
+            <LocationMap name={SITE.name} tag="Zona Río" />
           </div>
         </div>
       </div>

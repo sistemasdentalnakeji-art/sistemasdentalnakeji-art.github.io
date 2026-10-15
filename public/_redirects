@@ -12,7 +12,11 @@
 # Landings en inglés
 /dentist-in-tijuana/               /                                    301
 /dental-implants/                  /implantes-dentales-en-tijuana/      301
-/smile-makeover/                   /cosmetica-dental-en-tijuana/        301
+/smile-makeover/                   /servicios/                          301
+
+# Servicios eliminados por ser categorías generales (cosmética dental y diseño de sonrisa; oct-2026)
+/cosmetica-dental-en-tijuana/      /servicios/                          301
+/diseno-de-sonrisa-en-tijuana/     /servicios/                          301
 
 # Blog y artículos
 /blog2/                            /blog/                               301

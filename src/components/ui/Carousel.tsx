@@ -39,7 +39,11 @@ export function Carousel({ label, items, className }: CarouselProps) {
     const track = trackRef.current
     if (!track) return
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    track.scrollBy({ left: direction * track.clientWidth * 0.9, behavior: reduceMotion ? 'auto' : 'smooth' })
+    // Una "página" exacta (ancho útil + separación): aterriza justo en una tarjeta, sin dejar un pedazo de la vecina.
+    const style = getComputedStyle(track)
+    const page =
+      track.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) + (parseFloat(style.columnGap) || 0)
+    track.scrollBy({ left: direction * page, behavior: reduceMotion ? 'auto' : 'smooth' })
   }
 
   return (
@@ -49,7 +53,7 @@ export function Carousel({ label, items, className }: CarouselProps) {
         ref={trackRef}
         className="carousel__track"
         tabIndex={canPrev || canNext ? 0 : undefined}
-        aria-label="Desliza para ver más"
+        aria-label={`Lista: ${label}`}
       >
         {items.map((item, index) => (
           <li key={index} className="carousel__item">
@@ -66,7 +70,7 @@ export function Carousel({ label, items, className }: CarouselProps) {
           aria-disabled={!canPrev}
         >
           <Icon name="chevronLeft" size={20} />
-          <span className="visually-hidden">Anterior</span>
+          <span className="visually-hidden">Anterior: {label}</span>
         </button>
         <button
           type="button"
@@ -75,7 +79,7 @@ export function Carousel({ label, items, className }: CarouselProps) {
           aria-disabled={!canNext}
         >
           <Icon name="chevronRight" size={20} />
-          <span className="visually-hidden">Siguiente</span>
+          <span className="visually-hidden">Siguiente: {label}</span>
         </button>
       </div>
     </div>

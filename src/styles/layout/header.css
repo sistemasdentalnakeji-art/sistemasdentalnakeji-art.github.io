@@ -286,12 +286,10 @@
     width: 680px;
   }
 
-  /* Servicios: 3 columnas de 4, llenando primero la 1.ª columna (orden de importancia). */
+  /* Servicios: 9 enlaces en 3 columnas x 3 filas, que se leen por filas (orden de navigation.ts). */
   .dropdown--servicios .dropdown__list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(4, auto);
-    grid-auto-flow: column;
     column-gap: 4px;
   }
 }

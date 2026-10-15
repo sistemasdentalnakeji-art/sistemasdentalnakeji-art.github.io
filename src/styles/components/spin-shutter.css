@@ -1,0 +1,137 @@
+/* ==========================================================================
+   Spin Shutter (components/ui/SpinShutter.tsx): órbita 3D de fotos con botones anterior/siguiente.
+   Geometría en CSS puro: cada foto se coloca en el anillo (rotateY(k·360°/n) + un radio hacia delante) y se CONTRA-GIRA para
+   mirar siempre de frente; el anillo se inclina hacia la cámara (--tilt) y se gira sobre la pantalla (--roll), como en la
+   página oficial. --spin (el giro), --tilt y --roll los escribe el componente cada frame; --ss-spread (0 a 1) abre el anillo
+   desde una pila. El desenfoque y el apagado por profundidad también los pone el componente.
+   Panel azul marino liso. Sin movimiento: órbita quieta y completa.
+   ========================================================================== */
+@property --ss-spread {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+.spin-shutter {
+  --ss-spread: 1;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 8px;
+  height: 100%;
+  min-height: 540px;
+  padding: clamp(20px, 2.4vw, 32px);
+  overflow: hidden;
+  border-radius: 32px;
+  background: linear-gradient(160deg, var(--color-ink), var(--color-night));
+  color: var(--color-white);
+  user-select: none;
+}
+
+/* Pila inicial (antes de verse) y apertura: la órbita se abre en ~1.9 s. */
+.spin-shutter[data-phase='stacked'] {
+  --ss-spread: 0;
+}
+
+.spin-shutter[data-phase='open'] {
+  transition: --ss-spread 1.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Sin movimiento: órbita completa desde el principio, sin transición. Sin JavaScript: también completa. */
+.spin-shutter[data-phase='static'] {
+  --ss-spread: 1;
+}
+
+@media (scripting: none) {
+  .spin-shutter[data-phase='stacked'] {
+    --ss-spread: 1;
+  }
+}
+
+/* Escenario: contenedor de medidas (cqw) para que la órbita escale con el ancho del panel. */
+.spin-shutter__stage {
+  container-type: inline-size;
+  position: relative;
+  min-height: 300px;
+  cursor: grab;
+  touch-action: pan-y; /* el dedo arrastra la órbita en horizontal; en vertical sigue siendo scroll de la página */
+}
+
+.spin-shutter__stage:active {
+  cursor: grabbing;
+}
+
+.spin-shutter__scene {
+  position: absolute;
+  inset: 0;
+  perspective: 80cqw; /* cámara cerca: el arco cercano se ve mucho más grande que el lejano, como en la página oficial */
+  perspective-origin: 50% 50%;
+}
+
+.spin-shutter__ring {
+  --spin: 0deg;
+  --w: min(15cqw, 180px); /* lado de cada foto */
+  --radius: calc(var(--w) * var(--n) * 0.19); /* radio para que n fotos queden casi pegadas */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--w);
+  height: var(--w);
+  margin: calc(var(--w) / -2) 0 0 calc(var(--w) / -2);
+  /* --tilt positivo = cámara por encima del anillo: el arco cercano queda abajo y el lejano arriba (por eso rotateX negativo). */
+  transform: rotateZ(var(--roll)) rotateX(calc(var(--tilt) * -1)) rotateY(var(--spin));
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Cada foto: se coloca en su lugar del anillo y luego se deshacen los giros del anillo (en orden inverso) para mirar de frente. */
+.spin-shutter__card {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--color-night);
+  box-shadow: 0 16px 28px -14px rgba(0, 0, 0, 0.6);
+  transform: rotateY(calc(var(--k) * 360deg / var(--n) * var(--ss-spread)))
+    translateZ(calc(var(--radius) * var(--ss-spread)))
+    rotateY(calc(var(--k) * -360deg / var(--n) * var(--ss-spread)))
+    rotateY(calc(var(--spin) * -1))
+    rotateX(var(--tilt))
+    rotateZ(calc(var(--roll) * -1));
+}
+
+.spin-shutter__card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* Anterior / siguiente. */
+.spin-shutter__bar {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+}
+
+.spin-shutter__nav {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-white);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.spin-shutter__nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+html[data-motion='paused'] .spin-shutter {
+  transition: none !important;
+}

@@ -14,6 +14,7 @@ import {
   BENEFITS,
   CONTACT,
   HOME,
+  MORE_SERVICE_ROUTES,
   SERVICE_ROUTES,
   SERVICES,
   type RouteDef,
@@ -37,13 +38,32 @@ export interface NavMenu {
 
 type NavItem = NavLink | NavMenu
 
+/** Servicios del menú: 9, en cuadrícula de 3 x 3 que se lee por filas (dos de cada categoría de /servicios/ (Limpieza y Periodoncia en la de encías); el resto, en "Ver todos los servicios"). */
+const MENU_SERVICE_PATHS = [
+  '/implantes-dentales-en-tijuana/',
+  '/all-in-4-implants-en-tijuana/',
+  '/coronas-en-tijuana/',
+  '/carillasdentalesentijuana/',
+  '/ortodoncia-en-tijuana/',
+  '/invisalign-in-tijuana/',
+  '/limpieza-dental-en-tijuana/',
+  '/periodoncia-en-tijuana/',
+  '/endodoncias-en-tijuana/',
+]
+
+const MENU_SERVICES: RouteDef[] = MENU_SERVICE_PATHS.map((path) => {
+  const route = [...SERVICE_ROUTES, ...MORE_SERVICE_ROUTES].find((item) => item.path === path)
+  if (!route) throw new Error(`Servicio del menú sin ruta: ${path}`)
+  return route
+})
+
 export const MAIN_NAV: NavItem[] = [
   { kind: 'link', id: 'inicio', label: HOME.label, href: HOME.path },
   {
     kind: 'menu',
     id: 'servicios',
     label: SERVICES.label,
-    children: SERVICE_ROUTES,
+    children: MENU_SERVICES,
     overview: { label: 'Ver todos los servicios', href: SERVICES.path },
   },
   {

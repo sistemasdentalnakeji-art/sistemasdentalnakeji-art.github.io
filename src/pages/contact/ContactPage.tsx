@@ -1,0 +1,252 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// PÁGINA /contacto/ — "Bento": rejilla de tarjetas de distinto tamaño (teléfonos, WhatsApp, correo y el plano animado
+// de la ubicación) y dos marcos sociales (Facebook e Instagram).
+//
+// • Luz que sigue al cursor en cada tarjeta (inspirada en "Spotlight" de 21st.dev, código propio): un solo pointermove en la
+//   rejilla escribe --spot-x/--spot-y en la tarjeta bajo el puntero; nada se vuelve a renderizar. Sin efecto en táctil.
+// • Las tarjetas entran escalonadas con el scroll (CSS animation-timeline, sin JS); sin soporte se ven quietas.
+// • El plano es el mismo LocationMap de la home (se abre solo al verse).
+// • Sin fondo propio. Textos → src/data/contact.ts; datos de contacto → src/config/site.ts.
+// • Redes ("muro"): panel oscuro con texto y enlaces a la izquierda y dos ventanas a la derecha con el contenido real,
+//   que se carga solo (iframes con loading="lazy"): plugin de página de Facebook e incrustación del perfil de Instagram.
+// • Estilos → src/styles/pages/contact.css.
+// ─────────────────────────────────────────────────────────────────────────────
+
+import { useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react'
+import { SITE } from '@/config/site'
+import {
+  CONTACT_DIRECT,
+  CONTACT_INTRO,
+  CONTACT_SOCIAL,
+  facebookEmbed,
+  INSTAGRAM_EMBED,
+  PRIVACY_NOTE,
+  SOCIAL_CARDS,
+} from '@/data/contact'
+import { Band } from '@/components/decor/Band'
+import { PlasmaBackground } from '@/components/decor/PlasmaBackground'
+import { AddressText } from '@/components/ui/AddressText'
+import { BrandIcon } from '@/components/ui/BrandIcon'
+import { ExternalLink } from '@/components/ui/ExternalLink'
+import { Icon, type IconName } from '@/components/ui/Icon'
+import { LocationMap } from '@/components/ui/LocationMap'
+import { cx } from '@/lib/cx'
+
+// La luz se mueve con el puntero dentro de la tarjeta que esté debajo.
+function moveSpot(event: PointerEvent<HTMLUListElement>) {
+  if (event.pointerType === 'touch') return
+  const card = (event.target as HTMLElement).closest<HTMLElement>('.bento__card')
+  if (!card) return
+  const box = card.getBoundingClientRect()
+  card.style.setProperty('--spot-x', `${event.clientX - box.left}px`)
+  card.style.setProperty('--spot-y', `${event.clientY - box.top}px`)
+}
+
+interface CardProps {
+  area: string
+  icon: IconName
+  title: string
+  index: number
+  tone?: 'night'
+  children: ReactNode
+}
+
+function BentoCard({ area, icon, title, index, tone, children }: CardProps) {
+  return (
+    <li className={cx('bento__card', `bento__card--${area}`, tone && 'bento__card--night')} style={{ '--i': index } as CSSProperties}>
+      <span className="bento__ring" aria-hidden="true" />
+      <div className="bento__head">
+        <span className="bento__icon siri">
+          <Icon name={icon} size={20} />
+        </span>
+        <h3 className="bento__title">{title}</h3>
+      </div>
+      {children}
+    </li>
+  )
+}
+
+// Copia al portapapeles (solo en el navegador, dentro del clic); confirma 1.6 s con una palomita.
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = useState(false)
+  const copy = () => {
+    navigator.clipboard
+      ?.writeText(text)
+      .then(() => {
+        setCopied(true)
+        window.setTimeout(() => setCopied(false), 1600)
+      })
+      .catch(() => undefined)
+  }
+  return (
+    <button type="button" className="copy-btn" onClick={copy} aria-label={`Copiar ${label}`}>
+      {copied ? (
+        <Icon name="check" size={16} />
+      ) : (
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="11" height="11" rx="2.5" />
+          <path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15" />
+        </svg>
+      )}
+      <span className="copy-btn__live" role="status">
+        {copied ? 'Copiado' : ''}
+      </span>
+    </button>
+  )
+}
+
+// Ventana de red social: barra con marca y "en vivo", y el contenido incrustado (se carga solo, en diferido).
+// `src` como función recibe el ancho del iframe ya medido en el navegador (Facebook); así el prerender no lo necesita.
+function SocialWindow({ brand, src, title }: { brand: 'facebook' | 'instagram'; src: string | ((width: number) => string); title: string }) {
+  const card = SOCIAL_CARDS[brand]
+  return (
+    <article className={cx('social-window', `social-window--${brand}`)}>
+      <header className="social-window__bar">
+        <BrandIcon name={brand} size={22} />
+        <h3 className="social-window__title">{card.title}</h3>
+        <span className="social-window__handle">{card.handle}</span>
+        <span className="social-window__live" aria-hidden="true" />
+      </header>
+      <iframe
+        className="social-window__embed"
+        src={typeof src === 'string' ? src : undefined}
+        ref={(el) => {
+          if (el && typeof src === 'function' && !el.src) el.src = src(el.getBoundingClientRect().width)
+        }}
+        title={title}
+        loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
+      />
+      <ExternalLink className="social-window__more" href={SITE.social[brand]}>
+        {card.more}
+        <Icon name="arrowRight" size={16} />
+      </ExternalLink>
+    </article>
+  )
+}
+
+export function ContactPage() {
+  return (
+    <Band
+      tone="white"
+      className="contact-page"
+      labelledBy="contacto-titulo"
+      decor={
+        <div className="contact-page__plasma">
+          <PlasmaBackground
+            className="contact-page__plasma-view"
+            color="#7bc3eb"
+            opacity={0.5}
+            scale={0.6}
+            speed={1.4}
+            iterations={45}
+            renderScale={0.4}
+            targetFps={30}
+          />
+        </div>
+      }
+    >
+      <div className="container">
+        <header>
+          <h1 id="contacto-titulo" className="page-title">
+            {CONTACT_INTRO.title}
+          </h1>
+          <p className="page-lead">{CONTACT_INTRO.tagline}</p>
+        </header>
+
+        <section className="contact-page__section" aria-label="Formas de contacto">
+          <ul className="bento" onPointerMove={moveSpot}>
+            <BentoCard area="phone" icon="phone" title={CONTACT_DIRECT.phoneLabel} index={0}>
+              <div className="bento__phones">
+                {SITE.phones.map((phone) => (
+                  <div key={phone.e164} className="bento__phone">
+                    <span className="bento__label">{phone.label}</span>
+                    <div className="bento__row">
+                      <a className="bento__value" href={phone.href}>
+                        {phone.display}
+                      </a>
+                      <CopyButton text={phone.display} label={phone.label} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </BentoCard>
+
+            <BentoCard area="wa" icon="whatsapp" title={CONTACT_DIRECT.whatsappTitle} index={1} tone="night">
+              <span className="bento__typing" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              <p className="bento__copy">{CONTACT_DIRECT.whatsappText}</p>
+              <ExternalLink className="btn bento__wa" href={SITE.social.whatsapp}>
+                <Icon name="whatsapp" size={20} />
+                {CONTACT_DIRECT.whatsappCta}
+              </ExternalLink>
+            </BentoCard>
+
+            <BentoCard area="mail" icon="mail" title={CONTACT_DIRECT.emailLabel} index={2}>
+              <div className="bento__row">
+                <a className="bento__value bento__value--mail" href={`mailto:${SITE.email}`}>
+                  {SITE.email}
+                </a>
+                <CopyButton text={SITE.email} label={CONTACT_DIRECT.emailLabel} />
+              </div>
+              <p className="bento__note">{CONTACT_DIRECT.emailText}</p>
+              {SITE.hours.length > 0 && (
+                <ul className="bento__hours">
+                  {SITE.hours.map((row) => (
+                    <li key={row.days}>
+                      <Icon name="clock" size={16} /> {row.days}: {row.hours}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <a className="btn btn--primary btn--sm bento__mail-cta" href={`mailto:${SITE.email}`}>
+                {CONTACT_DIRECT.emailCta}
+              </a>
+            </BentoCard>
+
+            <BentoCard area="map" icon="pin" title={CONTACT_DIRECT.addressLabel} index={3}>
+              <div className="bento__map">
+                <LocationMap name={SITE.name} tag="Zona Río" />
+              </div>
+              <div className="bento__row bento__row--address">
+                <address className="bento__text">
+                  <AddressText />
+                </address>
+                <ExternalLink className="btn btn--secondary btn--sm" href={SITE.address.mapsUrl}>
+                  {CONTACT_DIRECT.addressCta}
+                </ExternalLink>
+              </div>
+            </BentoCard>
+          </ul>
+        </section>
+
+        <section className="contact-page__section social-wall" aria-labelledby="contacto-redes">
+          <div className="social-wall__intro">
+            <p className="social-wall__eyebrow">{CONTACT_SOCIAL.eyebrow}</p>
+            <h2 id="contacto-redes" className="social-wall__title">
+              {CONTACT_SOCIAL.title}
+            </h2>
+            <p className="social-wall__lead">{CONTACT_SOCIAL.lead}</p>
+            <div className="social-wall__links">
+              {(['facebook', 'instagram'] as const).map((brand) => (
+                <ExternalLink key={brand} className={cx('social-wall__link', `social-wall__link--${brand}`)} href={SITE.social[brand]}>
+                  <BrandIcon name={brand} size={22} />
+                  {SOCIAL_CARDS[brand].cta}
+                  <Icon name="arrowRight" size={18} />
+                </ExternalLink>
+              ))}
+            </div>
+            <p className="social-wall__note">{PRIVACY_NOTE}</p>
+          </div>
+          <div className="social-wall__windows">
+            <SocialWindow brand="facebook" src={facebookEmbed} title="Publicaciones recientes de Dental Nakeji en Facebook" />
+            <SocialWindow brand="instagram" src={INSTAGRAM_EMBED} title="Perfil de Instagram de Dental Nakeji" />
+          </div>
+        </section>
+      </div>
+    </Band>
+  )
+}

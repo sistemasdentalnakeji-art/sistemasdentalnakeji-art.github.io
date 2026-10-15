@@ -1,0 +1,52 @@
+{
+  "slug": "ortodoncia",
+  "path": "/ortodoncia-en-tijuana/",
+  "highlights": [
+    "Valoración de tu mordida.",
+    "Ajustes periódicos del aparato.",
+    "Seguimiento para revisar tu avance."
+  ],
+  "aboutTitle": "Ortodoncia",
+  "aboutText": "La ortodoncia mueve los dientes poco a poco con brackets u otros aparatos. Puede ayudar cuando los dientes están encimados, separados o cuando la mordida no cierra bien. El tiempo y el tipo de tratamiento se revisan con un profesional de acuerdo con tu caso.",
+  "sources": [
+    {
+      "name": "MouthHealthy (ADA) - Braces",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/braces",
+      "used_for": "Qué es la ortodoncia, causas de la mala mordida, brackets y alineadores removibles, retenedor tras el tratamiento, higiene durante el tratamiento"
+    },
+    {
+      "name": "MouthHealthy (ADA) - Orthodontics",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/orthodontics",
+      "used_for": "Objetivo de una mordida sana (masticar y hablar), uso en adultos, retenedores para estabilizar resultados"
+    },
+    {
+      "name": "American Association of Orthodontists - Orthodontics for Children",
+      "url": "https://aaoinfo.org/child-orthodontics/",
+      "used_for": "Revisión temprana, dientes mixtos, origen de los problemas ortodónticos"
+    },
+    {
+      "name": "American Association of Orthodontists - Retainers",
+      "url": "https://aaoinfo.org/whats-trending/retainers/",
+      "used_for": "El retenedor mantiene los dientes en su posición corregida tras el tratamiento"
+    },
+    {
+      "name": "Cleveland Clinic - What Is Orthodontics?",
+      "url": "https://my.clevelandclinic.org/health/treatments/24285-orthodontics",
+      "used_for": "Contraste: problemas comunes, atender primero caries o enfermedad de encías, retenedores"
+    },
+    {
+      "name": "MedlinePlus (NIH) - Orthodontia",
+      "url": "https://medlineplus.gov/orthodontia.html",
+      "used_for": "Contraste: para qué sirve la ortodoncia y que se usa en niños y adultos"
+    }
+  ],
+  "originalityCheck": "Búsqueda web entre comillas (2026-10) de \"guiar cada pieza hacia un lugar más adecuado\" y \"no todas las bocas necesitan lo mismo\": sin coincidencias exactas ni casi idénticas en ningún sitio; solo temas afines.",
+  "claimsToConfirmWithClinic": [
+    "Si la clínica cuenta con ortodoncista especialista o dentista con formación en ortodoncia (no se afirma)",
+    "Tipos de aparatos que se ofrecen (brackets metálicos, estéticos, linguales, etc.)",
+    "Si se toman radiografías, fotos y escaneo o moldes en la valoración inicial de la clínica",
+    "Si el retenedor se entrega o se cobra aparte, y de qué tipo",
+    "Edades de atención en ortodoncia (infantil, adolescentes, adultos)",
+    "Frecuencia de las revisiones (no se menciona)"
+  ]
+}

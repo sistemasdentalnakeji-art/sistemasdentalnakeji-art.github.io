@@ -1,0 +1,48 @@
+{
+  "slug": "alineadores",
+  "path": "/invisalign-in-tijuana/",
+  "highlights": [
+    "Una opción discreta para mejorar tu sonrisa.",
+    "Ayudan a mejorar la alineación dental.",
+    "Favorecen una sonrisa más equilibrada."
+  ],
+  "aboutTitle": "Alineadores transparentes",
+  "aboutText": "El tratamiento con alineadores se planifica de acuerdo con la posición de tus dientes y el resultado que se busca. Durante el proceso, se realizan revisiones para seguir los cambios y hacer los ajustes necesarios. El dentista te explica cada etapa y el tiempo estimado para tu caso.",
+  "sources": [
+    {
+      "name": "American Association of Orthodontists - Orthodontic Treatment with Clear Aligners",
+      "url": "https://aaoinfo.org/whats-trending/orthodontic-treatment-with-clear-aligners/",
+      "used_for": "Qué son, valoración con fotos y escaneo, plan en software, juegos sucesivos, uso constante, supervisión, limitaciones en casos complejos, higiene y cuidado"
+    },
+    {
+      "name": "Cleveland Clinic - Clear Aligners",
+      "url": "https://my.clevelandclinic.org/health/treatments/clear-aligners",
+      "used_for": "Contraste: casos de leves a moderados, escaneo y fabricación, retirarlos para comer y cepillar, citas de control"
+    },
+    {
+      "name": "Cleveland Clinic - What Is a Teeth Retainer?",
+      "url": "https://my.clevelandclinic.org/health/treatments/10899-teeth-retainer",
+      "used_for": "Retenedor tras aparatos o alineadores para evitar que los dientes se muevan de regreso"
+    },
+    {
+      "name": "MouthHealthy (ADA) - Braces",
+      "url": "https://www.mouthhealthy.org/all-topics-a-z/braces",
+      "used_for": "Los alineadores removibles se usan bajo supervisión directa de un dentista u ortodoncista"
+    },
+    {
+      "name": "American Association of Orthodontists - Retainers",
+      "url": "https://aaoinfo.org/whats-trending/retainers/",
+      "used_for": "Quien termina un tratamiento ortodóntico necesita retención"
+    }
+  ],
+  "originalityCheck": "Búsqueda web entre comillas de \"cubiertas de plástico, hechas a la medida de tus dientes\" y \"su efecto depende de quien los lleva\": sin coincidencias exactas ni casi idénticas; solo temas afines.",
+  "claimsToConfirmWithClinic": [
+    "Marca o sistema de alineadores que usa la clínica (no se nombra)",
+    "Si el plan se hace con software digital y escaneo intraoral o con moldes",
+    "Si se colocan pequeños aditamentos (attachments) en los dientes",
+    "Horas diarias de uso y frecuencia de cambio de alineador (omitidas a propósito)",
+    "Quién diseña y supervisa el tratamiento (dentista general u ortodoncista)",
+    "Tipo de retenedor que entrega la clínica y si va incluido",
+    "Edades y tipos de casos que la clínica trata con alineadores"
+  ]
+}

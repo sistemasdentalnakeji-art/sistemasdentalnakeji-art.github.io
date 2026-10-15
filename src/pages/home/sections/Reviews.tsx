@@ -81,7 +81,6 @@ export function Reviews() {
 
           <Carousel
             label="Reseñas de pacientes"
-            className="carousel--reviews"
             items={REVIEWS.map((review) => (
               <ReviewCard review={review} />
             ))}

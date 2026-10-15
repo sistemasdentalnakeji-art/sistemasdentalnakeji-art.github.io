@@ -35,12 +35,10 @@ const CONFIG = {
     'Coronas',
     'Carillas dentales',
     'Blanqueamiento dental',
-    'Cosmética dental',
     'Endodoncias',
     'Ortodoncia',
     'Alineadores',
     'Odontopediatría',
-    'Diseño de sonrisa',
     'Dentaduras',
     'Periodoncia',
     'Extracciones simples y de juicio',
@@ -152,7 +150,10 @@ function validate_(data) {
   if (text(data.firstName).length < 2 || text(data.firstName).length > 50) errors.push('firstName');
   if (text(data.lastName).length < 2 || text(data.lastName).length > 50) errors.push('lastName');
   // Solo dígitos y los signos normales de un teléfono: sin letras ni etiquetas HTML.
-  if (!/^[+\d\s()-]{10,20}$/.test(text(data.phone))) errors.push('phone');
+  // Al menos 10 dígitos (igual que la web): sin esto, "++++++++++" pasaba y bloqueaba ese teléfono.
+  if (!/^[+\d\s()-]{10,20}$/.test(text(data.phone)) || text(data.phone).replace(/\D/g, '').length < 10) {
+    errors.push('phone');
+  }
   if (text(data.email) && (text(data.email).length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(text(data.email)))) {
     errors.push('email');
   }
