@@ -81,6 +81,24 @@ if (production) {
   }
 }
 
+// Candado de publicación: un 301 que apunta a una página noindex ('empty') desindexaría la URL del sitio actual.
+// Solo en producción; el build de vista previa no se ve afectado. Cada línea de public/_redirects es "origen destino [código]".
+if (production) {
+  const redirects = await fs.readFile(path.join(root, 'public', '_redirects'), 'utf8')
+  const hidden = redirects
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith('#'))
+    .map((line) => line.split(/\s+/))
+    .filter(([, target]) => ALL_ROUTES.find((route) => route.path === target)?.status === 'empty')
+  if (hidden.length > 0) {
+    const list = hidden.map(([from, target]) => `  ${from} -> ${target}`).join('\n')
+    throw new Error(
+      `${hidden.length} redirecciones 301 apuntan a páginas noindex (status 'empty'); publicar así desindexaría el sitio actual:\n${list}`,
+    )
+  }
+}
+
 // robots.txt y sitemap.xml: solo las páginas reales y terminadas.
 // Sin <lastmod>: la fecha del build no es la de la última modificación y daría una señal falsa a Google.
 const sitemapFile = path.join(dist, 'sitemap.xml')
