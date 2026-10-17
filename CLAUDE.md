@@ -206,6 +206,7 @@ Verificación rápida: `dist/index.html` debe contener el H1, "Solicita tu cita"
 
 ## Pendientes
 - Páginas nuevas (noindex, lorem ipsum por ahora): `/aviso-de-privacidad/`, `/terminos-y-condiciones/` y `/preguntas-frecuentes/`. Sus textos viven en `src/data/legal.ts` y `src/data/faq.ts`; la historia y el equipo de `/nosotros/`, en `src/data/about.ts`. Falta el texto real de cada una.
+- Al publicar y hospedar: revisar las 33 reglas de `public/_redirects` con la clínica (si usan alguna dirección vieja en mensajes, en Google Business o en anuncios, esa regla se queda). `/thank-you/` no está en el archivo; viene de la revisión SEO y falta agregarla. Las reglas solo funcionan con un hosting que lea `_redirects` (no GitHub Pages).
 - Reseñas: se dejan con marcadores "Paciente N" hasta tener las reales (decisión del usuario).
 - Botón "Pausar animaciones" también arriba, además del del footer (WCAG 2.2.2). Para después.
 - Versión en inglés (`/en/`) y en español. Para después.
