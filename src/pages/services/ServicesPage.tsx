@@ -56,6 +56,8 @@ function goToCategory(event: MouseEvent<HTMLAnchorElement>, index: number) {
   event.preventDefault()
   deck.scrollIntoView({ block: 'center', behavior: 'smooth' })
   deck.scrollTo({ top: (max / (CATALOG_GROUPS.length - 1)) * index, behavior: 'smooth' })
+  // Lleva también el foco a la categoría (sin mover el scroll): el siguiente Tab sigue desde ahí y no desde el índice.
+  document.getElementById(`${CATALOG_GROUPS[index].id}-titulo`)?.focus({ preventScroll: true })
 }
 
 export function ServicesPage() {
@@ -75,6 +77,7 @@ export function ServicesPage() {
             iterations={45}
             renderScale={0.4}
             targetFps={30}
+            maxDpr={1}
           />
         </div>
       }
@@ -144,7 +147,7 @@ export function ServicesPage() {
               }
             >
               <div className="catalog-group__rail">
-                <h2 id={`${group.id}-titulo`} className="catalog-group__title">
+                <h2 id={`${group.id}-titulo`} className="catalog-group__title" tabIndex={-1}>
                   {group.title}
                 </h2>
                 <p className="catalog-group__intro">{group.intro}</p>

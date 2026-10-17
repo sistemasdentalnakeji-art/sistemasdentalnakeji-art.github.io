@@ -244,7 +244,8 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
       aria-label={label}
       data-phase="stacked"
       // El giro automático espera mientras el foco del teclado está dentro de los botones.
-      onFocus={() => (focusWithin.current = true)}
+      // Solo el foco de teclado detiene el giro: un clic con el mouse también enfoca el botón y lo dejaría parado.
+      onFocus={(event) => (focusWithin.current = event.target.matches(':focus-visible'))}
       onBlur={() => (focusWithin.current = false)}
     >
       <div

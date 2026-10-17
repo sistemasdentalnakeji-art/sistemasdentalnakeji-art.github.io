@@ -13,7 +13,7 @@
 // La columna "Contacto" (dirección, teléfonos, correo) se llena sola con config/site.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { ABOUT, BENEFIT_ROUTES, BLOG, CONTACT, HOME, SERVICE_ROUTES, SERVICES } from '@/config/routes'
+import { ABOUT, BENEFIT_ROUTES, BLOG, CONTACT, FAQ, HOME, SERVICE_ROUTES, SERVICES } from '@/config/routes'
 
 export const FOOTER = {
   description: 'Clínica dental en la Zona Urbana Río Tijuana, Baja California.',
@@ -64,6 +64,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
       { label: CONTACT.label, href: CONTACT.path },
       { label: 'Agendar visita', schedule: true },
       { label: BLOG.label, href: BLOG.path },
+      { label: FAQ.label, href: FAQ.path },
     ],
   },
 ]

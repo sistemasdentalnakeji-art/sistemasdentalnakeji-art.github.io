@@ -56,7 +56,8 @@ export function LocationMap({ name, tag }: LocationMapProps) {
           if (manualRef.current) return
           timerRef.current = window.setTimeout(() => {
             // Si la persona ya está con el foco dentro, no se le mueve nada.
-            if (!stage.contains(document.activeElement)) setExpanded(true)
+            // Solo el foco de teclado lo frena: tras un clic con el mouse el botón queda enfocado y nunca volvería a abrirse solo.
+            if (!stage.querySelector(':focus-visible')) setExpanded(true)
           }, OPEN_DELAY)
         } else {
           manualRef.current = false

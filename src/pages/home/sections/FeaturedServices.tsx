@@ -29,8 +29,13 @@ function ServiceCard({ item }: { item: FeaturedItem }) {
       {/* Foto del servicio (data/services.ts → image); sin foto queda el degradado de marca. */}
       <div className="service-card__media">
         {image && (
+          // La tarjeta mide ~1/3 del contenedor: el navegador toma la miniatura de 720 px (public/images/servicios/spin/,
+          // mismo nombre y encuadre 16:9) salvo en pantallas de alta densidad.
+          // shortcut: supone que cada servicio destacado tiene miniatura en spin/ (hoy los 6 la tienen); si no, se pierde la foto.
           <img
             src={image.src}
+            srcSet={`${image.src.replace('/servicios/', '/servicios/spin/')} 720w, ${image.src} ${image.width}w`}
+            sizes="(min-width: 1100px) 400px, (min-width: 700px) 50vw, 100vw"
             width={image.width}
             height={image.height}
             alt=""

@@ -12,7 +12,7 @@
 // • Estilos → src/styles/pages/contact.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react'
 import { SITE } from '@/config/site'
 import {
   CONTACT_DIRECT,
@@ -24,7 +24,7 @@ import {
   SOCIAL_CARDS,
 } from '@/data/contact'
 import { Band } from '@/components/decor/Band'
-import { PlasmaBackground } from '@/components/decor/PlasmaBackground'
+import { PagePlasma } from '@/components/decor/PagePlasma'
 import { AddressText } from '@/components/ui/AddressText'
 import { BrandIcon } from '@/components/ui/BrandIcon'
 import { ExternalLink } from '@/components/ui/ExternalLink'
@@ -59,7 +59,7 @@ function BentoCard({ area, icon, title, index, tone, children }: CardProps) {
         <span className="bento__icon siri">
           <Icon name={icon} size={20} />
         </span>
-        <h3 className="bento__title">{title}</h3>
+        <h2 className="bento__title">{title}</h2>
       </div>
       {children}
     </li>
@@ -69,36 +69,66 @@ function BentoCard({ area, icon, title, index, tone, children }: CardProps) {
 // Copia al portapapeles (solo en el navegador, dentro del clic); confirma 1.6 s con una palomita.
 function CopyButton({ text, label }: { text: string; label: string }) {
   const [copied, setCopied] = useState(false)
+  const timer = useRef(0)
+  useEffect(() => () => window.clearTimeout(timer.current), [])
   const copy = () => {
     navigator.clipboard
       ?.writeText(text)
       .then(() => {
         setCopied(true)
-        window.setTimeout(() => setCopied(false), 1600)
+        // Un segundo clic reinicia la cuenta (si no, el primer temporizador cortaría la confirmación).
+        window.clearTimeout(timer.current)
+        timer.current = window.setTimeout(() => setCopied(false), 1600)
       })
       .catch(() => undefined)
   }
   return (
-    <button type="button" className="copy-btn" onClick={copy} aria-label={`Copiar ${label}`}>
-      {copied ? (
-        <Icon name="check" size={16} />
-      ) : (
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <rect x="9" y="9" width="11" height="11" rx="2.5" />
-          <path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15" />
-        </svg>
-      )}
+    <>
+      <button type="button" className="copy-btn" onClick={copy} aria-label={`Copiar ${label}`}>
+        {copied ? (
+          <Icon name="check" size={16} />
+        ) : (
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="11" height="11" rx="2.5" />
+            <path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15" />
+          </svg>
+        )}
+      </button>
+      {/* Fuera del botón: el contenido de un botón es presentacional y su aria-label lo taparía; así sí se anuncia. */}
       <span className="copy-btn__live" role="status">
         {copied ? 'Copiado' : ''}
       </span>
-    </button>
+    </>
   )
 }
 
 // Ventana de red social: barra con marca y "en vivo", y el contenido incrustado (se carga solo, en diferido).
 // `src` como función recibe el ancho del iframe ya medido en el navegador (Facebook); así el prerender no lo necesita.
+// Se vuelve a medir si el ancho cambia (girar el teléfono, cambiar la ventana): el plugin de Facebook no se adapta solo.
 function SocialWindow({ brand, src, title }: { brand: 'facebook' | 'instagram'; src: string | ((width: number) => string); title: string }) {
   const card = SOCIAL_CARDS[brand]
+  const frameRef = useRef<HTMLIFrameElement>(null)
+  useEffect(() => {
+    const frame = frameRef.current
+    if (!frame || typeof src !== 'function') return
+    let width = 0
+    let timer = 0
+    const load = () => {
+      const next = Math.round(frame.getBoundingClientRect().width)
+      if (Math.abs(next - width) < 40) return // cambios mínimos (barra de scroll) no recargan el plugin
+      width = next
+      frame.src = src(next)
+    }
+    const observer = new ResizeObserver(() => {
+      window.clearTimeout(timer)
+      timer = window.setTimeout(load, 250)
+    })
+    observer.observe(frame)
+    return () => {
+      observer.disconnect()
+      window.clearTimeout(timer)
+    }
+  }, [src])
   return (
     <article className={cx('social-window', `social-window--${brand}`)}>
       <header className="social-window__bar">
@@ -110,9 +140,7 @@ function SocialWindow({ brand, src, title }: { brand: 'facebook' | 'instagram'; 
       <iframe
         className="social-window__embed"
         src={typeof src === 'string' ? src : undefined}
-        ref={(el) => {
-          if (el && typeof src === 'function' && !el.src) el.src = src(el.getBoundingClientRect().width)
-        }}
+        ref={frameRef}
         title={title}
         loading="lazy"
         referrerPolicy="strict-origin-when-cross-origin"
@@ -129,22 +157,9 @@ export function ContactPage() {
   return (
     <Band
       tone="white"
-      className="contact-page"
+      className="contact-page band--clip"
       labelledBy="contacto-titulo"
-      decor={
-        <div className="contact-page__plasma">
-          <PlasmaBackground
-            className="contact-page__plasma-view"
-            color="#7bc3eb"
-            opacity={0.5}
-            scale={0.6}
-            speed={1.4}
-            iterations={45}
-            renderScale={0.4}
-            targetFps={30}
-          />
-        </div>
-      }
+      decor={<PagePlasma />}
     >
       <div className="container">
         <header>

@@ -7,12 +7,13 @@
 // Fondo: hilos de luz animados (AuroraBackground, efecto "fibers") con los colores del hero.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { ariaCurrent, HOME, PRIVACY, scheduleHref } from '@/config/routes'
+import { ariaCurrent, HOME, PRIVACY, scheduleHref, TERMS } from '@/config/routes'
 import { SITE } from '@/config/site'
 import { FOOTER_COLUMNS, type FooterLink } from '@/data/footer'
 import { AuroraBackground } from '@/components/decor/AuroraBackground'
 import { SectionDecor } from '@/components/decor/SectionDecor'
 import { AddressText } from '@/components/ui/AddressText'
+import { BrandOrb } from '@/components/ui/BrandOrb'
 import { Icon } from '@/components/ui/Icon'
 import { MotionToggle } from '@/components/ui/MotionToggle'
 import { SocialLinks } from '@/components/ui/SocialLinks'
@@ -39,10 +40,10 @@ export function Footer({ currentPath }: FooterProps) {
       <SectionDecor variant="wave" position="top" inverse />
       <div className="container">
         <div className="footer-grid">
-          {/* Marca: isotipo (corazón) en blanco, a la izquierda de las listas */}
+          {/* Marca: el mismo orbe iluminado del hero (BrandOrb), a la izquierda de las listas */}
           <div className="footer-brand">
             <a className="footer-brand__mark" href={HOME.path}>
-              <img src="/images/logo-isotipo-blanco.png" width={321} height={284} alt="" loading="lazy" decoding="async" />
+              <BrandOrb lazy />
               <span className="footer-brand__name">{SITE.name}</span>
             </a>
           </div>
@@ -93,7 +94,7 @@ export function Footer({ currentPath }: FooterProps) {
           </div>
         </div>
 
-        {/* Línea final: derechos y aviso de privacidad */}
+        {/* Línea final: derechos, aviso de privacidad y términos */}
         <div className="footer-bottom">
           <p>
             © <span suppressHydrationWarning>{YEAR}</span> {SITE.name}. Todos los derechos reservados.
@@ -101,9 +102,11 @@ export function Footer({ currentPath }: FooterProps) {
           <SocialLinks className="footer-social" iconSize={26} />
           <div className="footer-bottom__links">
             <MotionToggle />
-            <a href={PRIVACY.path} aria-current={ariaCurrent(PRIVACY.path, currentPath)}>
-              {PRIVACY.label}
-            </a>
+            {[PRIVACY, TERMS].map((route) => (
+              <a key={route.path} href={route.path} aria-current={ariaCurrent(route.path, currentPath)}>
+                {route.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>

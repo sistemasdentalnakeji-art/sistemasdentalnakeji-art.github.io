@@ -24,7 +24,7 @@
     display: none;
   }
 
-  .hero-orb__halo,
+  .brand-orb__halo,
   .siri::before,
   .siri::after {
     animation: none !important;
@@ -34,6 +34,15 @@
   .decor-ring__light {
     display: none;
   }
+}
+
+/* Fuera de pantalla (data-offscreen lo pone pauseOffscreen, lib/motion.ts): contornos .siri y texto con brillo en pausa.
+   Va aquí (al final de la cascada) para ganar a los `animation:` de cada página con la misma especificidad. */
+.siri[data-offscreen]::before,
+.siri[data-offscreen]::after,
+.shiny-text[data-offscreen],
+.brand-orb[data-offscreen] .brand-orb__halo {
+  animation-play-state: paused;
 }
 
 /* "Pausar animaciones" (botón del footer, WCAG 2.2.2). La historia animada se excluye (todo elemento con una clase

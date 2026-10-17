@@ -182,13 +182,15 @@
     mask-image: linear-gradient(270deg, transparent 0%, #000 22%);
   }
 
+  /* Más oscuro donde el título y el subtítulo largos llegan a la foto (~30-60 % del ancho): con fotos claras
+     (Limpieza, Blanqueamiento) el texto claro bajaba de 3:1. A la derecha la foto queda casi intacta. */
   .service-hero__scrim {
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(var(--hero-scrim-rgb), 0.35) 32%,
-      rgba(var(--hero-scrim-rgb), 0.4) 46%,
-      rgba(var(--hero-scrim-rgb), 0.1) 72%,
+      rgba(var(--hero-scrim-rgb), 0.5) 30%,
+      rgba(var(--hero-scrim-rgb), 0.6) 48%,
+      rgba(var(--hero-scrim-rgb), 0.25) 68%,
       transparent 100%
     );
   }

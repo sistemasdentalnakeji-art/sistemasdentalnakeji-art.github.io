@@ -21,6 +21,8 @@
 @import './layout/bands.css';
 @import './components/decor.css';
 @import './components/siri.css';
+@import './components/brand-orb.css';
+@import './components/page-plasma.css';
 @import './components/shiny-text.css';
 @import './components/spin-shutter.css';
 @import './layout/sections.css';
@@ -41,5 +43,8 @@
 @import './pages/agreements.css';
 @import './pages/insurance.css';
 @import './pages/contact.css';
+@import './pages/about.css';
+@import './pages/legal.css';
+@import './pages/faq.css';
 @import './pages/empty.css';
 @import './global/preferences.css';

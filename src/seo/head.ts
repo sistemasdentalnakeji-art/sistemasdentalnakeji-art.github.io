@@ -58,7 +58,9 @@ function clinicJsonLd() {
         '@type': 'WebSite',
         '@id': `${origin}/#sitio`,
         url: `${origin}/`,
-        name: SITE.legalName,
+        // Mismo nombre que og:site_name y el título; Google lo usa como nombre del sitio en los resultados.
+        name: SITE.name,
+        alternateName: SITE.legalName,
         inLanguage: SITE.lang,
         publisher: { '@id': `${origin}/#clinica` },
       },

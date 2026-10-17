@@ -9,3 +9,7 @@ npm-debug.log*
 
 # Graphify
 graphify-out/
+
+# QA local (capturas y reporte, no van a git)
+qa/
+.playwright-cli/

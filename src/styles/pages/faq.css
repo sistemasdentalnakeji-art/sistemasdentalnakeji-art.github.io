@@ -1,0 +1,188 @@
+/* ==========================================================================
+   Página /preguntas-frecuentes/ — acordeón por grupos (<details> nativo) con píldora de proximidad
+   (inspirada en "Proximity Accordion" de 21st.dev, código propio) y tarjeta de ayuda por WhatsApp.
+   Encabezado: .legal-head (legal.css). Textos en data/faq.ts.
+   ========================================================================== */
+.faq-page {
+  /* Permite animar el alto de la respuesta hasta "auto" (navegadores recientes; en los demás abre sin animación). */
+  interpolate-size: allow-keywords;
+}
+
+.faq {
+  display: grid;
+  gap: clamp(28px, 4vw, 48px);
+}
+
+@media (min-width: 1000px) {
+  .faq {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    align-items: start;
+  }
+
+  .faq-help {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+  }
+}
+
+.faq-group + .faq-group {
+  margin-top: clamp(28px, 4vw, 44px);
+}
+
+.faq-group__title {
+  margin-bottom: 12px;
+  color: var(--color-ink);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+}
+
+.faq-list {
+  position: relative;
+  border-top: 1px solid var(--color-fog);
+}
+
+/* Píldora que sigue a la pregunta más cercana al cursor (solo mouse). */
+.faq-list__pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--pill-h, 0px);
+  border-radius: 16px;
+  background: var(--color-sky-strong);
+  opacity: 0;
+  transform: translateY(var(--pill-y, 0px));
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1),
+    height 0.35s cubic-bezier(0.34, 1.4, 0.64, 1),
+    opacity 0.2s var(--ease);
+  pointer-events: none;
+}
+
+.faq-list[data-pill] .faq-list__pill {
+  opacity: 1;
+}
+
+.faq-item {
+  position: relative;
+  border-bottom: 1px solid var(--color-fog);
+}
+
+.faq-item__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 56px;
+  padding: 14px 16px;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq-item__q::-webkit-details-marker {
+  display: none;
+}
+
+/* Más que gira y se vuelve menos al abrir. */
+.faq-item__icon {
+  position: relative;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: inset 0 0 0 1px var(--color-fog);
+}
+
+.faq-item__icon::before,
+.faq-item__icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 2px;
+  margin: -1px 0 0 -6px;
+  border-radius: 2px;
+  background: var(--color-brand);
+  transition: transform 0.3s var(--ease);
+}
+
+.faq-item__icon::after {
+  transform: rotate(90deg);
+}
+
+.faq-item[open] .faq-item__icon::after {
+  transform: rotate(0deg);
+}
+
+.faq-item[open] .faq-item__icon::before {
+  transform: rotate(180deg);
+}
+
+.faq-item__a {
+  margin: 0;
+  padding: 0 16px 18px;
+  color: var(--color-text);
+  line-height: 1.7;
+}
+
+/* Apertura con altura animada (navegadores con ::details-content). */
+.faq-item::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size 0.35s var(--ease),
+    content-visibility 0.35s allow-discrete;
+}
+
+.faq-item[open]::details-content {
+  block-size: auto;
+}
+
+/* ---- Ayuda ---- */
+.faq-help {
+  padding: clamp(24px, 3vw, 32px);
+  border-radius: var(--radius-card);
+  background: radial-gradient(circle at 85% 0%, #18305a, var(--color-night) 70%);
+  color: var(--color-white);
+}
+
+.faq-help__title {
+  margin-bottom: 8px;
+  color: var(--color-white);
+  font-size: var(--text-card-title);
+}
+
+.faq-help__text {
+  margin: 0 0 20px;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* La regla global de "reducir movimiento" (*, ::before, ::after) no alcanza a ::details-content. */
+@media (prefers-reduced-motion: reduce) {
+  .faq-item::details-content {
+    transition: none;
+  }
+}
+
+/* Alto contraste de Windows: el más/menos se dibuja con fondos, que ese modo quita. */
+@media (forced-colors: active) {
+  .faq-item__icon {
+    border: 1px solid CanvasText;
+  }
+
+  .faq-item__icon::before,
+  .faq-item__icon::after {
+    background: CanvasText;
+  }
+}
+
+html[data-motion='paused'] .faq-list__pill,
+html[data-motion='paused'] .faq-item::details-content,
+html[data-motion='paused'] .faq-item__icon::before,
+html[data-motion='paused'] .faq-item__icon::after {
+  transition: none;
+}

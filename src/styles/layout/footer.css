@@ -48,27 +48,21 @@
   gap: 28px 24px;
 }
 
-/* Isotipo (corazón) en blanco: ya viene en blanco desde public/images/logo-isotipo-blanco.png. Arriba en celular; a la izquierda
-   de las listas en escritorio (ver el bloque de 1080 px). */
+/* Orbe iluminado del hero (BrandOrb, styles/components/brand-orb.css). Arriba en celular; a la izquierda
+   de las listas en escritorio (ver el bloque de 1080 px). Su resplandor (z-index -1) queda sobre los hilos (-2) y el velo. */
 .footer-brand {
   display: flex;
   align-items: flex-start;
   grid-column: 1 / -1;
 }
 
-/* Corazón (un poco más chico) con el nombre debajo, en blanco. */
+/* Orbe con el nombre debajo, en blanco y centrado bajo el orbe. */
 .footer-brand__mark {
   display: inline-flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
+  align-items: center;
+  gap: 22px;
   text-decoration: none;
-}
-
-.footer-brand__mark img {
-  display: block;
-  width: clamp(84px, 9vw, 124px);
-  height: auto;
 }
 
 .footer-brand__name {

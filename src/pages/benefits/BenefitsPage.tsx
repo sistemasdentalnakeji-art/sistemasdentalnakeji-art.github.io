@@ -60,6 +60,7 @@ export function BenefitsPage() {
             iterations={45}
             renderScale={0.4}
             targetFps={30}
+            maxDpr={1}
           />
         </div>
       }

@@ -63,6 +63,13 @@
   letter-spacing: 0.05em;
 }
 
+/* Pantallas muy angostas (320 px, zoom al 400 %): el chip pasa a dos líneas en vez de recortarse. */
+@media (max-width: 359px) {
+  .rail__badge {
+    white-space: normal;
+  }
+}
+
 @media (min-width: 960px) {
   .rail__top .rail__icon {
     width: 56px;
@@ -295,4 +302,19 @@
   .rail__list--copy {
     display: none;
   }
+}
+
+/* "Pausar animaciones": igual que sin movimiento. Congelada a medio camino, la cinta dejaría logos tapados. */
+html[data-motion='paused'] .rail__marquee {
+  overflow-x: auto;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+html[data-motion='paused'] .rail__track {
+  animation: none;
+}
+
+html[data-motion='paused'] .rail__list--copy {
+  display: none;
 }

@@ -1,0 +1,419 @@
+/* ==========================================================================
+   Página /nosotros/ — historia (línea de tiempo), misión y visión, y equipo por áreas.
+   Línea de tiempo inspirada en "Growth Story Timeline" y equipo en "Team Section with Glow Cards" (21st.dev, código propio).
+   El plasma de fondo es el compartido (page-plasma.css). Los estilos base son el estado final: sin soporte de
+   animation-timeline, con "reducir movimiento" o con "Pausar animaciones" todo se ve completo y quieto.
+   ========================================================================== */
+.about-section {
+  margin-top: clamp(48px, 7vw, 96px);
+}
+
+/* --color-text (no el gris de .section-text): va directo sobre el plasma y el gris bajaría de 4.5:1. */
+.about-lead {
+  max-width: 60ch;
+  margin-bottom: clamp(24px, 4vw, 44px);
+  color: var(--color-text);
+}
+
+/* ---- Historia: línea de tiempo ---- */
+/* Celular: línea a la izquierda. Escritorio: línea al centro y los hitos se alternan a cada lado. */
+.timeline {
+  --line-x: 11px;
+  position: relative;
+  display: grid;
+  gap: clamp(20px, 3vw, 36px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Pista gris y relleno de marca (el relleno crece con el scroll). */
+.timeline::before,
+.timeline::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: calc(var(--line-x) - 1.5px);
+  width: 3px;
+  border-radius: 3px;
+  background: var(--color-fog);
+}
+
+.timeline::after {
+  background: linear-gradient(var(--color-brand-light), var(--color-brand));
+  transform-origin: top;
+}
+
+.timeline__item {
+  position: relative;
+  padding-left: calc(var(--line-x) * 2 + 18px);
+}
+
+.timeline__dot {
+  position: absolute;
+  top: 26px;
+  left: calc(var(--line-x) - 11px);
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  border: 4px solid var(--color-white);
+  border-radius: 50%;
+  background: var(--color-brand);
+  box-shadow: 0 0 0 4px rgba(123, 195, 235, 0.35);
+}
+
+.timeline__card {
+  position: relative;
+  padding: clamp(20px, 3vw, 30px);
+  border: 1px solid var(--color-fog);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+}
+
+.timeline__title {
+  margin-bottom: 8px;
+  color: var(--color-ink);
+  font-size: var(--text-card-title);
+}
+
+.timeline__text {
+  margin: 0;
+  color: var(--color-text);
+}
+
+/* Trazo de marca sobre el borde de la tarjeta: se dibuja con el scroll (pathLength=1 en el <rect>). Estado base: completo. */
+.timeline__sketch {
+  position: absolute;
+  inset: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.timeline__sketch rect {
+  x: 1px;
+  y: 1px;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  rx: 24px;
+  fill: none;
+  stroke: var(--color-brand-light);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+/* Espacio para la foto (vacío por ahora), con el contorno luminoso .siri como la foto de recepción de /beneficios/.
+   El contorno gira solo con el cursor encima de la tarjeta. */
+.timeline__photo {
+  --siri-blur: 12px;
+  margin-top: 18px;
+  aspect-ratio: 16 / 9;
+  border-radius: 18px;
+  background: var(--color-sky);
+}
+
+.timeline__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.timeline__photo::before,
+.timeline__photo::after {
+  animation-play-state: paused;
+}
+
+.timeline__card:hover .timeline__photo::before,
+.timeline__card:hover .timeline__photo::after {
+  animation-play-state: running;
+}
+
+@media (min-width: 900px) {
+  .timeline {
+    --line-x: 50%;
+  }
+
+  .timeline__item {
+    width: 50%;
+    padding-left: 48px;
+    margin-left: 50%;
+  }
+
+  .timeline__item:nth-child(even) {
+    padding-right: 48px;
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+  .timeline__dot {
+    left: -11px;
+  }
+
+  .timeline__item:nth-child(even) .timeline__dot {
+    right: -11px;
+    left: auto;
+  }
+}
+
+/* ---- Misión y visión ---- */
+.purpose {
+  display: grid;
+  gap: clamp(16px, 2.5vw, 28px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 760px) {
+  .purpose {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.purpose__card {
+  isolation: isolate;
+  padding: clamp(26px, 4vw, 44px);
+  border: 1px solid var(--color-fog);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+}
+
+/* Visión en azul noche (el mismo degradado del orbe de marca). */
+.purpose__card--vision {
+  border-color: transparent;
+  background: radial-gradient(circle at 85% 0%, #18305a, var(--color-night) 70%);
+}
+
+.purpose__icon {
+  margin-bottom: 18px;
+}
+
+.purpose__title {
+  margin-bottom: 10px;
+  color: var(--color-ink);
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem);
+  letter-spacing: -0.02em;
+}
+
+.purpose__text {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--text-body-lg);
+}
+
+.purpose__card--vision .purpose__title,
+.purpose__card--vision .purpose__text {
+  color: var(--color-white);
+}
+
+/* ---- Equipo ---- */
+.team-area + .team-area {
+  margin-top: clamp(32px, 5vw, 56px);
+}
+
+.team-area__head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.team-area__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--color-ink);
+  color: var(--color-white);
+}
+
+.team-area__title {
+  color: var(--color-ink);
+  font-size: var(--text-card-title);
+}
+
+.team-area__text {
+  margin: 2px 0 0;
+  color: var(--color-text);
+  font-size: var(--text-small);
+}
+
+/* Tarjetas de ancho fijo y centradas (dos por fila en celular). */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, clamp(150px, 40vw, 210px));
+  justify-content: center;
+  gap: clamp(12px, 2vw, 20px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Tarjeta: el borde y la sombra se iluminan en celeste al pasar el cursor; el contorno del avatar gira. */
+.member {
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  padding: 26px 18px 22px;
+  border: 1px solid var(--color-fog);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition:
+    border-color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+
+.member:hover {
+  border-color: var(--color-brand-light);
+  box-shadow:
+    0 0 0 4px rgba(123, 195, 235, 0.18),
+    0 18px 40px rgba(58, 112, 176, 0.18);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .member:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.member__avatar {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  background: var(--color-sky);
+  color: var(--color-brand);
+}
+
+.member__name {
+  margin: 0;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.member__role {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--text-small);
+}
+
+/* Contornos .siri quietos hasta pasar el cursor (como las tarjetas de /servicios/). */
+.member .siri::before,
+.member .siri::after,
+.purpose__card .siri::before,
+.purpose__card .siri::after {
+  animation-play-state: paused;
+}
+
+.member:hover .siri::before,
+.member:hover .siri::after,
+.purpose__card:hover .siri::before,
+.purpose__card:hover .siri::after {
+  animation-play-state: running;
+}
+
+/* ---- Movimiento con el scroll ---- */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* El relleno avanza mientras la línea cruza el centro de la pantalla (inset 50 %/50 % = una línea a media altura). */
+    .timeline {
+      view-timeline: --history block;
+      view-timeline-inset: 50% 50%;
+    }
+
+    .timeline::after {
+      animation: timeline-fill linear both;
+      animation-timeline: --history;
+    }
+
+    /* La tarjeta entra girando desde su lado (bisagra en el punto de la línea); luego se dibuja su borde
+       y el contenido aparece en cascada, enfocándose (--d = orden). */
+    .timeline__item {
+      --swing: 1;
+      animation: timeline-in linear both;
+      animation-timeline: view();
+      /* Tope en píxeles: una tarjeta más alta que la pantalla (zoom, celular horizontal) no se queda atenuada. */
+      animation-range: entry 0% entry min(80%, 240px);
+    }
+
+    .timeline__sketch rect {
+      animation: sketch-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 30% cover 50%;
+    }
+
+    .timeline__reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry calc(20% + var(--d) * 12%) entry calc(75% + var(--d) * 12%);
+    }
+
+    @media (min-width: 900px) {
+      .timeline__item {
+        transform-origin: left center;
+      }
+
+      .timeline__item:nth-child(even) {
+        --swing: -1;
+        transform-origin: right center;
+      }
+    }
+  }
+}
+
+@keyframes timeline-fill {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes timeline-in {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--swing) * 48px)) rotate(calc(var(--swing) * 4deg)) scale(0.94);
+  }
+}
+
+@keyframes sketch-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(12px);
+  }
+}
+
+/* La pausa global (preferences.css) congelaría la línea y los hitos a medio entrar: con "Pausar animaciones" se ven completos. */
+html[data-motion='paused'] .timeline::after,
+html[data-motion='paused'] .timeline__item,
+html[data-motion='paused'] .timeline__sketch rect,
+html[data-motion='paused'] .timeline__reveal {
+  animation: none;
+}
+
+html[data-motion='paused'] .member {
+  transition: none;
+  transform: none;
+}

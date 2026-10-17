@@ -4,34 +4,6 @@
    Animaciones solo con transform/opacity; se detienen con "reducir movimiento" y "Pausar animaciones"
    (la entrada con el scroll no se pausa: depende del scroll, como en /servicios/).
    ========================================================================== */
-/* Fondo de plasma igual que /servicios/ y /beneficios/. clip (no hidden): hidden rompería el sticky del plasma. */
-.contact-page.band {
-  overflow: clip;
-}
-
-.contact-page__plasma {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  /* Atenuado arriba (título) y desvanecido al final para no dejar un borde recto antes del footer. */
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0, #000 620px, #000 calc(100% - 90px), transparent 100%);
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0, #000 620px, #000 calc(100% - 90px), transparent 100%);
-}
-
-.contact-page__plasma-view {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100svh;
-  opacity: 0;
-  transition: opacity 1.2s var(--ease);
-}
-
-.contact-page__plasma-view.is-ready {
-  opacity: 1;
-}
-
 .contact-page__section {
   margin-top: clamp(28px, 4vw, 44px);
 }

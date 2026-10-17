@@ -1,0 +1,214 @@
+/* ==========================================================================
+   Páginas legales: /aviso-de-privacidad/ (índice lateral con marcas) y /terminos-y-condiciones/ (artículos
+   numerados con barra de lectura). También el encabezado .legal-head, que reusa /preguntas-frecuentes/.
+   Sin fondo propio. Textos en data/legal.ts.
+   ========================================================================== */
+.legal-head {
+  max-width: 760px;
+  margin-bottom: clamp(32px, 5vw, 64px);
+}
+
+.legal-updated {
+  margin: 14px 0 0;
+  color: var(--color-muted);
+  font-size: var(--text-small);
+}
+
+.legal-text {
+  max-width: 68ch;
+  margin: 0 0 14px;
+  color: var(--color-text);
+  line-height: 1.7;
+}
+
+/* ---- Aviso de privacidad ---- */
+.privacy {
+  display: grid;
+  gap: clamp(28px, 4vw, 56px);
+}
+
+@media (min-width: 960px) {
+  .privacy {
+    grid-template-columns: 260px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  /* Con poca altura (zoom), el índice se desplaza por dentro en vez de cortarse. */
+  .toc {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+    max-height: calc(100svh - var(--header-height) - 48px);
+    overflow: auto;
+  }
+}
+
+.toc {
+  padding: 20px 22px;
+  border: 1px solid var(--color-fog);
+  border-radius: var(--radius-card);
+  background: var(--color-porcelain);
+}
+
+.toc__label {
+  margin: 0 0 12px;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.toc__list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cada enlace lleva una "marca": corta y gris en reposo; larga y azul en la sección activa (o con el cursor). */
+.toc__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  color: var(--color-muted);
+  font-size: var(--text-small);
+  text-decoration: none;
+  transition: color 0.25s var(--ease);
+}
+
+.toc__tick {
+  flex: none;
+  width: 10px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-field-border);
+  transition:
+    width 0.3s var(--ease),
+    background-color 0.3s var(--ease);
+}
+
+.toc__link:hover,
+.toc__link[aria-current] {
+  color: var(--color-ink);
+}
+
+.toc__link:hover .toc__tick {
+  width: 18px;
+}
+
+.toc__link[aria-current] {
+  font-weight: 700;
+}
+
+.toc__link[aria-current] .toc__tick {
+  width: 26px;
+  background: var(--color-brand);
+}
+
+@media (forced-colors: active) {
+  .toc__tick {
+    background: CanvasText;
+  }
+}
+
+.privacy__section + .privacy__section {
+  margin-top: clamp(28px, 4vw, 44px);
+  padding-top: clamp(28px, 4vw, 44px);
+  border-top: 1px dashed var(--color-fog);
+}
+
+.privacy__title {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 14px;
+  color: var(--color-ink);
+  font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.75rem);
+  letter-spacing: -0.02em;
+}
+
+.privacy__num {
+  color: var(--color-brand);
+  font-size: var(--text-small);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+/* ---- Términos y condiciones ---- */
+.terms {
+  display: grid;
+  gap: clamp(14px, 2vw, 20px);
+  max-width: 900px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Tarjeta con el numeral grande en contorno a la izquierda (arriba en celular). */
+.terms__item {
+  display: grid;
+  gap: 6px 28px;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--color-fog);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+}
+
+@media (min-width: 700px) {
+  .terms__item {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+}
+
+.terms__num {
+  color: transparent;
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 2rem + 2.5vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  -webkit-text-stroke: 1.5px var(--color-brand);
+}
+
+.terms__title {
+  margin-bottom: 12px;
+  color: var(--color-ink);
+  font-size: var(--text-card-title);
+}
+
+.terms__item .legal-text:last-child {
+  margin-bottom: 0;
+}
+
+/* Barra de lectura: fija bajo el header, crece con el scroll de la página. Solo con soporte y sin "reducir movimiento". */
+.terms-progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .terms-progress {
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      z-index: 40;
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-brand-light), var(--color-brand));
+      transform-origin: left;
+      animation: terms-read linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+
+@keyframes terms-read {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+html[data-motion='paused'] .terms-progress {
+  display: none;
+}

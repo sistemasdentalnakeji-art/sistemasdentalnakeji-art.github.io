@@ -238,9 +238,10 @@
     scale: 1.06;
   }
 
-  /* Nombre: blanco sobre un chip del color de la marca (oscurecido un poco: naranja o rosa puros no dan contraste con blanco). */
+  /* Nombre: blanco sobre un chip del color de la marca, mezclado mitad y mitad con la tinta: así todas las marcas dan 4.5:1
+     con el blanco (con 72 % de marca, Real Inn e IMMUJER quedaban en 3.5 y 4.4). */
   .brand-tile[data-lit='true'] .brand-tile__name {
-    background: color-mix(in srgb, var(--brand) 72%, var(--color-ink));
+    background: color-mix(in srgb, var(--brand) 50%, var(--color-ink));
     color: var(--color-white);
   }
 

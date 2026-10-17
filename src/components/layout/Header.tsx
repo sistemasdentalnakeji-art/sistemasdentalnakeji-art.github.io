@@ -84,6 +84,8 @@ export function Header({ currentPath }: HeaderProps) {
     covered.forEach((element) => {
       element.inert = true
     })
+    // El panel va antes del botón en el DOM: sin esto, Tab saldría del header y no entraría al menú abierto.
+    document.getElementById(MENU_ID)?.querySelector<HTMLElement>('a, button')?.focus()
     const desktop = window.matchMedia(DESKTOP_QUERY)
     const onChange = () => {
       if (desktop.matches) setMenuOpen(false)

@@ -8,12 +8,15 @@
 // • "/beneficios/" → BenefitsPage (promociones, convenios y aseguranzas, src/pages/benefits/BenefitsPage.tsx).
 // • "/nuestras-promociones/", "/convenios/" y "/insurance/" → PromotionsPage, AgreementsPage e InsurancePage (cada una con su diseño).
 // • "/contacto/" → ContactPage (teléfonos, dirección y redes, src/pages/contact/ContactPage.tsx).
+// • "/nosotros/" → AboutPage (historia, misión y visión, equipo; src/pages/about/AboutPage.tsx).
+// • "/aviso-de-privacidad/", "/terminos-y-condiciones/" → PrivacyPage / TermsPage (src/pages/legal/).
+// • "/preguntas-frecuentes/" → FaqPage (src/pages/faq/FaqPage.tsx).
 // • Rutas con template 'service' y textos en src/data/services.ts → ServicePage (plantilla de servicio).
 // • Cualquier otra ruta conocida → EmptyPage (destino en construcción, noindex).
 // • Ruta desconocida → EmptyPage con el mensaje de "página no encontrada".
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { AGREEMENTS, BENEFITS, CONTACT, findRoute, HOME, INSURANCE, NOT_FOUND, PROMOTIONS_PAGE, SERVICES } from '@/config/routes'
+import { ABOUT, AGREEMENTS, BENEFITS, CONTACT, FAQ, findRoute, HOME, INSURANCE, NOT_FOUND, PRIVACY, PROMOTIONS_PAGE, SERVICES, TERMS } from '@/config/routes'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { HomePage } from '@/pages/home/HomePage'
@@ -24,6 +27,10 @@ import { BenefitsPage } from '@/pages/benefits/BenefitsPage'
 import { PromotionsPage } from '@/pages/promotions/PromotionsPage'
 import { AgreementsPage } from '@/pages/agreements/AgreementsPage'
 import { ContactPage } from '@/pages/contact/ContactPage'
+import { AboutPage } from '@/pages/about/AboutPage'
+import { PrivacyPage } from '@/pages/legal/PrivacyPage'
+import { TermsPage } from '@/pages/legal/TermsPage'
+import { FaqPage } from '@/pages/faq/FaqPage'
 import { InsurancePage } from '@/pages/insurance/InsurancePage'
 import { SERVICE_PAGES } from '@/data/services'
 
@@ -56,6 +63,14 @@ export function App({ path }: AppProps) {
           <InsurancePage />
         ) : route === CONTACT ? (
           <ContactPage />
+        ) : route === ABOUT ? (
+          <AboutPage />
+        ) : route === PRIVACY ? (
+          <PrivacyPage />
+        ) : route === TERMS ? (
+          <TermsPage />
+        ) : route === FAQ ? (
+          <FaqPage />
         ) : service ? (
           <ServicePage route={route} content={service} />
         ) : (

@@ -13,6 +13,7 @@ import { SCHEDULE_ANCHOR } from '@/config/routes'
 import { SITE } from '@/config/site'
 import { HERO } from '@/data/home'
 import { AuroraBackground } from '@/components/decor/AuroraBackground'
+import { BrandOrb } from '@/components/ui/BrandOrb'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon } from '@/components/ui/Icon'
 import { SectionDecor } from '@/components/decor/SectionDecor'
@@ -35,10 +36,7 @@ export function Hero() {
 
       <div className="container hero__inner">
         <div className="hero__content">
-          <div className="hero-orb siri" aria-hidden="true">
-            <span className="hero-orb__halo" />
-            <img className="hero-orb__mark" src="/favicon-192.webp" width={192} height={192} alt="" decoding="async" />
-          </div>
+          <BrandOrb />
 
           <h1 id="hero-titulo" className="hero__title">
             <span className="hero__title-lead shiny-text">{HERO.titleLead}</span>{' '}

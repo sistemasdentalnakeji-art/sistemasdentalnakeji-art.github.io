@@ -9,6 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useRef, useState, useSyncExternalStore, type FormEvent, type ReactNode } from 'react'
+import { flushSync } from 'react-dom'
 import { BOOKING, isBookingConfigured } from '@/config/booking'
 import { PRIVACY } from '@/config/routes'
 import { SITE } from '@/config/site'
@@ -106,11 +107,15 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
     // La fecha de hoy se lee al enviar (no la del último render): evita validar contra "ayer" si la
     // pestaña quedó abierta pasada la medianoche.
     const found = validate(fields, todayInClinic())
-    setErrors(found)
-
     const firstInvalid = Object.keys(found)[0]
+    // flushSync: el error (aria-invalid, aria-describedby y su texto) ya debe estar en el DOM cuando llega el foco,
+    // si no el lector de pantalla anuncia el campo sin el error.
+    flushSync(() => {
+      setErrors(found)
+      if (firstInvalid) setState({ status: 'idle' })
+    })
+
     if (firstInvalid) {
-      setState({ status: 'idle' })
       form.querySelector<HTMLElement>(`[name="${firstInvalid}"]`)?.focus()
       return
     }

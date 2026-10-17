@@ -55,7 +55,8 @@
   padding: 7px 16px;
   border-radius: var(--radius-pill);
   background: var(--color-sky-strong);
-  color: var(--color-brand);
+  /* Tinta (no el azul de marca): el azul sobre este fondo da 4.05:1, por debajo de 4.5 para texto de 12 px. */
+  color: var(--color-ink);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;

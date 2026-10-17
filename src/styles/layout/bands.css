@@ -13,6 +13,12 @@
   overflow: hidden;
 }
 
+/* Bandas con algo sticky dentro (plasma, índice de privacidad, ayuda del FAQ): clip recorta igual que hidden
+   pero no vuelve a la banda contenedor de scroll, que impediría que el sticky se pegue. */
+.band.band--clip {
+  overflow: clip;
+}
+
 .band--wave-top {
   padding-top: calc(var(--band-padding) + clamp(12px, 2.5vw, 36px));
 }

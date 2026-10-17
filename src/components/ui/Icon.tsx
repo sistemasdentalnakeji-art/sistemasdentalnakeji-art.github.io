@@ -139,6 +139,21 @@ const PATHS = {
       <path d="M5.5 20.5c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5" />
     </>
   ),
+  // Misión: diana con flecha.
+  target: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <circle cx="12" cy="12" r="4.5" />
+      <path d="M12 12l7-7M16 5h3v3" />
+    </>
+  ),
+  // Visión: ojo.
+  eye: (
+    <>
+      <path d="M2.8 12c2.2-4 5.3-6 9.2-6s7 2 9.2 6c-2.2 4-5.3 6-9.2 6s-7-2-9.2-6z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
   // Tecnología: microchip.
   chip: (
     <>

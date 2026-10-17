@@ -24,8 +24,11 @@ React 19 + Vite + TypeScript. Sin backend propio y sin router. Encargo original:
 
 ## Alcance (estructura aprobada)
 Header → Hero → Historia animada (`CareStory`) → Agendar (con formulario) → Servicios destacados → Aseguranzas y convenios → Reseñas de Google → Contacto y ubicación → Footer.
-- Las páginas internas de nosotros y aviso de privacidad son **destinos vacíos**
-  (`EmptyPage`): noindex, fuera del sitemap. **/contacto/** ya tiene su diseño ("Bento", `pages/contact/ContactPage.tsx`, textos en `data/contact.ts`,
+- El aviso de privacidad es un **destino vacío** (`EmptyPage`): noindex, fuera del sitemap.
+  **/nosotros/** ya tiene diseño (`pages/about/AboutPage.tsx`, textos **provisionales** en `data/about.ts`, estilos `styles/pages/about.css`; sigue `status: 'empty'`/noindex):
+  historia en línea de tiempo cuya línea se llena con el scroll (inspirada en "Growth Story Timeline" de 21st.dev, CSS `view-timeline`), misión (blanca) y visión (azul noche),
+  y equipo por áreas (gerencia, administración, ventas, doctores, equipo técnico) con tarjetas "Integrante N" de marcador cuyo avatar `.siri` gira al pasar el cursor
+  (inspirada en "Team Section with Glow Cards"). Sin años, cifras ni nombres inventados: los da la clínica. Plasma compartido con /contacto/ (`components/decor/PagePlasma.tsx` + `styles/components/page-plasma.css`, clase `page-plasma-band` en la Band). **/contacto/** ya tiene su diseño ("Bento", `pages/contact/ContactPage.tsx`, textos en `data/contact.ts`,
   estilos `styles/pages/contact.css`; sigue `status: 'empty'`/noindex): rejilla bento (teléfonos ancho arriba, plano `LocationMap` alto a la derecha, WhatsApp oscuro con burbuja "escribiendo", correo con copiar y horario si `SITE.hours` tiene datos), luz que sigue al cursor + borde iluminado (inspirado en "Spotlight" de 21st.dev, código propio: un `pointermove` en la rejilla escribe `--spot-x/y`), entrada escalonada con `animation-timeline: view()` (con "Pausar animaciones" se muestran completas). Bajo el H1 va una frase de atención al cliente (`CONTACT_INTRO.tagline`). Mismo plasma de fondo que /servicios/ y /beneficios/ (`.contact-page__plasma`). Orden en celular: teléfonos, WhatsApp, correo y al final la dirección (el DOM sigue ese orden; en escritorio lo coloca `grid-template-areas`).
   Redes: "muro" oscuro (texto y enlaces a la izquierda, dos ventanas a la derecha). **El contenido se carga solo** (a petición; iframes `loading="lazy"`, sin consentimiento previo):
   Facebook con el Page Plugin (no se adapta a su iframe: `facebookEmbed(width)` recibe el ancho medido en el navegador por un ref) e Instagram con la incrustación oficial del perfil
@@ -157,7 +160,7 @@ Header → Hero → Historia animada (`CareStory`) → Agendar (con formulario) 
   Espaciado compacto: `--band-padding` en `tokens.css`; el hero tiene su propio `padding-block` en `hero.css`.
 - **Footer**: banda oscura `band--night` (`--color-night`) con "hilos de luz" en WebGL, inspirado en Ghost Fibers de
   React Bits (código propio): `<AuroraBackground effect="fibers">` (shader `FIBERS_FRAGMENT` en `auroraShaders.ts`) y
-  un velo a la izquierda para leer el texto. Usa los colores y la tipografía del hero. Marca: el **isotipo (corazón) en blanco** `public/images/logo-isotipo-blanco.png` (silueta ya blanca con fondo transparente, generada del corazón azul; sin filtro), a la izquierda de las listas en escritorio y arriba en celular; sin texto de clínica ni botón de agenda. Barra inferior: derechos a la izquierda, redes sociales **centradas** (48 px), enlaces a la derecha.
+  un velo a la izquierda para leer el texto. Usa los colores y la tipografía del hero. Marca: el **mismo orbe iluminado del hero** (`components/ui/BrandOrb.tsx`, estilos `styles/components/brand-orb.css`: contorno `.siri` que gira + halo que respira; lo pidió el jefe de la clínica en lugar del corazón blanco) con el nombre debajo, a la izquierda de las listas en escritorio y arriba en celular. El orbe se pausa fuera de pantalla (`data-offscreen`, IntersectionObserver) y con "reducir movimiento"/"Pausar animaciones"; su resplandor queda sobre los hilos. `public/images/logo-isotipo-blanco.png` ya no se usa. Barra inferior: derechos a la izquierda, redes sociales **centradas** (48 px), enlaces a la derecha.
   La unión con la sección anterior es una ola blanca dentro del footer (`SectionDecor` wave `inverse`), así los hilos llegan
   hasta la curva; la sección previa (Contacto, páginas vacías) no lleva ola inferior.
 - **Componentes compartidos**: `decor/Band` (sección de la hoja: tono, olas, curvas y decor), `ui/SectionIntro`, `ui/ContactItem`,
@@ -202,6 +205,11 @@ En `npm run dev` no hay prerender ni hidratación: los errores de hidratación s
 Verificación rápida: `dist/index.html` debe contener el H1, "Solicita tu cita", el JSON-LD y `<div id="root" data-path="/">`.
 
 ## Pendientes
+- Páginas nuevas (noindex, lorem ipsum por ahora): `/aviso-de-privacidad/`, `/terminos-y-condiciones/` y `/preguntas-frecuentes/`. Sus textos viven en `src/data/legal.ts` y `src/data/faq.ts`; la historia y el equipo de `/nosotros/`, en `src/data/about.ts`. Falta el texto real de cada una.
+- Reseñas: se dejan con marcadores "Paciente N" hasta tener las reales (decisión del usuario).
+- Botón "Pausar animaciones" también arriba, además del del footer (WCAG 2.2.2). Para después.
+- Versión en inglés (`/en/`) y en español. Para después.
+- Botón "Conocer más" del blog: se queda visible aunque `/blog/` esté vacío (decisión del usuario).
 - Confirmar con la clínica: frases del hero (`HERO.highlights`: "Dentistas certificados", "Más de 35 años"), **días y horarios de citas** (`booking.ts` + `Code.gs`) y horario de atención (`SITE.hours`).
 - Instalar el Apps Script con la cuenta de Google de la clínica y poner la URL en `.env.production` (guía: `integrations/google-calendar/README.md`).
 - Publicar el texto legal del **aviso de privacidad** (el formulario recoge datos personales y de salud).

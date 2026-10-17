@@ -78,44 +78,6 @@
   text-align: center;
 }
 
-/* Orbe luminoso con el isotipo de la clínica */
-.hero-orb {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 38%, #18305a, #070f1e 72%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-}
-
-/* Contorno luminoso estilo Siri (componente .siri, styles/components/siri.css): más grueso y con blanco para
-   que destaque sobre el fondo oscuro. */
-.hero-orb {
-  --siri-width: 4px;
-  --siri-blur: 14px;
-  --siri-d: #ffffff;
-}
-
-/* Halo grande que "respira" */
-.hero-orb__halo {
-  position: absolute;
-  inset: -34px;
-  z-index: -1;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(123, 195, 235, 0.5), rgba(47, 99, 173, 0.18) 45%, transparent 68%);
-  animation: orb-breathe 3.2s ease-in-out infinite;
-}
-
-.hero-orb__mark {
-  width: 46px;
-  height: 46px;
-  filter: drop-shadow(0 0 10px rgba(123, 195, 235, 0.55));
-}
-
 .hero__title {
   margin-top: 26px;
   color: var(--hero-text);
@@ -297,19 +259,6 @@
   100% {
     opacity: 0;
     transform: translateY(-8px) scale(0.97);
-  }
-}
-
-@keyframes orb-breathe {
-  0%,
-  100% {
-    opacity: 0.75;
-    transform: scale(0.94);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1.06);
   }
 }
 

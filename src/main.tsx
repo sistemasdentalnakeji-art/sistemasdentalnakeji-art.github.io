@@ -12,6 +12,7 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 import { App } from '@/app/App'
 import { findRoute } from '@/config/routes'
 import { applyHead } from '@/seo/head'
+import { pauseOffscreen } from '@/lib/motion'
 import '@/styles/index.css'
 
 const container = document.getElementById('root')!
@@ -31,3 +32,6 @@ if (container.dataset.path === route.path) {
   applyHead(route)
   createRoot(container).render(app)
 }
+
+// Tras el primer cuadro (en desarrollo, React ya dibujó la página): pausa los contornos y brillos fuera de pantalla.
+requestAnimationFrame(pauseOffscreen)

@@ -1,0 +1,4 @@
+# Caché (Netlify / Cloudflare Pages). Solo /assets/: sus nombres llevan hash, así que pueden guardarse un año.
+# Las imágenes de /images/ no llevan hash (se reemplazarán por fotos reales): se quedan con la caché por defecto del hosting.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

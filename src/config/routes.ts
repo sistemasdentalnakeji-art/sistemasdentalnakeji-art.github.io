@@ -154,10 +154,28 @@ export const CONTACT: RouteDef = {
   description:
     'Llama, escribe o visita Dental Nakeji en la Zona Río de Tijuana. Teléfonos de México y Estados Unidos, dirección y correo. Agenda tu cita.',
 }
-export const ABOUT = empty('/nosotros/', 'Nosotros')
+export const ABOUT: RouteDef = {
+  ...empty('/nosotros/', 'Nosotros'),
+  title: 'Nosotros | Dental Nakeji, Zona Río Tijuana',
+  description: 'Conoce la historia, la misión y la visión de Dental Nakeji en Tijuana, y al equipo de doctores y personal que te atiende.',
+}
 export const BLOG = empty('/blog/', 'Blog')
 /** Requerido por el formulario de citas (LFPDPPP). Falta el texto legal de la clínica. */
-export const PRIVACY = empty('/aviso-de-privacidad/', 'Aviso de privacidad')
+export const PRIVACY: RouteDef = {
+  ...empty('/aviso-de-privacidad/', 'Aviso de privacidad'),
+  title: 'Aviso de privacidad | Dental Nakeji',
+  description: 'Cómo Dental Nakeji recaba, usa y protege tus datos personales y cómo ejercer tus derechos ARCO.',
+}
+export const TERMS: RouteDef = {
+  ...empty('/terminos-y-condiciones/', 'Términos y condiciones'),
+  title: 'Términos y condiciones | Dental Nakeji',
+  description: 'Condiciones de uso del sitio web y de los servicios de Dental Nakeji en Tijuana.',
+}
+export const FAQ: RouteDef = {
+  ...empty('/preguntas-frecuentes/', 'Preguntas frecuentes'),
+  title: 'Preguntas frecuentes | Dental Nakeji, Tijuana',
+  description: 'Respuestas a las dudas más comunes sobre citas, tratamientos, pagos y aseguranzas en Dental Nakeji.',
+}
 
 export const NOT_FOUND: RouteDef = {
   path: '/404/',
@@ -177,6 +195,8 @@ export const ALL_ROUTES: RouteDef[] = [
   ABOUT,
   BLOG,
   PRIVACY,
+  TERMS,
+  FAQ,
 ]
 
 /** Normaliza la ruta: sin "index.html" y siempre con "/" final (igual que el sitio actual). */

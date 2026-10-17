@@ -55,7 +55,13 @@ if (fontPreloads.length === 0) {
 const written = []
 for (const route of [...ALL_ROUTES, NOT_FOUND]) {
   const indexable = production && route.status === 'ready'
+  // Sin descripción, head.ts emitiría og:description vacío en una página indexable.
+  if (route.status === 'ready' && !route.description) throw new Error(`Ruta 'ready' sin description: ${route.path}`)
   const { html, head } = render(route.path, { indexable })
+  // Una página con textos de marcador (lorem ipsum, "Texto provisional", "Integrante N") no puede salir indexable.
+  if (indexable && /Lorem ipsum|Texto provisional|Integrante \d/.test(html)) {
+    throw new Error(`Textos de marcador en una ruta indexable: ${route.path}. Cambia sus textos o déjala en status 'empty'.`)
+  }
   const page = template
     // Reemplazo con función: evita que "$&", "$'"… del contenido se interpreten como patrones.
     .replace(HEAD_SLOT, () => [head, ...fontPreloads].join('\n    '))
