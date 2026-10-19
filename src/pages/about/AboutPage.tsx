@@ -86,32 +86,31 @@ export function AboutPage() {
             {TEAM.title}
           </h2>
           <p className="section-text about-lead">{TEAM.lead}</p>
-          {TEAM.areas.map((area) => (
-            <section key={area.id} className="team-area">
-              <header className="team-area__head">
-                <span className="team-area__icon">
-                  <Icon name={area.icon} size={22} />
-                </span>
-                <div>
-                  <h3 className="team-area__title">
-                    {area.title}
-                  </h3>
-                  <p className="team-area__text">{area.text}</p>
-                </div>
-              </header>
-              <ul className="team-grid">
-                {area.members.map((member) => (
-                  <li key={member.name} className="member">
-                    <span className="member__avatar siri">
-                      <Icon name="user" size={34} />
-                    </span>
-                    <p className="member__name">{member.name}</p>
-                    <p className="member__role">{member.role}</p>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
+          <div className="team-areas">
+            {TEAM.areas.map((area) => (
+              <section key={area.id} className="team-area">
+                <header className="team-area__head">
+                  <span className="team-area__icon">
+                    <Icon name={area.icon} size={22} />
+                  </span>
+                  <div>
+                    <h3 className="team-area__title">{area.title}</h3>
+                    <p className="team-area__text">{area.text}</p>
+                  </div>
+                </header>
+                <ul className={area.members.length === 4 ? 'team-grid team-grid--pairs' : 'team-grid'}>
+                  {area.members.map((member, index) => (
+                    <li key={index} className="member">
+                      <span className="member__avatar siri">
+                        <Icon name="user" size={48} />
+                      </span>
+                      <p className="member__name">{member.name}</p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
         </section>
       </div>
     </Band>

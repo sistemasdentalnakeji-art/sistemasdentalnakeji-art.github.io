@@ -19,7 +19,7 @@ export const HISTORY = {
   lead: 'Texto provisional: la clínica nos compartirá su historia.',
   // `photo: true` deja debajo del texto un espacio vacío para la foto (llega después).
   milestones: [
-    { label: 'Los inicios', title: 'Un consultorio con una idea clara', text: 'Texto provisional sobre cómo y por qué nació la clínica.' },
+    { label: 'Los inicios', title: 'Un consultorio con una idea clara', text: 'Texto provisional sobre cómo y por qué nació la clínica.', photo: true },
     { label: 'Crecimiento', title: 'Más especialidades bajo el mismo techo', text: 'Texto provisional sobre la llegada de nuevos doctores y tratamientos.', photo: true },
     { label: 'Tecnología', title: 'Laboratorio y equipo propios', text: 'Texto provisional sobre el laboratorio y la tecnología de la clínica.', photo: true },
     { label: 'Hoy', title: 'Pacientes de ambos lados de la frontera', text: 'Texto provisional sobre la clínica hoy y los pacientes que atiende.', photo: true },
@@ -33,21 +33,20 @@ export const PURPOSE = [
 
 interface Member {
   name: string
-  role: string
 }
 
+// Marcadores hasta que la clínica mande la lista. Dentro de cada tarjeta solo va el nombre (sin cargo).
 // shortcut: el número de marcadores por área es un supuesto; se ajusta cuando la clínica mande su lista.
-const placeholders = (count: number, role: string): Member[] =>
-  Array.from({ length: count }, (_, i) => ({ name: `Integrante ${i + 1}`, role }))
+const placeholders = (count: number): Member[] => Array.from({ length: count }, (_, i) => ({ name: `Integrante ${i + 1}` }))
 
 export const TEAM = {
   title: 'Nuestro equipo',
   lead: 'Cinco áreas trabajando juntas para que tu visita sea sencilla, de la primera llamada al último ajuste.',
   areas: [
-    { id: 'gerencia', icon: 'building', title: 'Gerencia', text: 'Dirige la clínica y cuida la calidad de la atención.', members: placeholders(4, 'Gerencia') },
-    { id: 'administracion', icon: 'calendar', title: 'Administración', text: 'Citas, pagos, aseguranzas y convenios.', members: placeholders(4, 'Administración') },
-    { id: 'ventas', icon: 'users', title: 'Ventas', text: 'Te orientan sobre tratamientos, presupuestos y promociones.', members: placeholders(2, 'Asesor de pacientes') },
-    { id: 'doctores', icon: 'tooth', title: 'Doctores', text: 'Especialistas que planean y realizan tu tratamiento.', members: placeholders(8, 'Cirujano dentista') },
-    { id: 'tecnico', icon: 'chip', title: 'Equipo técnico', text: 'Laboratorio y asistentes que preparan cada pieza y cada sillón.', members: placeholders(1, 'Técnico dental') },
+    { id: 'gerencia', icon: 'building', title: 'Gerencia', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', members: placeholders(4) },
+    { id: 'doctores', icon: 'tooth', title: 'Doctores', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', members: placeholders(8) },
+    { id: 'administracion', icon: 'calendar', title: 'Administración', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', members: placeholders(4) },
+    { id: 'tecnico', icon: 'chip', title: 'Infraestructura tecnológica', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', members: placeholders(1) },
+    { id: 'ventas', icon: 'users', title: 'Ventas', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', members: placeholders(1) },
   ] satisfies { id: string; icon: IconName; title: string; text: string; members: Member[] }[],
 }

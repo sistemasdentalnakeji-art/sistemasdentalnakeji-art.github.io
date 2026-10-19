@@ -8,11 +8,16 @@
   margin-top: clamp(48px, 7vw, 96px);
 }
 
+.about-section > .section-title {
+  font-size: clamp(2.25rem, 1.75rem + 2vw, 3.25rem);
+}
+
 /* --color-text (no el gris de .section-text): va directo sobre el plasma y el gris bajaría de 4.5:1. */
 .about-lead {
   max-width: 60ch;
   margin-bottom: clamp(24px, 4vw, 44px);
   color: var(--color-text);
+  font-size: clamp(1.125rem, 1rem + 0.35vw, 1.25rem);
 }
 
 /* ---- Historia: línea de tiempo ---- */
@@ -75,12 +80,19 @@
 .timeline__title {
   margin-bottom: 8px;
   color: var(--color-ink);
-  font-size: var(--text-card-title);
+  font-size: clamp(1.5rem, 1.3rem + 0.8vw, 1.875rem);
+  line-height: 1.2;
 }
 
 .timeline__text {
   margin: 0;
   color: var(--color-text);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.timeline__card .page-eyebrow {
+  font-size: 0.9375rem;
 }
 
 /* Trazo de marca sobre el borde de la tarjeta: se dibuja con el scroll (pathLength=1 en el <rect>). Estado base: completo. */
@@ -214,17 +226,36 @@
 }
 
 /* ---- Equipo ---- */
-.team-area + .team-area {
-  margin-top: clamp(32px, 5vw, 56px);
+.team-areas {
+  display: grid;
+  gap: clamp(36px, 5vw, 60px) clamp(20px, 4vw, 48px);
+}
+
+/* Desde tableta: las tres primeras áreas ocupan todo el ancho; Infraestructura y Ventas van en la misma fila,
+   cada una en su mitad y con encabezado y tarjeta centrados. */
+@media (min-width: 760px) {
+  .team-areas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .team-area:nth-child(-n + 3) {
+    grid-column: 1 / -1;
+  }
+
+  .team-area:nth-child(n + 4) .team-area__head {
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 .team-area__head {
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: left;
-  gap: 14px;
-  margin-bottom: 18px;
+  gap: 16px;
+  min-height: 80px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-fog);
 }
 
 .team-area__icon {
@@ -234,30 +265,50 @@
   width: 46px;
   height: 46px;
   border-radius: 14px;
-  background: var(--color-ink);
-  color: var(--color-white);
+  background: var(--color-sky);
+  color: var(--color-ink);
 }
 
 .team-area__title {
   color: var(--color-ink);
-  font-size: var(--text-card-title);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  line-height: 1.2;
 }
 
 .team-area__text {
   margin: 2px 0 0;
   color: var(--color-text);
-  font-size: var(--text-small);
+  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.125rem);
+  line-height: 1.5;
 }
 
-/* Tarjetas de ancho fijo y centradas (dos por fila en celular). */
+/* Integrantes: dos por fila en celular y tres en escritorio (tarjetas anchas, menos alargadas). Un área con una sola persona
+   (Infraestructura y Ventas) lleva su tarjeta centrada bajo su encabezado. */
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, clamp(150px, 40vw, 210px));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   justify-content: center;
-  gap: clamp(12px, 2vw, 20px);
+  gap: clamp(16px, 2vw, 24px);
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.team-area:nth-child(n + 4) .team-grid {
+  grid-template-columns: minmax(0, 320px);
+  justify-content: center;
+}
+
+@media (min-width: 1000px) {
+  .team-area:nth-child(-n + 3) .team-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /* Áreas de 4 personas (Gerencia, Administración): de 2 en 2, con un ancho máximo para que la tarjeta no se estire. */
+  .team-area:nth-child(-n + 3) .team-grid--pairs {
+    grid-template-columns: repeat(2, minmax(0, 400px));
+    justify-content: center;
+  }
 }
 
 /* Tarjeta: el borde y la sombra se iluminan en celeste al pasar el cursor; el contorno del avatar gira. */
@@ -265,7 +316,9 @@
   isolation: isolate;
   display: grid;
   justify-items: center;
-  padding: 26px 18px 22px;
+  align-content: start;
+  min-width: 0;
+  padding: 24px 24px 32px;
   border: 1px solid var(--color-fog);
   border-radius: var(--radius-card);
   background: var(--color-white);
@@ -293,10 +346,10 @@
 .member__avatar {
   display: grid;
   place-items: center;
-  width: 96px;
-  height: 96px;
-  margin-bottom: 16px;
-  border-radius: 50%;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  margin-bottom: 20px;
+  border-radius: 18px;
   background: var(--color-sky);
   color: var(--color-brand);
 }
@@ -305,13 +358,9 @@
   margin: 0;
   color: var(--color-ink);
   font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
   font-weight: 700;
-}
-
-.member__role {
-  margin: 0;
-  color: var(--color-muted);
-  font-size: var(--text-small);
+  line-height: 1.2;
 }
 
 /* Contornos .siri quietos hasta pasar el cursor (como las tarjetas de /servicios/). */
