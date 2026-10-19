@@ -100,14 +100,18 @@ export function Footer({ currentPath }: FooterProps) {
             © <span suppressHydrationWarning>{YEAR}</span> {SITE.name}. Todos los derechos reservados.
           </p>
           <SocialLinks className="footer-social" iconSize={26} />
-          <div className="footer-bottom__links">
-            <MotionToggle />
+          <ul className="footer-bottom__links">
             {[PRIVACY, TERMS].map((route) => (
-              <a key={route.path} href={route.path} aria-current={ariaCurrent(route.path, currentPath)}>
-                {route.label}
-              </a>
+              <li key={route.path}>
+                <a href={route.path} aria-current={ariaCurrent(route.path, currentPath)}>
+                  {route.label}
+                </a>
+              </li>
             ))}
-          </div>
+            <li>
+              <MotionToggle />
+            </li>
+          </ul>
         </div>
       </div>
     </footer>
