@@ -1,11 +1,66 @@
 /* ==========================================================================
-   Páginas legales: /aviso-de-privacidad/ (índice lateral con marcas) y /terminos-y-condiciones/ (artículos
-   numerados con barra de lectura). También el encabezado .legal-head, que reusa /preguntas-frecuentes/.
-   Sin fondo propio. Textos en data/legal.ts.
+   Páginas legales (/aviso-de-privacidad/ y /terminos-y-condiciones/, pages/legal/LegalDocument.tsx): índice lateral con marcas a la
+   izquierda y una carta por sección a la derecha, apiladas como en /servicios/. También el encabezado .legal-head, que reusa
+   /preguntas-frecuentes/. Sin fondo propio. Textos en data/legal.ts.
    ========================================================================== */
 .legal-head {
   max-width: 760px;
   margin-bottom: clamp(32px, 5vw, 64px);
+}
+
+/* Encabezado de los documentos legales: etiqueta en pastilla, título grande, subtítulo y fecha en chip con icono. */
+.legal-head--doc {
+  max-width: 860px;
+  padding-bottom: clamp(24px, 3vw, 36px);
+  border-bottom: 1px dashed var(--color-field-border);
+}
+
+.legal-head__eyebrow {
+  display: inline-block;
+  margin: 0;
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--color-sky-strong);
+  color: var(--color-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.legal-head__title {
+  margin-top: 20px;
+  color: var(--color-ink-strong);
+  font-size: clamp(2.5rem, 1.5rem + 3.2vw, 4.25rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+.legal-head__lead {
+  max-width: 60ch;
+  margin-top: 22px;
+  color: var(--color-text);
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.legal-head__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 0;
+  padding: 9px 18px 9px 14px;
+  border: 1px solid var(--color-sky-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+  color: var(--color-ink);
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.legal-head__date svg {
+  color: var(--color-brand);
 }
 
 .legal-updated {
@@ -21,14 +76,33 @@
   line-height: 1.7;
 }
 
-/* ---- Aviso de privacidad ---- */
-.privacy {
+.legal-list {
+  max-width: 68ch;
+  margin: 0 0 14px;
+  padding-left: 1.25rem;
+  color: var(--color-text);
+  line-height: 1.7;
+}
+
+.legal-list li + li {
+  margin-top: 6px;
+}
+
+.legal-link {
+  color: var(--color-brand);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---- Índice + cartas ---- */
+.legal-doc {
   display: grid;
   gap: clamp(28px, 4vw, 56px);
 }
 
 @media (min-width: 960px) {
-  .privacy {
+  .legal-doc {
     grid-template-columns: 260px minmax(0, 1fr);
     align-items: start;
   }
@@ -43,22 +117,26 @@
 }
 
 .toc {
-  padding: 20px 22px;
-  border: 1px solid var(--color-fog);
+  padding: 26px 18px 22px;
   border-radius: var(--radius-card);
-  background: var(--color-porcelain);
+  /* Azul noche, el mismo degradado de la tarjeta "Visión" de /nosotros/. */
+  background: radial-gradient(circle at 85% 0%, #18305a, var(--color-night) 70%);
+  box-shadow: 0 14px 40px rgba(10, 21, 41, 0.22);
 }
 
 .toc__label {
-  margin: 0 0 12px;
-  color: var(--color-ink);
+  margin: 0 8px 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.28);
+  color: var(--color-white);
   font-family: var(--font-display);
+  font-size: 1.125rem;
   font-weight: 800;
 }
 
 .toc__list {
   display: grid;
-  gap: 2px;
+  gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -67,21 +145,40 @@
 /* Cada enlace lleva una "marca": corta y gris en reposo; larga y azul en la sección activa (o con el cursor). */
 .toc__link {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-  min-height: 40px;
-  color: var(--color-muted);
+  min-height: 44px;
+  padding: 11px 12px;
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.74);
   font-size: var(--text-small);
+  line-height: 1.4;
   text-decoration: none;
-  transition: color 0.25s var(--ease);
+  transition:
+    color 0.25s var(--ease),
+    background-color 0.25s var(--ease);
+}
+
+.toc__link:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.toc__link[aria-current] {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Sobre el fondo oscuro, el anillo de foco va en blanco. */
+.toc__link:focus-visible {
+  outline-color: var(--color-white);
 }
 
 .toc__tick {
   flex: none;
+  margin-top: 0.65em; /* alinea la marca con la primera línea del título */
   width: 10px;
   height: 2px;
   border-radius: 2px;
-  background: var(--color-field-border);
+  background: rgba(255, 255, 255, 0.4);
   transition:
     width 0.3s var(--ease),
     background-color 0.3s var(--ease);
@@ -89,7 +186,7 @@
 
 .toc__link:hover,
 .toc__link[aria-current] {
-  color: var(--color-ink);
+  color: var(--color-white);
 }
 
 .toc__link:hover .toc__tick {
@@ -102,7 +199,7 @@
 
 .toc__link[aria-current] .toc__tick {
   width: 26px;
-  background: var(--color-brand);
+  background: var(--color-brand-light);
 }
 
 @media (forced-colors: active) {
@@ -111,104 +208,125 @@
   }
 }
 
-.privacy__section + .privacy__section {
-  margin-top: clamp(28px, 4vw, 44px);
-  padding-top: clamp(28px, 4vw, 44px);
-  border-top: 1px dashed var(--color-fog);
-}
-
-.privacy__title {
+/* Carta de una sección: numeral grande en contorno + título arriba, texto debajo. */
+.legal-card {
   display: flex;
-  align-items: baseline;
-  gap: 14px;
-  margin-bottom: 14px;
-  color: var(--color-ink);
-  font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.75rem);
-  letter-spacing: -0.02em;
-}
-
-.privacy__num {
-  color: var(--color-brand);
-  font-size: var(--text-small);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-
-/* ---- Términos y condiciones ---- */
-.terms {
-  display: grid;
-  gap: clamp(14px, 2vw, 20px);
-  max-width: 900px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* Tarjeta con el numeral grande en contorno a la izquierda (arriba en celular). */
-.terms__item {
-  display: grid;
-  gap: 6px 28px;
-  padding: clamp(22px, 3vw, 34px);
+  flex-direction: column;
   border: 1px solid var(--color-fog);
   border-radius: var(--radius-card);
   background: var(--color-white);
   box-shadow: var(--shadow);
 }
 
-@media (min-width: 700px) {
-  .terms__item {
-    grid-template-columns: 96px minmax(0, 1fr);
-  }
+.legal-card + .legal-card {
+  margin-top: 20px;
 }
 
-.terms__num {
+.legal-card__head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 0 clamp(22px, 3vw, 36px);
+  padding: clamp(20px, 2.5vw, 30px) 0 18px;
+  border-bottom: 1px dashed var(--color-fog);
+}
+
+.legal-card__num {
   color: transparent;
   font-family: var(--font-display);
-  font-size: clamp(2.75rem, 2rem + 2.5vw, 4rem);
+  font-size: clamp(2.25rem, 1.8rem + 1.8vw, 3.25rem);
   font-weight: 800;
   line-height: 1;
   -webkit-text-stroke: 1.5px var(--color-brand);
 }
 
-.terms__title {
-  margin-bottom: 12px;
+.legal-card__title {
   color: var(--color-ink);
-  font-size: var(--text-card-title);
+  font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem);
+  letter-spacing: -0.02em;
 }
 
-.terms__item .legal-text:last-child {
+.legal-card__body {
+  padding: 20px clamp(22px, 3vw, 36px) clamp(22px, 3vw, 32px);
+}
+
+.legal-card__body > :last-child {
   margin-bottom: 0;
 }
 
-/* Barra de lectura: fija bajo el header, crece con el scroll de la página. Solo con soporte y sin "reducir movimiento". */
-.terms-progress {
-  display: none;
+.legal-card__sub {
+  margin: 22px 0 8px;
+  color: var(--color-ink);
+  font-size: 1.0625rem;
 }
 
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .terms-progress {
-      position: fixed;
-      top: var(--header-height);
-      left: 0;
-      z-index: 40;
-      display: block;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(90deg, var(--color-brand-light), var(--color-brand));
-      transform-origin: left;
-      animation: terms-read linear both;
-      animation-timeline: scroll(root);
+.legal-card__sub:first-child {
+  margin-top: 0;
+}
+
+/* Cartas apiladas DENTRO de una ventana (escritorio, sin "reducir movimiento"): igual que en /servicios/ (ver services-index.css).
+   La ventana (.legal-deck) mide una carta + los desfases y tiene su propio scroll: con la rueda encima, cada carta sube y se fija
+   --off px más abajo que la anterior, que se encoge hacia atrás; al terminar, la rueda sigue con la página y el footer queda debajo.
+   --n (número de cartas) lo escribe el componente. Fuera de esto (celular, pantalla baja, reduced-motion) queda como lista normal. */
+@media (min-width: 900px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+  .legal-doc {
+    --off: 18px;
+    --card-h: clamp(26rem, calc(100svh - var(--header-height) - 240px), 40rem);
+  }
+
+  .legal-deck {
+    --deck-h: calc(var(--card-h) + (var(--n) - 1) * var(--off));
+    timeline-scope: --lg1, --lg2, --lg3, --lg4, --lg5, --lg6, --lg7, --lg8, --lg9, --lg10, --lg11;
+    height: var(--deck-h);
+    overflow-y: auto;
+    border-radius: 32px;
+    scrollbar-width: none;
+  }
+
+  .legal-deck::-webkit-scrollbar {
+    display: none;
+  }
+
+  .legal-card {
+    position: sticky;
+    --top: calc(var(--i) * var(--off));
+    top: var(--top);
+    margin: 0;
+    /* Todas igual de altas: así la de encima tapa por completo a la de atrás. */
+    height: var(--card-h);
+    border-radius: 32px;
+    box-shadow: 0 -12px 40px -16px rgba(42, 66, 105, 0.28);
+    transform-origin: 50% 0;
+    view-timeline-name: var(--tl);
+  }
+
+  /* Separación mayor que todos los desfases: la siguiente carta queda fuera de la ventana mientras espera el scroll.
+     Va como margen SUPERIOR (uno inferior limitaría hasta dónde puede seguir fija cada carta). */
+  .legal-card + .legal-card {
+    margin-top: calc((var(--n) - 1) * var(--off) + 16px);
+  }
+
+  /* El texto largo se desplaza dentro de su carta; al llegar al final, la rueda sigue con la ventana. */
+  .legal-card__body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  /* Una animación no puede leer la línea de tiempo de su propio ancestro: la carta i se encoge con la vista de la i+1 (hermana).
+     El rango termina justo cuando la siguiente queda fija = alto de la ventana - su "top". */
+  @supports (animation-timeline: view()) {
+    .legal-card:not(:last-child) {
+      animation: legal-recede linear both;
+      animation-timeline: var(--tl-next);
+      animation-range: cover 0% cover calc(var(--deck-h) - var(--top) - var(--off));
     }
   }
 }
 
-@keyframes terms-read {
-  from {
-    transform: scaleX(0);
+@keyframes legal-recede {
+  to {
+    transform: scale(var(--scale));
   }
-}
-
-html[data-motion='paused'] .terms-progress {
-  display: none;
 }

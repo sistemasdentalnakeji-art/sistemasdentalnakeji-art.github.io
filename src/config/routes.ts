@@ -162,14 +162,14 @@ export const ABOUT: RouteDef = {
 export const BLOG = empty('/blog/', 'Blog')
 /** Requerido por el formulario de citas (LFPDPPP). Falta el texto legal de la clínica. */
 export const PRIVACY: RouteDef = {
-  ...empty('/aviso-de-privacidad/', 'Aviso de privacidad'),
-  title: 'Aviso de privacidad | Dental Nakeji',
-  description: 'Cómo Dental Nakeji recaba, usa y protege tus datos personales y cómo ejercer tus derechos ARCO.',
+  ...empty('/aviso-de-privacidad/', 'Notice of Privacy Practices'),
+  title: 'Notice of Privacy Practices | Dental Nakeji',
+  description: 'Notice of Privacy Practices of Nakeji Dental: how your health information may be used and disclosed.',
 }
 export const TERMS: RouteDef = {
-  ...empty('/terminos-y-condiciones/', 'Términos y condiciones'),
-  title: 'Términos y condiciones | Dental Nakeji',
-  description: 'Condiciones de uso del sitio web y de los servicios de Dental Nakeji en Tijuana.',
+  ...empty('/terminos-y-condiciones/', 'SMS Terms & Conditions'),
+  title: 'SMS Terms & Conditions | Dental Nakeji',
+  description: 'SMS Terms & Conditions of Nakeji Dental: how to receive, opt out of, and get help with text messages.',
 }
 export const FAQ: RouteDef = {
   ...empty('/preguntas-frecuentes/', 'Preguntas frecuentes'),
