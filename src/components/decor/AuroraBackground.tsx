@@ -44,10 +44,11 @@ function compile(gl: WebGLRenderingContext, type: number, source: string) {
 interface AuroraBackgroundProps {
   theme: AuroraTheme
   effect?: AuroraEffect
+  fiberCount?: number
   className?: string
 }
 
-export function AuroraBackground({ theme, effect = 'aurora', className }: AuroraBackgroundProps) {
+export function AuroraBackground({ theme, effect = 'aurora', fiberCount = 14, className }: AuroraBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   // Sube cuando Chrome restaura el contexto gráfico: vuelve a montar la aurora desde cero.
   const [generation, setGeneration] = useState(0)
@@ -108,6 +109,7 @@ export function AuroraBackground({ theme, effect = 'aurora', className }: Aurora
     gl.uniform3fv(uniform('uColorB'), toRgb(palette.colors[1]))
     gl.uniform3fv(uniform('uColorC'), toRgb(palette.colors[2]))
     gl.uniform1f(uniform('uIntensity'), palette.intensity)
+    gl.uniform1f(uniform('uFiberCount'), Math.max(2, Math.min(14, Math.round(fiberCount))))
     const uTime = uniform('uTime')
     const uResolution = uniform('uResolution')
 
@@ -204,7 +206,7 @@ export function AuroraBackground({ theme, effect = 'aurora', className }: Aurora
       gl.deleteShader(fragment)
       gl.deleteBuffer(buffer)
     }
-  }, [theme, effect, generation, armed])
+  }, [theme, effect, fiberCount, generation, armed])
 
   return <canvas ref={canvasRef} className={className} aria-hidden="true" />
 }

@@ -100,6 +100,7 @@ uniform vec3 uColorA;
 uniform vec3 uColorB;
 uniform vec3 uColorC;
 uniform float uIntensity;
+uniform float uFiberCount;
 
 float hash(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -114,8 +115,9 @@ void main() {
   vec3 light = vec3(0.0);
   for (int i = 0; i < 14; i++) {
     float fi = float(i);
+    if (fi >= uFiberCount) break;
     // Cada hebra: una onda suave que cruza en diagonal y se mece con el tiempo.
-    float offset = (fi / 13.0 - 0.5) * 1.3;
+    float offset = (fi / (uFiberCount - 1.0) - 0.5) * 1.3;
     float wave = 0.22 * sin(p.x * (1.1 + 0.07 * fi) + t * (0.6 + 0.05 * fi) + fi * 1.9)
                + 0.08 * sin(p.x * 2.7 - t * 0.8 + fi * 0.7);
     float y = offset + wave + p.x * 0.28;
