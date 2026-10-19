@@ -1,6 +1,6 @@
 /* ==========================================================================
    Página /nosotros/ — historia (línea de tiempo), misión y visión, y equipo por áreas.
-   Línea de tiempo inspirada en "Growth Story Timeline" y equipo en "Team Section with Glow Cards" (21st.dev, código propio).
+   Línea de tiempo inspirada en "Growth Story Timeline" y tarjetas del equipo en "Flip Card" (21st.dev, código propio).
    El plasma de fondo es el compartido (page-plasma.css). Los estilos base son el estado final: sin soporte de
    animation-timeline, con "reducir movimiento" o con "Pausar animaciones" todo se ve completo y quieto.
    ========================================================================== */
@@ -225,14 +225,71 @@
   color: var(--color-white);
 }
 
-/* ---- Equipo ---- */
+/* ---- Valores (bajo Misión y Visión): cuatro tarjetas claras con el mismo borde y sombra que las de misión y visión. ---- */
+.values {
+  display: grid;
+  gap: clamp(16px, 2vw, 24px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 700px) {
+  .values {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1000px) {
+  .values {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.value-card {
+  padding: clamp(22px, 3vw, 32px);
+  border: 1px solid var(--color-fog);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+}
+
+.value-card__icon {
+  margin-bottom: 14px;
+}
+
+.value-card__title {
+  margin-bottom: 8px;
+  color: var(--color-ink);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  letter-spacing: -0.02em;
+}
+
+.value-card__text {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--text-body);
+}
+
+/* ---- Equipo (pages/about/TeamSection.tsx) ---- */
+/* Todas las tarjetas miden lo mismo: --card-w sale del ancho de este contenedor (cqw), así las áreas de una persona
+   (Laboratorio, Infraestructura) igualan a las de Doctores. 2 por fila en celular y 3 desde 1000 px. */
 .team-areas {
+  --card-gap: clamp(16px, 2vw, 24px);
+  --card-w: calc((100cqw - var(--card-gap)) / 2);
+  container-type: inline-size;
   display: grid;
   gap: clamp(36px, 5vw, 60px) clamp(20px, 4vw, 48px);
 }
 
-/* Desde tableta: las tres primeras áreas ocupan todo el ancho; Infraestructura y Ventas van en la misma fila,
-   cada una en su mitad y con encabezado y tarjeta centrados. */
+@media (min-width: 1000px) {
+  .team-areas {
+    --card-w: calc((100cqw - 2 * var(--card-gap)) / 3);
+  }
+}
+
+/* Desde tableta: las tres primeras áreas ocupan todo el ancho; Laboratorio e Infraestructura (una persona cada una)
+   van en la misma fila, cada una en su mitad y con encabezado y tarjeta centrados. */
 @media (min-width: 760px) {
   .team-areas {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -282,80 +339,120 @@
   line-height: 1.5;
 }
 
-/* Integrantes: dos por fila en celular y tres en escritorio (tarjetas anchas, menos alargadas). Un área con una sola persona
-   (Infraestructura y Ventas) lleva su tarjeta centrada bajo su encabezado. */
+/* Integrantes: dos por fila en celular y tres en escritorio. Un área con una sola persona lleva su tarjeta centrada. */
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, var(--card-w));
   justify-content: center;
-  gap: clamp(16px, 2vw, 24px);
+  gap: var(--card-gap);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+/* Un área con una sola persona (Laboratorio, Infraestructura): su tarjeta mide igual que las demás. */
 .team-area:nth-child(n + 4) .team-grid {
-  grid-template-columns: minmax(0, 320px);
-  justify-content: center;
+  grid-template-columns: var(--card-w);
 }
 
 @media (min-width: 1000px) {
   .team-area:nth-child(-n + 3) .team-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, var(--card-w));
   }
 
-  /* Áreas de 4 personas (Gerencia, Administración): de 2 en 2, con un ancho máximo para que la tarjeta no se estire. */
+  /* Áreas de 4 personas (Gerencia, Administración): de 2 en 2, centradas. */
   .team-area:nth-child(-n + 3) .team-grid--pairs {
-    grid-template-columns: repeat(2, minmax(0, 400px));
+    grid-template-columns: repeat(2, var(--card-w));
     justify-content: center;
   }
 }
 
-/* Tarjeta: el borde y la sombra se iluminan en celeste al pasar el cursor; el contorno del avatar gira. */
+/* Tarjeta que voltea al hacer clic o tocarla. El <li> da la perspectiva; el botón gira con sus dos caras. */
 .member {
+  min-width: 0;
+  perspective: 1400px;
+}
+
+/* Alto completo: las tarjetas de una fila quedan parejas aunque una lleve profesión y otra no. */
+.member__flip {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  /* Giro corto y que arranca rápido (ease-out fuerte): al voltear y al regresar responde al instante. */
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.member[data-flipped] .member__flip {
+  transform: rotateY(180deg);
+}
+
+/* Las dos caras ocupan la misma celda: la tarjeta mide lo que su frente. */
+.member__face {
+  display: flex;
+  grid-area: 1 / 1;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Frente: la foto es transparente (ahí se ve la aurora recortada) y solo la franja de la profesión y el nombre es clara. */
+.member__face--front {
+  box-shadow: 0 22px 44px -20px rgba(42, 66, 105, 0.55);
+}
+
+/* Ventana de la foto: detrás va su propio lienzo con la aurora del hero (shaderPool); el azul del hero queda de respaldo. */
+.member__photo {
+  position: relative;
   isolation: isolate;
   display: grid;
-  justify-items: center;
-  align-content: start;
-  min-width: 0;
-  padding: 24px 24px 32px;
-  border: 1px solid var(--color-fog);
-  border-radius: var(--radius-card);
-  background: var(--color-white);
-  box-shadow: var(--shadow);
-  text-align: center;
-  transition:
-    border-color 0.3s var(--ease),
-    box-shadow 0.3s var(--ease),
-    transform 0.3s var(--ease);
-}
-
-.member:hover {
-  border-color: var(--color-brand-light);
-  box-shadow:
-    0 0 0 4px rgba(123, 195, 235, 0.18),
-    0 18px 40px rgba(58, 112, 176, 0.18);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .member:hover {
-    transform: translateY(-4px);
-  }
-}
-
-.member__avatar {
-  display: grid;
   place-items: center;
-  width: 100%;
   aspect-ratio: 4 / 5;
-  margin-bottom: 20px;
-  border-radius: 18px;
-  background: var(--color-sky);
+  overflow: hidden;
+  background: #0a1529;
+  color: rgba(255, 255, 255, 0.8); /* icono de los lugares sin foto, sobre la aurora */
+}
+
+/* La persona ocupa ~82 % del alto de la ventana y se apoya abajo: arriba queda aire con la aurora y se ve menos de cerca. */
+.member__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 12%;
+  transform: scale(0.82);
+  transform-origin: 50% 100%;
+}
+
+.member__text {
+  display: grid;
+  flex: 1;
+  align-content: center;
+  gap: 4px;
+  padding: 16px 18px 20px;
+  background: linear-gradient(180deg, var(--color-white), var(--color-sky));
+}
+
+/* Profesión arriba del nombre ("Doctora", "Licenciada"…). */
+.member__title {
   color: var(--color-brand);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .member__name {
-  margin: 0;
   color: var(--color-ink);
   font-family: var(--font-display);
   font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
@@ -363,16 +460,67 @@
   line-height: 1.2;
 }
 
-/* Contornos .siri quietos hasta pasar el cursor (como las tarjetas de /servicios/). */
-.member .siri::before,
-.member .siri::after,
+/* Reverso: el orbe de marca del footer con el nombre, sobre sus propios hilos de luz (lienzo animado por shaderPool).
+   El degradado queda de respaldo sin WebGL. */
+.member__face--back {
+  position: relative;
+  isolation: isolate;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  background: radial-gradient(circle at 50% 35%, #18305a, var(--color-night) 70%);
+  transform: rotateY(180deg);
+}
+
+/* Lienzos animados de cada cara (aurora tras la foto, hilos en el reverso): detrás del contenido de su cara. */
+.member__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.2s var(--ease);
+}
+
+.member__canvas.is-ready {
+  opacity: 1;
+}
+
+.member__brand {
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1rem + 0.6vw, 1.625rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* El orbe del reverso solo gira mientras se ve (las tarjetas de frente lo tienen escondido). */
+.member .brand-orb::before,
+.member .brand-orb::after,
+.member .brand-orb__halo {
+  animation-play-state: paused;
+}
+
+.member[data-flipped] .brand-orb::before,
+.member[data-flipped] .brand-orb::after,
+.member[data-flipped] .brand-orb__halo {
+  animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .member__flip {
+    transition: none;
+  }
+}
+
+/* Contornos .siri de Misión y Visión: quietos hasta pasar el cursor (como las tarjetas de /servicios/). */
 .purpose__card .siri::before,
 .purpose__card .siri::after {
   animation-play-state: paused;
 }
 
-.member:hover .siri::before,
-.member:hover .siri::after,
 .purpose__card:hover .siri::before,
 .purpose__card:hover .siri::after {
   animation-play-state: running;
@@ -462,7 +610,6 @@ html[data-motion='paused'] .timeline__reveal {
   animation: none;
 }
 
-html[data-motion='paused'] .member {
+html[data-motion='paused'] .member__flip {
   transition: none;
-  transform: none;
 }

@@ -1,5 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { FIBERS_FRAGMENT, FRAGMENT, VERTEX } from '@/components/decor/auroraShaders'
+import {
+  AURORA_PALETTES as PALETTES,
+  compileShader as compile,
+  FIBERS_FRAGMENT,
+  FRAGMENT,
+  toRgb,
+  VERTEX,
+  type AuroraTheme,
+} from '@/components/decor/auroraShaders'
 
 // Fondo "aurora" en WebGL (GLSL propio, sin dependencias).
 // - Se dibuja a baja resolución (es un degradado suave) y a 30 fps como máximo.
@@ -8,38 +16,14 @@ import { FIBERS_FRAGMENT, FRAGMENT, VERTEX } from '@/components/decor/auroraShad
 //   de la sección (nunca un rectángulo negro): el lienzo es transparente hasta que se pinta y solo
 //   se muestra (.is-ready) después de comprobar que el primer cuadro sí se dibujó.
 
-export type AuroraTheme = 'dark' | 'light'
+export type { AuroraTheme }
 /** aurora: luces difusas (hero) · fibers: hilos de luz (footer). */
 type AuroraEffect = 'aurora' | 'fibers'
 
 const SHADERS: Record<AuroraEffect, string> = { aurora: FRAGMENT, fibers: FIBERS_FRAGMENT }
 
-const PALETTES: Record<AuroraTheme, { base: string; colors: [string, string, string]; intensity: number }> = {
-  // Azules del logo + un toque aguamarina (fresco, "dental").
-  dark: { base: '#0a1529', colors: ['#2f63ad', '#7bc3eb', '#3fb5c8'], intensity: 0.85 },
-  light: { base: '#f5f7fb', colors: ['#b7d3f2', '#7bc3eb', '#ade4ea'], intensity: 0.85 },
-}
-
 const RENDER_SCALE = 0.45
 const FRAME_INTERVAL = 1000 / 30
-
-const toRgb = (hex: string): [number, number, number] => {
-  const value = parseInt(hex.slice(1), 16)
-  return [((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255]
-}
-
-function compile(gl: WebGLRenderingContext, type: number, source: string) {
-  const shader = gl.createShader(type)
-  if (!shader) return null
-  gl.shaderSource(shader, source)
-  gl.compileShader(shader)
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.warn('Aurora: error al compilar el shader', gl.getShaderInfoLog(shader))
-    gl.deleteShader(shader)
-    return null
-  }
-  return shader
-}
 
 interface AuroraBackgroundProps {
   theme: AuroraTheme

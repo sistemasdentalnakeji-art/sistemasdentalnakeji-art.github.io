@@ -4,17 +4,17 @@
 // • Historia: línea de tiempo vertical cuya línea se llena con el scroll (inspirada en "Growth Story Timeline" de 21st.dev).
 //   Cada tarjeta entra girando desde su lado, su borde se dibuja a mano y el contenido aparece en cascada
 //   (inspirado en "Sketchbook Reveal Card" de 21st.dev). Código propio: CSS animation-timeline, sin JS ni librerías.
-// • Equipo: tarjetas con avatar de contorno luminoso (.siri) y borde que brilla al pasar el cursor
-//   (inspirada en "Team Section with Glow Cards" de 21st.dev, código propio).
+// • Equipo: tarjetas que voltean al hacer clic, sobre la aurora del hero (ver TeamSection.tsx).
 // • Mismo plasma de fondo que /contacto/ (PagePlasma).
 // • Textos (provisionales) → src/data/about.ts. Estilos → src/styles/pages/about.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { CSSProperties } from 'react'
-import { ABOUT_INTRO, HISTORY, PURPOSE, TEAM } from '@/data/about'
+import { ABOUT_INTRO, HISTORY, PURPOSE, VALUES } from '@/data/about'
 import { Band } from '@/components/decor/Band'
 import { PagePlasma } from '@/components/decor/PagePlasma'
 import { Icon } from '@/components/ui/Icon'
+import { TeamSection } from '@/pages/about/TeamSection'
 
 export function AboutPage() {
   return (
@@ -81,37 +81,25 @@ export function AboutPage() {
           </ul>
         </section>
 
-        <section className="about-section" aria-labelledby="equipo-titulo">
-          <h2 id="equipo-titulo" className="section-title">
-            {TEAM.title}
+        <section className="about-section" aria-labelledby="valores-titulo">
+          <h2 id="valores-titulo" className="section-title">
+            {VALUES.title}
           </h2>
-          <p className="section-text about-lead">{TEAM.lead}</p>
-          <div className="team-areas">
-            {TEAM.areas.map((area) => (
-              <section key={area.id} className="team-area">
-                <header className="team-area__head">
-                  <span className="team-area__icon">
-                    <Icon name={area.icon} size={22} />
-                  </span>
-                  <div>
-                    <h3 className="team-area__title">{area.title}</h3>
-                    <p className="team-area__text">{area.text}</p>
-                  </div>
-                </header>
-                <ul className={area.members.length === 4 ? 'team-grid team-grid--pairs' : 'team-grid'}>
-                  {area.members.map((member, index) => (
-                    <li key={index} className="member">
-                      <span className="member__avatar siri">
-                        <Icon name="user" size={48} />
-                      </span>
-                      <p className="member__name">{member.name}</p>
-                    </li>
-                  ))}
-                </ul>
-              </section>
+          <p className="section-text about-lead">{VALUES.lead}</p>
+          <ul className="values">
+            {VALUES.items.map((item) => (
+              <li key={item.id} className="value-card">
+                <span className="icon-badge value-card__icon siri">
+                  <Icon name={item.icon} size={22} />
+                </span>
+                <h3 className="value-card__title">{item.title}</h3>
+                <p className="value-card__text">{item.text}</p>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
+
+        <TeamSection />
       </div>
     </Band>
   )

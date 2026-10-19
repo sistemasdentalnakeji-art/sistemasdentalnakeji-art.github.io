@@ -1,4 +1,31 @@
-// Shaders GLSL del fondo aurora del hero (WebGL 1).
+// Shaders GLSL del fondo aurora del hero (WebGL 1), sus colores y el compilador que comparten
+// AuroraBackground (un lienzo) y shaderPool (muchos lienzos con un solo contexto).
+
+export type AuroraTheme = 'dark' | 'light'
+
+export const AURORA_PALETTES: Record<AuroraTheme, { base: string; colors: [string, string, string]; intensity: number }> = {
+  // Azules del logo + un toque aguamarina (fresco, "dental").
+  dark: { base: '#0a1529', colors: ['#2f63ad', '#7bc3eb', '#3fb5c8'], intensity: 0.85 },
+  light: { base: '#f5f7fb', colors: ['#b7d3f2', '#7bc3eb', '#ade4ea'], intensity: 0.85 },
+}
+
+export const toRgb = (hex: string): [number, number, number] => {
+  const value = parseInt(hex.slice(1), 16)
+  return [((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255]
+}
+
+export function compileShader(gl: WebGLRenderingContext, type: number, source: string) {
+  const shader = gl.createShader(type)
+  if (!shader) return null
+  gl.shaderSource(shader, source)
+  gl.compileShader(shader)
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.warn('Aurora: error al compilar el shader', gl.getShaderInfoLog(shader))
+    gl.deleteShader(shader)
+    return null
+  }
+  return shader
+}
 
 export const VERTEX = `
 attribute vec2 aPosition;
