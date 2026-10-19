@@ -4,7 +4,8 @@
    mirar siempre de frente; el anillo se inclina hacia la cámara (--tilt) y se gira sobre la pantalla (--roll), como en la
    página oficial. --spin (el giro), --tilt y --roll los escribe el componente cada frame; --ss-spread (0 a 1) abre el anillo
    desde una pila. El desenfoque y el apagado por profundidad también los pone el componente.
-   Panel azul marino liso. Sin movimiento: órbita quieta y completa.
+   Aurora y fibras del footer detrás de las fotos. Cada foto se despliega dentro del panel como la tarjeta LocationMap.
+   Sin movimiento: órbita quieta y completa, apertura y cierre inmediatos.
    ========================================================================== */
 @property --ss-spread {
   syntax: '<number>';
@@ -14,6 +15,9 @@
 
 .spin-shutter {
   --ss-spread: 1;
+  --ss-spring: cubic-bezier(0.22, 1.1, 0.36, 1);
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-rows: 1fr auto;
   gap: 8px;
@@ -22,9 +26,37 @@
   padding: clamp(20px, 2.4vw, 32px);
   overflow: hidden;
   border-radius: 32px;
-  background: linear-gradient(160deg, var(--color-ink), var(--color-night));
+  background:
+    radial-gradient(55% 60% at 70% 45%, rgba(47, 99, 173, 0.35), transparent 70%),
+    radial-gradient(40% 45% at 82% 70%, rgba(63, 181, 200, 0.15), transparent 70%),
+    var(--color-night);
   color: var(--color-white);
   user-select: none;
+}
+
+.spin-shutter__aurora,
+.spin-shutter__fibers {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s var(--ease);
+}
+
+.spin-shutter__aurora.is-ready {
+  opacity: 0.6;
+}
+
+.spin-shutter__fibers {
+  z-index: -1;
+  mix-blend-mode: screen;
+}
+
+.spin-shutter__fibers.is-ready {
+  opacity: 0.65;
 }
 
 /* Pila inicial (antes de verse) y apertura: la órbita se abre en ~1.9 s. */
@@ -87,9 +119,12 @@
 .spin-shutter__card {
   position: absolute;
   inset: 0;
+  padding: 0;
   overflow: hidden;
+  border: 0;
   border-radius: 14px;
   background: var(--color-night);
+  cursor: zoom-in;
   box-shadow: 0 16px 28px -14px rgba(0, 0, 0, 0.6);
   transform: rotateY(calc(var(--k) * 360deg / var(--n) * var(--ss-spread)))
     translateZ(calc(var(--radius) * var(--ss-spread)))
@@ -132,6 +167,74 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
-html[data-motion='paused'] .spin-shutter {
+.spin-shutter__card:focus-visible {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.spin-shutter :focus-visible {
+  outline-color: var(--color-white);
+}
+
+.spin-shutter__preview {
+  position: absolute;
+  z-index: 1;
+  top: var(--photo-y, 50%);
+  left: var(--photo-x, 50%);
+  width: var(--photo-width, 0px);
+  height: var(--photo-height, 0px);
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--color-night);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    top 0.7s var(--ss-spring),
+    left 0.7s var(--ss-spring),
+    width 0.7s var(--ss-spring),
+    height 0.7s var(--ss-spring),
+    border-radius 0.7s var(--ss-spring),
+    opacity 0.2s var(--ease) 0.5s,
+    visibility 0s 0.7s;
+}
+
+.spin-shutter__preview[data-expanded] {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 32px;
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.spin-shutter__expanded-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.spin-shutter__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+}
+
+.spin-shutter__close:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+html[data-motion='paused'] .spin-shutter,
+html[data-motion='paused'] .spin-shutter__preview {
   transition: none !important;
 }

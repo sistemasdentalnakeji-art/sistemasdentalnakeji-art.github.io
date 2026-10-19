@@ -6,8 +6,9 @@
 //   • la órbita va inclinada en diagonal (`tilt` hacia la cámara + `roll` en pantalla), como en la página oficial: un arco cercano
 //     de fotos grandes y nítidas y otro lejano de fotos chicas, difuminadas y apagadas. Las fotos miran siempre de frente
 //     (se contra-giran), solo cambia su tamaño por la perspectiva;
-//   • con el cursor encima el giro se frena suave y la órbita "rebota": se inclina un poco hacia donde apuntas y vuelve;
+//   • con el cursor encima la órbita "rebota": se inclina un poco hacia donde apuntas y vuelve;
 //     se puede arrastrar (con inercia) y los botones anterior/siguiente llevan la foto elegida al frente.
+//   • un clic despliega la foto dentro del panel, con el mismo resorte que LocationMap; al cerrar vuelve a su lugar.
 //   • NO se mueve con la rueda del mouse (se la quitaría al scroll de la página).
 // • Sin movimiento ("reducir movimiento" o "Pausar animaciones"): la órbita queda quieta y completa; los botones cambian de
 //   foto sin animar. Se renderiza también en Node: nada de window/document fuera de efectos y eventos.
@@ -16,8 +17,9 @@
 //   vuelve a pintar mientras gira.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect, useRef, type CSSProperties, type PointerEvent } from 'react'
+import { useEffect, useId, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from 'react'
 import { Icon } from '@/components/ui/Icon'
+import { AuroraBackground } from '@/components/decor/AuroraBackground'
 import { motionOff } from '@/lib/motion'
 
 export interface SpinShutterPhoto {
@@ -61,14 +63,19 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
   const step = 360 / count
   const rootRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+  const cardRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const previewId = useId()
+  const previewRef = useRef<HTMLDivElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const openerRef = useRef<HTMLButtonElement | null>(null)
+  const closeTimer = useRef<number | undefined>(undefined)
+  const [expandedPhoto, setExpandedPhoto] = useState<SpinShutterPhoto | null>(null)
 
   // Estado del giro (en refs: se actualiza 60 veces por segundo sin volver a pintar React).
   const angle = useRef(0)
   const velocity = useRef(0)
   const snapTo = useRef<number | null>(null)
   const holdUntil = useRef(0)
-  const hovering = useRef(false)
   const focusWithin = useRef(false)
   const pressed = useRef(false) // botón o dedo abajo sobre el escenario (aún puede ser un simple clic)
   const dragging = useRef(false) // ya se movió lo bastante: es un arrastre
@@ -118,6 +125,10 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
     const tick = (now: number) => {
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
+      if (openerRef.current) {
+        frame = requestAnimationFrame(tick)
+        return
+      }
       const still = motionOff()
       if (snapTo.current !== null) {
         const diff = snapTo.current - angle.current
@@ -129,7 +140,7 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
           angle.current += diff * Math.min(1, dt * 7)
         }
       } else if (!dragging.current) {
-        const resting = still || hovering.current || focusWithin.current || now < holdUntil.current
+        const resting = still || focusWithin.current || now < holdUntil.current
         const target = resting ? 0 : speed * 6
         velocity.current += (target - velocity.current) * Math.min(1, dt * 2.5)
         angle.current += velocity.current * dt
@@ -178,17 +189,80 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
     }
   }, [count, step, speed, tilt, roll])
 
+  useEffect(() => {
+    const preview = previewRef.current
+    if (!preview) return
+    if (expandedPhoto) {
+      // Fija el recuadro de origen antes de desplegarlo hasta los bordes del panel.
+      preview.getBoundingClientRect()
+      preview.dataset.expanded = 'true'
+      closeRef.current?.focus({ preventScroll: true })
+    } else if (openerRef.current) {
+      openerRef.current = null
+      holdUntil.current = 0
+      velocity.current = motionOff() || focusWithin.current ? 0 : speed * 6
+    }
+
+    return () => window.clearTimeout(closeTimer.current)
+  }, [expandedPhoto, speed])
+
+  const setPhotoOrigin = (button: HTMLButtonElement) => {
+    const root = rootRef.current
+    const preview = previewRef.current
+    if (!root || !preview) return
+    const panel = root.getBoundingClientRect()
+    const source = button.getBoundingClientRect()
+    preview.style.setProperty('--photo-x', `${source.left - panel.left}px`)
+    preview.style.setProperty('--photo-y', `${source.top - panel.top}px`)
+    preview.style.setProperty('--photo-width', `${source.width}px`)
+    preview.style.setProperty('--photo-height', `${source.height}px`)
+  }
+
+  const openPhoto = (event: MouseEvent<HTMLButtonElement>, photo: SpinShutterPhoto) => {
+    // pointerup ya soltó el arrastre; la distancia conserva la diferencia entre arrastrar y pulsar.
+    if (event.detail !== 0 && dragMoved.current >= DRAG_START_PX) return
+    const preview = previewRef.current
+    if (!preview) return
+    preview.style.transition = 'none'
+    setPhotoOrigin(event.currentTarget)
+    preview.getBoundingClientRect()
+    preview.style.removeProperty('transition')
+    openerRef.current = event.currentTarget
+    velocity.current = 0
+    snapTo.current = null
+    setExpandedPhoto(photo)
+  }
+
+  const finishPhotoClose = () => {
+    if (previewRef.current?.contains(document.activeElement)) {
+      const opener = openerRef.current
+      opener?.closest('.spin-shutter__stage')?.removeAttribute('inert')
+      opener?.focus({ preventScroll: true })
+    }
+    setExpandedPhoto(null)
+  }
+
+  const closePhoto = () => {
+    const preview = previewRef.current
+    if (!preview?.hasAttribute('data-expanded')) return
+    if (openerRef.current) setPhotoOrigin(openerRef.current)
+    preview.removeAttribute('data-expanded')
+    if (motionOff()) finishPhotoClose()
+    // Respaldo si la transición se cancela al cambiar las preferencias de movimiento.
+    else closeTimer.current = window.setTimeout(finishPhotoClose, 750)
+  }
+
   /** Lleva la foto `index` al frente por el camino más corto. */
-  const goTo = (index: number) => {
+  const goTo = (index: number, now: number) => {
     const k = ((index % count) + count) % count
     targetIndex.current = k
     const base = -k * step
     snapTo.current = base + 360 * Math.round((angle.current - base) / 360)
-    holdUntil.current = performance.now() + HOLD_MS
+    holdUntil.current = now + HOLD_MS
   }
 
   /** Anterior / siguiente parten de la foto a la que ya va la órbita (si no, dos clics rápidos avanzarían uno). */
-  const goBy = (delta: number) => goTo((snapTo.current !== null ? targetIndex.current : frontIndex.current) + delta)
+  const goBy = (delta: number, now: number) => goTo((snapTo.current !== null ? targetIndex.current : frontIndex.current) + delta, now)
 
   // Arrastre con inercia. El puntero solo se captura cuando ya se movió (DRAG_START_PX).
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
@@ -210,8 +284,8 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
     if (!pressed.current) return
     const now = performance.now()
     const dx = event.clientX - dragLast.current.x
-    dragMoved.current += Math.abs(dx)
     if (!dragging.current) {
+      dragMoved.current = Math.abs(dx)
       if (dragMoved.current < DRAG_START_PX) return
       dragging.current = true
       snapTo.current = null
@@ -247,16 +321,21 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
       // Solo el foco de teclado detiene el giro: un clic con el mouse también enfoca el botón y lo dejaría parado.
       onFocus={(event) => (focusWithin.current = event.target.matches(':focus-visible'))}
       onBlur={() => (focusWithin.current = false)}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape' && expandedPhoto) {
+          event.preventDefault()
+          closePhoto()
+        }
+      }}
     >
+      <AuroraBackground theme="dark" className="spin-shutter__aurora" />
+      <AuroraBackground theme="dark" effect="fibers" fiberCount={9} className="spin-shutter__fibers" />
       <div
         className="spin-shutter__stage"
+        inert={!!expandedPhoto}
         style={{ '--n': count, '--tilt': `${tilt}deg`, '--roll': `${roll}deg` } as CSSProperties}
-        onPointerEnter={(event) => {
-          if (event.pointerType === 'mouse') hovering.current = true
-        }}
         onPointerLeave={(event) => {
           if (event.pointerType !== 'mouse') return
-          hovering.current = false
           wobbleTarget.current = { tilt: 0, roll: 0 }
         }}
         onPointerDown={onPointerDown}
@@ -268,27 +347,54 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
         <div className="spin-shutter__scene">
           <div ref={ringRef} className="spin-shutter__ring">
             {photos.map((photo, index) => (
-              <div
+              <button
                 key={photo.src}
+                type="button"
                 ref={(node) => {
                   cardRefs.current[index] = node
                 }}
                 className="spin-shutter__card"
+                aria-label={`Ampliar foto: ${photo.alt}`}
+                aria-controls={previewId}
+                aria-expanded={expandedPhoto === photo}
                 style={{ '--k': index } as CSSProperties}
+                onClick={(event) => openPhoto(event, photo)}
+                onFocus={(event) => {
+                  if (event.currentTarget.matches(':focus-visible')) goTo(index, event.timeStamp)
+                }}
               >
                 <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" draggable={false} style={{ objectPosition: photo.position }} />
-              </div>
+              </button>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="spin-shutter__bar">
-        <button type="button" className="spin-shutter__nav" aria-label="Foto anterior" onClick={() => goBy(-1)}>
+      <div className="spin-shutter__bar" inert={!!expandedPhoto}>
+        <button type="button" className="spin-shutter__nav" aria-label="Foto anterior" onClick={(event) => goBy(-1, event.timeStamp)}>
           <Icon name="chevronLeft" size={22} />
         </button>
-        <button type="button" className="spin-shutter__nav" aria-label="Foto siguiente" onClick={() => goBy(1)}>
+        <button type="button" className="spin-shutter__nav" aria-label="Foto siguiente" onClick={(event) => goBy(1, event.timeStamp)}>
           <Icon name="chevronRight" size={22} />
+        </button>
+      </div>
+
+      <div
+        ref={previewRef}
+        id={previewId}
+        className="spin-shutter__preview"
+        role="region"
+        aria-label={expandedPhoto ? `Foto ampliada: ${expandedPhoto.alt}` : 'Foto ampliada'}
+        aria-hidden={!expandedPhoto}
+        inert={!expandedPhoto}
+        onTransitionEnd={(event) => {
+          if (event.target !== event.currentTarget || event.currentTarget.hasAttribute('data-expanded')) return
+          if (event.propertyName === 'width' || event.propertyName === 'height') finishPhotoClose()
+        }}
+      >
+        {expandedPhoto && <img className="spin-shutter__expanded-image" src={expandedPhoto.src} alt={expandedPhoto.alt} />}
+        <button ref={closeRef} type="button" className="spin-shutter__close" aria-label="Cerrar foto ampliada" onClick={closePhoto}>
+          <Icon name="close" size={26} />
         </button>
       </div>
     </div>
