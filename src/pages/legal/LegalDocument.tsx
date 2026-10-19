@@ -43,7 +43,7 @@ function Block({ block }: { block: LegalBlock }) {
   )
 }
 
-export function LegalDocument({ doc, titleId }: { doc: LegalDoc; titleId: string }) {
+export function LegalDocument({ doc, titleId, compact = false }: { doc: LegalDoc; titleId: string; compact?: boolean }) {
   const { sections } = doc
   const [active, setActive] = useState(sections[0].id)
   const [stacked, setStacked] = useState(false)
@@ -107,7 +107,7 @@ export function LegalDocument({ doc, titleId }: { doc: LegalDoc; titleId: string
           )}
         </header>
 
-        <div className="legal-doc">
+        <div className={compact ? 'legal-doc legal-doc--compact' : 'legal-doc'}>
           <nav className="toc" aria-label={doc.tocLabel}>
             <p className="toc__label">{doc.tocLabel}</p>
             <ol className="toc__list" role="list">
@@ -146,8 +146,8 @@ export function LegalDocument({ doc, titleId }: { doc: LegalDoc; titleId: string
                 }
               >
                 <header className="legal-card__head">
-                  <span className="legal-card__num" aria-hidden="true">
-                    {String(index + 1).padStart(2, '0')}
+                  <span className="legal-card__icon" aria-hidden="true">
+                    <Icon name={item.icon} size={26} />
                   </span>
                   <h2 id={`${item.id}-titulo`} className="legal-card__title">
                     {item.title}

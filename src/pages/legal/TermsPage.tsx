@@ -5,5 +5,6 @@ import { TERMS_PAGE } from '@/data/legal'
 import { LegalDocument } from '@/pages/legal/LegalDocument'
 
 export function TermsPage() {
-  return <LegalDocument doc={TERMS_PAGE} titleId="terminos-titulo" />
+  // `compact`: las cartas de SMS tienen poco texto, así que son bajas (ver legal.css).
+  return <LegalDocument doc={TERMS_PAGE} titleId="terminos-titulo" compact />
 }

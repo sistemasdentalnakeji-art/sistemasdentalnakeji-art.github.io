@@ -7,11 +7,14 @@
 // Si la clínica cambia el original, se actualiza aquí. Cada sección conserva un `id` corto y único (ancla del índice).
 // ─────────────────────────────────────────────────────────────────────────────
 
+import type { IconName } from '@/components/ui/Icon'
+
 /** Bloque de contenido de una sección: párrafo, subtítulo, lista o enlace (externo si empieza con http). */
 export type LegalBlock = string | { h: string } | { ul: string[] } | { link: string; href: string }
 
 interface LegalSection {
   id: string
+  icon: IconName
   title: string
   blocks: LegalBlock[]
 }
@@ -34,6 +37,7 @@ export const PRIVACY_PAGE: LegalDoc = {
   sections: [
     {
       id: 'commitment',
+      icon: 'shield',
       title: 'Our Commitment to Your Privacy',
       blocks: [
         'Nakeji Dental Group, doing business as Nakeji Dental, is committed to protecting the privacy of your health information.',
@@ -53,6 +57,7 @@ export const PRIVACY_PAGE: LegalDoc = {
     },
     {
       id: 'information',
+      icon: 'document',
       title: 'Information We Collect and Protect',
       blocks: [
         'In providing dental care and managing our practice, we may collect, create, receive, maintain, and use information about you, including:',
@@ -86,6 +91,7 @@ export const PRIVACY_PAGE: LegalDoc = {
     },
     {
       id: 'uses',
+      icon: 'share',
       title: 'How We May Use and Disclose Your Health Information',
       blocks: [
         'When HIPAA applies, we may use or disclose your PHI for the following purposes, as permitted by law.',
@@ -113,6 +119,7 @@ export const PRIVACY_PAGE: LegalDoc = {
     },
     {
       id: 'authorization',
+      icon: 'lock',
       title: 'Uses That Require Your Authorization',
       blocks: [
         'We will obtain your written authorization when required by applicable law.',
@@ -124,6 +131,7 @@ export const PRIVACY_PAGE: LegalDoc = {
     },
     {
       id: 'rights',
+      icon: 'scale',
       title: 'Your Rights Regarding Your Health Information',
       blocks: [
         'If HIPAA applies, you have the following rights, subject to applicable legal exceptions.',
@@ -152,6 +160,7 @@ export const PRIVACY_PAGE: LegalDoc = {
     },
     {
       id: 'responsibilities',
+      icon: 'check',
       title: 'Our Privacy and Security Responsibilities',
       blocks: [
         'When HIPAA applies, we are required to:',
@@ -171,6 +180,7 @@ export const PRIVACY_PAGE: LegalDoc = {
     },
     {
       id: 'minors',
+      icon: 'users',
       title: 'Minors and Authorized Representatives',
       blocks: [
         'For patients who are minors or who have a legally authorized representative, we will handle requests, consent, access, and disclosures in accordance with applicable federal and state law.',
@@ -179,6 +189,7 @@ export const PRIVACY_PAGE: LegalDoc = {
     },
     {
       id: 'state',
+      icon: 'pin',
       title: 'State-Specific Privacy Protections',
       blocks: [
         'Federal HIPAA requirements may be supplemented by state laws that provide greater privacy protections or additional patient rights.',
@@ -188,6 +199,7 @@ export const PRIVACY_PAGE: LegalDoc = {
     },
     {
       id: 'changes',
+      icon: 'refresh',
       title: 'Changes to This Notice',
       blocks: [
         'We reserve the right to change the terms of this Notice as permitted by law.',
@@ -197,6 +209,7 @@ export const PRIVACY_PAGE: LegalDoc = {
     },
     {
       id: 'contact',
+      icon: 'mail',
       title: 'How to Contact Us or File a Complaint',
       blocks: [
         'For questions, requests, or complaints concerning your privacy, contact:',
@@ -228,20 +241,23 @@ export const TERMS_PAGE: LegalDoc = {
   updated: 'Effective Date: 10/16/26',
   tocLabel: 'In these terms',
   sections: [
-    { id: 'frequency', title: 'Message Frequency', blocks: ['Message frequency may vary.'] },
+    { id: 'frequency', icon: 'clock', title: 'Message Frequency', blocks: ['Message frequency may vary.'] },
     {
       id: 'rates',
+      icon: 'message',
       title: 'Message and Data Rates',
       blocks: ['Message and data rates may apply depending on your mobile carrier and plan.'],
     },
-    { id: 'opt-out', title: 'Opt-Out', blocks: ['You can opt out of receiving SMS messages at any time by replying STOP.'] },
+    { id: 'opt-out', icon: 'close', title: 'Opt-Out', blocks: ['You can opt out of receiving SMS messages at any time by replying STOP.'] },
     {
       id: 'help',
+      icon: 'help',
       title: 'Help',
       blocks: ['For assistance, reply HELP or contact us at appointments@nakejidental.com.'],
     },
     {
       id: 'privacy',
+      icon: 'lock',
       title: 'Privacy',
       blocks: [
         'Your information will be handled in accordance with our Privacy Policy. We do not sell or share your mobile number or SMS consent information with third parties for their marketing purposes.',
@@ -249,11 +265,13 @@ export const TERMS_PAGE: LegalDoc = {
     },
     {
       id: 'consent',
+      icon: 'check',
       title: 'Consent',
       blocks: ['Consent to receive SMS messages is not a condition of purchase.'],
     },
     {
       id: 'contact',
+      icon: 'phone',
       title: 'Contact Information',
       blocks: [{ link: 'Dental Nakeji — https://nakejidental.com/', href: 'https://nakejidental.com/' }],
     },

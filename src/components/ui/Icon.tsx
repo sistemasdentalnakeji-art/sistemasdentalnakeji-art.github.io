@@ -196,6 +196,51 @@ const PATHS = {
     </>
   ),
   drop: <path d="M12 3.5c3.2 3.9 5.5 6.8 5.5 9.6a5.5 5.5 0 0 1-11 0c0-2.8 2.3-5.7 5.5-9.6z" />,
+  // Páginas legales (una por sección): mensaje, ayuda, candado, documento, compartir, balanza y actualizar.
+  message: (
+    <>
+      <path d="M4.5 5h15a1 1 0 0 1 1 1v9.5a1 1 0 0 1-1 1H11L6.5 20v-3.5h-2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z" />
+      <path d="M8 9.5h8M8 12.5h5" />
+    </>
+  ),
+  help: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M9.6 9.6a2.5 2.5 0 1 1 3.6 2.2c-.8.5-1.2 1-1.2 1.9M12 16.6v.1" />
+    </>
+  ),
+  lock: (
+    <>
+      <rect x="5" y="10.5" width="14" height="10" rx="2" />
+      <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5M12 14.5v2.5" />
+    </>
+  ),
+  document: (
+    <>
+      <path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z" />
+      <path d="M14 3.5V8h4.5M8.5 12.5h7M8.5 16h5" />
+    </>
+  ),
+  share: (
+    <>
+      <circle cx="6.5" cy="12" r="2.3" />
+      <circle cx="17.5" cy="6.5" r="2.3" />
+      <circle cx="17.5" cy="17.5" r="2.3" />
+      <path d="M8.5 10.9l7-3.3M8.5 13.1l7 3.3" />
+    </>
+  ),
+  scale: (
+    <>
+      <path d="M12 4v16M7 20h10M5 7.5h14" />
+      <path d="M5 7.5L2.8 13a3 3 0 0 0 4.4 0zM19 7.5L16.8 13a3 3 0 0 0 4.4 0z" />
+    </>
+  ),
+  refresh: (
+    <>
+      <path d="M19.5 12a7.5 7.5 0 0 1-13 5.1M4.5 12a7.5 7.5 0 0 1 13-5.1" />
+      <path d="M18.5 3.5v4h-4M5.5 20.5v-4h4" />
+    </>
+  ),
 } as const
 
 export type IconName = keyof typeof PATHS

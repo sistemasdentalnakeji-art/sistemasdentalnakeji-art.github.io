@@ -208,7 +208,7 @@
   }
 }
 
-/* Carta de una sección: numeral grande en contorno + título arriba, texto debajo. */
+/* Carta de una sección: icono + título arriba, texto debajo. */
 .legal-card {
   display: flex;
   flex-direction: column;
@@ -231,13 +231,17 @@
   border-bottom: 1px dashed var(--color-fog);
 }
 
-.legal-card__num {
-  color: transparent;
-  font-family: var(--font-display);
-  font-size: clamp(2.25rem, 1.8rem + 1.8vw, 3.25rem);
-  font-weight: 800;
-  line-height: 1;
-  -webkit-text-stroke: 1.5px var(--color-brand);
+/* Icono de la sección, en el lugar donde iba el número. */
+.legal-card__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: clamp(44px, 3.4vw, 52px);
+  aspect-ratio: 1;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--color-brand), var(--color-ink));
+  box-shadow: 0 8px 18px -8px rgba(42, 66, 105, 0.55);
+  color: var(--color-white);
 }
 
 .legal-card__title {
@@ -264,6 +268,15 @@
   margin-top: 0;
 }
 
+/* Cartas compactas (SMS): menos relleno arriba y abajo para que hasta la sección más larga quepa sin desplazarse. */
+.legal-doc--compact .legal-card__head {
+  padding-block: 16px 14px;
+}
+
+.legal-doc--compact .legal-card__body {
+  padding-block: 14px 16px;
+}
+
 /* Cartas apiladas DENTRO de una ventana (escritorio, sin "reducir movimiento"): igual que en /servicios/ (ver services-index.css).
    La ventana (.legal-deck) mide una carta + los desfases y tiene su propio scroll: con la rueda encima, cada carta sube y se fija
    --off px más abajo que la anterior, que se encoge hacia atrás; al terminar, la rueda sigue con la página y el footer queda debajo.
@@ -272,6 +285,11 @@
   .legal-doc {
     --off: 18px;
     --card-h: clamp(26rem, calc(100svh - var(--header-height) - 240px), 40rem);
+  }
+
+  /* SMS: poco texto por sección, así que las cartas son bajas (≈70 % menos que las del aviso). */
+  .legal-doc--compact {
+    --card-h: 12rem;
   }
 
   .legal-deck {
