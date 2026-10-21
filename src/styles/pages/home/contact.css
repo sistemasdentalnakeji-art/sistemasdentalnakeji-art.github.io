@@ -27,6 +27,16 @@
   color: var(--color-brand);
 }
 
+/* Iconos de esta sección (título y tarjetas): mismo diseño que el de Aseguranzas, azul fuerte con degradado e ícono dorado. */
+.contact__intro .icon-badge,
+.contact-item__icon {
+  background: linear-gradient(135deg, var(--color-brand), var(--color-ink));
+  color: var(--color-gold);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 12px 24px -12px rgba(42, 66, 105, 0.7);
+}
+
 /* Contorno luminoso (.siri) de la fila y del ícono: el mismo de las tarjetas de servicios, más fino.
    Sin contexto de apilamiento (el brillo va detrás con z-index -1). Con "reducir movimiento" se queda quieto (siri.css). */
 .contact-item.siri {
@@ -37,6 +47,12 @@
 .contact-item__icon.siri {
   --siri-width: 2px;
   --siri-blur: 4px;
+}
+
+/* Los iconos van sólidos: sin aura ni contorno luminoso (la tarjeta conserva el suyo). */
+.contact-item__icon.siri::before,
+.contact-item__icon.siri::after {
+  display: none;
 }
 
 /* Sin el "respiro" (escala y brillo) y con un resplandor corto: así no se encima con la fila vecina. */
@@ -99,6 +115,12 @@ a.contact-item__value:hover {
   margin-top: 28px;
 }
 
+/* Redes más grandes que en el resto del sitio: el botón (44 px) pasa a 54 px para que el logo de 40 px respire. */
+.contact__social .icon-button {
+  width: 54px;
+  height: 54px;
+}
+
 .contact__social {
   position: relative;
   display: flex;
@@ -108,15 +130,17 @@ a.contact-item__value:hover {
   margin-top: 24px;
 }
 
+.contact__social > .contact-item__label {
+  color: var(--color-gold);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
 /* Escritorio: debajo del correo, alineado a la derecha; "Síguenos" centrado con las redes */
 @media (min-width: 960px) {
   .contact__social {
     justify-content: flex-end;
   }
-}
-
-.contact__social .icon-button {
-  background: var(--color-porcelain);
 }
 
 /* Recuadro de la tarjeta de ubicación (components/ui/LocationMap.tsx): mantiene el espacio que ocupaba el mapa de Google;
@@ -166,6 +190,14 @@ a.contact-item__value:hover {
 /* Celular: cerrado, el recuadro se ajusta a la tarjeta (140 px + pista); expandido, recupera la altura del escritorio
    para que el plano no quede recortado. */
 @media (max-width: 599.98px) {
+  .contact__intro .section-title {
+    margin-top: 12px;
+  }
+
+  .contact__intro .section-text {
+    margin-top: 8px;
+  }
+
   .contact__map {
     min-height: 220px;
     transition: min-height 0.7s cubic-bezier(0.22, 1.1, 0.36, 1);

@@ -22,6 +22,8 @@ import {
   type PointerEvent,
 } from 'react'
 import { BLOCKS, LABELS, MAP_VIEW, PARK, PIN, RIVER, ROADS, TERRAIN } from '@/data/locationMap'
+import { useLang } from '@/app/lang'
+import { UI } from '@/data/ui'
 import { Icon } from '@/components/ui/Icon'
 
 /** Espera (ms) desde que la sección es visible hasta que la tarjeta se abre sola. */
@@ -37,6 +39,7 @@ interface LocationMapProps {
 const step = (index: number) => ({ '--i': index }) as CSSProperties
 
 export function LocationMap({ name, tag }: LocationMapProps) {
+  const ui = UI[useLang()].map
   const [expanded, setExpanded] = useState(false)
   const stageRef = useRef<HTMLDivElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
@@ -186,7 +189,7 @@ export function LocationMap({ name, tag }: LocationMapProps) {
 
         {/* Un solo botón cubre y alterna la tarjeta. */}
         <button ref={toggleRef} type="button" className="loc__toggle" aria-expanded={expanded} onClick={toggle}>
-          <span className="visually-hidden">Ubicación de {name}</span>
+          <span className="visually-hidden">{ui.toggle(name)}</span>
         </button>
         <span className="loc__close" aria-hidden="true">
           <Icon name="close" size={18} />
@@ -195,7 +198,7 @@ export function LocationMap({ name, tag }: LocationMapProps) {
       </div>
 
       <p className="loc__hint" aria-hidden="true">
-        Toca para ver la ubicación
+        {ui.hint}
       </p>
     </div>
   )

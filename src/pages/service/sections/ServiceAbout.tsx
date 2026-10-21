@@ -1,42 +1,37 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// SECCIÓN 2 DE SERVICIO: información breve + espacio para una animación 3D
+// SECCIÓN 2 DE SERVICIO: información breve del tratamiento.
 //
-// Izquierda: subtítulo, descripción y botón al artículo del blog.
-// Derecha: contenedor vacío de medidas fijas donde se integrará la animación 3D.
-// • Textos y enlace al blog → src/data/services.ts (about, blogHref).
+// Subtítulo, descripción y botón al artículo del blog.
+// • Textos y enlace al blog → src/data/services.ts (about); el blog es la ruta 'blog' de config/routes.ts.
 // • Estilos → src/styles/pages/service.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { useLang } from '@/app/lang'
+import { routeOf } from '@/config/routes'
+import { UI } from '@/data/ui'
 import type { ServiceContent } from '@/data/services'
 import { Band } from '@/components/decor/Band'
-import { Icon } from '@/components/ui/Icon'
+import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
 
 interface ServiceAboutProps {
   content: ServiceContent
 }
 
 export function ServiceAbout({ content }: ServiceAboutProps) {
+  const lang = useLang()
+  const ui = UI[lang].service
   return (
-    <Band tone="tint" labelledBy="servicio-info-titulo">
+    <Band tone="tint" labelledBy="servicio-info-titulo" className="service-about-band">
       <div className="container">
         <div className="service-about">
-          <div className="service-about__text">
-            <p className="service-about__eyebrow">Acerca del tratamiento</p>
-            <h2 id="servicio-info-titulo" className="section-title">
-              {content.about.title}
-            </h2>
-            <p className="section-text">{content.about.text}</p>
-            <a className="btn btn--primary service-about__cta" href={content.blogHref}>
-              Conocer más sobre este tratamiento
-              <Icon name="arrowRight" size={18} />
-            </a>
-          </div>
-
-          <div className="service-about__media" aria-hidden="true">
-            {/* PUNTO DE INTEGRACIÓN: animación 3D del tratamiento (p. ej. un componente con WebGL/Three.js).
-                El contenedor ya tiene medidas fijas en service.css (.service-about__media); dibuja la animación
-                a 100 % de ancho y alto. Si la animación transmite información, quita aria-hidden. */}
-          </div>
+          <p className="service-about__eyebrow pill-label">{ui.aboutEyebrow}</p>
+          <h2 id="servicio-info-titulo" className="section-title">
+            {content.about.title}
+          </h2>
+          <p className="section-text">{content.about.text}</p>
+          <a className="btn btn--primary service-about__cta interactive-hover" href={routeOf('blog', lang).path}>
+            <InteractiveHoverContent>{ui.blogCta}</InteractiveHoverContent>
+          </a>
         </div>
       </div>
     </Band>

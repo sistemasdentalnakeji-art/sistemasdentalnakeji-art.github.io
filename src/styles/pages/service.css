@@ -9,10 +9,11 @@
   position: relative;
   isolation: isolate;
   display: flex;
-  align-items: center;
+  /* Contenido pegado abajo: el espacio entre los botones y la ola es el mismo en todos los servicios, sin importar el largo del texto. */
+  align-items: flex-end;
   min-height: clamp(560px, calc(100svh - var(--header-height) - 24px), 760px);
   margin: var(--band-gap) var(--band-gap) 0;
-  padding-block: clamp(48px, 7vw, 88px) clamp(32px, 4vw, 52px);
+  padding-block: clamp(48px, 7vw, 88px) clamp(88px, 9vw, 132px);
   overflow: hidden;
   border-radius: var(--band-radius) var(--band-radius) 0 0;
   /* Fondo sin foto (o mientras carga): azul de marca, más intenso a la derecha. En escritorio, este azul es lo que se ve a la izquierda de la foto. */
@@ -209,52 +210,35 @@
   }
 }
 
-/* --- 2. Información + espacio 3D ----------------------------------------- */
-.service-about {
-  display: grid;
-  gap: clamp(32px, 5vw, 64px);
-  align-items: center;
+/* --- 2. Acerca del tratamiento ------------------------------------------- */
+/* Banda más baja que el resto: con el texto ya grande, el padding general dejaba mucho aire arriba y abajo. */
+.band.service-about-band {
+  padding-block: clamp(24px, 3vw, 40px) clamp(0px, 1vw, 12px);
 }
 
 .service-about__eyebrow {
   margin-bottom: 14px;
-  color: #3768a8; /* --color-brand da 4.48:1 sobre el azul claro; este pasa 4.5:1 */
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 
-.service-about__text .section-text {
+/* Letras más grandes en todo el bloque (el texto ocupa poco de la banda). */
+.service-about__eyebrow.pill-label {
+  padding: 8px 18px;
+  font-size: 0.875rem;
+}
+
+.service-about .section-title {
+  font-size: clamp(2.25rem, 1.75rem + 1.6vw, 3.25rem);
+}
+
+.service-about .section-text {
   max-width: 52ch;
+  font-size: clamp(1.1875rem, 1.05rem + 0.4vw, 1.375rem);
 }
 
 .service-about__cta {
   margin-top: 28px;
+  min-height: 52px;
+  padding: 14px 28px;
+  font-size: 1.0625rem;
 }
 
-/* Contenedor de la futura animación 3D: medidas fijas, sin contenido ni fondo. */
-.service-about__media {
-  position: relative;
-  width: 100%;
-  max-width: 520px;
-  aspect-ratio: 1 / 1;
-  justify-self: center;
-}
-
-/* Una columna (celular y tableta): la caja vacía bajaría el botón 327 px sin aportar nada; solo se muestra en escritorio. */
-@media (max-width: 959.98px) {
-  .service-about__media {
-    display: none;
-  }
-}
-
-@media (min-width: 960px) {
-  .service-about {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .service-about__media {
-    justify-self: end;
-  }
-}

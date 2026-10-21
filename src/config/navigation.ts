@@ -8,17 +8,7 @@
 // El orden de la lista es el orden en que aparecen en el menú.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import {
-  ABOUT,
-  BENEFIT_ROUTES,
-  BENEFITS,
-  CONTACT,
-  HOME,
-  MORE_SERVICE_ROUTES,
-  SERVICE_ROUTES,
-  SERVICES,
-  type RouteDef,
-} from '@/config/routes'
+import { LANGS, routeOf, type Lang, type RouteDef, type RouteKey, type ServiceKey } from '@/config/routes'
 
 interface NavLink {
   kind: 'link'
@@ -39,40 +29,45 @@ export interface NavMenu {
 type NavItem = NavLink | NavMenu
 
 /** Servicios del menú: 9, en cuadrícula de 3 x 3 que se lee por filas (dos de cada categoría de /servicios/ (Limpieza y Periodoncia en la de encías); el resto, en "Ver todos los servicios"). */
-const MENU_SERVICE_PATHS = [
-  '/implantes-dentales-en-tijuana/',
-  '/all-in-4-implants-en-tijuana/',
-  '/coronas-en-tijuana/',
-  '/carillasdentalesentijuana/',
-  '/ortodoncia-en-tijuana/',
-  '/invisalign-in-tijuana/',
-  '/limpieza-dental-en-tijuana/',
-  '/periodoncia-en-tijuana/',
-  '/endodoncias-en-tijuana/',
+const MENU_SERVICE_KEYS: ServiceKey[] = [
+  'implants',
+  'all-on-4',
+  'crowns',
+  'veneers',
+  'orthodontics',
+  'aligners',
+  'cleaning',
+  'gum',
+  'root-canal',
 ]
 
-const MENU_SERVICES: RouteDef[] = MENU_SERVICE_PATHS.map((path) => {
-  const route = [...SERVICE_ROUTES, ...MORE_SERVICE_ROUTES].find((item) => item.path === path)
-  if (!route) throw new Error(`Servicio del menú sin ruta: ${path}`)
-  return route
-})
+const buildNav = (lang: Lang): NavItem[] => {
+  const to = (key: RouteKey) => routeOf(key, lang)
+  const link = (id: string, key: RouteKey): NavLink => ({
+    kind: 'link',
+    id,
+    label: to(key).label,
+    href: to(key).path,
+  })
+  return [
+    link('inicio', 'home'),
+    {
+      kind: 'menu',
+      id: 'servicios',
+      label: to('services').label,
+      children: MENU_SERVICE_KEYS.map(to),
+      overview: { label: lang === 'en' ? 'View all services' : 'Ver todos los servicios', href: to('services').path },
+    },
+    {
+      kind: 'menu',
+      id: 'beneficios',
+      label: to('benefits').label,
+      children: [to('promotions'), to('insurance'), to('agreements')],
+      overview: { label: lang === 'en' ? 'View all benefits' : 'Ver todos los beneficios', href: to('benefits').path },
+    },
+    link('contacto', 'contact'),
+    link('nosotros', 'about'),
+  ]
+}
 
-export const MAIN_NAV: NavItem[] = [
-  { kind: 'link', id: 'inicio', label: HOME.label, href: HOME.path },
-  {
-    kind: 'menu',
-    id: 'servicios',
-    label: SERVICES.label,
-    children: MENU_SERVICES,
-    overview: { label: 'Ver todos los servicios', href: SERVICES.path },
-  },
-  {
-    kind: 'menu',
-    id: 'beneficios',
-    label: BENEFITS.label,
-    children: BENEFIT_ROUTES,
-    overview: { label: 'Ver todos los beneficios', href: BENEFITS.path },
-  },
-  { kind: 'link', id: 'contacto', label: CONTACT.label, href: CONTACT.path },
-  { kind: 'link', id: 'nosotros', label: ABOUT.label, href: ABOUT.path },
-]
+export const MAIN_NAV = Object.fromEntries(LANGS.map((lang) => [lang, buildNav(lang)])) as Record<Lang, NavItem[]>

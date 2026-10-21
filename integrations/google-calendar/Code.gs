@@ -16,13 +16,16 @@ const CONFIG = {
   /** Días sin atención: 0 = domingo … 6 = sábado. */
   CLOSED_WEEKDAYS: [0],
   /** Horarios permitidos (24 h). */
-  SLOTS: ['09:00', '10:00', '11:00', '12:00', '13:00', '15:00', '16:00', '17:00'],
+  SLOTS: [
+    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
+    '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
+  ],
   /** Hasta cuántos días adelante se aceptan solicitudes. */
   DAYS_AHEAD: 60,
   /** Rechazar si ya hay una cita confirmada en ese horario (las solicitudes pendientes, en amarillo, no bloquean). */
   CHECK_CONFLICTS: true,
   /** Correo que recibe un aviso por cada solicitud (opcional). */
-  NOTIFY_EMAIL: '',
+  NOTIFY_EMAIL: 'info@nakejidental.com',
   /** Color del evento en Calendar (amarillo = por confirmar). */
   EVENT_COLOR: CalendarApp.EventColor.YELLOW,
   /** Servicios aceptados: deben coincidir, en el mismo orden, con SERVICES de src/config/booking.ts. */

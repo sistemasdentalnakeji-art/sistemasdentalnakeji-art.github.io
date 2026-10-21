@@ -99,10 +99,13 @@
 }
 
 /* Sangría invisible: ocupa el ancho de unas palabras (data-indent) para que la línea empiece justo debajo de ellas. */
-.story__line[data-indent]::before {
-  content: attr(data-indent);
-  white-space: pre;
-  visibility: hidden;
+/* Solo en pantallas anchas: en celular la sangría parte la frase en dos, así que el texto va continuo. */
+@media (min-width: 700px) {
+  .story__line[data-indent]::before {
+    content: attr(data-indent);
+    white-space: pre;
+    visibility: hidden;
+  }
 }
 
 /* Hilo de curvas detrás de los mensajes (se estira al alto de la sección). Son las mismas curvas animadas de la sección de

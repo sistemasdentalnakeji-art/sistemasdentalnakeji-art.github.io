@@ -13,3 +13,13 @@ graphify-out/
 # QA local (capturas y reporte, no van a git)
 qa/
 .playwright-cli/
+
+# Trabajo local y herramientas (no hacen falta para construir el sitio)
+.agents/
+.claude/
+.tmp_library/
+logo-staging/
+gan-harness/
+CLAUDE.md
+Prompt_Claude_Homepage_Nakeji.md
+.claudeignore

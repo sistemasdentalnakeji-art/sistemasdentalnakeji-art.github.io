@@ -1,11 +1,13 @@
+import { LiquidGlassContent, LiquidMetalArrow } from '@/components/ui/AnimatedButtons'
 // ─────────────────────────────────────────────────────────────────────────────
-// PÁGINA /beneficios/: encabezado con la idea central y el espacio de la foto de recepción, tres tarjetas
+// PÁGINA /beneficios/: encabezado con la idea central y un post promocional, tres tarjetas
 // (promociones, aseguranzas, convenios) y franja de contacto. Estructura parecida a /servicios/, con su propia composición.
 //
 // • Textos, tarjetas y lista de beneficios → src/data/benefits.ts.
 // • Estilos → src/styles/pages/benefits.css. Mismo fondo de plasma que /servicios/.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { useLang } from '@/app/lang'
 import { BENEFIT_CARDS, BENEFIT_CARDS_CTA, BENEFITS_CTA, BENEFITS_HERO, type BenefitCard } from '@/data/benefits'
 import { PARTNERS_CTA } from '@/data/partners'
 import { Band } from '@/components/decor/Band'
@@ -13,6 +15,7 @@ import { PlasmaBackground } from '@/components/decor/PlasmaBackground'
 import { Icon } from '@/components/ui/Icon'
 
 function BenefitCardView({ card }: { card: BenefitCard }) {
+  const ctaLabel = BENEFIT_CARDS_CTA[useLang()]
   return (
     <article className="benefit-card">
       <div className="benefit-card__top">
@@ -30,10 +33,10 @@ function BenefitCardView({ card }: { card: BenefitCard }) {
         <div className="benefit-card__footer">
           {/* El texto visible lo repite el nombre accesible del enlace (aria-label). */}
           <span className="benefit-card__cta" aria-hidden="true">
-            {BENEFIT_CARDS_CTA}
+            {ctaLabel}
           </span>
-          <a className="benefit-card__arrow" href={card.href} aria-label={`${BENEFIT_CARDS_CTA}: ${card.title}`}>
-            <Icon name="arrowRight" size={20} />
+          <a className="benefit-card__arrow liquid-metal" href={card.href} aria-label={`${ctaLabel}: ${card.title}`}>
+            <LiquidMetalArrow />
           </a>
         </div>
         <span className="benefit-card__outline" aria-hidden="true" />
@@ -44,6 +47,10 @@ function BenefitCardView({ card }: { card: BenefitCard }) {
 }
 
 export function BenefitsPage() {
+  const lang = useLang()
+  const cards = BENEFIT_CARDS[lang]
+  const hero = BENEFITS_HERO[lang]
+  const cta = BENEFITS_CTA[lang]
   return (
     <Band
       tone="white"
@@ -68,14 +75,14 @@ export function BenefitsPage() {
       <div className="container">
         <header className="benefits-hero">
           <div className="benefits-hero__text">
-            <p className="benefits-hero__eyebrow">{BENEFITS_HERO.eyebrow}</p>
+            <p className="benefits-hero__eyebrow pill-label">{hero.eyebrow}</p>
             <h1 id="beneficios-titulo" className="benefits-hero__title">
-              <span className="benefits-hero__lead-line">{BENEFITS_HERO.titleLead}</span>{' '}
-              <span className="benefits-hero__accent">{BENEFITS_HERO.titleAccent}</span>
+              <span className="benefits-hero__lead-line">{hero.titleLead}</span>{' '}
+              <span className="benefits-hero__accent">{hero.titleAccent}</span>
             </h1>
-            <p className="benefits-hero__lead">{BENEFITS_HERO.lead}</p>
+            <p className="benefits-hero__lead">{hero.lead}</p>
             <ul className="benefits-hero__features">
-              {BENEFITS_HERO.features.map((feature) => (
+              {hero.features.map((feature) => (
                 <li key={feature.text}>
                   <span className="benefits-hero__feature-icon">
                     <Icon name={feature.icon} size={22} />
@@ -86,17 +93,21 @@ export function BenefitsPage() {
             </ul>
           </div>
 
-          {/* Espacio para la foto de recepción: vacío por ahora, con el contorno luminoso (.siri) de los iconos.
-              Para añadirla, pon dentro de .benefits-hero__frame
-              <img className="benefits-hero__image" src="/images/beneficios/…" width={…} height={…} alt="" />
-              (decorativa; si la foto aporta información, escribe su alt). */}
           <div className="benefits-hero__photo siri">
-            <div className="benefits-hero__frame" />
+            <div className="benefits-hero__frame">
+              <img
+                className="benefits-hero__image"
+                src={lang === 'es' ? '/images/beneficios/beneficios-dental-nakeji.webp' : '/images/beneficios/benefits-dental-nakeji.webp'}
+                width={1536}
+                height={1024}
+                alt={lang === 'es' ? 'Dental Nakeji: promociones, convenios y aseguranzas americanas. Aquí te cuidamos.' : 'Dental Nakeji: promotions, partner agreements and U.S. dental insurance. We care for you.'}
+              />
+            </div>
           </div>
         </header>
 
         <ul className="benefit-grid">
-          {BENEFIT_CARDS.map((card) => (
+          {cards.map((card) => (
             <li key={card.id} className="benefit-grid__item">
               <BenefitCardView card={card} />
             </li>
@@ -109,16 +120,15 @@ export function BenefitsPage() {
               <Icon name="whatsapp" size={28} />
             </span>
             <div>
-              <h2 className="benefits-cta__title">{BENEFITS_CTA.title}</h2>
-              <p className="benefits-cta__text">{BENEFITS_CTA.text}</p>
+              <h2 className="benefits-cta__title">{cta.title}</h2>
+              <p className="benefits-cta__text">{cta.text}</p>
             </div>
           </div>
           {/* Talón: el contenedor gira al arrancarse; dentro, la pieza con el botón (recortada), su contorno verde y el doblez. */}
           <div className="benefits-cta__tear">
             <div className="benefits-cta__stub">
-              <a className="btn benefits-cta__btn" href={PARTNERS_CTA.href}>
-                {BENEFITS_CTA.label}
-                <Icon name="arrowRight" size={18} />
+              <a className="btn benefits-cta__btn liquid-glass" href={PARTNERS_CTA.href}>
+                <LiquidGlassContent>{cta.label}<Icon name="arrowRight" size={18} /></LiquidGlassContent>
               </a>
             </div>
             <span className="benefits-cta__outline" aria-hidden="true" />

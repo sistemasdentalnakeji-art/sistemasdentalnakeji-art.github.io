@@ -131,3 +131,21 @@
 .pill svg {
   color: var(--color-brand);
 }
+
+.page-eyebrow.pill-label,
+.catalog-hero__eyebrow.pill-label,
+.service-about__eyebrow.pill-label,
+.legal-head__eyebrow.pill-label,
+.benefits-hero__eyebrow.pill-label {
+  display: inline-block;
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--color-ink-strong);
+  color: var(--color-gold);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

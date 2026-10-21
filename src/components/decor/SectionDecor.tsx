@@ -9,7 +9,7 @@ import { cx } from '@/lib/cx'
 
 export type FlowLayout = 'schedule'
 /** contact: escritorio (arriba a la derecha); contact-mobile: junto a "Síguenos" en móvil y tableta. */
-type RingsPlacement = 'partners' | 'contact' | 'contact-mobile'
+type RingsPlacement = 'partners' | 'partners-cta' | 'contact' | 'contact-mobile'
 
 type SectionDecorProps =
   | { variant: 'flow'; layout: FlowLayout }

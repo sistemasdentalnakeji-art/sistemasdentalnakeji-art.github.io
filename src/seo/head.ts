@@ -6,8 +6,8 @@
 // • Datos de la clínica del JSON-LD → src/config/site.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { HOME, type RouteDef } from '@/config/routes'
-import { SITE } from '@/config/site'
+import { counterpart, routeOf, type Lang, type RouteDef } from '@/config/routes'
+import { LOCALES, SITE } from '@/config/site'
 
 export interface HeadOptions {
   /** true solo en el build de producción y para páginas terminadas. */
@@ -22,9 +22,16 @@ const meta = (attr: 'name' | 'property', key: string, content: string) =>
 
 const LOGO_URL = `${SITE.origin}${SITE.logo.full}`
 
+/** Descripción de la clínica por idioma: la misma del pie de página original (dato publicado), sin horarios ni calificaciones. */
+const CLINIC_DESCRIPTION: Record<Lang, string> = {
+  en: 'Dental clinic in Zona Urbana Río Tijuana, Baja California, Mexico.',
+  es: 'Clínica dental en la Zona Urbana Río Tijuana, Baja California.',
+}
+
 /** Datos estructurados de la clínica. Solo información publicada y verificable. */
-function clinicJsonLd() {
+function clinicJsonLd(route: RouteDef) {
   const { origin, address } = SITE
+  const homeUrl = `${origin}${route.path}`
   return {
     '@context': 'https://schema.org',
     '@graph': [
@@ -33,7 +40,9 @@ function clinicJsonLd() {
         '@id': `${origin}/#clinica`,
         name: SITE.name,
         alternateName: SITE.legalName,
-        url: `${origin}/`,
+        description: CLINIC_DESCRIPTION[route.lang],
+        inLanguage: LOCALES[route.lang].lang,
+        url: homeUrl,
         logo: LOGO_URL,
         image: LOGO_URL,
         email: SITE.email,
@@ -57,11 +66,11 @@ function clinicJsonLd() {
       {
         '@type': 'WebSite',
         '@id': `${origin}/#sitio`,
-        url: `${origin}/`,
+        url: homeUrl,
         // Mismo nombre que og:site_name y el título; Google lo usa como nombre del sitio en los resultados.
         name: SITE.name,
         alternateName: SITE.legalName,
-        inLanguage: SITE.lang,
+        inLanguage: LOCALES[route.lang].lang,
         publisher: { '@id': `${origin}/#clinica` },
       },
     ],
@@ -75,13 +84,21 @@ export function buildHead(route: RouteDef, { indexable }: HeadOptions): string {
 
   tags.push(meta('name', 'robots', indexable ? 'index, follow, max-image-preview:large' : 'noindex, follow'))
 
-  // Canonical y Open Graph: el homepage y toda página terminada ('ready'). El JSON-LD de la clínica, solo el homepage.
-  if (route === HOME || route.status === 'ready') {
+  // Canonical, hreflang y Open Graph: el homepage y toda página terminada ('ready'). El JSON-LD de la clínica, solo el homepage.
+  if (route.key === 'home' || route.status === 'ready') {
     const url = `${SITE.origin}${route.path}`
+    const other = counterpart(route)
+    const alternate = (hreflang: string, target: RouteDef) =>
+      `<link rel="alternate" hreflang="${hreflang}" href="${SITE.origin}${target.path}" />`
     tags.push(
       `<link rel="canonical" href="${url}" />`,
+      // Pareja (en, es) en cada página, más x-default hacia la versión en inglés (la principal).
+      alternate(LOCALES[route.lang].lang, route),
+      alternate(LOCALES[other.lang].lang, other),
+      alternate('x-default', routeOf(route.key, 'en')),
       meta('property', 'og:type', 'website'),
-      meta('property', 'og:locale', SITE.locale),
+      meta('property', 'og:locale', LOCALES[route.lang].og),
+      meta('property', 'og:locale:alternate', LOCALES[other.lang].og),
       meta('property', 'og:site_name', SITE.name),
       meta('property', 'og:title', route.title),
       meta('property', 'og:description', route.description ?? ''),
@@ -89,11 +106,11 @@ export function buildHead(route: RouteDef, { indexable }: HeadOptions): string {
       meta('property', 'og:image', LOGO_URL),
       meta('property', 'og:image:width', String(SITE.logo.fullWidth)),
       meta('property', 'og:image:height', String(SITE.logo.fullHeight)),
-      meta('property', 'og:image:alt', `Logo de ${SITE.name}`),
+      meta('property', 'og:image:alt', `${route.lang === 'es' ? 'Logo de' : 'Logo of'} ${SITE.name}`),
       meta('name', 'twitter:card', 'summary'),
     )
-    if (route === HOME) {
-      tags.push(`<script type="application/ld+json">${JSON.stringify(clinicJsonLd()).replace(/</g, '\\u003c')}</script>`)
+    if (route.key === 'home') {
+      tags.push(`<script type="application/ld+json">${JSON.stringify(clinicJsonLd(route)).replace(/</g, '\\u003c')}</script>`)
     }
   }
 
@@ -106,9 +123,12 @@ export function buildHead(route: RouteDef, { indexable }: HeadOptions): string {
  */
 export function applyHead(route: RouteDef) {
   document.title = route.title
-  if (route !== HOME) {
+  document.documentElement.lang = LOCALES[route.lang].lang
+  if (route.key !== 'home') {
     document.head
-      .querySelectorAll('link[rel="canonical"], meta[property^="og:"], meta[name="twitter:card"], script[type="application/ld+json"]')
+      .querySelectorAll(
+        'link[rel="canonical"], link[rel="alternate"][hreflang], meta[property^="og:"], meta[name="twitter:card"], script[type="application/ld+json"]',
+      )
       .forEach((tag) => tag.remove())
   }
   const upsert = (name: string, content: string) => {

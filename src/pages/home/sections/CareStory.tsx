@@ -15,6 +15,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { Fragment, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type RefObject } from 'react'
+import { useLang } from '@/app/lang'
 import { STORY, type StoryLines } from '@/data/story'
 import { AnimatedLines, type Line } from '@/components/decor/SectionDecor'
 import { Band } from '@/components/decor/Band'
@@ -262,6 +263,7 @@ function useScrollScrub(areaRef: RefObject<HTMLDivElement | null>, threadD?: str
 }
 
 export function CareStory() {
+  const story = STORY[useLang()]
   const [areaRef, size] = useAreaSize()
   const scaleX = size ? size.width / 100 : 1
   const scaleY = size ? size.height / 100 : 1
@@ -283,15 +285,15 @@ export function CareStory() {
         <ThreadTip path={size ? thread[0].a : undefined} />
 
         <p className="story__item story__item--left">
-          <StoryText lines={STORY.desire} />
+          <StoryText lines={story.desire} />
         </p>
 
         <h2 id="historia-titulo" className="story__item story__item--up">
-          <StoryText lines={STORY.priority} />
+          <StoryText lines={story.priority} />
         </h2>
 
         <p className="story__item story__item--right">
-          <StoryText lines={STORY.decision} />
+          <StoryText lines={story.decision} />
         </p>
       </div>
     </Band>

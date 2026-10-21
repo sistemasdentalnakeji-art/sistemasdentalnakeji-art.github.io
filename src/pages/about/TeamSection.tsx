@@ -11,10 +11,12 @@
 
 import { useEffect, useRef, useState, type TransitionEvent } from 'react'
 import { SITE } from '@/config/site'
-import { TEAM, type Member } from '@/data/about'
+import { useLang } from '@/app/lang'
+import { ABOUT_A11Y, TEAM, type Member } from '@/data/about'
 import { addAurora, addFibers } from '@/components/decor/shaderPool'
 import { BrandOrb } from '@/components/ui/BrandOrb'
 import { Icon } from '@/components/ui/Icon'
+import { SoftBlurIn } from '@/pages/about/SoftBlurIn'
 
 /** Registra el lienzo en un efecto de shaderPool mientras `active` sea verdadero. */
 function useShader(add: typeof addAurora, active: boolean, offset: number) {
@@ -56,7 +58,7 @@ function MemberCard({ member, order, flipped, onToggle }: MemberCardProps) {
       <button
         type="button"
         className="member__flip"
-        aria-label={`${member.name}: voltear tarjeta`}
+        aria-label={ABOUT_A11Y[useLang()].flip(member.name, member.specialty)}
         aria-pressed={flipped}
         onClick={turn}
         onTransitionEnd={settle}
@@ -72,17 +74,21 @@ function MemberCard({ member, order, flipped, onToggle }: MemberCardProps) {
             )}
           </span>
           <span className="member__text">
-            {/* Sin profesión se reserva la línea (invisible) para que todas las tarjetas midan lo mismo. */}
-            <span className="member__title" aria-hidden={member.title ? undefined : true} style={member.title ? undefined : { visibility: 'hidden' }}>
-              {member.title ?? ' '}
+            <span className="member__name">
+              {member.title && <span className="member__title">{member.title} </span>}
+              {member.name}
             </span>
-            <span className="member__name">{member.name}</span>
+            {member.specialty && <span className="member__specialty">{member.specialty}</span>}
           </span>
         </span>
         <span className="member__face member__face--back" aria-hidden="true">
           <canvas ref={fibersRef} className="member__canvas" />
           <BrandOrb lazy />
           <span className="member__brand">{SITE.name}</span>
+          <span className="member__back-info">
+            <span className="member__back-name">{member.name}</span>
+            {member.specialty && <span className="member__back-specialty">{member.specialty}</span>}
+          </span>
         </span>
       </button>
     </li>
@@ -90,6 +96,7 @@ function MemberCard({ member, order, flipped, onToggle }: MemberCardProps) {
 }
 
 export function TeamSection() {
+  const team = TEAM[useLang()]
   const [flipped, setFlipped] = useState<ReadonlySet<string>>(new Set())
 
   function toggle(key: string) {
@@ -105,11 +112,11 @@ export function TeamSection() {
   return (
     <section className="about-section" aria-labelledby="equipo-titulo">
       <h2 id="equipo-titulo" className="section-title">
-        {TEAM.title}
+        <SoftBlurIn>{team.title}</SoftBlurIn>
       </h2>
-      <p className="section-text about-lead">{TEAM.lead}</p>
+      <p className="section-text about-lead">{team.lead}</p>
       <div className="team-areas">
-        {TEAM.areas.map((area) => (
+        {team.areas.map((area) => (
           <section key={area.id} className="team-area" aria-labelledby={`equipo-${area.id}`}>
             <header className="team-area__head">
               <span className="team-area__icon siri">
@@ -119,7 +126,6 @@ export function TeamSection() {
                 <h3 id={`equipo-${area.id}`} className="team-area__title">
                   {area.title}
                 </h3>
-                <p className="team-area__text">{area.text}</p>
               </div>
             </header>
             <ul className={area.members.length === 4 ? 'team-grid team-grid--pairs' : 'team-grid'}>

@@ -94,7 +94,7 @@ export function LegalDocument({ doc, titleId, compact = false }: { doc: LegalDoc
     <Band tone="white" className="legal-page band--clip" labelledBy={titleId} decor={<PagePlasma />}>
       <div className="container">
         <header className="legal-head legal-head--doc">
-          <p className="legal-head__eyebrow">{doc.eyebrow}</p>
+          <p className="legal-head__eyebrow pill-label">{doc.eyebrow}</p>
           <h1 id={titleId} className="legal-head__title">
             {doc.title}
           </h1>

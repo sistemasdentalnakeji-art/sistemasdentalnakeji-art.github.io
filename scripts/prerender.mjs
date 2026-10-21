@@ -15,7 +15,7 @@ const dist = path.join(root, 'dist')
 const production = process.argv.includes('--production') || process.env.SITE_ENV === 'production'
 
 const serverEntry = pathToFileURL(path.join(root, 'dist-server', 'entry-server.js')).href
-const { render, ALL_ROUTES, NOT_FOUND, SITE, BOOKING } = await import(serverEntry)
+const { render, ALL_ROUTES, NOT_FOUND, SITE, BOOKING, LOCALES, counterpart, routeOf } = await import(serverEntry)
 
 // Seguro del formulario: el Apps Script valida al final, así que sus listas deben coincidir con las del sitio.
 // Sin esto, cambiar SERVICES de config/booking.ts (u otras listas) sin actualizar Code.gs haría que el script rechace citas.
@@ -39,8 +39,9 @@ if (mismatches.length > 0) {
 const template = await fs.readFile(path.join(dist, 'index.html'), 'utf8')
 const HEAD_SLOT = '<!--app-head-->'
 const APP_SLOT = '<div id="root"><!--app-html--></div>'
-if (!template.includes(HEAD_SLOT) || !template.includes(APP_SLOT)) {
-  throw new Error('dist/index.html no contiene los marcadores del prerender.')
+const LANG_ATTR = /<html lang="[^"]*"/
+if (!template.includes(HEAD_SLOT) || !template.includes(APP_SLOT) || !LANG_ATTR.test(template)) {
+  throw new Error('dist/index.html no contiene los marcadores del prerender (<!--app-head-->, #root y <html lang>).')
 }
 
 // Precarga de las fuentes latinas (titulares y texto) para evitar saltos tipográficos.
@@ -58,11 +59,15 @@ for (const route of [...ALL_ROUTES, NOT_FOUND]) {
   // Sin descripción, head.ts emitiría og:description vacío en una página indexable.
   if (route.status === 'ready' && !route.description) throw new Error(`Ruta 'ready' sin description: ${route.path}`)
   const { html, head } = render(route.path, { indexable })
-  // Una página con textos de marcador (lorem ipsum, "Texto provisional", "Integrante N") no puede salir indexable.
-  if (indexable && /Lorem ipsum|Texto provisional|Integrante \d/.test(html)) {
+  // Una página con textos de marcador (lorem ipsum, "Texto provisional", "Integrante N", reseñas "Paciente N", promociones
+  // y preguntas numeradas) no puede salir indexable. Los textos de las reseñas y promociones van en su idioma.
+  const MARKER = /Lorem ipsum|Texto provisional|Integrante \d|Team member \d|Paciente \d|Patient \d|Aquí se mostrará|will appear here|Fecha de la reseña|Review date|Promoci[oó]n \d|Promotion \d|Pregunta \d|Question \d/
+  if (indexable && MARKER.test(html)) {
     throw new Error(`Textos de marcador en una ruta indexable: ${route.path}. Cambia sus textos o déjala en status 'empty'.`)
   }
   const page = template
+    // Cada página fija su idioma (en: "en"; es: "es-MX").
+    .replace(LANG_ATTR, `<html lang="${LOCALES[route.lang].lang}"`)
     // Reemplazo con función: evita que "$&", "$'"… del contenido se interpreten como patrones.
     .replace(HEAD_SLOT, () => [head, ...fontPreloads].join('\n    '))
     .replace(APP_SLOT, () => `<div id="root" data-path="${route.path}">${html}</div>`)
@@ -73,28 +78,57 @@ for (const route of [...ALL_ROUTES, NOT_FOUND]) {
   written.push(`${indexable ? 'index  ' : 'noindex'}  ${path.relative(dist, file).replaceAll('\\', '/')}`)
 }
 
-// Seguro de producción: un build de producción nunca debe salir con el homepage en noindex.
+// "/" no es una página: dist/index.html pasa a ser una redirección a la versión en inglés (la principal), por si el
+// hosting no aplica la redirección de vercel.json. Sin script del sitio ni contenido indexable.
+const englishHome = routeOf('home', 'en').path
+await fs.writeFile(
+  path.join(dist, 'index.html'),
+  `<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="UTF-8" />\n    <title>Dental Nakeji</title>\n    <meta name="robots" content="noindex, follow" />\n    <link rel="canonical" href="${SITE.origin}${englishHome}" />\n    <meta http-equiv="refresh" content="0; url=${englishHome}" />\n  </head>\n  <body>\n    <a href="${englishHome}">Dental Nakeji</a>\n  </body>\n</html>\n`,
+)
+
+// Seguro de producción: un build de producción nunca debe salir con el homepage (en cada idioma) en noindex.
 if (production) {
-  const home = await fs.readFile(path.join(dist, 'index.html'), 'utf8')
-  if (/name="robots" content="[^"]*noindex/.test(home)) {
-    throw new Error('Build de producción con el homepage en noindex: revisa buildHead / el status de HOME.')
+  for (const lang of ['en', 'es']) {
+    const home = await fs.readFile(path.join(dist, routeOf('home', lang).path, 'index.html'), 'utf8')
+    if (/name="robots" content="[^"]*noindex/.test(home)) {
+      throw new Error(`Build de producción con el homepage (${lang}) en noindex: revisa buildHead / el status de la ruta 'home'.`)
+    }
   }
 }
 
-// Candado de publicación: un 301 que apunta a una página noindex ('empty') desindexaría la URL del sitio actual.
-// Solo en producción; el build de vista previa no se ve afectado. Cada línea de public/_redirects es "origen destino [código]".
+// Redirecciones en vercel.json (campo "redirects"; Vercel no lee public/_redirects). Reglas:
+//  • 301 (permanent true, statusCode 301) solo a una página 'ready'.
+//  • Si el destino es 'empty', la redirección va a la portada de su idioma con 302 (provisional) hasta que la página real esté lista.
+//  • Cada página en español (/es/slug/) debe tener su regla "slug/ → destino", y "/" debe ir a /en/ con 302. Si falta, el build falla.
+const vercel = JSON.parse(await fs.readFile(path.join(root, 'vercel.json'), 'utf8'))
+const redirects = vercel.redirects ?? []
+const statusOf = (route) => ALL_ROUTES.find((r) => r.path === route)?.status
+const codeOf = (rule) => rule.statusCode ?? (rule.permanent ? 301 : 302)
+{
+  const bySource = new Map(redirects.map((rule) => [rule.source, rule]))
+  const missing = []
+  for (const route of ALL_ROUTES.filter((r) => r.lang === 'es' && r.key !== 'home')) {
+    const rule = bySource.get(route.path.replace(/^\/es/, ''))
+    const ok =
+      statusOf(route.path) === 'ready'
+        ? rule?.destination === route.path && codeOf(rule) === 301
+        : rule?.destination === routeOf('home', 'es').path && codeOf(rule) === 302
+    if (!ok) missing.push(`${route.path.replace(/^\/es/, '')} -> ${route.path}`)
+  }
+  const englishHome = routeOf('home', 'en').path
+  const rootRule = bySource.get('/')
+  if (!rootRule || rootRule.destination !== englishHome || codeOf(rootRule) !== 302) missing.push(`/ -> ${englishHome} (302)`)
+  if (missing.length > 0) throw new Error(`Faltan o son incorrectas redirecciones en vercel.json: ${missing.join(', ')}`)
+}
+
+// Candado de publicación: un 301 que apunta a una página no publicada ('empty') desindexaría la URL del sitio actual.
+// Solo en producción; el build de vista previa no se ve afectado.
 if (production) {
-  const redirects = await fs.readFile(path.join(root, 'public', '_redirects'), 'utf8')
-  const hidden = redirects
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith('#'))
-    .map((line) => line.split(/\s+/))
-    .filter(([, target]) => ALL_ROUTES.find((route) => route.path === target)?.status === 'empty')
+  const hidden = redirects.filter((rule) => codeOf(rule) === 301 && statusOf(rule.destination) !== 'ready')
   if (hidden.length > 0) {
-    const list = hidden.map(([from, target]) => `  ${from} -> ${target}`).join('\n')
+    const list = hidden.map((rule) => `  ${rule.source} -> ${rule.destination}`).join('\n')
     throw new Error(
-      `${hidden.length} redirecciones 301 apuntan a páginas noindex (status 'empty'); publicar así desindexaría el sitio actual:\n${list}`,
+      `${hidden.length} redirecciones 301 en vercel.json apuntan a páginas no publicadas (status 'empty'); publicar así desindexaría el sitio actual:\n${list}`,
     )
   }
 }
@@ -103,12 +137,22 @@ if (production) {
 // Sin <lastmod>: la fecha del build no es la de la última modificación y daría una señal falsa a Google.
 const sitemapFile = path.join(dist, 'sitemap.xml')
 if (production) {
+  // Ambas versiones de cada página 'ready', cada una con su pareja (hreflang) y x-default hacia la versión en inglés.
+  const alternate = (hreflang, target) => `    <xhtml:link rel="alternate" hreflang="${hreflang}" href="${SITE.origin}${target.path}" />`
   const urls = ALL_ROUTES.filter((route) => route.status === 'ready')
-    .map((route) => `  <url>\n    <loc>${SITE.origin}${route.path}</loc>\n  </url>`)
+    .map((route) => {
+      const other = counterpart(route)
+      const links = [
+        alternate(LOCALES[route.lang].lang, route),
+        alternate(LOCALES[other.lang].lang, other),
+        alternate('x-default', routeOf(route.key, 'en')),
+      ].join('\n')
+      return `  <url>\n    <loc>${SITE.origin}${route.path}</loc>\n${links}\n  </url>`
+    })
     .join('\n')
   await fs.writeFile(
     sitemapFile,
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`,
   )
   await fs.writeFile(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE.origin}/sitemap.xml\n`)
 } else {

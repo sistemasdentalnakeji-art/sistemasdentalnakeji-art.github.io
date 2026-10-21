@@ -6,8 +6,6 @@ export const SITE = {
   legalName: 'Clínica Dental Nakeji',
   /** Dominio de producción confirmado (URL canónica). */
   origin: 'https://nakejidental.com',
-  locale: 'es_MX',
-  lang: 'es-MX',
   logo: {
     src: '/brand/logo-nakeji-azul-768.webp',
     full: '/brand/logo-nakeji-azul.webp',
@@ -19,8 +17,22 @@ export const SITE = {
   },
   email: 'citasnakeji@gmail.com',
   phones: [
-    { label: 'Teléfono México', display: '(664) 449 4649', e164: '+526644494649' },
-    { label: 'Teléfono Estados Unidos', display: '(619) 730 4612', e164: '+16197304612' },
+    // `label`/`display` (español) los usan las páginas aún sin traducir; la home usa `labels`/`displays` por idioma
+    // (en inglés, el teléfono con código de país: ver gan-harness/glosario-en.md).
+    {
+      label: 'Teléfono México',
+      labels: { en: 'Mexico phone', es: 'Teléfono México' },
+      display: '(664) 449 4649',
+      displays: { en: '+52 (664) 449 4649', es: '(664) 449 4649' },
+      e164: '+526644494649',
+    },
+    {
+      label: 'Teléfono Estados Unidos',
+      labels: { en: 'US phone', es: 'Teléfono Estados Unidos' },
+      display: '(619) 730 4612',
+      displays: { en: '+1 (619) 730 4612', es: '(619) 730 4612' },
+      e164: '+16197304612',
+    },
   ].map((phone) => ({ ...phone, href: `tel:${phone.e164}` })),
   address: {
     street: 'Av. Río Tijuana 2440, Int. PH3, Jose María Velasco',
@@ -42,6 +54,12 @@ export const SITE = {
     instagram: 'https://www.instagram.com/dentalnakeji/',
     whatsapp: 'https://wa.me/message/VVH7OKKWM2W7O1',
   },
+} as const
+
+/** Etiqueta de idioma del <html lang> y de Open Graph (og:locale) de cada versión del sitio. */
+export const LOCALES = {
+  en: { lang: 'en', og: 'en_US' },
+  es: { lang: 'es-MX', og: 'es_MX' },
 } as const
 
 export const SOCIAL_LINKS = [

@@ -7,9 +7,11 @@
 // • Estilos → src/styles/pages/home/schedule.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { useLang } from '@/app/lang'
 import { SCHEDULE_ANCHOR } from '@/config/routes'
 import { SITE } from '@/config/site'
 import { SCHEDULE } from '@/data/home'
+import { UI } from '@/data/ui'
 import { BookingForm } from '@/features/booking/BookingForm'
 import { Band } from '@/components/decor/Band'
 import { ExternalLink } from '@/components/ui/ExternalLink'
@@ -25,15 +27,17 @@ interface ScheduleProps {
 
 /** También es la sección 3 de las páginas de servicio (src/pages/service/ServicePage.tsx). */
 export function Schedule({ service, flow = true }: ScheduleProps) {
+  const lang = useLang()
+  const schedule = SCHEDULE[lang]
   return (
     <Band id={SCHEDULE_ANCHOR} tone="white" labelledBy="agendar-titulo" waveTop="plain" flow={flow ? 'schedule' : undefined}>
       <div className="container">
         <div className="schedule">
           <div className="schedule__intro">
-            <SectionIntro icon="calendar" id="agendar-titulo" title={SCHEDULE.title} text={SCHEDULE.text} />
+            <SectionIntro icon="calendar" id="agendar-titulo" title={schedule.title} text={schedule.text} />
 
             <ol className="steps">
-              {SCHEDULE.steps.map((step, index) => (
+              {schedule.steps.map((step, index) => (
                 <li key={step} className="steps__item">
                   <span className="steps__number" aria-hidden="true">
                     {index + 1}
@@ -44,15 +48,15 @@ export function Schedule({ service, flow = true }: ScheduleProps) {
             </ol>
 
             <div className="schedule__alt">
-              <p className="schedule__alt-title">{SCHEDULE.alternative}</p>
+              <p className="schedule__alt-title">{schedule.alternative}</p>
               <div className="schedule__alt-actions">
                 <ExternalLink className="btn btn--secondary schedule__whatsapp" href={SITE.social.whatsapp}>
                   <Icon name="whatsapp" size={20} />
-                  {SCHEDULE.whatsappCta}
+                  {schedule.whatsappCta}
                 </ExternalLink>
                 <a className="text-link" href={SITE.phones[0].href}>
                   <Icon name="phone" size={18} />
-                  Llamar al {SITE.phones[0].display}
+                  {UI[lang].contact.call} {SITE.phones[0].displays[lang]}
                 </a>
               </div>
             </div>

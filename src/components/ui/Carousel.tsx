@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useLang } from '@/app/lang'
+import { UI } from '@/data/ui'
 import { cx } from '@/lib/cx'
 import { Icon } from '@/components/ui/Icon'
 
@@ -14,6 +16,7 @@ interface CarouselProps {
  * (flechas cuando la pista tiene el foco) o los botones. Sin reproducción automática.
  */
 export function Carousel({ label, items, className }: CarouselProps) {
+  const ui = UI[useLang()].carousel
   const trackRef = useRef<HTMLUListElement>(null)
   const [canPrev, setCanPrev] = useState(false)
   const [canNext, setCanNext] = useState(true)
@@ -47,13 +50,13 @@ export function Carousel({ label, items, className }: CarouselProps) {
   }
 
   return (
-    <div className={cx('carousel', className)} role="region" aria-roledescription="carrusel" aria-label={label}>
+    <div className={cx('carousel', className)} role="region" aria-roledescription={ui.role} aria-label={label}>
       {/* Solo entra en el orden de Tab si hay algo que desplazar. */}
       <ul
         ref={trackRef}
         className="carousel__track"
         tabIndex={canPrev || canNext ? 0 : undefined}
-        aria-label={`Lista: ${label}`}
+        aria-label={ui.list(label)}
       >
         {items.map((item, index) => (
           <li key={index} className="carousel__item">
@@ -70,7 +73,7 @@ export function Carousel({ label, items, className }: CarouselProps) {
           aria-disabled={!canPrev}
         >
           <Icon name="chevronLeft" size={20} />
-          <span className="visually-hidden">Anterior: {label}</span>
+          <span className="visually-hidden">{ui.prev(label)}</span>
         </button>
         <button
           type="button"
@@ -79,7 +82,7 @@ export function Carousel({ label, items, className }: CarouselProps) {
           aria-disabled={!canNext}
         >
           <Icon name="chevronRight" size={20} />
-          <span className="visually-hidden">Siguiente: {label}</span>
+          <span className="visually-hidden">{ui.next(label)}</span>
         </button>
       </div>
     </div>

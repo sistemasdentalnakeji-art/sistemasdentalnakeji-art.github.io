@@ -1,32 +1,35 @@
+import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
 // ─────────────────────────────────────────────────────────────────────────────
 // SECCIÓN HERO (primera pantalla del homepage)
 //
-// Fondo aurora animado + orbe con el isotipo + título, texto, botones y frases.
+// Fondo de fibras de luz animadas + orbe con el isotipo + título, texto, botones y frases.
 // • Textos y tema (oscuro/claro) → src/data/home.ts (HERO).
-// • Burbujas flotantes → HERO.ambientLabels en src/data/home.ts.
-// • Animación de fondo → src/components/decor/AuroraBackground.tsx.
+// • Burbujas flotantes → hero.ambientLabels en src/data/home.ts.
+// • Animación de fondo → src/components/decor/FibersBackground.tsx (el mismo fondo de /nosotros/).
 // • Estilos → src/styles/pages/home/hero.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { CSSProperties } from 'react'
+import { useLang } from '@/app/lang'
 import { SCHEDULE_ANCHOR } from '@/config/routes'
 import { SITE } from '@/config/site'
 import { HERO } from '@/data/home'
-import { AuroraBackground } from '@/components/decor/AuroraBackground'
+import { FibersBackground } from '@/components/decor/FibersBackground'
 import { BrandOrb } from '@/components/ui/BrandOrb'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon } from '@/components/ui/Icon'
 import { SectionDecor } from '@/components/decor/SectionDecor'
 
 export function Hero() {
+  const hero = HERO[useLang()]
   return (
-    <section className={`hero hero--${HERO.theme}`} aria-labelledby="hero-titulo">
-      <AuroraBackground theme={HERO.theme} className="hero__aurora" />
+    <section className={`hero hero--${hero.theme}`} aria-labelledby="hero-titulo">
+      <FibersBackground lightMode={hero.theme === 'light'} />
       <div className="hero__scrim" aria-hidden="true" />
       <SectionDecor variant="wave" position="bottom" />
 
       <ul className="hero__ambient" aria-hidden="true">
-        {HERO.ambientLabels.map((label, index) => (
+        {hero.ambientLabels.map((label, index) => (
           <li key={label} className="ambient-label" style={{ '--i': index } as CSSProperties}>
             <Icon name="check" size={18} />
             {label}
@@ -39,25 +42,24 @@ export function Hero() {
           <BrandOrb />
 
           <h1 id="hero-titulo" className="hero__title">
-            <span className="hero__title-lead shiny-text">{HERO.titleLead}</span>{' '}
-            <span className="hero__title-muted shiny-text">{HERO.titleMuted}</span>
+            <span className="hero__title-lead shiny-text">{hero.titleLead}</span>{' '}
+            <span className="hero__title-muted shiny-text">{hero.titleMuted}</span>
           </h1>
 
-          <p className="hero__lead">{HERO.lead}</p>
+          <p className="hero__lead">{hero.lead}</p>
 
           <div className="hero__actions">
-            <a className="btn btn--lg hero__cta" href={`#${SCHEDULE_ANCHOR}`}>
-              {HERO.primaryCta}
-              <Icon name="arrowRight" size={18} />
+            <a className="btn btn--lg hero__cta interactive-hover" href={`#${SCHEDULE_ANCHOR}`}>
+              <InteractiveHoverContent>{hero.primaryCta}</InteractiveHoverContent>
             </a>
             <ExternalLink className="btn btn--lg hero__cta-alt" href={SITE.social.whatsapp}>
               <Icon name="whatsapp" size={20} />
-              {HERO.secondaryCta}
+              {hero.secondaryCta}
             </ExternalLink>
           </div>
 
           <ul className="hero__note">
-            {HERO.highlights.map((text) => (
+            {hero.highlights.map((text) => (
               <li key={text}>
                 <Icon name="check" size={16} />
                 {text}

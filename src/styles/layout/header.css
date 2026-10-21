@@ -59,8 +59,71 @@
   white-space: nowrap;
 }
 
-/* Pantallas de 320 px: logo + botón + menú no caben con los huecos normales. */
-@media (max-width: 359.98px) {
+/* Botón de idioma (header y footer): enlace de texto a la misma página en el otro idioma. */
+.lang-switch {
+  padding: 6px 8px;
+  border-radius: 8px;
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lang-switch:hover {
+  text-decoration: underline;
+}
+
+/* Bandera pequeña junto al nombre del idioma. */
+.lang-switch__flag {
+  display: inline-block;
+  width: 33px;
+  height: 22px;
+  vertical-align: middle;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.12);
+}
+
+.lang-switch__flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Barra (escritorio) o panel del menú (móvil y tableta): solo uno se ve a la vez. */
+.lang-switch--bar,
+.schedule-link--bar {
+  display: none;
+}
+
+.lang-switch--menu {
+  align-self: flex-start;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding-inline: 4px;
+  font-size: 1rem;
+}
+
+@media (min-width: 1080px) {
+  .lang-switch--bar,
+  .schedule-link--bar {
+    display: inline-flex;
+  }
+
+  .lang-switch--menu,
+  .schedule-link--menu {
+    display: none;
+  }
+
+  /* Escritorio: la fila del menú no existe; sus elementos siguen en línea como antes. */
+  .site-menu__row {
+    display: contents;
+  }
+}
+
+/* Pantallas angostas (hasta 400 px): logo + botón + menú no caben con los huecos normales (en inglés "Schedule" es más largo). */
+@media (max-width: 399.98px) {
   .site-header__bar {
     gap: 8px;
   }
@@ -92,6 +155,7 @@
   color: var(--color-ink);
   font-size: 1.0625rem;
   font-weight: 500;
+  white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
   transition:
@@ -151,7 +215,8 @@
   justify-content: space-between;
   gap: 8px;
   margin-top: 8px;
-  background: var(--color-porcelain);
+  background: var(--color-ink);
+  color: var(--color-white);
   font-weight: 600;
 }
 
@@ -210,12 +275,48 @@
     padding-inline: 12px;
   }
 
+  /* Fila del pie del menú: Agendar, redes y bandera alineadas en una misma línea. */
+  .site-menu__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .schedule-link--menu {
+    display: inline-flex;
+    flex: none;
+  }
+
   .site-menu__social {
-    justify-content: flex-start;
+    justify-content: center;
+    gap: 0;
   }
 
   .site-menu__social .icon-button {
+    width: 34px;
+    height: 34px;
     background: var(--color-porcelain);
+  }
+
+  /* Barra de móvil: logo centrado y el botón de menú a la derecha. */
+  .site-header__bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  .site-header__bar .logo {
+    grid-column: 2;
+    justify-self: center;
+  }
+
+  .site-header__actions {
+    grid-column: 3;
+    justify-self: end;
+  }
+
+  .logo__img {
+    height: 34px;
   }
 }
 
@@ -297,7 +398,7 @@
 /* Escritorio angosto: menú un poco más compacto para que todo quepa en una línea */
 @media (min-width: 1080px) and (max-width: 1279.98px) {
   .site-header__bar {
-    gap: 14px;
+    gap: 10px;
   }
 
   .site-menu {
@@ -305,7 +406,12 @@
   }
 
   .nav-link {
-    padding-inline: 10px;
+    padding-inline: 8px;
+  }
+
+  /* Con el botón de idioma, "Agendar visita" / "Schedule a visit" se acorta a su primera palabra. */
+  .site-header__actions .hide-xs {
+    display: none;
   }
 }
 

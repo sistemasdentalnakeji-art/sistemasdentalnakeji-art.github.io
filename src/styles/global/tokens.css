@@ -29,8 +29,9 @@
   --color-gold: #e0b65c; /* oro suave para títulos del footer: sobre --color-night da 9.6:1, sin chillar */
 
   /* Tipografía */
-  --font-display: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Zilla Slab', Georgia, serif;
   --font-body: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-ui: 'Montserrat Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --text-heading: clamp(1.875rem, 1.5rem + 1.6vw, 2.75rem);
   --text-card-title: 1.25rem;
   --text-body-lg: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);

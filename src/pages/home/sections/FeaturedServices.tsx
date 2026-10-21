@@ -10,12 +10,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { CSSProperties } from 'react'
-import { SERVICES } from '@/config/routes'
-import { FEATURED_BADGE, FEATURED_ITEMS, type FeaturedItem } from '@/data/featuredServices'
+import { useLang } from '@/app/lang'
+import { routeOf } from '@/config/routes'
+import { FEATURED_ITEMS, type FeaturedItem } from '@/data/featuredServices'
 import { SERVICES_SECTION } from '@/data/home'
+import { UI } from '@/data/ui'
 import { Band } from '@/components/decor/Band'
 import { Carousel } from '@/components/ui/Carousel'
 import { Icon } from '@/components/ui/Icon'
+import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
 
 /** Encuadre y espejo de la foto (`cardPosition` ajusta el encuadre en la tarjeta; `flip` solo en Ortodoncia). */
 function photoStyle(image: NonNullable<FeaturedItem['image']>): CSSProperties {
@@ -24,6 +27,7 @@ function photoStyle(image: NonNullable<FeaturedItem['image']>): CSSProperties {
 
 function ServiceCard({ item }: { item: FeaturedItem }) {
   const { image } = item
+  const ui = UI[useLang()].featured
   return (
     <article className="card service-card">
       {/* Foto del servicio (data/services.ts → image); sin foto queda el degradado de marca. */}
@@ -44,7 +48,7 @@ function ServiceCard({ item }: { item: FeaturedItem }) {
             style={photoStyle(image)}
           />
         )}
-        <p className="service-card__badge">{FEATURED_BADGE}</p>
+        <p className="service-card__badge">{ui.badge}</p>
         <span className="icon-badge service-card__icon siri" aria-hidden="true">
           <Icon name={item.icon} size={28} />
         </span>
@@ -65,11 +69,8 @@ function ServiceCard({ item }: { item: FeaturedItem }) {
           ))}
         </ul>
 
-        <a className="service-card__cta" href={item.href}>
-          Conocer más del servicio
-          <span className="service-card__arrow" aria-hidden="true">
-            <Icon name="arrowRight" size={20} />
-          </span>
+        <a className="service-card__cta interactive-hover" href={item.href}>
+          <InteractiveHoverContent>{ui.cta}</InteractiveHoverContent>
           <span className="visually-hidden">: {item.title}</span>
         </a>
       </div>
@@ -78,28 +79,29 @@ function ServiceCard({ item }: { item: FeaturedItem }) {
 }
 
 export function FeaturedServices() {
+  const lang = useLang()
+  const section = SERVICES_SECTION[lang]
   return (
     <Band tone="tint" labelledBy="servicios-titulo" waveTop="flip">
       <div className="container">
         <header className="section-head">
           <h2 id="servicios-titulo" className="section-title">
-            {SERVICES_SECTION.title}
+            {section.title}
           </h2>
-          <p className="section-text">{SERVICES_SECTION.text}</p>
+          <p className="section-text">{section.text}</p>
         </header>
 
         <Carousel
-          label="Servicios más solicitados"
+          label={UI[lang].featured.carousel}
           className="carousel--services"
-          items={FEATURED_ITEMS.map((item) => (
+          items={FEATURED_ITEMS[lang].map((item) => (
             <ServiceCard item={item} />
           ))}
         />
 
         <div className="section-cta">
-          <a className="btn btn--secondary" href={SERVICES.path}>
-            {SERVICES_SECTION.cta}
-            <Icon name="arrowRight" size={18} />
+          <a className="btn btn--primary interactive-hover" href={routeOf('services', lang).path}>
+            <InteractiveHoverContent>{section.cta}</InteractiveHoverContent>
           </a>
         </div>
       </div>

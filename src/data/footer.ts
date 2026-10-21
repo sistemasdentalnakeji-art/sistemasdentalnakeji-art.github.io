@@ -13,11 +13,7 @@
 // La columna "Contacto" (dirección, teléfonos, correo) se llena sola con config/site.ts.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { ABOUT, BENEFIT_ROUTES, BLOG, CONTACT, FAQ, HOME, SERVICE_ROUTES, SERVICES } from '@/config/routes'
-
-export const FOOTER = {
-  description: 'Clínica dental en la Zona Urbana Río Tijuana, Baja California.',
-}
+import { LANGS, routeOf, type Lang, type RouteKey, type ServiceKey } from '@/config/routes'
 
 export interface FooterLink {
   label: string
@@ -34,37 +30,38 @@ interface FooterColumn {
 }
 
 /** Servicios del footer: solo estos 4 (All on 4 y All on 6 no van juntos); el resto, en "Ver todos los servicios". */
-const FOOTER_SERVICE_PATHS = [
-  '/implantes-dentales-en-tijuana/',
-  '/all-in-4-implants-en-tijuana/',
-  '/coronas-en-tijuana/',
-  '/carillasdentalesentijuana/',
-]
-const serviceLinks: FooterLink[] = SERVICE_ROUTES.filter((route) => FOOTER_SERVICE_PATHS.includes(route.path)).map(
-  (route) => ({ label: route.label, href: route.path }),
-)
+const FOOTER_SERVICE_KEYS: ServiceKey[] = ['implants', 'all-on-4', 'crowns', 'veneers']
 
-export const FOOTER_COLUMNS: FooterColumn[] = [
-  {
-    id: 'servicios',
-    title: 'Servicios',
-    links: [...serviceLinks, { label: 'Ver todos los servicios', href: SERVICES.path }],
-  },
-  {
-    id: 'beneficios',
-    title: 'Beneficios',
-    links: BENEFIT_ROUTES.map((route) => ({ label: route.label, href: route.path })),
-  },
-  {
-    id: 'clinica',
-    title: 'Clínica',
-    links: [
-      { label: HOME.label, href: HOME.path },
-      { label: ABOUT.label, href: ABOUT.path },
-      { label: CONTACT.label, href: CONTACT.path },
-      { label: 'Agendar visita', schedule: true },
-      { label: BLOG.label, href: BLOG.path },
-      { label: FAQ.label, href: FAQ.path },
-    ],
-  },
-]
+const buildColumns = (lang: Lang): FooterColumn[] => {
+  const en = lang === 'en'
+  const link = (key: RouteKey): FooterLink => ({ label: routeOf(key, lang).label, href: routeOf(key, lang).path })
+  return [
+    {
+      id: 'servicios',
+      title: en ? 'Services' : 'Servicios',
+      links: [
+        ...FOOTER_SERVICE_KEYS.map(link),
+        { label: en ? 'View all services' : 'Ver todos los servicios', href: routeOf('services', lang).path },
+      ],
+    },
+    {
+      id: 'beneficios',
+      title: en ? 'Benefits' : 'Beneficios',
+      links: (['promotions', 'agreements', 'insurance'] as const).map(link),
+    },
+    {
+      id: 'clinica',
+      title: en ? 'Clinic' : 'Clínica',
+      links: [
+        link('home'),
+        link('about'),
+        link('contact'),
+        { label: en ? 'Schedule a visit' : 'Agendar visita', schedule: true },
+        link('blog'),
+        link('faq'),
+      ],
+    },
+  ]
+}
+
+export const FOOTER_COLUMNS = Object.fromEntries(LANGS.map((lang) => [lang, buildColumns(lang)])) as Record<Lang, FooterColumn[]>

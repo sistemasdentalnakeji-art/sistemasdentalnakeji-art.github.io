@@ -1,13 +1,57 @@
-// Rutas del sitio. Se conservan las URLs que ya existen en nakejidental.com
-// para no romper enlaces ni posicionamiento al publicar.
+// Rutas del sitio, en dos idiomas: inglés bajo /en/ (principal) y español bajo /es/.
+// Cada página tiene una clave estable (`key`) y una ruta por idioma; el código busca por clave (`routeOf`),
+// nunca por path. Las URLs en español conservan los slugs del sitio actual (nakejidental.com), que
+// vercel.json redirige (301 si la página está lista; 302 a la portada si no) a su par en /es/.
 //
 // status:
 //  - 'ready': página terminada → indexable y en el sitemap.
 //  - 'empty': destino preparado sin contenido → noindex y fuera del sitemap.
+//
+// TEXTOS: ya están en inglés el homepage, el menú y el footer (paso 2), la lista de servicios (solo el nombre) y las páginas de
+// beneficios, contacto, nosotros y preguntas frecuentes (solo nombre y SEO; su contenido sigue en español hasta el paso 4).
+// Servicios (paso 3): nombre, título y descripción SEO ya están en inglés (la clínica debe confirmarlos antes de publicar).
+// Para traducir otra página, separa su `text` en { en, es } dentro de `page(...)` (ver PAGES).
+
+export type Lang = 'en' | 'es'
+export const LANGS: Lang[] = ['en', 'es']
 
 type RouteStatus = 'ready' | 'empty'
 
+export type ServiceKey =
+  | 'implants'
+  | 'all-on-4'
+  | 'all-on-6'
+  | 'crowns'
+  | 'veneers'
+  | 'whitening'
+  | 'cleaning'
+  | 'root-canal'
+  | 'orthodontics'
+  | 'aligners'
+  | 'pediatric'
+  | 'dentures'
+  | 'gum'
+  | 'extractions'
+
+export type RouteKey =
+  | 'home'
+  | 'services'
+  | 'benefits'
+  | 'promotions'
+  | 'agreements'
+  | 'insurance'
+  | 'contact'
+  | 'about'
+  | 'blog'
+  | 'privacy'
+  | 'terms'
+  | 'faq'
+  | 'notFound'
+  | ServiceKey
+
 export interface RouteDef {
+  key: RouteKey
+  lang: Lang
   path: string
   label: string
   title: string
@@ -17,187 +61,403 @@ export interface RouteDef {
   template?: 'service'
 }
 
-export const HOME: RouteDef = {
-  path: '/',
-  label: 'Inicio',
-  title: 'Dentistas en Tijuana | Clínica Dental Nakeji',
-  description:
-    'Clínica dental en la Zona Río de Tijuana. Implantes dentales, coronas, carillas, blanqueamiento, ortodoncia y más especialidades. Agenda tu visita por WhatsApp.',
-  status: 'ready',
+interface Text {
+  label: string
+  title: string
+  description?: string
 }
 
-const empty = (path: string, label: string): RouteDef => ({
-  path,
-  label,
-  title: `${label} | Dental Nakeji`,
+interface PageDef {
+  key: RouteKey
+  paths: Record<Lang, string>
+  text: Record<Lang, Text>
+  status: RouteStatus
+  template?: 'service'
+}
+
+/**
+ * Página en ambos idiomas. `text` puede ser un solo Text (el mismo en los dos idiomas: provisional en /en/ hasta traducirla)
+ * o { en, es }. Por defecto 'empty' (noindex).
+ */
+const page = (
+  key: RouteKey,
+  paths: Record<Lang, string>,
+  text: Text | Record<Lang, Text>,
+  extra: { status?: RouteStatus; template?: 'service' } = {},
+): PageDef => ({
+  key,
+  paths,
+  text: 'label' in text ? { en: text, es: text } : text,
   status: 'empty',
+  ...extra,
 })
+
+/** Título y descripción SEO en inglés de cada servicio (glosario: gan-harness/glosario-en.md). La clínica debe confirmarlos antes de publicar. */
+const SERVICE_SEO_EN: Record<ServiceKey, { title: string; description: string }> = {
+  implants: {
+    title: 'Dental implants in Tijuana | Dental Nakeji',
+    description:
+      'Learn about dental implants in Tijuana: what they are and when they are recommended. Schedule an evaluation at Dental Nakeji, Zona Río.',
+  },
+  'all-on-4': {
+    title: 'All-on-4 implants in Tijuana | Dental Nakeji',
+    description: 'All-on-4 in Tijuana: an option to replace a full arch of teeth. Schedule an evaluation at Dental Nakeji, Zona Río.',
+  },
+  'all-on-6': {
+    title: 'All-on-6 implants in Tijuana | Dental Nakeji',
+    description:
+      'All-on-6 in Tijuana: an option to replace a full arch with more support points. Schedule an evaluation at Dental Nakeji.',
+  },
+  crowns: {
+    title: 'Dental crowns in Tijuana | Dental Nakeji',
+    description: 'Dental crowns in Tijuana to protect and restore damaged teeth. Schedule an evaluation at Dental Nakeji, Zona Río.',
+  },
+  veneers: {
+    title: 'Veneers in Tijuana | Dental Nakeji',
+    description:
+      'Dental veneers in Tijuana to improve the shape and color of your smile. Schedule an evaluation at Dental Nakeji, Zona Río.',
+  },
+  whitening: {
+    title: 'Teeth whitening in Tijuana | Dental Nakeji',
+    description: 'Teeth whitening in Tijuana, with an evaluation at the clinic first. Schedule your visit at Dental Nakeji, Zona Río.',
+  },
+  cleaning: {
+    title: 'Dental cleaning in Tijuana | Dental Nakeji',
+    description: 'Dental cleaning in Tijuana to care for your teeth and gums. Schedule your visit at Dental Nakeji, Zona Río.',
+  },
+  'root-canal': {
+    title: 'Root canal treatment in Tijuana | Dental Nakeji',
+    description:
+      'Root canal treatment in Tijuana to care for the inside of the tooth. Schedule an evaluation at Dental Nakeji, Zona Río.',
+  },
+  orthodontics: {
+    title: 'Orthodontics in Tijuana | Dental Nakeji',
+    description:
+      'Orthodontics in Tijuana with braces or aligners, depending on your case. Schedule an evaluation at Dental Nakeji, Zona Río.',
+  },
+  aligners: {
+    title: 'Clear aligners in Tijuana | Dental Nakeji',
+    description: 'Clear aligners in Tijuana to align your teeth. Schedule an evaluation at Dental Nakeji, Zona Río.',
+  },
+  pediatric: {
+    title: 'Pediatric dentistry in Tijuana | Dental Nakeji',
+    description:
+      'Pediatric dentistry in Tijuana: dental care for children. Schedule your child’s visit at Dental Nakeji, Zona Río.',
+  },
+  dentures: {
+    title: 'Dentures in Tijuana | Dental Nakeji',
+    description: 'Dentures in Tijuana to replace missing teeth. Schedule an evaluation at Dental Nakeji, Zona Río.',
+  },
+  gum: {
+    title: 'Gum treatment in Tijuana | Dental Nakeji',
+    description:
+      'Periodontal treatment in Tijuana: care for your gums and the support of your teeth. Schedule an evaluation at Dental Nakeji, Zona Río.',
+  },
+  extractions: {
+    title: 'Tooth extractions in Tijuana | Dental Nakeji',
+    description:
+      'Simple and wisdom tooth extractions in Tijuana, with an evaluation first. Schedule your visit at Dental Nakeji, Zona Río.',
+  },
+}
+
+/** Nombre del servicio en inglés (menú, footer, migas); según gan-harness/glosario-en.md. */
+const SERVICE_LABEL_EN: Record<ServiceKey, string> = {
+  implants: 'Dental implants',
+  'all-on-4': 'All-on-4 implants',
+  'all-on-6': 'All-on-6 implants',
+  crowns: 'Dental crowns',
+  veneers: 'Veneers',
+  whitening: 'Teeth whitening',
+  cleaning: 'Dental cleaning',
+  'root-canal': 'Root canal',
+  orthodontics: 'Orthodontics',
+  aligners: 'Clear aligners',
+  pediatric: 'Pediatric dentistry',
+  dentures: 'Dentures',
+  gum: 'Gum treatment',
+  extractions: 'Tooth extractions',
+}
+
+const withTitle = (label: string, seo: Partial<Text> = {}): Text => ({ label, title: `${label} | Dental Nakeji`, ...seo })
 
 /**
  * Página de servicio con la plantilla (hero + información + agenda).
  * Sigue en 'empty' (noindex) hasta publicar: cambia su status a 'ready' para que se indexe y entre al sitemap.
+ * El slug en español es el del sitio actual; el de inglés es nuevo.
  */
-const service = (path: string, label: string, seo: { title: string; description: string }): RouteDef => ({
-  ...empty(path, label),
-  ...seo,
-  template: 'service',
-})
-
-export const SERVICES: RouteDef = {
-  ...empty('/servicios/', 'Servicios'),
-  title: 'Servicios dentales en Tijuana | Dental Nakeji',
-  description:
-    'Implantes, coronas, carillas, blanqueamiento, ortodoncia, limpieza, endodoncia y más servicios dentales en Tijuana. Conoce cada tratamiento en Dental Nakeji.',
-}
+const service = (key: ServiceKey, es: string, en: string, label: string, seo: { title: string; description: string }): PageDef =>
+  page(
+    key,
+    { en: `/en/${en}/`, es: `/es/${es}/` },
+    { es: { label, ...seo }, en: { label: SERVICE_LABEL_EN[key], ...SERVICE_SEO_EN[key] } },
+    { template: 'service' },
+  )
 
 /**
- * Servicios con página propia, de mayor a menor relevancia (los 12 del submenú van en 3 columnas de 4).
- * El menú de Servicios usa 9 de ellos: ver MENU_SERVICE_PATHS en config/navigation.ts.
+ * Servicios con página propia, de mayor a menor relevancia (los 11 primeros fueron los del submenú en 3 columnas).
+ * El menú de Servicios usa 9 de ellos: ver MENU_SERVICE_KEYS en config/navigation.ts.
  * Prioridad acordada con los doctores + búsquedas más frecuentes (implantes, carillas, coronas).
  */
-export const SERVICE_ROUTES: RouteDef[] = [
+export const SERVICE_KEYS: ServiceKey[] = [
   // Columna 1: implantes y rehabilitación (lo más solicitado)
-  service('/implantes-dentales-en-tijuana/', 'Implantes dentales', {
+  'implants',
+  'all-on-4',
+  'all-on-6',
+  'crowns',
+  // Columna 2: estética y prevención
+  'veneers',
+  'whitening',
+  'cleaning',
+  // Columna 3: tratamientos y especialidades
+  'root-canal',
+  'orthodontics',
+  'aligners',
+  'pediatric',
+]
+
+/**
+ * Servicios con página propia que NO van en el submenú pero sí en la página /servicios/ y en el
+ * formulario de citas. Mismo orden de prioridad: de mayor a menor.
+ */
+export const MORE_SERVICE_KEYS: ServiceKey[] = ['dentures', 'gum', 'extractions']
+
+/** Los 14, en orden. */
+export const ALL_SERVICE_KEYS: ServiceKey[] = [...SERVICE_KEYS, ...MORE_SERVICE_KEYS]
+
+const PAGES: PageDef[] = [
+  page(
+    'home',
+    { en: '/en/', es: '/es/' },
+    {
+      en: {
+        label: 'Home',
+        title: 'Dentists in Tijuana | Dental Nakeji',
+        description:
+          'Dental clinic in Zona Río, Tijuana. Dental implants, crowns, veneers, teeth whitening, orthodontics and more. Schedule your visit on WhatsApp.',
+      },
+      es: {
+        label: 'Inicio',
+        title: 'Dentistas en Tijuana | Clínica Dental Nakeji',
+        description:
+          'Clínica dental en la Zona Río de Tijuana. Implantes dentales, coronas, carillas, blanqueamiento, ortodoncia y más. Agenda tu visita por WhatsApp.',
+      },
+    },
+    { status: 'ready' },
+  ),
+  page('services', { en: '/en/services/', es: '/es/servicios/' }, {
+    en: {
+      label: 'Services',
+      title: 'Dental services in Tijuana | Dental Nakeji',
+      description:
+        'Dental implants, crowns, veneers, teeth whitening, orthodontics, cleaning, root canal and more in Tijuana. Learn about each treatment at Dental Nakeji.',
+    },
+    es: withTitle('Servicios', {
+      title: 'Servicios dentales en Tijuana | Dental Nakeji',
+      description:
+        'Implantes, coronas, carillas, blanqueamiento, ortodoncia, limpieza, endodoncia y más servicios dentales en Tijuana. Conoce cada tratamiento en Dental Nakeji.',
+    }),
+  }),
+  // Página /beneficios/: promociones, convenios y aseguranzas en una sola página (pages/benefits/BenefitsPage.tsx).
+  page('benefits', { en: '/en/benefits/', es: '/es/beneficios/' }, { en: withTitle('Benefits'), es: withTitle('Beneficios') }),
+  // Submenú de Beneficios. /convenios/ es nueva; las otras dos ya existen.
+  page('promotions', { en: '/en/promotions/', es: '/es/nuestras-promociones/' }, { en: withTitle('Promotions'), es: withTitle('Promociones') }),
+  page('agreements', { en: '/en/agreements/', es: '/es/convenios/' }, { en: withTitle('Partner companies'), es: withTitle('Convenios') }),
+  page('insurance', { en: '/en/insurance/', es: '/es/insurance/' }, { en: withTitle('Insurance'), es: withTitle('Aseguranzas') }),
+
+  service('implants', 'implantes-dentales-en-tijuana', 'dental-implants-in-tijuana', 'Implantes dentales', {
     title: 'Implantes dentales en Tijuana | Dental Nakeji',
     description:
       'Conoce los implantes dentales en Tijuana: qué son y cuándo se recomiendan. Agenda una valoración en Dental Nakeji, Zona Río.',
   }),
-  service('/all-in-4-implants-en-tijuana/', 'All on 4 implants', {
+  service('all-on-4', 'all-in-4-implants-en-tijuana', 'all-on-4-implants-in-tijuana', 'All on 4 implants', {
     title: 'All on 4 Implants en Tijuana | Dental Nakeji',
     description:
       'All on 4 en Tijuana: una opción para reemplazar una arcada completa de dientes. Agenda una valoración en Dental Nakeji, Zona Río.',
   }),
-  service('/all-in-6-implants-en-tijuana/', 'All on 6 implants', {
+  service('all-on-6', 'all-in-6-implants-en-tijuana', 'all-on-6-implants-in-tijuana', 'All on 6 implants', {
     title: 'All on 6 Implants en Tijuana | Dental Nakeji',
     description:
       'All on 6 en Tijuana: una opción para reemplazar una arcada completa con más puntos de apoyo. Agenda una valoración en Dental Nakeji.',
   }),
-  service('/coronas-en-tijuana/', 'Coronas', {
+  service('crowns', 'coronas-en-tijuana', 'dental-crowns-in-tijuana', 'Coronas', {
     title: 'Coronas dentales en Tijuana | Dental Nakeji',
     description:
       'Coronas dentales en Tijuana para proteger y restaurar dientes dañados. Agenda una valoración en Dental Nakeji, Zona Río.',
   }),
-  // Columna 2: estética y prevención
-  service('/carillasdentalesentijuana/', 'Carillas dentales', {
+  service('veneers', 'carillasdentalesentijuana', 'dental-veneers-in-tijuana', 'Carillas dentales', {
     title: 'Carillas dentales en Tijuana | Dental Nakeji',
     description:
       'Carillas dentales en Tijuana para mejorar la forma y el color de tu sonrisa. Agenda una valoración en Dental Nakeji, Zona Río.',
   }),
-  service('/blanqueamiento-dental-en-tijuana/', 'Blanqueamiento dental', {
+  service('whitening', 'blanqueamiento-dental-en-tijuana', 'teeth-whitening-in-tijuana', 'Blanqueamiento dental', {
     title: 'Blanqueamiento dental en Tijuana | Dental Nakeji',
     description:
       'Blanqueamiento dental en Tijuana, con valoración previa en la clínica. Agenda tu visita en Dental Nakeji, Zona Río.',
   }),
-  service('/limpieza-dental-en-tijuana/', 'Limpieza dental', {
+  service('cleaning', 'limpieza-dental-en-tijuana', 'dental-cleaning-in-tijuana', 'Limpieza dental', {
     title: 'Limpieza dental en Tijuana | Dental Nakeji',
     description:
       'Limpieza dental en Tijuana para el cuidado de tus dientes y encías. Agenda tu visita en Dental Nakeji, Zona Río.',
   }),
-  // Columna 3: tratamientos y especialidades
-  service('/endodoncias-en-tijuana/', 'Endodoncias', {
+  service('root-canal', 'endodoncias-en-tijuana', 'root-canal-in-tijuana', 'Endodoncias', {
     title: 'Endodoncias en Tijuana | Dental Nakeji',
     description:
       'Endodoncias en Tijuana: tratamiento de conductos para atender el interior del diente. Agenda una valoración en Dental Nakeji, Zona Río.',
   }),
-  service('/ortodoncia-en-tijuana/', 'Ortodoncia', {
+  service('orthodontics', 'ortodoncia-en-tijuana', 'orthodontics-in-tijuana', 'Ortodoncia', {
     title: 'Ortodoncia en Tijuana | Dental Nakeji',
     description:
       'Ortodoncia en Tijuana con brackets o alineadores, según tu caso. Agenda una valoración en Dental Nakeji, Zona Río.',
   }),
-  // La URL conserva "invisalign" (es la del sitio actual); el nombre visible ya no lleva la marca.
-  service('/invisalign-in-tijuana/', 'Alineadores', {
+  // La URL en español conserva "invisalign" (es la del sitio actual); el nombre visible ya no lleva la marca.
+  service('aligners', 'invisalign-in-tijuana', 'clear-aligners-in-tijuana', 'Alineadores', {
     title: 'Alineadores transparentes en Tijuana | Dental Nakeji',
     description:
       'Alineadores transparentes en Tijuana para alinear tus dientes. Agenda una valoración en Dental Nakeji, Zona Río.',
   }),
-  service('/odontologia-pediatrica-en-tijuana/', 'Odontopediatría', {
+  service('pediatric', 'odontologia-pediatrica-en-tijuana', 'pediatric-dentistry-in-tijuana', 'Odontopediatría', {
     title: 'Odontopediatría en Tijuana | Dental Nakeji',
     description:
       'Odontopediatría en Tijuana: cuidado dental para niños. Agenda la visita de tu hijo en Dental Nakeji, Zona Río.',
   }),
-]
-
-/**
- * Servicios con página propia que NO van en el submenú (queda en 12) pero sí en la página /servicios/ y en el
- * formulario de citas. Mismo orden de prioridad: de mayor a menor.
- */
-export const MORE_SERVICE_ROUTES: RouteDef[] = [
-  service('/dentaduras-en-tijuana/', 'Dentaduras', {
+  service('dentures', 'dentaduras-en-tijuana', 'dentures-in-tijuana', 'Dentaduras', {
     title: 'Dentaduras en Tijuana | Dental Nakeji',
     description:
       'Dentaduras en Tijuana para reemplazar dientes faltantes. Agenda una valoración en Dental Nakeji, Zona Río.',
   }),
-  service('/periodoncia-en-tijuana/', 'Periodoncia', {
+  service('gum', 'periodoncia-en-tijuana', 'gum-treatment-in-tijuana', 'Periodoncia', {
     title: 'Periodoncia en Tijuana | Dental Nakeji',
     description:
       'Periodoncia en Tijuana: atención de las encías y del soporte de tus dientes. Agenda una valoración en Dental Nakeji, Zona Río.',
   }),
-  service('/extracciones-dentales-en-tijuana/', 'Extracciones simples y de juicio', {
+  service('extractions', 'extracciones-dentales-en-tijuana', 'tooth-extractions-in-tijuana', 'Extracciones simples y de juicio', {
     title: 'Extracciones dentales en Tijuana | Dental Nakeji',
     description:
       'Extracciones simples y de muelas del juicio en Tijuana, con valoración previa. Agenda tu visita en Dental Nakeji, Zona Río.',
   }),
+
+  page(
+    'contact',
+    { en: '/en/contact/', es: '/es/contacto/' },
+    {
+      en: withTitle('Contact', {
+        title: 'Contact and location | Dental Nakeji, Zona Río Tijuana',
+        description:
+          'Call, message or visit Dental Nakeji in Zona Río, Tijuana. Phone numbers for Mexico and the United States, address and email. Schedule your appointment.',
+      }),
+      es: withTitle('Contacto', {
+        title: 'Contacto y ubicación | Dental Nakeji, Zona Río Tijuana',
+        description:
+          'Llama, escribe o visita Dental Nakeji en la Zona Río de Tijuana. Teléfonos de México y Estados Unidos, dirección y correo. Agenda tu cita.',
+      }),
+    },
+  ),
+  page(
+    'about',
+    { en: '/en/about/', es: '/es/nosotros/' },
+    {
+      en: withTitle('About us', {
+        title: 'About us | Dental Nakeji, Zona Río Tijuana',
+        description:
+          'Learn about the history, mission and vision of Dental Nakeji in Tijuana, and meet the doctors and staff who will care for you.',
+      }),
+      es: withTitle('Nosotros', {
+        title: 'Nosotros | Dental Nakeji, Zona Río Tijuana',
+        description: 'Conoce la historia, la misión y la visión de Dental Nakeji en Tijuana, y al equipo de doctores y personal que te atiende.',
+      }),
+    },
+  ),
+  page('blog', { en: '/en/blog/', es: '/es/blog/' }, withTitle('Blog')),
+  // Requerido por el formulario de citas (LFPDPPP). El texto es el oficial de la clínica, en inglés (src/data/legal.ts).
+  // PENDIENTE: la traducción al español de /es/ (la pide la clínica; no se inventa).
+  page(
+    'privacy',
+    { en: '/en/privacy/', es: '/es/aviso-de-privacidad/' },
+    // El documento oficial está en inglés hasta la traducción de la clínica; el título de /es/ dice qué es, en español.
+    {
+      en: withTitle('Notice of Privacy Practices', {
+        description: 'Notice of Privacy Practices of Nakeji Dental: how your health information may be used and disclosed.',
+      }),
+      es: withTitle('Aviso de privacidad', {
+        description:
+          'Aviso de privacidad de Dental Nakeji: cómo puede usarse y compartirse tu información médica. Documento oficial en inglés; traducción pendiente.',
+      }),
+    },
+  ),
+  page(
+    'terms',
+    { en: '/en/terms/', es: '/es/terminos-y-condiciones/' },
+    {
+      en: withTitle('SMS Terms & Conditions', {
+        description: 'SMS Terms & Conditions of Nakeji Dental: how to receive, opt out of, and get help with text messages.',
+      }),
+      es: withTitle('Términos de mensajes SMS', {
+        description:
+          'Términos de los mensajes SMS de Dental Nakeji: cómo recibirlos, darte de baja y pedir ayuda. Documento oficial en inglés; traducción pendiente.',
+      }),
+    },
+  ),
+  page(
+    'faq',
+    { en: '/en/faq/', es: '/es/preguntas-frecuentes/' },
+    {
+      en: withTitle('FAQ', {
+        title: 'Frequently asked questions | Dental Nakeji, Tijuana',
+        description: 'Answers to common questions about appointments, treatments, payments and insurance at Dental Nakeji.',
+      }),
+      es: withTitle('Preguntas frecuentes', {
+        title: 'Preguntas frecuentes | Dental Nakeji, Tijuana',
+        description: 'Respuestas a las dudas más comunes sobre citas, tratamientos, pagos y aseguranzas en Dental Nakeji.',
+      }),
+    },
+  ),
 ]
 
-/** Página /beneficios/: promociones, convenios y aseguranzas en una sola página (pages/benefits/BenefitsPage.tsx). */
-export const BENEFITS = empty('/beneficios/', 'Beneficios')
+export const ALL_ROUTES: RouteDef[] = PAGES.flatMap((def) =>
+  LANGS.map((lang) => ({
+    key: def.key,
+    lang,
+    path: def.paths[lang],
+    ...def.text[lang],
+    status: def.status,
+    template: def.template,
+  })),
+)
 
-/** Submenú de Beneficios. /convenios/ es nueva; las otras dos ya existen. */
-export const AGREEMENTS = empty('/convenios/', 'Convenios')
-export const INSURANCE = empty('/insurance/', 'Aseguranzas')
-export const PROMOTIONS_PAGE = empty('/nuestras-promociones/', 'Promociones')
-export const BENEFIT_ROUTES: RouteDef[] = [PROMOTIONS_PAGE, AGREEMENTS, INSURANCE]
-
-export const CONTACT: RouteDef = {
-  ...empty('/contacto/', 'Contacto'),
-  title: 'Contacto y ubicación | Dental Nakeji, Zona Río Tijuana',
-  description:
-    'Llama, escribe o visita Dental Nakeji en la Zona Río de Tijuana. Teléfonos de México y Estados Unidos, dirección y correo. Agenda tu cita.',
-}
-export const ABOUT: RouteDef = {
-  ...empty('/nosotros/', 'Nosotros'),
-  title: 'Nosotros | Dental Nakeji, Zona Río Tijuana',
-  description: 'Conoce la historia, la misión y la visión de Dental Nakeji en Tijuana, y al equipo de doctores y personal que te atiende.',
-}
-export const BLOG = empty('/blog/', 'Blog')
-/** Requerido por el formulario de citas (LFPDPPP). Falta el texto legal de la clínica. */
-export const PRIVACY: RouteDef = {
-  ...empty('/aviso-de-privacidad/', 'Notice of Privacy Practices'),
-  title: 'Notice of Privacy Practices | Dental Nakeji',
-  description: 'Notice of Privacy Practices of Nakeji Dental: how your health information may be used and disclosed.',
-}
-export const TERMS: RouteDef = {
-  ...empty('/terminos-y-condiciones/', 'SMS Terms & Conditions'),
-  title: 'SMS Terms & Conditions | Dental Nakeji',
-  description: 'SMS Terms & Conditions of Nakeji Dental: how to receive, opt out of, and get help with text messages.',
-}
-export const FAQ: RouteDef = {
-  ...empty('/preguntas-frecuentes/', 'Preguntas frecuentes'),
-  title: 'Preguntas frecuentes | Dental Nakeji, Tijuana',
-  description: 'Respuestas a las dudas más comunes sobre citas, tratamientos, pagos y aseguranzas en Dental Nakeji.',
-}
-
+/** Página 404: una sola (dist/404.html); su idioma, en el navegador, es el de la URL pedida (ver findRoute). */
 export const NOT_FOUND: RouteDef = {
+  key: 'notFound',
+  lang: 'en',
   path: '/404/',
-  label: 'Página no encontrada',
-  title: 'Página no encontrada | Dental Nakeji',
+  label: 'Page not found',
+  title: 'Page not found | Dental Nakeji',
   status: 'empty',
 }
 
-export const ALL_ROUTES: RouteDef[] = [
-  HOME,
-  SERVICES,
-  BENEFITS,
-  ...SERVICE_ROUTES,
-  ...MORE_SERVICE_ROUTES,
-  ...BENEFIT_ROUTES,
-  CONTACT,
-  ABOUT,
-  BLOG,
-  PRIVACY,
-  TERMS,
-  FAQ,
-]
+const NOT_FOUND_ES: RouteDef = {
+  ...NOT_FOUND,
+  lang: 'es',
+  label: 'Página no encontrada',
+  title: 'Página no encontrada | Dental Nakeji',
+}
+
+const BY_KEY = new Map<string, RouteDef>(
+  [...ALL_ROUTES, NOT_FOUND, NOT_FOUND_ES].map((route) => [`${route.key}:${route.lang}`, route]),
+)
+
+/** La ruta de una página en un idioma, buscada por su clave. */
+export function routeOf(key: RouteKey, lang: Lang): RouteDef {
+  const route = BY_KEY.get(`${key}:${lang}`)
+  if (!route) throw new Error(`Ruta sin definir: ${key} (${lang})`)
+  return route
+}
+
+/** La misma página en el otro idioma (botón de idioma y hreflang). El 404 no tiene URL propia: su par es el inicio. */
+export const counterpart = (route: RouteDef): RouteDef =>
+  routeOf(route.key === 'notFound' ? 'home' : route.key, route.lang === 'en' ? 'es' : 'en')
+
+/** Idioma de una URL por su prefijo (/es/…); cualquier otra cosa es inglés, el idioma principal. */
+export const langOfPath = (pathname: string): Lang => (pathname.startsWith('/es/') ? 'es' : 'en')
 
 /** Normaliza la ruta: sin "index.html" y siempre con "/" final (igual que el sitio actual). */
 function normalizePath(pathname: string): string {
@@ -207,17 +467,15 @@ function normalizePath(pathname: string): string {
 
 export function findRoute(pathname: string): RouteDef {
   const path = normalizePath(pathname)
-  return ALL_ROUTES.find((r) => r.path === path) ?? NOT_FOUND
+  return ALL_ROUTES.find((r) => r.path === path) ?? routeOf('notFound', langOfPath(path))
 }
 
 /** El botón "Agendar visita" baja al módulo de agenda (homepage y páginas de servicio). */
 export const SCHEDULE_ANCHOR = 'agendar'
 
-/** Enlace a la agenda: ancla local si la página tiene agenda; si no, la del homepage. */
-export const scheduleHref = (currentPath: string) => {
-  const route = findRoute(currentPath)
-  return route === HOME || route.template === 'service' ? `#${SCHEDULE_ANCHOR}` : `/#${SCHEDULE_ANCHOR}`
-}
+/** Enlace a la agenda: ancla local si la página tiene agenda; si no, la del homepage de su idioma. */
+export const scheduleHref = (route: RouteDef) =>
+  route.key === 'home' || route.template === 'service' ? `#${SCHEDULE_ANCHOR}` : `${routeOf('home', route.lang).path}#${SCHEDULE_ANCHOR}`
 
 /** Valor de aria-current para un enlace interno. */
 export const ariaCurrent = (href: string, currentPath: string) => (href === currentPath ? 'page' : undefined)

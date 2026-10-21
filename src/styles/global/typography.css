@@ -1,0 +1,219 @@
+/* Familias y pesos acordados para toda la interfaz. */
+body {
+  font-weight: 400;
+}
+
+h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+h3,
+h4 {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+/* Los capítulos narrativos son más ligeros que los títulos de página. */
+.timeline__title,
+.catalog-group__title,
+.legal-card__title,
+.faq-group__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.purpose__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+.benefits-hero__title,
+.catalog-hero__title,
+.legal-head__title,
+.service-hero__title {
+  font-weight: 600;
+}
+
+/* Lectura, subtítulos, nombres y títulos de tarjetas. */
+.service-hero__subtitle,
+.catalog-card__title,
+.service-card__title,
+.benefit-card__title,
+.card-title,
+.value-card__title,
+.team-area__title,
+.member__name,
+.member__title,
+.member__brand,
+.member__back-name,
+.bento__value,
+.social-window__title,
+.faq-item__q,
+.booking-form__title,
+.booking-success__title,
+.schedule__alt-title,
+.plate__name,
+.promo__title,
+.legal-card__sub {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.hero__lead,
+.page-lead,
+.catalog-hero__lead,
+.section-text,
+.benefits-hero__lead,
+.legal-head__lead,
+.about-lead,
+.social-wall__lead {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.review-card__author,
+.review-card__avatar,
+.booking-ticket dd,
+.reviews-summary__score,
+.catalog-hero__features li,
+.insurance__steps li {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+/* Navegación y llamadas a la acción. */
+.btn,
+.skip-link,
+.text-link,
+.nav-link,
+.dropdown__link,
+.dropdown__overview,
+.catalog-hero__index a,
+.catalog-card__cta,
+.service-card__cta,
+.benefit-card__cta,
+.benefits-cta__btn,
+.toc__link,
+.legal-link,
+.social-window__more,
+.social-wall__link,
+.contact-item__value,
+.page-back,
+.service-hero__crumbs [aria-current],
+.booking-form__submit {
+  font-family: var(--font-ui);
+  font-weight: 500;
+}
+
+.btn,
+.booking-form__submit {
+  font-weight: 600;
+}
+
+/* Las ligas dentro de oraciones conservan la fuente del párrafo. */
+p .text-link,
+.choice .text-link,
+.form-alert .text-link,
+.legal-card__body a {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+/* Etiquetas, insignias, cifras pequeñas y encabezados del pie. */
+.page-eyebrow,
+.page-eyebrow.pill-label,
+.catalog-hero__eyebrow,
+.catalog-hero__eyebrow.pill-label,
+.service-about__eyebrow.pill-label,
+.legal-head__eyebrow,
+.legal-head__eyebrow.pill-label,
+.benefits-hero__eyebrow,
+.benefits-hero__eyebrow.pill-label,
+.social-wall__eyebrow,
+.booking-form__eyebrow,
+.catalog-hero__index-label,
+.service-card__eyebrow,
+.benefit-card__badge,
+.benefit-card__top::before,
+.promo__badge,
+.promo__num,
+.service-card__badge,
+.brand-tile__name,
+.rail__badge,
+.insurance__steps li::before,
+.footer-title,
+.footer-brand__name,
+.toc__label,
+.rail__title,
+.plate__label,
+.steps__number,
+.booking-group__num,
+.legal-head__date,
+.legal-updated,
+.pill {
+  font-family: var(--font-ui);
+  font-weight: 600;
+}
+
+.footer-links a,
+.footer-contact a,
+.footer-bottom a,
+.motion-toggle,
+.catalog-hero__index a,
+.toc__link,
+.legal-link {
+  font-family: var(--font-ui);
+  font-weight: 400;
+}
+
+.dropdown__link[aria-current='page'],
+.footer-links a[aria-current='page'],
+.toc__link[aria-current],
+.booking-group__num,
+.catalog-hero__index a[aria-current='true'] {
+  font-weight: 600;
+}
+
+.benefits-cta__btn,
+.social-wall__link,
+.social-window__more {
+  font-family: var(--font-ui);
+  font-weight: 600;
+}
+
+/* Etiquetas de campos y selecciones del formulario. */
+.field__label,
+.slot,
+.booking-group__title,
+.field__optional {
+  font-family: var(--font-ui);
+  font-weight: 500;
+}
+
+.field__optional {
+  font-weight: 400;
+}
+
+.field input,
+.field select,
+.field textarea {
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+
+/* Textos del mapa: calles legibles y etiquetas compactas. */
+.loc__label,
+.loc__pin-label,
+.loc__name {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+.loc__tag,
+.loc__badge,
+.loc__hint {
+  font-family: var(--font-ui);
+  font-weight: 600;
+}

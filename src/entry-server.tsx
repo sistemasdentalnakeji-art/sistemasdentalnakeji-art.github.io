@@ -4,8 +4,8 @@ import { App } from '@/app/App'
 import { findRoute } from '@/config/routes'
 import { buildHead, type HeadOptions } from '@/seo/head'
 
-export { ALL_ROUTES, NOT_FOUND } from '@/config/routes'
-export { SITE } from '@/config/site'
+export { ALL_ROUTES, NOT_FOUND, counterpart, routeOf } from '@/config/routes'
+export { LOCALES, SITE } from '@/config/site'
 export { BOOKING } from '@/config/booking'
 
 export function render(path: string, options: HeadOptions) {

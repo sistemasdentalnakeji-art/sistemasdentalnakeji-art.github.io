@@ -3,13 +3,13 @@
 //
 // Todas las páginas de servicio tienen la misma estructura:
 //   1. Hero con foto de fondo, título, gancho, 3 frases y botones (WhatsApp / Reservar cita).
-//   2. "Acerca del tratamiento": título-pregunta, un párrafo y botón al blog; a la derecha, el espacio vacío para la animación 3D (ver ServiceAbout.tsx).
+//   2. "Acerca del tratamiento": título-pregunta, un párrafo y botón al blog (ver ServiceAbout.tsx).
 //   3. Agenda con el formulario de citas (id="agendar", el servicio llega preseleccionado).
 // • Textos, imagen y enlace al blog de cada servicio → src/data/services.ts.
 // • Estilos → src/styles/pages/service.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { RouteDef } from '@/config/routes'
+import { routeOf, type RouteDef } from '@/config/routes'
 import type { ServiceContent } from '@/data/services'
 import { Schedule } from '@/pages/home/sections/Schedule'
 import { ServiceHero } from '@/pages/service/sections/ServiceHero'
@@ -28,7 +28,8 @@ export function ServicePage({ route, content }: ServicePageProps) {
       {/* 2. Acerca del tratamiento */}
       <ServiceAbout content={content} />
       {/* 3. Agenda (el botón "Reservar cita" baja hasta aquí) */}
-      <Schedule service={route.label} flow={false} />
+      {/* El formulario guarda el nombre en español (valor fijo que valida Code.gs), sea cual sea el idioma de la página. */}
+      <Schedule service={routeOf(route.key, 'es').label} flow={false} />
     </>
   )
 }

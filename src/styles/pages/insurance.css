@@ -19,11 +19,15 @@
 .insurance__steps-card {
   display: grid;
   gap: 22px;
-  justify-items: start;
+  justify-items: center;
   padding: clamp(20px, 3vw, 28px);
-  border: 1px solid var(--color-sky-strong);
   border-radius: 28px;
-  background: var(--color-tint);
+  background: var(--color-ink);
+}
+
+/* Pasos alineados a la izquierda; el botón de WhatsApp va centrado en la tarjeta. */
+.insurance__steps {
+  justify-self: stretch;
 }
 
 .insurance__steps {
@@ -39,7 +43,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  color: var(--color-ink);
+  color: var(--color-white);
   font-weight: 600;
   counter-increment: step;
 }
@@ -51,10 +55,10 @@
   place-items: center;
   width: 36px;
   height: 36px;
-  border: 1.5px solid var(--color-brand);
+  border: 1.5px solid var(--color-gold);
   border-radius: 50%;
   background: var(--color-white);
-  color: var(--color-brand);
+  color: var(--color-ink);
   font-family: var(--font-display);
   font-weight: 800;
 }
@@ -80,18 +84,6 @@
   color: var(--color-ink);
   font-size: clamp(1.25rem, 1rem + 1vw, 1.625rem);
   letter-spacing: -0.02em;
-}
-
-.insurers__ask {
-  color: var(--color-brand);
-  font-size: var(--text-small);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.insurers__ask:hover {
-  color: var(--color-ink);
 }
 
 /* Las líneas son el fondo asomando por el hueco de 1 px entre celdas; overflow recorta las esquinas. */

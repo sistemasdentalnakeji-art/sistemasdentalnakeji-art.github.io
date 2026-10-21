@@ -2,6 +2,8 @@
 // Debe coincidir con la validación de integrations/google-calendar/Code.gs.
 
 import { BOOKING } from '@/config/booking'
+import type { Lang } from '@/config/routes'
+import { FORM_TEXT } from '@/features/booking/bookingText'
 
 const FIELD_NAMES = ['firstName', 'lastName', 'phone', 'email', 'service', 'date', 'time', 'firstVisit', 'consent'] as const
 export type FieldName = (typeof FIELD_NAMES)[number]
@@ -71,46 +73,49 @@ export const addDays = (iso: string, days: number) => {
 
 const weekday = (iso: string) => parseISODate(iso).getDay()
 
-export const formatTime = (time: string) => {
+/** Hora para mostrar: en inglés "9:00 AM", en español "9:00 a. m." (el valor enviado sigue siendo HH:MM de 24 h). */
+export const formatTime = (time: string, lang: Lang) => {
   const [h, m] = time.split(':').map(Number)
-  return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'a. m.' : 'p. m.'}`
+  const suffix = lang === 'en' ? (h < 12 ? 'AM' : 'PM') : h < 12 ? 'a. m.' : 'p. m.'
+  return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${suffix}`
 }
 
-export const formatDate = (iso: string) =>
-  new Intl.DateTimeFormat('es-MX', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(
-    new Date(`${iso}T12:00:00Z`),
-  )
+/** Fecha para mostrar: "Monday, October 21" / "lunes, 21 de octubre". */
+export const formatDate = (iso: string, lang: Lang) =>
+  new Intl.DateTimeFormat(lang === 'en' ? 'en-US' : 'es-MX', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  }).format(new Date(`${iso}T12:00:00Z`))
 
 // --- Validación ---
 
-export function validate(fields: BookingFields, today: string): FieldErrors {
+export function validate(fields: BookingFields, today: string, lang: Lang): FieldErrors {
   const errors: FieldErrors = {}
+  const text = FORM_TEXT[lang].validation
 
-  if (fields.firstName.length < 2) errors.firstName = 'Escribe tu nombre.'
-  if (fields.lastName.length < 2) errors.lastName = 'Escribe tus apellidos.'
+  if (fields.firstName.length < 2) errors.firstName = text.firstName
+  if (fields.lastName.length < 2) errors.lastName = text.lastName
 
   const digits = fields.phone.replace(/\D/g, '')
   if (digits.length < 10 || digits.length > 15 || !/^[+\d\s()-]+$/.test(fields.phone.trim())) {
-    errors.phone = 'Escribe un teléfono de al menos 10 dígitos, solo con números.'
+    errors.phone = text.phone
   }
 
-  if (fields.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(fields.email)) errors.email = 'Revisa el formato del correo.'
+  if (fields.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(fields.email)) errors.email = text.email
 
-  if (!fields.service) errors.service = 'Elige el servicio que te interesa.'
+  if (!fields.service) errors.service = text.service
 
   const min = addDays(today, 1)
   const max = addDays(today, BOOKING.daysAhead)
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(fields.date)) errors.date = 'Elige una fecha.'
-  else if (fields.date < min || fields.date > max)
-    errors.date = `Elige una fecha entre mañana y los próximos ${BOOKING.daysAhead} días.`
-  else if (BOOKING.closedWeekdays.includes(weekday(fields.date))) errors.date = 'Ese día no hay atención. Elige otra fecha.'
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fields.date)) errors.date = text.date
+  else if (fields.date < min || fields.date > max) errors.date = text.dateRange(BOOKING.daysAhead)
+  else if (BOOKING.closedWeekdays.includes(weekday(fields.date))) errors.date = text.closed
 
-  if (!BOOKING.slots.includes(fields.time)) errors.time = 'Elige un horario.'
-  if (!fields.firstVisit) errors.firstVisit = 'Indica si es tu primera visita.'
-  if (!fields.consent) errors.consent = 'Necesitamos tu autorización para agendar la cita.'
+  if (!BOOKING.slots.includes(fields.time)) errors.time = text.time
+  if (!fields.firstVisit) errors.firstVisit = text.firstVisit
+  if (!fields.consent) errors.consent = text.consent
 
   return errors
 }
-
-/** Mensajes genéricos para los campos que el servidor marque como inválidos. */
-export const SERVER_FIELD_ERROR = 'Revisa este dato.'

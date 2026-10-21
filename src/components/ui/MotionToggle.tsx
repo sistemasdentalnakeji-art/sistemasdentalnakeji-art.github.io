@@ -3,9 +3,12 @@
 // con el evento `motionchange` a las animaciones SVG (SectionDecor) y al WebGL (AuroraBackground).
 
 import { useState } from 'react'
+import { useLang } from '@/app/lang'
+import { UI } from '@/data/ui'
 
 export function MotionToggle() {
   const [paused, setPaused] = useState(false)
+  const ui = UI[useLang()]
 
   const toggle = () => {
     const next = !paused
@@ -18,7 +21,7 @@ export function MotionToggle() {
 
   return (
     <button type="button" className="motion-toggle" aria-pressed={paused} onClick={toggle}>
-      Pausar animaciones
+      {ui.pauseAnimations}
     </button>
   )
 }

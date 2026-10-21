@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Plasma de página (components/decor/PagePlasma.tsx): /contacto/ y /nosotros/.
+   Plasma de página (components/decor/PagePlasma.tsx): /contacto/ y las páginas legales.
    El plasma se dibuja del tamaño de la pantalla y queda fijo (sticky) detrás de la banda (que lleva .band--clip).
    ========================================================================== */
 .page-plasma {

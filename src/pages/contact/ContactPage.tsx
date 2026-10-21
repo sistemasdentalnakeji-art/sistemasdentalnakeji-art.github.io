@@ -13,8 +13,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react'
+import { useLang } from '@/app/lang'
 import { SITE } from '@/config/site'
 import {
+  CONTACT_A11Y,
   CONTACT_DIRECT,
   CONTACT_INTRO,
   CONTACT_SOCIAL,
@@ -23,10 +25,12 @@ import {
   PRIVACY_NOTE,
   SOCIAL_CARDS,
 } from '@/data/contact'
+import { UI } from '@/data/ui'
 import { Band } from '@/components/decor/Band'
 import { PagePlasma } from '@/components/decor/PagePlasma'
 import { AddressText } from '@/components/ui/AddressText'
 import { BrandIcon } from '@/components/ui/BrandIcon'
+import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon, type IconName } from '@/components/ui/Icon'
 import { LocationMap } from '@/components/ui/LocationMap'
@@ -44,20 +48,22 @@ function moveSpot(event: PointerEvent<HTMLUListElement>) {
 
 interface CardProps {
   area: string
-  icon: IconName
+  /** Ícono de línea; o `brand` para el logo de marca en sus colores. */
+  icon?: IconName
+  brand?: 'whatsapp'
   title: string
   index: number
   tone?: 'night'
   children: ReactNode
 }
 
-function BentoCard({ area, icon, title, index, tone, children }: CardProps) {
+function BentoCard({ area, icon, brand, title, index, tone, children }: CardProps) {
   return (
     <li className={cx('bento__card', `bento__card--${area}`, tone && 'bento__card--night')} style={{ '--i': index } as CSSProperties}>
       <span className="bento__ring" aria-hidden="true" />
       <div className="bento__head">
-        <span className="bento__icon siri">
-          <Icon name={icon} size={20} />
+        <span className={cx('bento__icon', brand ? 'bento__icon--brand' : 'siri')}>
+          {brand ? <BrandIcon name={brand} size={42} /> : icon && <Icon name={icon} size={20} />}
         </span>
         <h2 className="bento__title">{title}</h2>
       </div>
@@ -68,6 +74,7 @@ function BentoCard({ area, icon, title, index, tone, children }: CardProps) {
 
 // Copia al portapapeles (solo en el navegador, dentro del clic); confirma 1.6 s con una palomita.
 function CopyButton({ text, label }: { text: string; label: string }) {
+  const a11y = CONTACT_A11Y[useLang()]
   const [copied, setCopied] = useState(false)
   const timer = useRef(0)
   useEffect(() => () => window.clearTimeout(timer.current), [])
@@ -84,7 +91,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
   }
   return (
     <>
-      <button type="button" className="copy-btn" onClick={copy} aria-label={`Copiar ${label}`}>
+      <button type="button" className="copy-btn" onClick={copy} aria-label={a11y.copy(label)}>
         {copied ? (
           <Icon name="check" size={16} />
         ) : (
@@ -96,7 +103,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
       </button>
       {/* Fuera del botón: el contenido de un botón es presentacional y su aria-label lo taparía; así sí se anuncia. */}
       <span className="copy-btn__live" role="status">
-        {copied ? 'Copiado' : ''}
+        {copied ? a11y.copied : ''}
       </span>
     </>
   )
@@ -106,7 +113,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 // `src` como función recibe el ancho del iframe ya medido en el navegador (Facebook); así el prerender no lo necesita.
 // Se vuelve a medir si el ancho cambia (girar el teléfono, cambiar la ventana): el plugin de Facebook no se adapta solo.
 function SocialWindow({ brand, src, title }: { brand: 'facebook' | 'instagram'; src: string | ((width: number) => string); title: string }) {
-  const card = SOCIAL_CARDS[brand]
+  const card = SOCIAL_CARDS[useLang()][brand]
   const frameRef = useRef<HTMLIFrameElement>(null)
   useEffect(() => {
     const frame = frameRef.current
@@ -154,6 +161,11 @@ function SocialWindow({ brand, src, title }: { brand: 'facebook' | 'instagram'; 
 }
 
 export function ContactPage() {
+  const lang = useLang()
+  const intro = CONTACT_INTRO[lang]
+  const direct = CONTACT_DIRECT[lang]
+  const social = CONTACT_SOCIAL[lang]
+  const a11y = CONTACT_A11Y[lang]
   return (
     <Band
       tone="white"
@@ -163,51 +175,52 @@ export function ContactPage() {
     >
       <div className="container">
         <header>
+          <p className="page-eyebrow pill-label">{intro.eyebrow}</p>
           <h1 id="contacto-titulo" className="page-title">
-            {CONTACT_INTRO.title}
+            {intro.title}
           </h1>
-          <p className="page-lead">{CONTACT_INTRO.tagline}</p>
+          <p className="page-lead">{intro.tagline}</p>
         </header>
 
-        <section className="contact-page__section" aria-label="Formas de contacto">
+        <section className="contact-page__section" aria-label={a11y.sections}>
           <ul className="bento" onPointerMove={moveSpot}>
-            <BentoCard area="phone" icon="phone" title={CONTACT_DIRECT.phoneLabel} index={0}>
+            <BentoCard area="phone" icon="phone" title={direct.phoneLabel} index={0}>
               <div className="bento__phones">
                 {SITE.phones.map((phone) => (
                   <div key={phone.e164} className="bento__phone">
-                    <span className="bento__label">{phone.label}</span>
+                    <span className="bento__label">{phone.labels[lang]}</span>
                     <div className="bento__row">
                       <a className="bento__value" href={phone.href}>
-                        {phone.display}
+                        {phone.displays[lang]}
                       </a>
-                      <CopyButton text={phone.display} label={phone.label} />
+                      <CopyButton text={phone.displays[lang]} label={phone.labels[lang]} />
                     </div>
                   </div>
                 ))}
               </div>
             </BentoCard>
 
-            <BentoCard area="wa" icon="whatsapp" title={CONTACT_DIRECT.whatsappTitle} index={1} tone="night">
+            <BentoCard area="wa" brand="whatsapp" title={direct.whatsappTitle} index={1} tone="night">
               <span className="bento__typing" aria-hidden="true">
                 <i />
                 <i />
                 <i />
               </span>
-              <p className="bento__copy">{CONTACT_DIRECT.whatsappText}</p>
+              <p className="bento__copy">{direct.whatsappText}</p>
               <ExternalLink className="btn bento__wa" href={SITE.social.whatsapp}>
                 <Icon name="whatsapp" size={20} />
-                {CONTACT_DIRECT.whatsappCta}
+                {direct.whatsappCta}
               </ExternalLink>
             </BentoCard>
 
-            <BentoCard area="mail" icon="mail" title={CONTACT_DIRECT.emailLabel} index={2}>
+            <BentoCard area="mail" icon="mail" title={direct.emailLabel} index={2}>
               <div className="bento__row">
                 <a className="bento__value bento__value--mail" href={`mailto:${SITE.email}`}>
                   {SITE.email}
                 </a>
-                <CopyButton text={SITE.email} label={CONTACT_DIRECT.emailLabel} />
+                <CopyButton text={SITE.email} label={direct.emailLabel} />
               </div>
-              <p className="bento__note">{CONTACT_DIRECT.emailText}</p>
+              <p className="bento__note">{direct.emailText}</p>
               {SITE.hours.length > 0 && (
                 <ul className="bento__hours">
                   {SITE.hours.map((row) => (
@@ -217,21 +230,21 @@ export function ContactPage() {
                   ))}
                 </ul>
               )}
-              <a className="btn btn--primary btn--sm bento__mail-cta" href={`mailto:${SITE.email}`}>
-                {CONTACT_DIRECT.emailCta}
+              <a className="btn btn--primary btn--sm bento__mail-cta interactive-hover" href={`mailto:${SITE.email}`}>
+                <InteractiveHoverContent>{direct.emailCta}</InteractiveHoverContent>
               </a>
             </BentoCard>
 
-            <BentoCard area="map" icon="pin" title={CONTACT_DIRECT.addressLabel} index={3}>
+            <BentoCard area="map" icon="pin" title={direct.addressLabel} index={3}>
               <div className="bento__map">
-                <LocationMap name={SITE.name} tag="Zona Río" />
+                <LocationMap name={SITE.name} tag={UI[lang].map.tag} />
               </div>
               <div className="bento__row bento__row--address">
                 <address className="bento__text">
                   <AddressText />
                 </address>
-                <ExternalLink className="btn btn--secondary btn--sm" href={SITE.address.mapsUrl}>
-                  {CONTACT_DIRECT.addressCta}
+                <ExternalLink className="btn btn--primary btn--sm interactive-hover" href={SITE.address.mapsUrl}>
+                  <InteractiveHoverContent>{direct.addressCta}</InteractiveHoverContent>
                 </ExternalLink>
               </div>
             </BentoCard>
@@ -240,25 +253,25 @@ export function ContactPage() {
 
         <section className="contact-page__section social-wall" aria-labelledby="contacto-redes">
           <div className="social-wall__intro">
-            <p className="social-wall__eyebrow">{CONTACT_SOCIAL.eyebrow}</p>
+            <p className="social-wall__eyebrow">{social.eyebrow}</p>
             <h2 id="contacto-redes" className="social-wall__title">
-              {CONTACT_SOCIAL.title}
+              {social.title}
             </h2>
-            <p className="social-wall__lead">{CONTACT_SOCIAL.lead}</p>
+            <p className="social-wall__lead">{social.lead}</p>
             <div className="social-wall__links">
               {(['facebook', 'instagram'] as const).map((brand) => (
                 <ExternalLink key={brand} className={cx('social-wall__link', `social-wall__link--${brand}`)} href={SITE.social[brand]}>
                   <BrandIcon name={brand} size={22} />
-                  {SOCIAL_CARDS[brand].cta}
+                  {SOCIAL_CARDS[lang][brand].cta}
                   <Icon name="arrowRight" size={18} />
                 </ExternalLink>
               ))}
             </div>
-            <p className="social-wall__note">{PRIVACY_NOTE}</p>
+            <p className="social-wall__note">{PRIVACY_NOTE[lang]}</p>
           </div>
           <div className="social-wall__windows">
-            <SocialWindow brand="facebook" src={facebookEmbed} title="Publicaciones recientes de Dental Nakeji en Facebook" />
-            <SocialWindow brand="instagram" src={INSTAGRAM_EMBED} title="Perfil de Instagram de Dental Nakeji" />
+            <SocialWindow brand="facebook" src={facebookEmbed} title={a11y.facebookTitle} />
+            <SocialWindow brand="instagram" src={INSTAGRAM_EMBED} title={a11y.instagramTitle} />
           </div>
         </section>
       </div>

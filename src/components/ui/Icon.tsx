@@ -124,6 +124,13 @@ const PATHS = {
       <path d="M6 21.5h12" />
     </>
   ),
+  // Laboratorio dental: matraz para preparación y mezcla de materiales.
+  flask: (
+    <>
+      <path d="M9 3h6M10 3v5l-5 8.8A2.8 2.8 0 0 0 7.4 21h9.2a2.8 2.8 0 0 0 2.4-4.2L14 8V3" />
+      <path d="M7.2 15h9.6M9.3 11.8h5.4" />
+    </>
+  ),
   smile: (
     <>
       <circle cx="12" cy="12" r="8.5" />

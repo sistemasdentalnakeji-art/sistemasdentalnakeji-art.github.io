@@ -5,7 +5,7 @@ import { SectionDecor, type FlowLayout } from '@/components/decor/SectionDecor'
 type Wave = 'plain' | 'flip'
 
 interface BandProps {
-  tone: 'white' | 'tint'
+  tone: 'white' | 'tint' | 'night'
   id?: string
   labelledBy: string
   className?: string
@@ -19,7 +19,7 @@ interface BandProps {
 }
 
 /**
- * Sección de la hoja continua: fondo blanco o azul, olas de unión y decoraciones.
+ * Sección de la hoja continua: fondo blanco, azul claro o azul noche, olas de unión y decoraciones.
  * Une las clases de la banda (tono, ola superior, curvas) con las decoraciones que se pintan dentro (`SectionDecor`).
  */
 export function Band({ tone, id, labelledBy, className, waveTop, flow, decor, children }: BandProps) {

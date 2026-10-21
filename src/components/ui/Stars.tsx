@@ -1,3 +1,5 @@
+import { useLang } from '@/app/lang'
+import { UI } from '@/data/ui'
 import { Icon } from '@/components/ui/Icon'
 
 interface StarsProps {
@@ -7,7 +9,8 @@ interface StarsProps {
 }
 
 export function Stars({ rating, size = 18 }: StarsProps) {
-  const label = rating === null ? 'Calificación pendiente' : `Calificación: ${rating} de 5`
+  const ui = UI[useLang()].stars
+  const label = rating === null ? ui.pending : ui.value(rating)
   return (
     <span className={`stars${rating === null ? ' stars--empty' : ''}`} role="img" aria-label={label}>
       {Array.from({ length: 5 }, (_, index) => (

@@ -7,9 +7,10 @@
 // Fondo: hilos de luz animados (AuroraBackground, efecto "fibers") con los colores del hero.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { ariaCurrent, HOME, PRIVACY, scheduleHref, TERMS } from '@/config/routes'
+import { ariaCurrent, routeOf, scheduleHref, type RouteDef } from '@/config/routes'
 import { SITE } from '@/config/site'
 import { FOOTER_COLUMNS, type FooterLink } from '@/data/footer'
+import { UI } from '@/data/ui'
 import { AuroraBackground } from '@/components/decor/AuroraBackground'
 import { SectionDecor } from '@/components/decor/SectionDecor'
 import { AddressText } from '@/components/ui/AddressText'
@@ -23,12 +24,14 @@ import { SocialLinks } from '@/components/ui/SocialLinks'
 const YEAR = new Date().getFullYear()
 
 interface FooterProps {
-  /** Ruta de la página actual: marca el enlace activo y decide a dónde apunta "Agendar visita". */
-  currentPath: string
+  /** Página actual: marca el enlace activo, decide a dónde apunta "Agendar visita" y a dónde lleva el botón de idioma. */
+  route: RouteDef
 }
 
-export function Footer({ currentPath }: FooterProps) {
-  const agendaHref = scheduleHref(currentPath)
+export function Footer({ route }: FooterProps) {
+  const currentPath = route.path
+  const ui = UI[route.lang]
+  const agendaHref = scheduleHref(route)
   // Los enlaces marcados con `schedule: true` apuntan a la agenda del homepage.
   const hrefOf = (link: FooterLink) => (link.schedule ? agendaHref : (link.href ?? '#'))
 
@@ -42,14 +45,14 @@ export function Footer({ currentPath }: FooterProps) {
         <div className="footer-grid">
           {/* Marca: el mismo orbe iluminado del hero (BrandOrb), a la izquierda de las listas */}
           <div className="footer-brand">
-            <a className="footer-brand__mark" href={HOME.path}>
+            <a className="footer-brand__mark" href={routeOf('home', route.lang).path}>
               <BrandOrb lazy />
               <span className="footer-brand__name">{SITE.name}</span>
             </a>
           </div>
 
           {/* Columnas de enlaces (definidas en data/footer.ts) */}
-          {FOOTER_COLUMNS.map((column) => (
+          {FOOTER_COLUMNS[route.lang].map((column) => (
             <nav key={column.id} className="footer-column" aria-labelledby={`footer-${column.id}`}>
               <h2 id={`footer-${column.id}`} className="footer-title">
                 {column.title}
@@ -68,21 +71,21 @@ export function Footer({ currentPath }: FooterProps) {
 
           {/* Contacto: se llena con config/site.ts */}
           <div className="footer-column">
-            <h2 className="footer-title">Contacto</h2>
+            <h2 className="footer-title">{ui.contact.title}</h2>
             <address className="footer-contact">
               <a href={SITE.address.mapsUrl} target="_blank" rel="noopener">
                 <Icon name="pin" size={18} />
                 <span>
                   <AddressText />
-                  <span className="visually-hidden"> (abre Google Maps en una pestaña nueva)</span>
+                  <span className="visually-hidden">{ui.opensMaps}</span>
                 </span>
               </a>
               {SITE.phones.map((phone) => (
                 <a key={phone.href} href={phone.href}>
                   <Icon name="phone" size={18} />
                   <span>
-                    <span className="visually-hidden">{phone.label}: </span>
-                    {phone.display}
+                    <span className="visually-hidden">{phone.labels[route.lang]}: </span>
+                    {phone.displays[route.lang]}
                   </span>
                 </a>
               ))}
@@ -97,17 +100,20 @@ export function Footer({ currentPath }: FooterProps) {
         {/* Línea final: derechos, aviso de privacidad y términos */}
         <div className="footer-bottom">
           <p>
-            © <span suppressHydrationWarning>{YEAR}</span> {SITE.name}. Todos los derechos reservados.
+            © <span suppressHydrationWarning>{YEAR}</span> {SITE.name}. {ui.rights}
           </p>
-          <SocialLinks className="footer-social" iconSize={26} />
+          <SocialLinks className="footer-social" iconSize={34} />
           <ul className="footer-bottom__links">
-            {[PRIVACY, TERMS].map((route) => (
-              <li key={route.path}>
-                <a href={route.path} aria-current={ariaCurrent(route.path, currentPath)}>
-                  {route.label}
-                </a>
-              </li>
-            ))}
+            {(['privacy', 'terms'] as const).map((key) => {
+              const legal = routeOf(key, route.lang)
+              return (
+                <li key={key}>
+                  <a href={legal.path} aria-current={ariaCurrent(legal.path, currentPath)}>
+                    {legal.label}
+                  </a>
+                </li>
+              )
+            })}
             <li>
               <MotionToggle />
             </li>

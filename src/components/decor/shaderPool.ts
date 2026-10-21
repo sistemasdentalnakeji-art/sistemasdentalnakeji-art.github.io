@@ -167,5 +167,5 @@ function createPool(options: PoolOptions) {
 /** Aurora del hero (detrás de la foto): 4× más rápida, porque en una ventana chica a su velocidad parece un color fijo. */
 export const addAurora = createPool({ fragment: FRAGMENT, speed: 4 })
 
-/** Hilos de luz del footer (reverso de la tarjeta). */
-export const addFibers = createPool({ fragment: FIBERS_FRAGMENT, fiberCount: 8 })
+/** Hilos de luz del footer (reverso de la tarjeta). Cinco en lugar de ocho: ~40 % menos ruido visual. */
+export const addFibers = createPool({ fragment: FIBERS_FRAGMENT, fiberCount: 5 })

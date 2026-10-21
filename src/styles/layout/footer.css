@@ -18,6 +18,11 @@
   color: var(--color-white);
 }
 
+/* Si la página termina en una banda oscura (Nosotros), la ola toma ese tono: con blanco se vería una franja entre las dos. */
+main:has(> .band--night:last-child) + .site-footer .decor--wave {
+  color: var(--color-night);
+}
+
 /* Hilos de luz (canvas WebGL); si no hay WebGL queda el azul marino de la banda. */
 .site-footer__fibers {
   position: absolute;
@@ -150,13 +155,13 @@
   grid-column: 1 / -1;
 }
 
-/* Barra inferior, todo centrado en una columna: derechos, redes y enlaces. */
+/* Barra inferior: derechos, redes y los tres enlaces conservan su acomodo original. */
 .footer-bottom {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: 16px 24px;
   text-align: center;
   margin-top: 32px;
   padding-top: 18px;
@@ -188,22 +193,38 @@
   cursor: pointer;
 }
 
-/* Aviso, términos y "Pausar animaciones" en una lista vertical centrada. */
+/* Aviso, términos y "Pausar animaciones" permanecen juntos en la franja inferior. */
 .footer-bottom__links {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 4px 20px;
   margin: 0;
   padding: 0;
   list-style: none;
   text-align: center;
 }
 
+@media (max-width: 767.98px) {
+  .footer-bottom__links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: 8px;
+    width: 100%;
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }
+}
+
 
 @media (min-width: 768px) {
   .footer-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .footer-bottom__links {
+    flex-wrap: nowrap;
   }
 }
 
@@ -218,6 +239,28 @@
   .footer-brand,
   .footer-column:last-child {
     grid-column: auto;
+  }
+}
+
+@media (min-width: 1200px) {
+  .footer-bottom {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    column-gap: 24px;
+    text-align: left;
+  }
+
+  .footer-bottom p {
+    justify-self: start;
+  }
+
+  .footer-bottom .footer-social {
+    justify-self: center;
+  }
+
+  .footer-bottom__links {
+    justify-self: end;
   }
 }
 

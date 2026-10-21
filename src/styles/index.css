@@ -1,6 +1,7 @@
-/* Fuentes autoalojadas (variables). El navegador solo descarga el subconjunto latino. */
-@import '@fontsource-variable/manrope/wght.css';
+/* Zilla Slab para titulares; Inter y Montserrat permanecen autoalojadas. */
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&display=swap');
 @import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/montserrat/wght.css';
 
 /* ==========================================================================
    ÍNDICE DE ESTILOS
@@ -23,6 +24,7 @@
 @import './components/siri.css';
 @import './components/brand-orb.css';
 @import './components/page-plasma.css';
+@import './components/ghost-fibers.css';
 @import './components/shiny-text.css';
 @import './components/spin-shutter.css';
 @import './layout/sections.css';
@@ -47,4 +49,6 @@
 @import './pages/legal.css';
 @import './pages/faq.css';
 @import './pages/empty.css';
+@import './components/animated-buttons.css';
+@import './global/typography.css';
 @import './global/preferences.css';

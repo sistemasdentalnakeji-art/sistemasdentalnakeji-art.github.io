@@ -4,7 +4,8 @@
 // Estilos → src/styles/pages/empty.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { RouteDef } from '@/config/routes'
+import { routeOf, type RouteDef } from '@/config/routes'
+import { UI } from '@/data/ui'
 import { Band } from '@/components/decor/Band'
 
 interface EmptyPageProps {
@@ -13,16 +14,17 @@ interface EmptyPageProps {
 }
 
 /** Contenedor reutilizable para destinos que aún no tienen contenido (noindex). */
-export function EmptyPage({ route, message = 'Esta sección estará disponible próximamente.' }: EmptyPageProps) {
+export function EmptyPage({ route, message }: EmptyPageProps) {
+  const ui = UI[route.lang].empty
   return (
     <Band className="empty-page" tone="white" labelledBy="pagina-titulo">
       <div className="container empty-page__inner">
         <h1 id="pagina-titulo" className="empty-page__title">
           {route.label}
         </h1>
-        <p className="section-text">{message}</p>
-        <a className="text-link" href="/">
-          Volver a Inicio
+        <p className="section-text">{message ?? (route.key === 'notFound' ? ui.notFound : ui.soon)}</p>
+        <a className="text-link" href={routeOf('home', route.lang).path}>
+          {ui.backHome}
         </a>
       </div>
     </Band>

@@ -10,13 +10,15 @@
 import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import { App } from '@/app/App'
-import { findRoute } from '@/config/routes'
+import { findRoute, routeOf } from '@/config/routes'
 import { applyHead } from '@/seo/head'
 import { pauseOffscreen } from '@/lib/motion'
 import '@/styles/index.css'
 
 const container = document.getElementById('root')!
 const path = window.location.pathname
+// "/" no es una página: va a la versión en inglés (en producción lo hace vercel.json; aquí, en desarrollo).
+if (path === '/') window.location.replace(routeOf('home', 'en').path)
 const route = findRoute(path)
 const app = (
   <StrictMode>

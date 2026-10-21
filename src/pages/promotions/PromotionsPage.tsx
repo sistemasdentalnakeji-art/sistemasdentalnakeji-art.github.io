@@ -9,7 +9,8 @@
 
 import { BENEFITS_BACK, PAGE_CTA, PROMOTIONS, PROMOTIONS_INTRO, type PromoPoster } from '@/data/benefitPages'
 import { PARTNERS_CTA } from '@/data/partners'
-import { BENEFITS } from '@/config/routes'
+import { useLang } from '@/app/lang'
+import { routeOf } from '@/config/routes'
 import { Band } from '@/components/decor/Band'
 import { Carousel } from '@/components/ui/Carousel'
 import { ExternalLink } from '@/components/ui/ExternalLink'
@@ -35,25 +36,27 @@ function Poster({ promo, index }: { promo: PromoPoster; index: number }) {
 }
 
 export function PromotionsPage() {
+  const lang = useLang()
+  const benefits = routeOf('benefits', lang)
   return (
     <Band tone="white" className="promotions" labelledBy="promociones-titulo">
       <div className="container">
-        <a className="page-back" href={BENEFITS.path}>
+        <a className="page-back" href={benefits.path}>
           <Icon name="chevronLeft" size={16} />
-          {BENEFITS_BACK}
+          {BENEFITS_BACK[lang]}
         </a>
         <header className="promotions__head">
-          <p className="page-eyebrow">{PROMOTIONS_INTRO.eyebrow}</p>
+          <p className="page-eyebrow pill-label">{PROMOTIONS_INTRO[lang].eyebrow}</p>
           <h1 id="promociones-titulo" className="page-title">
-            {PROMOTIONS_INTRO.title}
+            {PROMOTIONS_INTRO[lang].title}
           </h1>
-          <p className="page-lead">{PROMOTIONS_INTRO.lead}</p>
+          <p className="page-lead">{PROMOTIONS_INTRO[lang].lead}</p>
         </header>
 
         <Carousel
           className="carousel--promos"
-          label="Promociones"
-          items={PROMOTIONS.map((promo, index) => (
+          label={PROMOTIONS_INTRO[lang].title}
+          items={PROMOTIONS[lang].map((promo, index) => (
             <Poster key={promo.name} promo={promo} index={index} />
           ))}
         />
@@ -61,7 +64,7 @@ export function PromotionsPage() {
         <div className="page-cta">
           <ExternalLink className="btn btn--secondary" href={PARTNERS_CTA.href}>
             <Icon name="whatsapp" size={20} />
-            {PAGE_CTA}
+            {PAGE_CTA[lang]}
           </ExternalLink>
         </div>
       </div>

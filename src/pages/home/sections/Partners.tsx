@@ -11,13 +11,15 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import type { CSSProperties } from 'react'
-import { PARTNER_GROUPS, PARTNERS_CTA, type Partner } from '@/data/partners'
+import { useLang } from '@/app/lang'
+import { PARTNER_GROUPS, PARTNERS_CTA, PARTNERS_CTA_LABEL, type Partner } from '@/data/partners'
+import { UI } from '@/data/ui'
 import { PARTNERS_SECTION } from '@/data/home'
 import { Band } from '@/components/decor/Band'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon } from '@/components/ui/Icon'
+import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
 import { SectionDecor } from '@/components/decor/SectionDecor'
-import { SectionIntro } from '@/components/ui/SectionIntro'
 
 /** Con logo real: solo el logo, sin tarjeta ni nombre (el nombre va en el alt). Sin logo: marcador con icono y nombre. */
 function Plate({ partner, icon }: { partner: Partner; icon: 'shield' | 'building' }) {
@@ -48,6 +50,9 @@ function Plate({ partner, icon }: { partner: Partner; icon: 'shield' | 'building
 }
 
 export function Partners() {
+  const lang = useLang()
+  const groups = PARTNER_GROUPS[lang]
+  const section = PARTNERS_SECTION[lang]
   return (
     <Band
       tone="white"
@@ -57,11 +62,12 @@ export function Partners() {
     >
       <div className="container">
         <header className="section-head">
-          <SectionIntro icon="shield" id="aseguranzas-titulo" title={PARTNERS_SECTION.title} text={PARTNERS_SECTION.text} />
+          <h2 id="aseguranzas-titulo" className="section-title">{section.title}</h2>
+          <p className="section-text">{section.text}</p>
         </header>
 
         <div className="rails">
-          {PARTNER_GROUPS.map((group, index) => {
+          {groups.map((group, index) => {
             const icon = group.id === 'aseguranzas' ? 'shield' : 'building'
             return (
               <section key={group.id} className={`rail rail--${group.id}`} aria-labelledby={`rail-${group.id}`}>
@@ -81,7 +87,7 @@ export function Partners() {
                 <div
                   className="rail__marquee"
                   role="region"
-                  aria-roledescription="carrusel"
+                  aria-roledescription={UI[lang].carousel.role}
                   aria-label={group.title}
                   data-dir={index % 2 === 0 ? 'left' : 'right'}
                 >
@@ -100,19 +106,20 @@ export function Partners() {
                   </div>
                 </div>
 
-                <a className="btn btn--secondary btn--sm rail__cta" href={group.link.href}>
-                  {group.link.label}
-                  <Icon name="arrowRight" size={16} />
+                <a className="btn btn--primary btn--sm rail__cta interactive-hover" href={group.link.href}>
+                  <InteractiveHoverContent>{group.link.label}</InteractiveHoverContent>
                 </a>
               </section>
             )
           })}
         </div>
 
-        <div className="section-cta">
+        <div className="section-cta section-cta--ringed">
+          {/* Celular y tableta: anillos abajo a la izquierda, detrás del botón de WhatsApp (en escritorio van arriba, en la banda). */}
+          <SectionDecor variant="rings" placement="partners-cta" />
           <ExternalLink className="btn btn--secondary" href={PARTNERS_CTA.href}>
             <Icon name="whatsapp" size={20} />
-            {PARTNERS_CTA.label}
+            {PARTNERS_CTA_LABEL[lang]}
           </ExternalLink>
         </div>
       </div>

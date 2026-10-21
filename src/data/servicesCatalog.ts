@@ -4,17 +4,19 @@
 // • Categorías, orden e intros: CATALOG_GROUPS (4-3-3-2-2). Para mover un servicio, cambia su línea `entry(...)`;
 //   la comprobación del final falla al compilar si un servicio de las rutas queda fuera o repetido.
 // • Encabezado de la página (título, subtítulo, 4 beneficios y tarjeta sobre la foto): CATALOG_HERO.
-// • Texto de cada tarjeta: hoy lorem ipsum; cámbialo en el campo `text` (o en LOREM para todas a la vez).
+// • Cada tarjeta reutiliza los tres puntos de su página individual (data/services.ts).
 // • El título y el enlace salen de la ruta del servicio (config/routes.ts), buscada por su nombre.
 // • Estilos → src/styles/pages/services-index.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { MORE_SERVICE_ROUTES, SERVICE_ROUTES } from '@/config/routes'
+import { ALL_SERVICE_KEYS, LANGS, routeOf, type Lang, type ServiceKey } from '@/config/routes'
 import type { IconName } from '@/components/ui/Icon'
+import { SERVICE_PAGES } from '@/data/services'
 
 export interface CatalogService {
+  key: ServiceKey
   title: string
-  text: string
+  highlights: [string, string, string]
   href: string
   icon: IconName
 }
@@ -29,95 +31,134 @@ export interface CatalogGroup {
 }
 
 /** Texto visible del enlace de cada tarjeta. */
-export const CATALOG_CTA = 'Ver servicio'
+export const CATALOG_CTA: Record<Lang, string> = { en: 'View service', es: 'Ver servicio' }
 
-/** Encabezado de la página: título en dos tonos, beneficios y tarjeta flotante sobre el espacio de la foto. */
-export const CATALOG_HERO = {
-  eyebrow: 'Nuestros servicios',
-  titleLead: 'Servicios dentales',
-  titleAccent: 'en Tijuana',
-  lead: 'Tratamientos dentales pensados para cada etapa de tu sonrisa.',
-  features: [
-    { icon: 'chip', text: 'Tecnología de vanguardia' },
-    { icon: 'shield', text: 'Atención personalizada' },
-    { icon: 'users', text: 'Especialistas certificados' },
-    { icon: 'tooth', text: 'Resultados que perduran' },
-  ] satisfies { icon: IconName; text: string }[],
-  /** Índice de categorías bajo el subtítulo (enlaza a cada carta). */
-  indexLabel: 'Explora por categoría',
-  /** Foto del laboratorio de la clínica (la dio la clínica). Va sola, sin etiquetas. */
-  photo: {
-    src: '/images/servicios/laboratorio.webp',
-    width: 1600,
-    height: 900,
-    alt: 'Laboratorio dental de Dental Nakeji con estaciones de diseño digital e impresoras 3D',
+const LAB_PHOTO = { src: '/images/servicios/laboratorio.webp', width: 1600, height: 900 }
+
+/**
+ * Encabezado de la página: título en dos tonos, beneficios y tarjeta flotante sobre el espacio de la foto.
+ * PENDIENTE (clínica): confirmar "Certified specialists"/"Especialistas certificados" y la frase de "Lasting care"/"Resultados que perduran"
+ * (en inglés se suavizó para no prometer resultados).
+ */
+export const CATALOG_HERO: Record<
+  Lang,
+  {
+    eyebrow: string
+    titleLead: string
+    titleAccent: string
+    lead: string
+    features: { icon: IconName; text: string }[]
+    indexLabel: string
+    photo: { src: string; width: number; height: number; alt: string }
+  }
+> = {
+  en: {
+    eyebrow: 'Our services',
+    titleLead: 'Dental services',
+    titleAccent: 'in Tijuana',
+    lead: 'Dental treatments designed for every stage of your smile.',
+    features: [
+      { icon: 'chip', text: 'Modern technology' },
+      { icon: 'shield', text: 'Personalized care' },
+      { icon: 'users', text: 'Certified specialists' },
+      { icon: 'tooth', text: 'Lasting care' },
+    ],
+    indexLabel: 'Explore by category',
+    // Foto del laboratorio de la clínica (la dio la clínica). Va sola, sin etiquetas.
+    photo: { ...LAB_PHOTO, alt: 'Dental Nakeji dental lab with digital design stations and 3D printers' },
+  },
+  es: {
+    eyebrow: 'Nuestros servicios',
+    titleLead: 'Servicios dentales',
+    titleAccent: 'en Tijuana',
+    lead: 'Tratamientos dentales pensados para cada etapa de tu sonrisa.',
+    features: [
+      { icon: 'chip', text: 'Tecnología de vanguardia' },
+      { icon: 'shield', text: 'Atención personalizada' },
+      { icon: 'users', text: 'Especialistas certificados' },
+      { icon: 'tooth', text: 'Resultados que perduran' },
+    ],
+    /** Índice de categorías bajo el subtítulo (enlaza a cada carta). */
+    indexLabel: 'Explora por categoría',
+    photo: { ...LAB_PHOTO, alt: 'Laboratorio dental de Dental Nakeji con estaciones de diseño digital e impresoras 3D' },
   },
 }
 
-const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.'
 // Texto de relleno bajo la descripción de cada categoría (pendiente de redactar).
 const LOREM_BODY =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.'
 
-const ROUTES = [...SERVICE_ROUTES, ...MORE_SERVICE_ROUTES]
-
-/** La ruta sale de la lista de servicios por su nombre: si se renombra o quita, falla al compilar (no deja un enlace roto). */
-const entry = (label: string, icon: IconName): CatalogService => {
-  const route = ROUTES.find((item) => item.label === label)
-  if (!route) throw new Error(`Servicio del catálogo sin ruta: ${label}`)
-  return { title: route.label, text: LOREM, href: route.path, icon }
+const buildGroups = (lang: Lang): CatalogGroup[] => {
+const en = lang === 'en'
+/** La ruta sale de la clave del servicio: si se quita, falla al compilar (no deja un enlace roto). */
+const entry = (key: ServiceKey, icon: IconName): CatalogService => {
+  const route = routeOf(key, lang)
+  const content = SERVICE_PAGES[lang][key]
+  if (!content) throw new Error(`Servicio del catálogo sin contenido: ${key}`)
+  return { key, title: route.label, highlights: content.highlights, href: route.path, icon }
 }
 
-export const CATALOG_GROUPS: CatalogGroup[] = [
+return [
   {
     id: 'implantes-y-rehabilitacion',
-    title: 'Implantes y rehabilitación dental',
-    intro: 'Opciones para reponer dientes ausentes, desde una pieza hasta toda la arcada.',
+    title: en ? 'Implants and dental rehabilitation' : 'Implantes y rehabilitación dental',
+    intro: en
+      ? 'Options to replace missing teeth, from a single tooth to a full arch.'
+      : 'Opciones para reponer dientes ausentes, desde una pieza hasta toda la arcada.',
     body: LOREM_BODY,
     services: [
-      entry('Implantes dentales', 'implant'),
-      entry('All on 4 implants', 'bridge4'),
-      entry('All on 6 implants', 'bridge6'),
-      entry('Dentaduras', 'denture'),
+      entry('implants', 'implant'),
+      entry('all-on-4', 'bridge4'),
+      entry('all-on-6', 'bridge6'),
+      entry('dentures', 'denture'),
     ],
   },
   {
     id: 'estetica-dental',
-    title: 'Estética y restauración',
-    intro: 'Coronas, carillas y blanqueamiento para cuidar la forma, el color y la apariencia de tus dientes.',
+    title: en ? 'Aesthetics and restoration' : 'Estética y restauración',
+    intro: en
+      ? 'Crowns, veneers and whitening to care for the shape, color and look of your teeth.'
+      : 'Coronas, carillas y blanqueamiento para cuidar la forma, el color y la apariencia de tus dientes.',
     body: LOREM_BODY,
-    services: [entry('Coronas', 'crown'), entry('Carillas dentales', 'tooth'), entry('Blanqueamiento dental', 'sparkle')],
+    services: [entry('crowns', 'crown'), entry('veneers', 'tooth'), entry('whitening', 'sparkle')],
   },
   {
     id: 'ortodoncia-y-odontopediatria',
-    title: 'Ortodoncia y odontopediatría',
-    intro: 'Para alinear la sonrisa y cuidar los dientes de los más pequeños.',
+    title: en ? 'Orthodontics and pediatric dentistry' : 'Ortodoncia y odontopediatría',
+    intro: en
+      ? 'To align your smile and care for the teeth of the little ones.'
+      : 'Para alinear la sonrisa y cuidar los dientes de los más pequeños.',
     body: LOREM_BODY,
-    services: [entry('Ortodoncia', 'braces'), entry('Alineadores', 'aligner'), entry('Odontopediatría', 'user')],
+    services: [entry('orthodontics', 'braces'), entry('aligners', 'aligner'), entry('pediatric', 'user')],
   },
   {
     id: 'limpieza-y-encias',
-    title: 'Limpieza y salud de encías',
-    intro: 'El cuidado de base: limpieza dental y atención de las encías.',
+    title: en ? 'Cleaning and gum health' : 'Limpieza y salud de encías',
+    intro: en ? 'Basic care: dental cleaning and gum treatment.' : 'El cuidado de base: limpieza dental y atención de las encías.',
     body: LOREM_BODY,
-    services: [entry('Limpieza dental', 'drop'), entry('Periodoncia', 'shield')],
+    services: [entry('cleaning', 'drop'), entry('gum', 'shield')],
   },
   {
     id: 'endodoncia-y-extracciones',
-    title: 'Endodoncia y extracciones',
-    intro: 'Tratamientos para conservar una pieza dental o retirarla cuando es necesario.',
+    title: en ? 'Root canal and extractions' : 'Endodoncia y extracciones',
+    intro: en
+      ? 'Treatments to save a tooth or remove it when needed.'
+      : 'Tratamientos para conservar una pieza dental o retirarla cuando es necesario.',
     body: LOREM_BODY,
-    services: [entry('Endodoncias', 'endo'), entry('Extracciones simples y de juicio', 'tooth')],
+    services: [entry('root-canal', 'endo'), entry('extractions', 'tooth')],
   },
 ]
+}
 
-/** Los servicios de todas las categorías, en orden. */
-export const CATALOG_SERVICES = CATALOG_GROUPS.flatMap((group) => group.services)
+export const CATALOG_GROUPS = Object.fromEntries(LANGS.map((lang) => [lang, buildGroups(lang)])) as Record<Lang, CatalogGroup[]>
 
-// Cada servicio de las rutas aparece una sola vez (entry() ya impide que sobre alguno); si falta o se repite, el build falla.
-const listed = CATALOG_SERVICES.map((service) => service.href)
-for (const route of ROUTES) {
-  if (listed.filter((href) => href === route.path).length !== 1) {
-    throw new Error(`Servicio fuera o repetido en CATALOG_GROUPS: ${route.label}`)
+/** Los servicios de todas las categorías, en orden (mismas claves e iconos en ambos idiomas). */
+export const CATALOG_SERVICES = CATALOG_GROUPS.es.flatMap((group) => group.services)
+
+// Cada servicio aparece una sola vez (entry() ya impide que sobre alguno); si falta o se repite, el build falla.
+const listed = CATALOG_SERVICES.map((service) => service.key)
+for (const key of ALL_SERVICE_KEYS) {
+  if (listed.filter((item) => item === key).length !== 1) {
+    throw new Error(`Servicio fuera o repetido en CATALOG_GROUPS: ${key}`)
   }
 }

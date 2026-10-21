@@ -1,7 +1,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // TEXTOS DE /aviso-de-privacidad/ y /terminos-y-condiciones/ (pages/legal/LegalDocument.tsx).
 //
-// Son los documentos OFICIALES de la clínica, copiados tal cual (en inglés, sin traducir) de sus páginas de Google Sites:
+// Son los documentos OFICIALES de la clínica, copiados tal cual (en inglés) de sus páginas de Google Sites.
+// La versión en español (PRIVACY_PAGE_ES / TERMS_PAGE_ES, al final) es una traducción provisional que la clínica debe revisar.
+// /en/ muestra la versión en inglés y /es/ la de español.
+// Fuentes:
 //  • /aviso-de-privacidad/ = "Notice of Privacy Practices" (HIPAA): https://sites.google.com/view/nakejinoticeofprivacypractice
 //  • /terminos-y-condiciones/ = "SMS Terms & Conditions": https://sites.google.com/view/nakejidentalsmsterms
 // Si la clínica cambia el original, se actualiza aquí. Cada sección conserva un `id` corto y único (ancla del índice).
@@ -273,6 +276,263 @@ export const TERMS_PAGE: LegalDoc = {
       id: 'contact',
       icon: 'phone',
       title: 'Contact Information',
+      blocks: [{ link: 'Dental Nakeji — https://nakejidental.com/', href: 'https://nakejidental.com/' }],
+    },
+  ],
+}
+
+// ─── Versión en español (traducción provisional, pendiente de revisión de la clínica) ───
+
+export const PRIVACY_PAGE_ES: LegalDoc = {
+  eyebrow: 'Dental Nakeji',
+  title: 'Aviso de Prácticas de Privacidad',
+  lead: 'Este aviso describe cómo se puede usar y divulgar su información médica y cómo puede acceder a ella. Por favor, léalo con atención.',
+  updated: 'Fecha de vigencia: 16/10/2026',
+  tocLabel: 'En este aviso',
+  sections: [
+    {
+      id: 'commitment',
+      icon: 'shield',
+      title: 'Nuestro compromiso con su privacidad',
+      blocks: [
+        'Nakeji Dental Group, que opera como Nakeji Dental, se compromete a proteger la privacidad de su información de salud.',
+        'Este Aviso de Prácticas de Privacidad ("Aviso") explica cómo podemos usar y divulgar su información protegida de salud ("PHI", por sus siglas en inglés), nuestras responsabilidades legales y sus derechos sobre su información.',
+        'Si estamos sujetos a la Ley de Portabilidad y Responsabilidad de Seguros Médicos de 1996 de los Estados Unidos ("HIPAA"), estamos obligados a mantener la privacidad de su PHI, entregarle este Aviso y seguir las prácticas de privacidad descritas en él mientras esté vigente.',
+        { h: 'Información de contacto' },
+        {
+          ul: [
+            'Responsable de privacidad: Nakeji Dental',
+            'Domicilio: Jose María Velasco, Av. Río Tijuana 2440-Int. PH3, Zona Urbana Río Tijuana, 22010 Tijuana, B.C., México.',
+            'Teléfono: 619-879-2202',
+            'Correo de privacidad: appointments@nakejidental.com',
+          ],
+        },
+        { link: 'Sitio web: https://nakejidental.com/', href: 'https://nakejidental.com/' },
+      ],
+    },
+    {
+      id: 'information',
+      icon: 'document',
+      title: 'Información que recabamos y protegemos',
+      blocks: [
+        'Al brindarle atención dental y administrar nuestro consultorio, podemos recabar, crear, recibir, conservar y usar información sobre usted, incluida:',
+        { h: 'Información de identificación y de contacto' },
+        {
+          ul: [
+            'Nombre, fecha de nacimiento, domicilio, número telefónico y correo electrónico.',
+            'Información de contacto de emergencia e información sobre padres, tutores o representantes autorizados, cuando aplique.',
+            'Información de seguros y facturación, cuando aplique.',
+          ],
+        },
+        { h: 'Información médica y dental' },
+        {
+          ul: [
+            'Antecedentes médicos y dentales, diagnósticos, planes de tratamiento, notas clínicas y registros de evolución.',
+            'Alergias, medicamentos, condiciones de salud y otra información relevante para su atención dental.',
+            'Radiografías dentales, escáneres, fotografías intraorales y extraorales, y otras imágenes diagnósticas.',
+            'Referencias, comunicaciones con otros profesionales de la salud e información recibida de otros prestadores.',
+          ],
+        },
+        { h: 'Información financiera y de pagos' },
+        {
+          ul: [
+            'Registros de pagos, facturas, saldos, recibos e información necesaria para procesar transacciones.',
+            'Reclamaciones de seguro e información de pagos relacionada, cuando aplique.',
+            'Los datos de tarjetas de pago pueden ser procesados por proveedores de pago externos. Manejaremos cualquier información de pago que conservemos conforme a la ley aplicable y a nuestras prácticas de pago reales.',
+          ],
+        },
+        'Cuando esta información lo identifique y esté protegida por la ley aplicable, se manejará conforme a los requisitos de privacidad y seguridad que aplican a nuestro consultorio.',
+      ],
+    },
+    {
+      id: 'uses',
+      icon: 'share',
+      title: 'Cómo podemos usar y divulgar su información de salud',
+      blocks: [
+        'Cuando aplique HIPAA, podemos usar o divulgar su PHI para los siguientes fines, según lo permita la ley.',
+        { h: 'A. Tratamiento' },
+        'Podemos usar su información para brindarle, coordinar y administrar la atención dental.',
+        'Por ejemplo, podemos revisar su historial médico, evaluar sus radiografías dentales, elaborar un plan de tratamiento o compartir información relevante con un especialista o con un laboratorio dental que participe en su atención.',
+        { h: 'B. Pagos' },
+        'Podemos usar o divulgar información para facturar los servicios y cobrar el pago.',
+        'Por ejemplo, podemos presentar reclamaciones a su aseguradora dental, verificar la cobertura, determinar beneficios o proporcionar la información necesaria para procesar el pago.',
+        { h: 'C. Operaciones de la clínica' },
+        'Podemos usar información para operar y mejorar nuestro consultorio, administrar citas, revisar la calidad de la atención, capacitar al personal autorizado y realizar actividades administrativas permitidas por la ley.',
+        { h: 'D. Recordatorios de citas y comunicaciones sobre su atención' },
+        'Podemos comunicarnos con usted por teléfono, correo electrónico, mensaje de texto, portal de pacientes u otro medio acordado, sobre citas, tratamiento, seguimiento, facturación y servicios relacionados, según la ley aplicable.',
+        'Puede solicitar acuerdos razonables de comunicación confidencial usando la información de contacto de arriba.',
+        { h: 'E. Personas involucradas en su atención' },
+        'Cuando la ley lo permita, podemos compartir información relevante con un familiar, cuidador u otra persona involucrada en su atención o en el pago de la misma.',
+        'Seguiremos los requisitos legales aplicables y respetaremos sus preferencias expresas cuando sea obligatorio.',
+        { h: 'F. Fines legales y de interés público' },
+        'Podemos usar o divulgar PHI cuando lo autorice o lo requiera la ley, incluidas ciertas actividades de salud pública, vigilancia sanitaria, procedimientos judiciales o administrativos, solicitudes de autoridades, denuncias de maltrato o negligencia y respuesta a ciertas emergencias.',
+        'Estas divulgaciones se limitarán a lo que la ley aplicable permita o requiera.',
+        { h: 'G. Otras divulgaciones permitidas' },
+        'Pueden permitirse otras divulgaciones para fines como compensación laboral, investigación u otras actividades reconocidas por la ley, sujetas a las salvaguardas y requisitos aplicables.',
+        'Cuando HIPAA u otra ley aplicable requiera su autorización por escrito, la obtendremos antes de hacer el uso o la divulgación correspondiente.',
+      ],
+    },
+    {
+      id: 'authorization',
+      icon: 'lock',
+      title: 'Usos que requieren su autorización',
+      blocks: [
+        'Obtendremos su autorización por escrito cuando la ley aplicable lo requiera.',
+        'Por ejemplo, en general no usaremos ni divulgaremos su PHI con fines de mercadotecnia que requieran autorización, ni venderemos su PHI, sin la autorización que exige la ley.',
+        'Fotografías clínicas e imágenes dentales: las fotografías y radiografías tomadas para el examen, diagnóstico, tratamiento y documentación clínica pueden usarse con esos fines, según lo permita la ley. Usar fotografías identificables de pacientes, testimonios o imágenes clínicas en publicidad, materiales promocionales, redes sociales o contenido educativo público requerirá una autorización por separado cuando la ley lo exija.',
+        'Su decisión sobre el uso promocional no se considerará permiso para usar su información con fines no relacionados.',
+        'Puede revocar una autorización por escrito, con las limitaciones aplicables a las acciones ya realizadas con base en ella.',
+      ],
+    },
+    {
+      id: 'rights',
+      icon: 'scale',
+      title: 'Sus derechos sobre su información de salud',
+      blocks: [
+        'Si aplica HIPAA, usted tiene los siguientes derechos, sujetos a las excepciones legales aplicables.',
+        { h: 'Derecho a inspeccionar y obtener una copia' },
+        'Puede solicitar acceso a sus expedientes médicos y dentales y obtener copias en papel o en formato electrónico, según lo permita la ley.',
+        'Envíe su solicitud por escrito al responsable de privacidad indicado arriba. Responderemos dentro del plazo que exija la ley. Pueden aplicarse cuotas permitidas.',
+        { h: 'Derecho a solicitar una modificación' },
+        'Puede pedirnos que corrijamos o modifiquemos información que considere inexacta o incompleta.',
+        'Podemos rechazar una solicitud en ciertas circunstancias permitidas por la ley. Si la rechazamos, le daremos una explicación e información sobre sus opciones.',
+        { h: 'Derecho a solicitar comunicaciones confidenciales' },
+        'Puede pedirnos que nos comuniquemos con usted por un número telefónico, correo electrónico, domicilio u otro medio razonable específico.',
+        'Atenderemos las solicitudes razonables según lo exija la ley aplicable.',
+        { h: 'Derecho a solicitar restricciones' },
+        'Puede pedirnos que limitemos ciertos usos o divulgaciones de su información.',
+        'No estamos obligados a aceptar todas las solicitudes. Sin embargo, cuando usted pague un servicio o un artículo de atención de salud totalmente de su bolsillo y solicite que no divulguemos información sobre ese servicio a su plan de salud para fines de pago u operaciones, lo respetaremos cuando lo exija HIPAA, salvo que otra ley exija la divulgación.',
+        { h: 'Derecho a un informe de divulgaciones' },
+        'Puede solicitar una lista de ciertas divulgaciones de su PHI realizadas durante el periodo aplicable, sujeta a las excepciones establecidas por la ley.',
+        { h: 'Derecho a una copia en papel' },
+        'Puede solicitar una copia en papel de este Aviso en cualquier momento, aunque antes haya aceptado recibirlo electrónicamente.',
+        { h: 'Derecho a designar a un representante personal' },
+        'Una persona legalmente autorizada para actuar en su nombre puede ejercer por usted los derechos aplicables. Podemos verificar la autoridad de la persona antes de responder.',
+        { h: 'Derecho a presentar una queja' },
+        'Puede presentar una queja ante nuestro consultorio o ante el Departamento de Salud y Servicios Humanos de los Estados Unidos, Oficina de Derechos Civiles, si considera que se han violado sus derechos de privacidad.',
+        'No tomaremos represalias contra usted por presentar una queja.',
+      ],
+    },
+    {
+      id: 'responsibilities',
+      icon: 'check',
+      title: 'Nuestras responsabilidades de privacidad y seguridad',
+      blocks: [
+        'Cuando aplica HIPAA, estamos obligados a:',
+        {
+          ul: [
+            'Proteger la privacidad y la seguridad de su PHI.',
+            'Entregarle este Aviso, que describe nuestras obligaciones legales y prácticas de privacidad.',
+            'Cumplir los términos del Aviso vigente.',
+            'Notificarle cuando una violación de PHI no protegida requiera notificación conforme a la ley aplicable.',
+            'Usar salvaguardas razonables y adecuadas para proteger la información contra el acceso, uso o divulgación no autorizados.',
+            'Limitar el acceso al personal autorizado y a los proveedores de servicios, conforme a los requisitos aplicables.',
+          ],
+        },
+        'Podemos usar proveedores de servicios para apoyar la programación de citas, los registros electrónicos, el almacenamiento seguro, las comunicaciones, la facturación y el procesamiento de pagos.',
+        'Cuando HIPAA lo exija, obtendremos las garantías escritas correspondientes o los acuerdos de socio comercial de los proveedores que creen, reciban, conserven o transmitan PHI en nuestro nombre.',
+      ],
+    },
+    {
+      id: 'minors',
+      icon: 'users',
+      title: 'Menores y representantes autorizados',
+      blocks: [
+        'En el caso de pacientes menores de edad o que tengan un representante legalmente autorizado, manejaremos las solicitudes, los consentimientos, el acceso y las divulgaciones conforme a la ley federal y estatal aplicable.',
+        'Ciertas leyes estatales pueden otorgar a los menores derechos independientes sobre tipos específicos de atención de salud. Aplicaremos esos requisitos cuando sea pertinente.',
+      ],
+    },
+    {
+      id: 'state',
+      icon: 'pin',
+      title: 'Protecciones de privacidad específicas de cada estado',
+      blocks: [
+        'Los requisitos federales de HIPAA pueden complementarse con leyes estatales que brinden mayor protección de la privacidad o derechos adicionales al paciente.',
+        'Cuando una ley aplicable más protectora limite nuestro uso o divulgación de información de salud, seguiremos los requisitos legales correspondientes.',
+        'Ley Federal de Protección de Datos Personales en Posesión de los Particulares,',
+      ],
+    },
+    {
+      id: 'changes',
+      icon: 'refresh',
+      title: 'Cambios a este Aviso',
+      blocks: [
+        'Nos reservamos el derecho de modificar los términos de este Aviso según lo permita la ley.',
+        'Cualquier Aviso revisado aplicará a la información de salud que conservemos, sujeto a los requisitos legales aplicables. La versión vigente estará disponible en nuestro consultorio y en nuestro sitio web.',
+        'Entregaremos avisos revisados o notificaremos los cambios importantes según lo exija la ley.',
+      ],
+    },
+    {
+      id: 'contact',
+      icon: 'mail',
+      title: 'Cómo comunicarse con nosotros o presentar una queja',
+      blocks: [
+        'Para preguntas, solicitudes o quejas sobre su privacidad, comuníquese con:',
+        {
+          ul: [
+            'Responsable de privacidad: Joe Miranda',
+            'Consultorio dental: Nakeji Dental',
+            'Domicilio: Jose María Velasco, Av. Río Tijuana 2440-Int. PH3, Zona Urbana Río Tijuana, 22010 Tijuana, B.C.',
+            'Teléfono: 619-879-2202',
+            'Correo: Appointments@nakejidental.com',
+          ],
+        },
+        'También puede presentar una queja ante el Departamento de Salud y Servicios Humanos de los Estados Unidos, Oficina de Derechos Civiles:',
+        {
+          link: 'Sitio web: https://www.hhs.gov/hipaa/filing-a-complaint/index.html',
+          href: 'https://www.hhs.gov/hipaa/filing-a-complaint/index.html',
+        },
+        'Teléfono: 1-800-368-1019',
+        'No tomaremos represalias contra usted por presentar una queja.',
+      ],
+    },
+  ],
+}
+
+export const TERMS_PAGE_ES: LegalDoc = {
+  eyebrow: 'Dental Nakeji',
+  title: 'Términos y condiciones de SMS',
+  lead: 'Al aceptar recibir mensajes SMS de Dental Nakeji, usted acepta recibir mensajes de texto relacionados con citas, actualizaciones, promociones y atención al cliente.',
+  updated: 'Fecha de vigencia: 16/10/2026',
+  tocLabel: 'En estos términos',
+  sections: [
+    { id: 'frequency', icon: 'clock', title: 'Frecuencia de mensajes', blocks: ['La frecuencia de los mensajes puede variar.'] },
+    {
+      id: 'rates',
+      icon: 'message',
+      title: 'Tarifas de mensajes y datos',
+      blocks: ['Pueden aplicar tarifas de mensajes y datos según su compañía telefónica y su plan.'],
+    },
+    {
+      id: 'opt-out',
+      icon: 'close',
+      title: 'Cancelar la suscripción',
+      blocks: ['Puede dejar de recibir mensajes SMS en cualquier momento respondiendo STOP.'],
+    },
+    {
+      id: 'help',
+      icon: 'help',
+      title: 'Ayuda',
+      blocks: ['Para obtener ayuda, responda HELP o escríbanos a appointments@nakejidental.com.'],
+    },
+    {
+      id: 'privacy',
+      icon: 'lock',
+      title: 'Privacidad',
+      blocks: [
+        'Su información se manejará de acuerdo con nuestro Aviso de Privacidad. No vendemos ni compartimos su número celular ni la información de su consentimiento para SMS con terceros para fines de mercadotecnia.',
+      ],
+    },
+    {
+      id: 'consent',
+      icon: 'check',
+      title: 'Consentimiento',
+      blocks: ['El consentimiento para recibir mensajes SMS no es condición para ninguna compra.'],
+    },
+    {
+      id: 'contact',
+      icon: 'phone',
+      title: 'Información de contacto',
       blocks: [{ link: 'Dental Nakeji — https://nakejidental.com/', href: 'https://nakejidental.com/' }],
     },
   ],

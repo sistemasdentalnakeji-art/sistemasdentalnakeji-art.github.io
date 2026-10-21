@@ -18,6 +18,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useId, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from 'react'
+import { useLang } from '@/app/lang'
+import { UI } from '@/data/ui'
 import { Icon } from '@/components/ui/Icon'
 import { AuroraBackground } from '@/components/decor/AuroraBackground'
 import { motionOff } from '@/lib/motion'
@@ -59,6 +61,7 @@ function depthStyle(card: HTMLElement, c: number) {
 }
 
 export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }: Props) {
+  const ui = UI[useLang()].spin
   const count = photos.length
   const step = 360 / count
   const rootRef = useRef<HTMLDivElement>(null)
@@ -354,7 +357,7 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
                   cardRefs.current[index] = node
                 }}
                 className="spin-shutter__card"
-                aria-label={`Ampliar foto: ${photo.alt}`}
+                aria-label={ui.zoom(photo.alt)}
                 aria-controls={previewId}
                 aria-expanded={expandedPhoto === photo}
                 style={{ '--k': index } as CSSProperties}
@@ -371,10 +374,10 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
       </div>
 
       <div className="spin-shutter__bar" inert={!!expandedPhoto}>
-        <button type="button" className="spin-shutter__nav" aria-label="Foto anterior" onClick={(event) => goBy(-1, event.timeStamp)}>
+        <button type="button" className="spin-shutter__nav" aria-label={ui.prev} onClick={(event) => goBy(-1, event.timeStamp)}>
           <Icon name="chevronLeft" size={22} />
         </button>
-        <button type="button" className="spin-shutter__nav" aria-label="Foto siguiente" onClick={(event) => goBy(1, event.timeStamp)}>
+        <button type="button" className="spin-shutter__nav" aria-label={ui.next} onClick={(event) => goBy(1, event.timeStamp)}>
           <Icon name="chevronRight" size={22} />
         </button>
       </div>
@@ -384,7 +387,7 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
         id={previewId}
         className="spin-shutter__preview"
         role="region"
-        aria-label={expandedPhoto ? `Foto ampliada: ${expandedPhoto.alt}` : 'Foto ampliada'}
+        aria-label={ui.expanded(expandedPhoto?.alt)}
         aria-hidden={!expandedPhoto}
         inert={!expandedPhoto}
         onTransitionEnd={(event) => {
@@ -393,7 +396,7 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
         }}
       >
         {expandedPhoto && <img className="spin-shutter__expanded-image" src={expandedPhoto.src} alt={expandedPhoto.alt} />}
-        <button ref={closeRef} type="button" className="spin-shutter__close" aria-label="Cerrar foto ampliada" onClick={closePhoto}>
+        <button ref={closeRef} type="button" className="spin-shutter__close" aria-label={ui.close} onClick={closePhoto}>
           <Icon name="close" size={26} />
         </button>
       </div>

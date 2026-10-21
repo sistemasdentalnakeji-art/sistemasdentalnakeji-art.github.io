@@ -1,3 +1,4 @@
+import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
 // ─────────────────────────────────────────────────────────────────────────────
 // SECCIÓN 1 DE SERVICIO: HERO con foto de borde a borde
 //
@@ -7,7 +8,9 @@
 // • Estilos → src/styles/pages/service.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { SCHEDULE_ANCHOR, SERVICES } from '@/config/routes'
+import { useLang } from '@/app/lang'
+import { UI } from '@/data/ui'
+import { routeOf, SCHEDULE_ANCHOR } from '@/config/routes'
 import { SITE } from '@/config/site'
 import type { ServiceContent } from '@/data/services'
 import { ExternalLink } from '@/components/ui/ExternalLink'
@@ -22,6 +25,9 @@ interface ServiceHeroProps {
 
 export function ServiceHero({ label, content }: ServiceHeroProps) {
   const { image } = content
+  const lang = useLang()
+  const services = routeOf('services', lang)
+  const ui = UI[lang].service
 
   return (
     <section className="service-hero" aria-labelledby="servicio-titulo">
@@ -44,10 +50,10 @@ export function ServiceHero({ label, content }: ServiceHeroProps) {
 
       <div className="container">
         <div className="service-hero__content">
-          <nav className="service-hero__crumbs" aria-label="Ruta de navegación">
+          <nav className="service-hero__crumbs" aria-label={ui.crumbs}>
             <ol>
               <li>
-                <a href={SERVICES.path}>{SERVICES.label}</a>
+                <a href={services.path}>{services.label}</a>
               </li>
               <li aria-current="page">{label}</li>
             </ol>
@@ -71,11 +77,10 @@ export function ServiceHero({ label, content }: ServiceHeroProps) {
           <div className="service-hero__actions">
             <ExternalLink className="btn btn--lg service-hero__whatsapp" href={SITE.social.whatsapp}>
               <Icon name="whatsapp" size={20} />
-              WhatsApp
+              {ui.whatsapp}
             </ExternalLink>
-            <a className="btn btn--lg service-hero__cta" href={`#${SCHEDULE_ANCHOR}`}>
-              Reservar cita
-              <Icon name="arrowRight" size={18} />
+            <a className="btn btn--lg service-hero__cta interactive-hover" href={`#${SCHEDULE_ANCHOR}`}>
+              <InteractiveHoverContent>{ui.book}</InteractiveHoverContent>
             </a>
           </div>
         </div>

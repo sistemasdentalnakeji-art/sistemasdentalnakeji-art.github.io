@@ -1,0 +1,300 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/en/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/servicios/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/beneficios/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/nuestras-promociones/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/convenios/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/insurance/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/implantes-dentales-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/all-in-4-implants-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/all-in-6-implants-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/coronas-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/carillasdentalesentijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/blanqueamiento-dental-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/limpieza-dental-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/endodoncias-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/ortodoncia-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/invisalign-in-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/odontologia-pediatrica-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/dentaduras-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/periodoncia-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/extracciones-dentales-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/contacto/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/nosotros/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/aviso-de-privacidad/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/terminos-y-condiciones/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/preguntas-frecuentes/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/odontologia-general-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/coronas-dentales-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/dentist-in-tijuana/",
+      "destination": "/en/",
+      "permanent": true,
+      "statusCode": 301
+    },
+    {
+      "source": "/dental-implants/",
+      "destination": "/en/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/smile-makeover/",
+      "destination": "/en/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/cosmetica-dental-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/diseno-de-sonrisa-en-tijuana/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/blog2/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/blog-3/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/blog-4/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/blog-pagina2/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/cuidado-dental/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/lo-que-no-sabias-del-cuidado-dental/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/galeria/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/nuestro-laboratorio/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/financiamiento/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/sucursales/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/testimoniales/",
+      "destination": "/es/",
+      "permanent": true,
+      "statusCode": 301
+    },
+    {
+      "source": "/nakeji-calle-nueve/",
+      "destination": "/es/",
+      "permanent": false,
+      "statusCode": 302
+    },
+    {
+      "source": "/inicio-clonado-211/",
+      "destination": "/es/",
+      "permanent": true,
+      "statusCode": 301
+    },
+    {
+      "source": "/carrito/",
+      "destination": "/es/",
+      "permanent": true,
+      "statusCode": 301
+    },
+    {
+      "source": "/mi-cuenta/",
+      "destination": "/es/",
+      "permanent": true,
+      "statusCode": 301
+    },
+    {
+      "source": "/finalizar-compra/",
+      "destination": "/es/",
+      "permanent": true,
+      "statusCode": 301
+    }
+  ]
+}

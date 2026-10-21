@@ -147,12 +147,21 @@
   stroke-opacity: 0.7;
 }
 
-/* Aseguranzas: arriba a la izquierda; los arcos van de la ola al borde izquierdo */
+/* Aseguranzas y convenios, escritorio (≥960 px): arriba a la izquierda, como estaba; los arcos van de la ola al borde izquierdo */
 .decor-rings--partners {
-  --cx: 36px;
-  --cy: 100px;
+  display: none;
+  --cx: 72px;
+  --cy: 150px;
   top: calc(var(--cy) - var(--rings-size) / 2);
   left: calc(var(--cx) - var(--rings-size) / 2);
+}
+
+/* Aseguranzas y convenios, celular y tableta: abajo a la derecha, detrás del botón de WhatsApp (ver partners.css) */
+.decor-rings--partners-cta {
+  top: calc(100% - 10px);
+  right: 36px;
+  z-index: -1;
+  transform: translate(50%, -50%);
 }
 
 /* Contacto (móvil y tableta): a la derecha de "Síguenos", centrado con la fila de redes */
@@ -170,11 +179,6 @@
   .decor-rings {
     --rings-scale: 0.7;
   }
-
-  .decor-rings--partners {
-    --cx: 52px;
-    --cy: 118px;
-  }
 }
 
 @media (min-width: 960px) {
@@ -183,8 +187,11 @@
   }
 
   .decor-rings--partners {
-    --cx: 72px;
-    --cy: 150px;
+    display: block;
+  }
+
+  .decor-rings--partners-cta {
+    display: none;
   }
 
   /* Contacto (escritorio): arriba a la derecha; los arcos van de la ola al borde derecho */

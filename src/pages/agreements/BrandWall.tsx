@@ -27,9 +27,11 @@ const isMouse = (event: PointerEvent) => event.pointerType === 'mouse'
 interface Props {
   companies: Partner[]
   summary: { title: string; text: string }
+  /** Nombre accesible del muro. */
+  label: string
 }
 
-export function BrandWall({ companies, summary }: Props) {
+export function BrandWall({ companies, summary, label }: Props) {
   const wallRef = useRef<HTMLUListElement>(null)
   const [visible, setVisible] = useState(false)
   const [auto, setAuto] = useState(0)
@@ -59,10 +61,9 @@ export function BrandWall({ companies, summary }: Props) {
   }, [visible, companies.length])
 
   return (
-    <ul ref={wallRef} className="brand-wall" role="list" aria-label="Empresas con convenio">
+    <ul ref={wallRef} className="brand-wall" role="list" aria-label={label}>
       <li className="brand-wall__summary">
         <h2 className="brand-wall__title">{summary.title}</h2>
-        <p className="brand-wall__summary-text">{summary.text}</p>
       </li>
       {companies.map((company, index) => (
         <li

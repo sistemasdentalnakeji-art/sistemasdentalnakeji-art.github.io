@@ -1,3 +1,4 @@
+import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
 // ─────────────────────────────────────────────────────────────────────────────
 // HEADER (barra superior de todas las páginas)
 //
@@ -11,9 +12,11 @@
 import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type PointerEvent as ReactPointerEvent } from 'react'
 import { flushSync } from 'react-dom'
 import { MAIN_NAV, type NavMenu } from '@/config/navigation'
-import { ariaCurrent, HOME, scheduleHref } from '@/config/routes'
+import { ariaCurrent, scheduleHref, type RouteDef } from '@/config/routes'
+import { UI } from '@/data/ui'
 import { cx } from '@/lib/cx'
 import { Icon } from '@/components/ui/Icon'
+import { LanguageSwitch } from '@/components/layout/LanguageSwitch'
 import { Logo } from '@/components/layout/Logo'
 import { SocialLinks } from '@/components/ui/SocialLinks'
 
@@ -24,11 +27,14 @@ const buttonId = (id: string) => `nav-${id}-boton`
 const panelId = (id: string) => `nav-${id}-submenu`
 
 interface HeaderProps {
-  currentPath: string
+  /** Página actual: marca el enlace activo, decide a dónde apunta "Agendar visita" y a dónde lleva el botón de idioma. */
+  route: RouteDef
 }
 
-export function Header({ currentPath }: HeaderProps) {
-  const isHome = currentPath === HOME.path
+export function Header({ route }: HeaderProps) {
+  const currentPath = route.path
+  const isHome = route.key === 'home'
+  const ui = UI[route.lang]
   const [menuOpen, setMenuOpen] = useState(false)
   const [openId, setOpenId] = useState<string | null>(null)
   const [scrolled, setScrolled] = useState(false)
@@ -106,9 +112,9 @@ export function Header({ currentPath }: HeaderProps) {
         <Logo isHome={isHome} />
 
         <div id={MENU_ID} className={cx('site-menu', menuOpen && 'is-open')}>
-          <nav className="site-nav" aria-label="Principal">
+          <nav className="site-nav" aria-label={ui.mainNav}>
             <ul className="nav-list">
-              {MAIN_NAV.map((item) =>
+              {MAIN_NAV[route.lang].map((item) =>
                 item.kind === 'menu' ? (
                   <NavDropdown
                     key={item.id}
@@ -133,14 +139,29 @@ export function Header({ currentPath }: HeaderProps) {
               )}
             </ul>
           </nav>
-          <SocialLinks className="site-menu__social" iconSize={22} />
+          {/* Pie del menú (móvil y tableta): Agendar, redes y bandera en una misma fila. En escritorio la fila no se ve. */}
+          <div className="site-menu__row">
+            <a
+              className="btn btn--primary btn--sm interactive-hover schedule-link--menu"
+              href={scheduleHref(route)}
+              onClick={() => setMenuOpen(false)}
+            >
+              <InteractiveHoverContent>
+                {ui.scheduleShort}
+              </InteractiveHoverContent>
+            </a>
+            <SocialLinks className="site-menu__social" iconSize={28} />
+            <LanguageSwitch route={route} className="lang-switch--menu" />
+          </div>
         </div>
 
         <div className="site-header__actions">
-          <a className="btn btn--primary btn--sm" href={scheduleHref(currentPath)} onClick={() => setMenuOpen(false)}>
-            <span>
-              Agendar<span className="hide-xs"> visita</span>
-            </span>
+          <LanguageSwitch route={route} className="lang-switch--bar" />
+          <a className="btn btn--primary btn--sm interactive-hover schedule-link--bar" href={scheduleHref(route)} onClick={() => setMenuOpen(false)}>
+            <InteractiveHoverContent>
+              {ui.scheduleShort}
+              <span className="hide-xs">{ui.scheduleRest}</span>
+            </InteractiveHoverContent>
           </a>
           <button
             ref={toggleRef}
@@ -154,7 +175,7 @@ export function Header({ currentPath }: HeaderProps) {
             }}
           >
             <Icon name={menuOpen ? 'close' : 'menu'} size={24} />
-            <span className="visually-hidden">Menú</span>
+            <span className="visually-hidden">{ui.menu}</span>
           </button>
         </div>
       </div>
@@ -273,12 +294,11 @@ function NavDropdown({ item, currentPath, open, onToggle, onOpen, onClose }: Nav
         </ul>
         {item.overview && (
           <a
-            className="dropdown__overview"
+            className="dropdown__overview btn btn--primary interactive-hover"
             href={item.overview.href}
             aria-current={ariaCurrent(item.overview.href, currentPath)}
           >
-            {item.overview.label}
-            <Icon name="arrowRight" size={18} />
+            <InteractiveHoverContent>{item.overview.label}</InteractiveHoverContent>
           </a>
         )}
       </div>

@@ -142,7 +142,7 @@
   list-style: none;
 }
 
-/* Cada enlace lleva una "marca": corta y gris en reposo; larga y azul en la sección activa (o con el cursor). */
+/* Cada enlace lleva una "marca": corta y gris en reposo; larga y amarilla en la sección activa. */
 .toc__link {
   display: flex;
   align-items: flex-start;
@@ -184,8 +184,7 @@
     background-color 0.3s var(--ease);
 }
 
-.toc__link:hover,
-.toc__link[aria-current] {
+.toc__link:hover {
   color: var(--color-white);
 }
 
@@ -194,12 +193,13 @@
 }
 
 .toc__link[aria-current] {
+  color: var(--color-gold);
   font-weight: 700;
 }
 
 .toc__link[aria-current] .toc__tick {
   width: 26px;
-  background: var(--color-brand-light);
+  background: var(--color-gold);
 }
 
 @media (forced-colors: active) {
@@ -313,7 +313,8 @@
     /* Todas igual de altas: así la de encima tapa por completo a la de atrás. */
     height: var(--card-h);
     border-radius: 32px;
-    box-shadow: 0 -12px 40px -16px rgba(42, 66, 105, 0.28);
+    /* Sombra solo hacia arriba y casi sin salir a los lados: la ventana con scroll la corta en seco y dejaba un rastro gris cuadrado. */
+    box-shadow: 0 -10px 16px -12px rgba(42, 66, 105, 0.28);
     transform-origin: 50% 0;
     view-timeline-name: var(--tl);
   }

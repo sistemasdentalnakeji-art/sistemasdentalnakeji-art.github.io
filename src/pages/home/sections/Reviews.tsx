@@ -6,7 +6,9 @@
 // • Estilos → src/styles/pages/home/reviews.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { useLang } from '@/app/lang'
 import { REVIEWS, REVIEWS_SUMMARY, type Review } from '@/data/reviews'
+import { UI } from '@/data/ui'
 import { REVIEWS_SECTION } from '@/data/home'
 import { Carousel } from '@/components/ui/Carousel'
 import { Band } from '@/components/decor/Band'
@@ -52,6 +54,9 @@ function ReviewCard({ review }: { review: Review }) {
 }
 
 export function Reviews() {
+  const lang = useLang()
+  const ui = UI[lang].reviews
+  const section = REVIEWS_SECTION[lang]
   const { rating, total, profileUrl } = REVIEWS_SUMMARY
   return (
     <Band tone="tint" labelledBy="resenas-titulo" waveTop="plain">
@@ -59,29 +64,29 @@ export function Reviews() {
         <header className="section-head">
           <p className="pill">
             <Icon name="star" size={16} />
-            {REVIEWS_SECTION.eyebrow}
+            {section.eyebrow}
           </p>
           <h2 id="resenas-titulo" className="section-title section-title--spaced">
-            {REVIEWS_SECTION.title}
+            {section.title}
           </h2>
-          <p className="section-text">{REVIEWS_SECTION.text}</p>
+          <p className="section-text">{section.text}</p>
         </header>
 
         <div className="reviews">
-          <aside className="card reviews-summary" aria-label="Resumen de calificaciones">
+          <aside className="card reviews-summary" aria-label={ui.summary}>
             <p className="reviews-summary__score">{rating === null ? '–' : rating.toFixed(1)}</p>
             <Stars rating={rating} size={22} />
             <p className="card-text">
-              {total === null ? 'Calificación en Google' : `Basado en ${total} reseñas de Google`}
+              {total === null ? ui.pending : ui.based(total)}
             </p>
             <ExternalLink className="btn btn--ghost" href={profileUrl}>
-              {REVIEWS_SECTION.cta}
+              {section.cta}
             </ExternalLink>
           </aside>
 
           <Carousel
-            label="Reseñas de pacientes"
-            items={REVIEWS.map((review) => (
+            label={ui.carousel}
+            items={REVIEWS[lang].map((review) => (
               <ReviewCard review={review} />
             ))}
           />

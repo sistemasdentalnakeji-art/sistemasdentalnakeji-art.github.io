@@ -4,7 +4,7 @@
 // PENDIENTE: confirmar días y horarios reales con la clínica. Deben coincidir
 // con CONFIG en integrations/google-calendar/Code.gs, que es quien valida al final.
 
-import { MORE_SERVICE_ROUTES, SERVICE_ROUTES } from '@/config/routes'
+import { ALL_SERVICE_KEYS, routeOf } from '@/config/routes'
 
 /**
  * Opciones del campo "Servicio de interés", en el orden en que se muestran (cambia el orden aquí).
@@ -29,8 +29,10 @@ const SERVICES = [
 ]
 
 // Las páginas de servicio preseleccionan su servicio por nombre: si falta en la lista, falla al compilar.
-for (const route of [...SERVICE_ROUTES, ...MORE_SERVICE_ROUTES]) {
-  if (!SERVICES.includes(route.label)) throw new Error(`Falta "${route.label}" en SERVICES de src/config/booking.ts`)
+// Se compara con el nombre en español (`es`): es el valor fijo que guarda y valida Code.gs; no se traduce.
+for (const key of ALL_SERVICE_KEYS) {
+  const { label } = routeOf(key, 'es')
+  if (!SERVICES.includes(label)) throw new Error(`Falta "${label}" en SERVICES de src/config/booking.ts`)
 }
 
 export const BOOKING = {
@@ -43,7 +45,10 @@ export const BOOKING = {
   /** Días sin atención: 0 = domingo … 6 = sábado. */
   closedWeekdays: [0] as number[],
   /** Horarios que puede elegir el paciente (formato 24 h). */
-  slots: ['09:00', '10:00', '11:00', '12:00', '13:00', '15:00', '16:00', '17:00'],
+  slots: [
+    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
+    '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
+  ],
   /** Opciones del campo "Servicio de interés". */
   services: SERVICES,
 }

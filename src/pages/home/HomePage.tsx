@@ -17,7 +17,7 @@ import { ContactLocation } from '@/pages/home/sections/ContactLocation'
 export function HomePage() {
   return (
     <>
-      {/* Primera pantalla con la aurora */}
+      {/* Primera pantalla con las fibras de luz */}
       <Hero />
       {/* Tres mensajes animados con el scroll */}
       <CareStory />

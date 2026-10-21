@@ -10,40 +10,43 @@
 
 import { AGREEMENT_COMPANIES, AGREEMENT_JOIN, AGREEMENT_SUMMARY, AGREEMENTS_INTRO, BENEFITS_BACK, PAGE_CTA } from '@/data/benefitPages'
 import { PARTNERS_CTA } from '@/data/partners'
-import { BENEFITS } from '@/config/routes'
+import { useLang } from '@/app/lang'
+import { routeOf } from '@/config/routes'
 import { Band } from '@/components/decor/Band'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon } from '@/components/ui/Icon'
 import { BrandWall } from '@/pages/agreements/BrandWall'
 
 export function AgreementsPage() {
+  const lang = useLang()
+  const benefits = routeOf('benefits', lang)
   return (
     <Band tone="white" className="agreements" labelledBy="convenios-titulo">
       <div className="container">
-        <a className="page-back" href={BENEFITS.path}>
+        <a className="page-back" href={benefits.path}>
           <Icon name="chevronLeft" size={16} />
-          {BENEFITS_BACK}
+          {BENEFITS_BACK[lang]}
         </a>
         <header className="agreements__head">
-          <p className="page-eyebrow">{AGREEMENTS_INTRO.eyebrow}</p>
+          <p className="page-eyebrow pill-label">{AGREEMENTS_INTRO[lang].eyebrow}</p>
           <h1 id="convenios-titulo" className="page-title">
-            {AGREEMENTS_INTRO.title}
+            {AGREEMENTS_INTRO[lang].title}
           </h1>
-          <p className="page-lead">{AGREEMENTS_INTRO.lead}</p>
         </header>
 
-        <BrandWall companies={AGREEMENT_COMPANIES} summary={AGREEMENT_SUMMARY} />
-
+        {/* Tarjeta para empresas sin convenio: arriba, entre el título y los logos (sustituye al subtítulo). */}
         <div className="agreements__join">
           <div>
-            <h2 className="agreements__join-title">{AGREEMENT_JOIN.title}</h2>
-            <p className="agreements__join-text">{AGREEMENT_JOIN.text}</p>
+            <h2 className="agreements__join-title">{AGREEMENT_JOIN[lang].title}</h2>
+            <p className="agreements__join-text">{AGREEMENT_JOIN[lang].text}</p>
           </div>
           <ExternalLink className="btn btn--secondary" href={PARTNERS_CTA.href}>
             <Icon name="whatsapp" size={20} />
-            {PAGE_CTA}
+            {PAGE_CTA[lang]}
           </ExternalLink>
         </div>
+
+        <BrandWall companies={AGREEMENT_COMPANIES} summary={AGREEMENT_SUMMARY[lang]} label={AGREEMENTS_INTRO[lang].title} />
       </div>
     </Band>
   )

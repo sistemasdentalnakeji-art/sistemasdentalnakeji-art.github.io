@@ -1,22 +1,84 @@
 /* ==========================================================================
    Página /nosotros/ — historia (línea de tiempo), misión y visión, y equipo por áreas.
    Línea de tiempo inspirada en "Growth Story Timeline" y tarjetas del equipo en "Flip Card" (21st.dev, código propio).
-   El plasma de fondo es el compartido (page-plasma.css). Los estilos base son el estado final: sin soporte de
-   animation-timeline, con "reducir movimiento" o con "Pausar animaciones" todo se ve completo y quieto.
+   El fondo es oscuro, con las fibras de luz de GhostFibers (ghost-fibers.css): los textos que van directo sobre él son claros
+   y las tarjetas usan vidrio azul translúcido para conservar profundidad sin competir con las fibras. Los estilos base son el estado final: sin soporte de animation-timeline,
+   con "reducir movimiento" o con "Pausar animaciones" todo se ve completo y quieto.
    ========================================================================== */
+.about-page {
+  --text-on-dark: rgba(255, 255, 255, 0.78);
+  --line-on-dark: rgba(255, 255, 255, 0.16);
+  --about-card: linear-gradient(145deg, rgba(24, 49, 84, 0.92), rgba(9, 24, 46, 0.88));
+  --about-card-soft: linear-gradient(145deg, rgba(29, 61, 101, 0.9), rgba(12, 30, 55, 0.88));
+  --about-card-border: rgba(123, 195, 235, 0.32);
+  --about-card-text: rgba(239, 247, 255, 0.8);
+  --about-card-shadow: 0 22px 56px -28px rgba(0, 8, 24, 0.82), inset 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* El fondo conserva su presencia, pero deja de competir con las tarjetas y los retratos. */
+.about-page .fibers-bg__view {
+  opacity: 0.76;
+  filter: saturate(0.82) contrast(0.92);
+}
+
+/* El foco del teclado, en blanco como en el hero y el footer (el azul de marca no se ve sobre el fondo oscuro). */
+.about-page :focus-visible {
+  outline-color: var(--color-white);
+  box-shadow: none;
+}
+
+/* Cabecera: eyebrow en celeste, título en blanco y la frase en blanco atenuado (contraste sobre las fibras). */
+.about-page header > .page-eyebrow {
+  color: var(--color-brand-light);
+}
+
+.about-page header > .page-title {
+  color: var(--color-white);
+}
+
+.about-page header > .page-lead {
+  color: var(--text-on-dark);
+}
+
 .about-section {
   margin-top: clamp(48px, 7vw, 96px);
 }
 
 .about-section > .section-title {
+  color: var(--color-white);
   font-size: clamp(2.25rem, 1.75rem + 2vw, 3.25rem);
 }
 
-/* --color-text (no el gris de .section-text): va directo sobre el plasma y el gris bajaría de 4.5:1. */
+/* Soft Blur In (SmoothUI): desenfoque, ascenso y aparición escalonada por letra. */
+.soft-blur-in {
+  display: inline-block;
+}
+
+.soft-blur-in__character {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(12px);
+  white-space: pre;
+  transform: translateY(16px);
+}
+
+.soft-blur-in[data-visible] .soft-blur-in__character {
+  animation: soft-blur-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--character) * 25ms);
+}
+
+@keyframes soft-blur-in {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
 .about-lead {
   max-width: 60ch;
   margin-bottom: clamp(24px, 4vw, 44px);
-  color: var(--color-text);
+  color: var(--text-on-dark);
   font-size: clamp(1.125rem, 1rem + 0.35vw, 1.25rem);
 }
 
@@ -27,12 +89,12 @@
   position: relative;
   display: grid;
   gap: clamp(20px, 3vw, 36px);
-  margin: 0;
+  margin: clamp(24px, 4vw, 44px) 0 0;
   padding: 0;
   list-style: none;
 }
 
-/* Pista gris y relleno de marca (el relleno crece con el scroll). */
+/* Pista tenue y relleno de marca (el relleno crece con el scroll). */
 .timeline::before,
 .timeline::after {
   content: '';
@@ -42,7 +104,7 @@
   left: calc(var(--line-x) - 1.5px);
   width: 3px;
   border-radius: 3px;
-  background: var(--color-fog);
+  background: var(--line-on-dark);
 }
 
 .timeline::after {
@@ -70,29 +132,26 @@
 
 .timeline__card {
   position: relative;
-  padding: clamp(20px, 3vw, 30px);
-  border: 1px solid var(--color-fog);
+  padding: clamp(20px, 3vw, 36px);
+  border: 1px solid var(--about-card-border);
   border-radius: var(--radius-card);
-  background: var(--color-white);
-  box-shadow: var(--shadow);
+  background: var(--about-card);
+  box-shadow: var(--about-card-shadow);
+  backdrop-filter: blur(18px) saturate(0.78);
 }
 
 .timeline__title {
   margin-bottom: 8px;
-  color: var(--color-ink);
-  font-size: clamp(1.5rem, 1.3rem + 0.8vw, 1.875rem);
+  color: var(--color-gold);
+  font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2.125rem);
   line-height: 1.2;
 }
 
 .timeline__text {
   margin: 0;
-  color: var(--color-text);
-  font-size: 1.0625rem;
+  color: var(--about-card-text);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
   line-height: 1.6;
-}
-
-.timeline__card .page-eyebrow {
-  font-size: 0.9375rem;
 }
 
 /* Trazo de marca sobre el borde de la tarjeta: se dibuja con el scroll (pathLength=1 en el <rect>). Estado base: completo. */
@@ -126,7 +185,7 @@
   margin-top: 18px;
   aspect-ratio: 16 / 9;
   border-radius: 18px;
-  background: var(--color-sky);
+  background: rgba(123, 195, 235, 0.08);
 }
 
 .timeline__frame {
@@ -134,6 +193,78 @@
   inset: 0;
   overflow: hidden;
   border-radius: inherit;
+}
+
+.timeline__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Solo la imagen (sin marco ni fondo a los lados), centrada y con los botones encima. */
+.timeline-carousel {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin: 18px auto 0;
+}
+
+.timeline-carousel__viewport {
+  position: relative;
+  height: clamp(320px, 52vw, 520px);
+  aspect-ratio: 3 / 4;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.timeline-carousel__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.65s var(--ease);
+}
+
+.timeline-carousel__image.is-active {
+  opacity: 1;
+}
+
+.timeline-carousel__button {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(7, 22, 43, 0.72);
+  color: var(--color-white);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.timeline-carousel__button:hover {
+  background: var(--color-gold);
+  color: var(--color-night);
+}
+
+.timeline-carousel__button:focus-visible {
+  outline-offset: 3px;
+}
+
+.timeline-carousel__button--prev {
+  left: 12px;
+}
+
+.timeline-carousel__button--next {
+  right: 12px;
 }
 
 .timeline__photo::before,
@@ -146,9 +277,36 @@
   animation-play-state: running;
 }
 
+/* Respiración más suave que la del .siri general (escala 1.08): aquí el resplandor llegaba al borde de la tarjeta. */
+.timeline__photo.siri::before {
+  animation:
+    siri-spin 3.4s linear infinite reverse,
+    timeline-breathe 1.6s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+
+.timeline__card:hover .timeline__photo.siri::before {
+  animation-play-state: running;
+}
+
+@keyframes timeline-breathe {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
+
 @media (min-width: 900px) {
   .timeline {
     --line-x: 50%;
+    left: 50%;
+    width: min(1500px, calc(100vw - 2 * var(--gutter)));
+    transform: translateX(-50%);
   }
 
   .timeline__item {
@@ -190,90 +348,104 @@
 
 .purpose__card {
   isolation: isolate;
+  text-align: center;
   padding: clamp(26px, 4vw, 44px);
-  border: 1px solid var(--color-fog);
+  border: 1px solid var(--about-card-border);
   border-radius: var(--radius-card);
-  background: var(--color-white);
-  box-shadow: var(--shadow);
+  background: var(--about-card-soft);
+  box-shadow: var(--about-card-shadow);
+  backdrop-filter: blur(18px) saturate(0.78);
 }
 
-/* Visión en azul noche (el mismo degradado del orbe de marca). */
+/* Visión en azul noche (el mismo degradado del orbe de marca); el borde claro la separa del fondo oscuro. */
 .purpose__card--vision {
-  border-color: transparent;
-  background: radial-gradient(circle at 85% 0%, #18305a, var(--color-night) 70%);
+  background: radial-gradient(circle at 85% 0%, rgba(58, 112, 176, 0.42), transparent 48%), var(--about-card);
 }
 
 .purpose__icon {
-  margin-bottom: 18px;
+  margin: 0 auto 18px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-white);
 }
 
 .purpose__title {
   margin-bottom: 10px;
-  color: var(--color-ink);
+  color: var(--color-gold);
   font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem);
   letter-spacing: -0.02em;
 }
 
 .purpose__text {
   margin: 0;
-  color: var(--color-text);
+  color: var(--about-card-text);
   font-size: var(--text-body-lg);
 }
 
-.purpose__card--vision .purpose__title,
-.purpose__card--vision .purpose__text {
-  color: var(--color-white);
-}
-
-/* ---- Valores (bajo Misión y Visión): cuatro tarjetas claras con el mismo borde y sombra que las de misión y visión. ---- */
+/* ---- Valores: superficies de vidrio azul, en el mismo plano visual que misión, visión y la historia. ---- */
 .values {
   display: grid;
-  gap: clamp(16px, 2vw, 24px);
-  margin: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 24px);
+  margin: clamp(24px, 4vw, 44px) 0 0;
   padding: 0;
   list-style: none;
 }
 
-@media (min-width: 700px) {
-  .values {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+/* Celular: dos columnas para que las tarjetas queden casi cuadradas; la quinta va sola, centrada. */
+.values .value-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: calc(50% - 6px);
 }
 
 @media (min-width: 1000px) {
   .values {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(10px, 1.5vw, 20px);
+  }
+
+  .values .value-card {
+    padding-inline: clamp(12px, 1.5vw, 20px);
+  }
+
+  .values .value-card:last-child:nth-child(odd) {
+    grid-column: auto;
+    justify-self: stretch;
+    width: auto;
   }
 }
 
 .value-card {
+  text-align: center;
   padding: clamp(22px, 3vw, 32px);
-  border: 1px solid var(--color-fog);
+  border: 1px solid var(--about-card-border);
   border-radius: var(--radius-card);
-  background: var(--color-white);
-  box-shadow: var(--shadow);
+  background: var(--about-card);
+  box-shadow: var(--about-card-shadow);
+  backdrop-filter: blur(16px) saturate(0.78);
 }
 
 .value-card__icon {
-  margin-bottom: 14px;
+  margin: 0 auto 14px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-white);
 }
 
 .value-card__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   margin-bottom: 8px;
-  color: var(--color-ink);
-  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  color: var(--color-gold);
+  font-size: clamp(1.0625rem, 0.95rem + 0.35vw, 1.375rem);
   letter-spacing: -0.02em;
-}
-
-.value-card__text {
-  margin: 0;
-  color: var(--color-text);
-  font-size: var(--text-body);
+  text-align: center;
+  text-wrap: balance;
 }
 
 /* ---- Equipo (pages/about/TeamSection.tsx) ---- */
-/* Todas las tarjetas miden lo mismo: --card-w sale del ancho de este contenedor (cqw), así las áreas de una persona
-   (Laboratorio, Infraestructura) igualan a las de Doctores. 2 por fila en celular y 3 desde 1000 px. */
+/* --card-w sale del ancho de este contenedor (cqw): dos tarjetas por fila en celular y tres en Doctores en escritorio. */
 .team-areas {
   --card-gap: clamp(16px, 2vw, 24px);
   --card-w: calc((100cqw - var(--card-gap)) / 2);
@@ -288,8 +460,7 @@
   }
 }
 
-/* Desde tableta: las tres primeras áreas ocupan todo el ancho; Laboratorio e Infraestructura (una persona cada una)
-   van en la misma fila, cada una en su mitad y con encabezado y tarjeta centrados. */
+/* Desde tableta: las tres primeras áreas ocupan todo el ancho; Laboratorio e Infraestructura comparten la última fila. */
 @media (min-width: 760px) {
   .team-areas {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -303,6 +474,15 @@
     justify-content: center;
     text-align: center;
   }
+
+  .team-area:nth-child(n + 4) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .team-area:nth-child(n + 4) .team-grid {
+    margin-top: auto;
+  }
 }
 
 .team-area__head {
@@ -312,7 +492,7 @@
   min-height: 80px;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-fog);
+  border-bottom: 1px solid var(--line-on-dark);
 }
 
 .team-area__icon {
@@ -322,21 +502,19 @@
   width: 46px;
   height: 46px;
   border-radius: 14px;
-  background: var(--color-sky);
-  color: var(--color-ink);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-white);
+}
+
+/* En los iconos el efecto vive solo en el contorno; el centro conserva el fondo blanco al 10 %. */
+.about-page :is(.purpose__icon, .value-card__icon, .team-area__icon).siri::before {
+  display: none;
 }
 
 .team-area__title {
-  color: var(--color-ink);
+  color: var(--color-gold);
   font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
   line-height: 1.2;
-}
-
-.team-area__text {
-  margin: 2px 0 0;
-  color: var(--color-text);
-  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.125rem);
-  line-height: 1.5;
 }
 
 /* Integrantes: dos por fila en celular y tres en escritorio. Un área con una sola persona lleva su tarjeta centrada. */
@@ -351,7 +529,7 @@
 }
 
 /* Un área con una sola persona (Laboratorio, Infraestructura): su tarjeta mide igual que las demás. */
-.team-area:nth-child(n + 4) .team-grid {
+.team-area:is(:first-child, :nth-child(n + 4)) .team-grid {
   grid-template-columns: var(--card-w);
 }
 
@@ -360,11 +538,26 @@
     grid-template-columns: repeat(3, var(--card-w));
   }
 
-  /* Áreas de 4 personas (Gerencia, Administración): de 2 en 2, centradas. */
-  .team-area:nth-child(-n + 3) .team-grid--pairs {
-    grid-template-columns: repeat(2, var(--card-w));
-    justify-content: center;
+  /* Gerencia: una sola tarjeta (Abril), centrada. */
+  .team-area:first-child .team-grid {
+    grid-template-columns: var(--card-w);
   }
+
+  .team-area:nth-child(2) .member:last-child {
+    grid-column: 3;
+  }
+
+  /* Administración sigue las mismas dos columnas visuales que Laboratorio e Infraestructura. */
+  .team-area:nth-child(3) .team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(20px, 4vw, 48px);
+  }
+
+  .team-area:nth-child(3) .member {
+    width: var(--card-w);
+    justify-self: center;
+  }
+
 }
 
 /* Tarjeta que voltea al hacer clic o tocarla. El <li> da la perspectiva; el botón gira con sus dos caras. */
@@ -407,9 +600,11 @@
   -webkit-backface-visibility: hidden;
 }
 
-/* Frente: la foto es transparente (ahí se ve la aurora recortada) y solo la franja de la profesión y el nombre es clara. */
+/* Frente: la fotografía arriba y la identidad en una franja inferior. */
 .member__face--front {
-  box-shadow: 0 22px 44px -20px rgba(42, 66, 105, 0.55);
+  border: 1px solid var(--about-card-border);
+  background: var(--color-night);
+  box-shadow: var(--about-card-shadow);
 }
 
 /* Ventana de la foto: detrás va su propio lienzo con la aurora del hero (shaderPool); el azul del hero queda de respaldo. */
@@ -420,7 +615,7 @@
   place-items: center;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  background: #0a1529;
+  background: var(--color-night);
   color: rgba(255, 255, 255, 0.8); /* icono de los lugares sin foto, sobre la aurora */
 }
 
@@ -438,26 +633,42 @@
   display: grid;
   flex: 1;
   align-content: center;
-  gap: 4px;
-  padding: 16px 18px 20px;
-  background: linear-gradient(180deg, var(--color-white), var(--color-sky));
+  gap: 5px;
+  min-height: 104px;
+  padding: clamp(13px, 1.6vw, 18px);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(135deg, rgba(24, 49, 84, 0.92), rgba(10, 21, 41, 0.8));
+  text-align: left;
 }
 
-/* Profesión arriba del nombre ("Doctora", "Licenciada"…). */
+.member__text::before {
+  content: '';
+  width: 34px;
+  height: 2px;
+  margin-bottom: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--color-gold);
+}
+
+/* Título abreviado ("Dra.", "Lic."…), en la misma línea que el nombre y en el azul de marca. */
 .member__title {
-  color: var(--color-brand);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  color: var(--color-gold);
 }
 
 .member__name {
-  color: var(--color-ink);
-  font-family: var(--font-display);
-  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
-  font-weight: 700;
-  line-height: 1.2;
+  color: var(--color-white);
+  font-size: clamp(0.9rem, 0.76rem + 0.65vw, 1.25rem);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.member__specialty {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-body);
+  font-size: clamp(0.68rem, 0.59rem + 0.38vw, 0.88rem);
+  font-weight: 400;
+  line-height: 1.35;
+  text-wrap: pretty;
 }
 
 /* Reverso: el orbe de marca del footer con el nombre, sobre sus propios hilos de luz (lienzo animado por shaderPool).
@@ -469,6 +680,8 @@
   justify-content: center;
   gap: 22px;
   background: radial-gradient(circle at 50% 35%, #18305a, var(--color-night) 70%);
+  border: 1px solid var(--about-card-border);
+  box-shadow: var(--about-card-shadow);
   transform: rotateY(180deg);
 }
 
@@ -487,6 +700,15 @@
   opacity: 1;
 }
 
+/* Menos movimiento simultáneo: los lienzos acompañan, sin dominar el retrato ni el reverso. */
+.member__face--front .member__canvas.is-ready {
+  opacity: 0.72;
+}
+
+.member__face--back .member__canvas.is-ready {
+  opacity: 0.68;
+}
+
 .member__brand {
   color: var(--color-white);
   font-family: var(--font-display);
@@ -494,6 +716,29 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1;
+}
+
+.member__back-info {
+  display: grid;
+  gap: 5px;
+  max-width: 82%;
+  color: var(--color-white);
+  text-align: center;
+}
+
+.member__back-name {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 0.85rem + 0.5vw, 1.2rem);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.member__back-specialty {
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-body);
+  font-size: clamp(0.7rem, 0.64rem + 0.3vw, 0.84rem);
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 /* El orbe del reverso solo gira mientras se ve (las tarjetas de frente lo tienen escondido). */
@@ -510,6 +755,18 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .soft-blur-in__character {
+    animation: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+
+  .timeline-carousel__image,
+  .timeline-carousel__button {
+    transition: none;
+  }
+
   .member__flip {
     transition: none;
   }
@@ -612,4 +869,16 @@ html[data-motion='paused'] .timeline__reveal {
 
 html[data-motion='paused'] .member__flip {
   transition: none;
+}
+
+html[data-motion='paused'] .timeline-carousel__image,
+html[data-motion='paused'] .timeline-carousel__button {
+  transition: none;
+}
+
+html[data-motion='paused'] .soft-blur-in__character {
+  animation: none;
+  opacity: 1;
+  filter: none;
+  transform: none;
 }
