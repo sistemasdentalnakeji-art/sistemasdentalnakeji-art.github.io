@@ -5,7 +5,7 @@ export const SITE = {
   name: 'Dental Nakeji',
   legalName: 'Clínica Dental Nakeji',
   /** Dominio de producción confirmado (URL canónica). */
-  origin: 'https://nakejidental.com',
+  origin: 'https://www.nakejidental.com',
   logo: {
     src: '/brand/logo-nakeji-azul-768.webp',
     full: '/brand/logo-nakeji-azul.webp',
