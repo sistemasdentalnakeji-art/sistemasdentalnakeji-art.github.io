@@ -135,12 +135,10 @@
   pointer-events: none;
 }
 
-/* Celular: sin hilo, diente ni destellos (solo se animan los tres mensajes). Se oculta con CSS para que el HTML prerenderizado
-   y la hidratación no cambien. */
+/* Celular: hilo y diente activos (usa THREAD_JOINTS_NARROW). Tamaño de punta reducido en celular. */
 @media (max-width: 767.98px) {
-  .story__thread,
   .story__tip {
-    display: none;
+    width: clamp(48px, 12vw, 64px);
   }
 }
 
