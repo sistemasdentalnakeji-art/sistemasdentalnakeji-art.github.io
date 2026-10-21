@@ -60,6 +60,17 @@ function CatalogCard({ service }: { service: CatalogService }) {
  */
 function goToCategory(event: MouseEvent<HTMLAnchorElement>, index: number) {
   const deck = document.querySelector<HTMLElement>('.catalog-groups')
+  // Celular con cartas apiladas (sticky): el ancla nativa no las alcanza, así que se calcula dónde empieza la carta en el flujo
+  // (suma de las anteriores) y se deja justo bajo el encabezado.
+  if (deck && deck.dataset.stack !== undefined) {
+    event.preventDefault()
+    const cards = [...deck.querySelectorAll<HTMLElement>('.catalog-group')]
+    const before = cards.slice(0, index).reduce((sum, card) => sum + card.offsetHeight + parseFloat(getComputedStyle(card).marginTop), 0)
+    const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 75
+    window.scrollTo({ top: deck.getBoundingClientRect().top + window.scrollY + before - header - 12, behavior: 'smooth' })
+    document.getElementById(`${CATALOG_GROUPS.en[index].id}-titulo`)?.focus({ preventScroll: true })
+    return
+  }
   const max = deck ? deck.scrollHeight - deck.clientHeight : 0
   if (!deck || max <= 1) return
   event.preventDefault()
@@ -87,6 +98,53 @@ export function ServicesPage() {
     deck.addEventListener('scroll', onScroll, { passive: true })
     return () => deck.removeEventListener('scroll', onScroll)
   }, [])
+
+  // Celular: las categorías se apilan con el scroll de la página (misma idea que la ventana de escritorio). Una carta más alta que la
+  // pantalla no puede fijarse por arriba (quedaría cortada), así que se fija por abajo: top = min(posición en la pila, pantalla - alto).
+  // Aquí se mide cada carta y se escriben sus variables (--top, --span, --cut, --scale-m); el CSS hace el resto (services-index.css).
+  useEffect(() => {
+    const deck = document.querySelector<HTMLElement>('.catalog-groups')
+    if (!deck) return
+    const cards = [...deck.querySelectorAll<HTMLElement>('.catalog-group')]
+    const media = window.matchMedia('(max-width: 899.98px) and (prefers-reduced-motion: no-preference)')
+    const probe = document.createElement('div') // 100svh en píxeles, estable aunque la barra del navegador suba o baje
+    probe.style.cssText = 'position:fixed;visibility:hidden;pointer-events:none;height:100svh'
+    document.body.append(probe)
+    const STEP = 14 // desfase entre cartas apiladas
+    const GAP = 12 // aire bajo una carta alta fijada por abajo
+    const layout = () => {
+      if (!media.matches) {
+        delete deck.dataset.stack
+        return
+      }
+      const vh = probe.offsetHeight
+      const stack = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 75) + 12
+      const heights = cards.map((card) => card.offsetHeight)
+      const tops = heights.map((h, i) => Math.min(stack + i * STEP, vh - h - GAP))
+      cards.forEach((card, i) => {
+        const scale = 1 - (cards.length - i) * 0.03
+        card.style.setProperty('--scale-m', String(scale))
+        card.style.setProperty('--top', `${tops[i]}px`)
+        if (i === cards.length - 1) return
+        // Recorrido de la carta siguiente hasta quedar fija, y recorte de abajo para que esta no asome bajo una carta siguiente más baja.
+        card.style.setProperty('--span', `${vh - tops[i + 1]}px`)
+        const cut = heights[i] - (tops[i + 1] + heights[i + 1] - tops[i] - 6) / scale
+        card.style.setProperty('--cut', `${Math.max(0, cut)}px`)
+      })
+      deck.dataset.stack = ''
+    }
+    layout()
+    const observer = new ResizeObserver(layout)
+    cards.forEach((card) => observer.observe(card))
+    media.addEventListener('change', layout)
+    window.addEventListener('resize', layout)
+    return () => {
+      observer.disconnect()
+      media.removeEventListener('change', layout)
+      window.removeEventListener('resize', layout)
+      probe.remove()
+    }
+  }, [lang])
 
   return (
     <Band

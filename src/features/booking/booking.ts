@@ -91,17 +91,18 @@ export const formatDate = (iso: string, lang: Lang) =>
 
 // --- Validación ---
 
+/** Nombre y apellido: solo letras, al menos 2, con espacios entre palabras. */
+export const NAME_PATTERN = /^\p{L}{2,}(?: \p{L}+)*$/u
+/** Teléfono: solo dígitos, con un "+" opcional al inicio; 10 a 15 dígitos. */
+export const PHONE_PATTERN = /^\+?\d{10,15}$/
+
 export function validate(fields: BookingFields, today: string, lang: Lang): FieldErrors {
   const errors: FieldErrors = {}
   const text = FORM_TEXT[lang].validation
 
-  if (fields.firstName.length < 2) errors.firstName = text.firstName
-  if (fields.lastName.length < 2) errors.lastName = text.lastName
-
-  const digits = fields.phone.replace(/\D/g, '')
-  if (digits.length < 10 || digits.length > 15 || !/^[+\d\s()-]+$/.test(fields.phone.trim())) {
-    errors.phone = text.phone
-  }
+  if (!NAME_PATTERN.test(fields.firstName.trim())) errors.firstName = text.firstName
+  if (!NAME_PATTERN.test(fields.lastName.trim())) errors.lastName = text.lastName
+  if (!PHONE_PATTERN.test(fields.phone.trim())) errors.phone = text.phone
 
   if (fields.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(fields.email)) errors.email = text.email
 

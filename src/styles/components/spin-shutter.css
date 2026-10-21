@@ -101,18 +101,25 @@
 
 .spin-shutter__ring {
   --spin: 0deg;
-  --w: min(15cqw, 180px); /* lado de cada foto */
-  --radius: calc(var(--w) * var(--n) * 0.19); /* radio para que n fotos queden casi pegadas */
+  --w: min(21cqw, 250px); /* ancho de cada foto (apaisada 4:3: el alto es --w x 0.75) */
+  --radius: calc(var(--w) * var(--n) * 0.155); /* radio para que n fotos queden casi pegadas */
   position: absolute;
   top: 50%;
   left: 50%;
   width: var(--w);
-  height: var(--w);
-  margin: calc(var(--w) / -2) 0 0 calc(var(--w) / -2);
+  height: calc(var(--w) * 0.75);
+  margin: calc(var(--w) * -0.375) 0 0 calc(var(--w) / -2);
   /* --tilt positivo = cámara por encima del anillo: el arco cercano queda abajo y el lejano arriba (por eso rotateX negativo). */
   transform: rotateZ(var(--roll)) rotateX(calc(var(--tilt) * -1)) rotateY(var(--spin));
   transform-style: preserve-3d;
   will-change: transform;
+}
+
+/* Celular: el panel es angosto y las fotos de 21 % quedaban diminutas; más grandes aunque la órbita asome por los lados. */
+@media (max-width: 699.98px) {
+  .spin-shutter__ring {
+    --w: 24cqw;
+  }
 }
 
 /* Cada foto: se coloca en su lugar del anillo y luego se deshacen los giros del anillo (en orden inverso) para mirar de frente. */

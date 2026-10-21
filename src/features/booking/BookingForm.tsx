@@ -45,8 +45,7 @@ type FormState =
   | { status: 'idle' }
   | { status: 'sending' }
   | { status: 'error'; code: ErrorCode }
-  /** demo: el formulario no está conectado; se muestra la confirmación pero no se envió nada. */
-  | { status: 'success'; summary: Summary; demo: boolean }
+  | { status: 'success'; summary: Summary }
 
 /** Qué errores ofrecen el enlace a WhatsApp (el texto de cada uno, por idioma, está en bookingText.ts). */
 // El Apps Script limita las solicitudes por teléfono (unas horas) y por hora en total.
@@ -60,6 +59,16 @@ interface ServerReply {
 
 /** Tiempo máximo de espera de la respuesta del Apps Script. */
 const SUBMIT_TIMEOUT_MS = 20_000
+
+/** Caracteres que se quitan al escribir o pegar (teclado de celular, autocompletar y pegado incluidos). */
+const NAME_CHARS = /[^\p{L} ]/gu
+const PHONE_CHARS = /[^\d+]|(?!^)\+/g
+
+const keepOnly = (junk: RegExp) => (event: FormEvent<HTMLInputElement>) => {
+  const input = event.currentTarget
+  const clean = input.value.replace(junk, '')
+  if (clean !== input.value) input.value = clean
+}
 
 // La fecha de hoy se lee solo en el navegador (en el HTML prerenderizado queda vacía).
 const subscribe = () => () => {}
@@ -134,11 +143,10 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       source: window.location.href,
     }
 
-    const showSuccess = (demo = false) => {
+    const showSuccess = () => {
       setState({
         status: 'success',
         summary: { name: payload.firstName, service: payload.service, date: payload.date, time: payload.time },
-        demo,
       })
       form.reset()
       requestAnimationFrame(() => successRef.current?.focus())
@@ -146,7 +154,7 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
 
     if (payload.hp_x) return showSuccess()
     // Sin Apps Script conectado (vista previa): no se envía nada, solo se muestra la confirmación.
-    if (!isBookingConfigured) return showSuccess(true)
+    if (!isBookingConfigured) return showSuccess()
 
     setState({ status: 'sending' })
     // Si el servidor no responde a tiempo, se cancela y se ofrece reintentar o usar WhatsApp.
@@ -184,7 +192,7 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
   }
 
   if (state.status === 'success') {
-    const { summary, demo } = state
+    const { summary } = state
     const details: { icon: IconName; label: string; value: string }[] = [
       { icon: 'tooth', label: t.success.service, value: serviceLabel(summary.service, lang) },
       { icon: 'calendar', label: t.success.date, value: formatDate(summary.date, lang) },
@@ -210,12 +218,6 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
           ))}
         </dl>
         <p className="booking-success__text">{t.success.text}</p>
-        {demo && (
-          <p className="booking-success__text">
-            <strong>{t.success.demoLabel}</strong>
-            {t.success.demoText}
-          </p>
-        )}
         <button type="button" className="btn btn--ghost" onClick={startOver}>
           {t.success.again}
         </button>
@@ -260,19 +262,19 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
         <div className="form-grid">
           <Field name="firstName" label={t.labels.firstName} icon="user" required error={errors.firstName}>
             <input {...fieldProps('firstName')} type="text" autoComplete="given-name" maxLength={50} required placeholder=" "
-              onKeyDown={(e) => { if (e.key.length === 1 && !/[\p{L}\s'\-]/u.test(e.key)) e.preventDefault() }} />
+              onInput={keepOnly(NAME_CHARS)} />
           </Field>
 
           <Field name="lastName" label={t.labels.lastName} icon="user" required error={errors.lastName}>
             <input {...fieldProps('lastName')} type="text" autoComplete="family-name" maxLength={50} required placeholder=" "
-              onKeyDown={(e) => { if (e.key.length === 1 && !/[\p{L}\s'\-]/u.test(e.key)) e.preventDefault() }} />
+              onInput={keepOnly(NAME_CHARS)} />
           </Field>
         </div>
 
         <div className="form-grid">
           <Field name="phone" label={t.labels.phone} icon="phone" required error={errors.phone}>
             <input {...fieldProps('phone')} type="tel" autoComplete="tel" inputMode="tel" maxLength={20} required placeholder=" "
-              onKeyDown={(e) => { if (e.key.length === 1 && !/[\d+\s\-()]/.test(e.key)) e.preventDefault() }} />
+              onInput={keepOnly(PHONE_CHARS)} />
           </Field>
 
           <Field name="email" label={t.labels.email} icon="mail" error={errors.email}>

@@ -48,8 +48,6 @@ export interface FormText {
     date: string
     time: string
     text: string
-    demoLabel: string
-    demoText: string
     again: string
   }
   validation: {
@@ -119,8 +117,6 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       date: 'Date',
       time: 'Time',
       text: 'We will contact you by phone or WhatsApp to confirm your appointment.',
-      demoLabel: 'Preview:',
-      demoText: ' this is a demo; no request was sent.',
       again: 'Send another request',
     },
     validation: {
@@ -183,8 +179,6 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       date: 'Fecha',
       time: 'Hora',
       text: 'Te contactaremos por teléfono o WhatsApp para confirmar tu cita.',
-      demoLabel: 'Vista previa:',
-      demoText: ' esta es una demostración, no se envió ninguna solicitud.',
       again: 'Enviar otra solicitud',
     },
     validation: {
