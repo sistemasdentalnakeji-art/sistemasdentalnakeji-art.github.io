@@ -592,8 +592,9 @@
   text-align: center;
   cursor: pointer;
   transform-style: preserve-3d;
-  /* Giro simétrico: el ease-out fuerte de antes llegaba al canto en ~60 ms y el resto parecía un salto. */
-  transition: transform 0.6s cubic-bezier(0.45, 0, 0.25, 1);
+  /* ease-in-out simétrico: la tarjeta llega a 90° exactamente en la mitad del tiempo (0.3 s),
+     así el visibility:hidden que se aplica a los 0.28 s siempre actúa antes del canto. */
+  transition: transform 0.6s ease-in-out;
   will-change: transform;
 }
 
@@ -612,7 +613,7 @@
   -webkit-backface-visibility: hidden;
   /* Safari/iOS deja ver (en espejo) los hijos con capa propia (foto, lienzo) pese a backface-visibility:
      cada cara se oculta/muestra con visibility justo al llegar al canto (mitad del giro). */
-  transition: visibility 0s 0.3s;
+  transition: visibility 0s 0.28s; /* 0.28 s < mitad del giro (0.3 s): se oculta antes del canto */
 }
 
 .member__face--back {
@@ -710,6 +711,14 @@
   border: 1px solid var(--about-card-border);
   box-shadow: var(--about-card-shadow);
   transform: rotateY(180deg);
+}
+
+/* Canvas y foto crean capas GPU propias en Safari y se saltan el backface-visibility del padre:
+   se lo forzamos directamente para que no aparezcan en espejo durante el giro. */
+.member__canvas,
+.member__photo img {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Lienzos animados de cada cara (aurora tras la foto, hilos en el reverso): detrás del contenido de su cara. */
