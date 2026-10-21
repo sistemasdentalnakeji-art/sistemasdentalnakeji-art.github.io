@@ -15,18 +15,21 @@
 }
 
 .loc__card {
+  /* Centrado con inset + margin auto (no translate en %): en iOS Safari el translate no se recalculaba al crecer y la
+     tarjeta se abría desde una esquina. Así crece del centro hacia los cuatro lados en todos los navegadores. */
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset: 0;
+  margin: auto;
   width: 240px;
   height: 140px;
+  max-width: 100%;
+  max-height: 100%;
   overflow: hidden;
   border: 1px solid rgba(var(--loc-line), 0.28);
   border-radius: 24px;
   background: linear-gradient(155deg, var(--color-ink) 0%, var(--color-night) 100%);
   box-shadow: 0 24px 48px -24px rgba(10, 21, 41, 0.75);
   color: var(--color-white);
-  translate: -50% -50%;
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transition:
     width 0.7s var(--loc-spring),
