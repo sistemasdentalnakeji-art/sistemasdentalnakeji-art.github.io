@@ -182,7 +182,6 @@ export function ServicesPage() {
                   {group.title}
                 </h2>
                 <p className="catalog-group__intro">{group.intro}</p>
-                <p className="catalog-group__body">{group.body}</p>
               </div>
               <ul className="catalog-grid">
                 {group.services.map((service) => (

@@ -458,8 +458,7 @@
   letter-spacing: -0.02em;
 }
 
-.catalog-group__intro,
-.catalog-group__body {
+.catalog-group__intro {
   margin-top: 12px;
   color: var(--color-muted);
   font-size: var(--text-small);
@@ -594,8 +593,7 @@
     font-size: clamp(2.25rem, 1.2rem + 1.6vw, 3.25rem);
   }
 
-  .catalog-group__intro,
-  .catalog-group__body {
+  .catalog-group__intro {
     margin-top: 16px;
     font-size: 1.0625rem;
   }
@@ -697,10 +695,6 @@
   .catalog-split .catalog-group__intro {
     margin-top: 10px;
     font-size: 0.9375rem;
-  }
-
-  .catalog-split .catalog-group__body {
-    display: none;
   }
 
   .catalog-split .catalog-grid {

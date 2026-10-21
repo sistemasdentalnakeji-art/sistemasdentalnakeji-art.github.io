@@ -135,10 +135,12 @@
   pointer-events: none;
 }
 
-/* Celular: diente más chico para que no se corte contra el borde de la pantalla al pasar por los costados. */
+/* Celular: sin hilo, diente ni destellos (solo se animan los tres mensajes). Se oculta con CSS para que el HTML prerenderizado
+   y la hidratación no cambien. */
 @media (max-width: 767.98px) {
+  .story__thread,
   .story__tip {
-    width: 48px;
+    display: none;
   }
 }
 

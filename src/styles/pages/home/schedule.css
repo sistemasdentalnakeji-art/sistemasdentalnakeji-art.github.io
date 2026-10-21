@@ -335,6 +335,20 @@
   padding-left: 44px;
 }
 
+.field input[type='date'] {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  text-align: left;
+}
+
+.field input[type='date']::-webkit-date-and-time-value {
+  min-width: 0;
+  text-align: left;
+}
+
 .field textarea {
   min-height: 104px;
   resize: vertical;

@@ -218,6 +218,18 @@
   border-radius: 18px;
 }
 
+/* Celular: la foto llena el ancho de la tarjeta (con alto fijo se quedaba de 240 px, angosta y descentrada). */
+@media (max-width: 767.98px) {
+  .timeline-carousel {
+    width: 100%;
+  }
+
+  .timeline-carousel__viewport {
+    width: 100%;
+    height: auto;
+  }
+}
+
 .timeline-carousel__image {
   position: absolute;
   inset: 0;

@@ -124,6 +124,13 @@
   box-shadow: 0 14px 40px rgba(10, 21, 41, 0.22);
 }
 
+/* Celular y tableta: el índice (muy largo) se oculta; en escritorio queda a la izquierda. */
+@media (max-width: 959.98px) {
+  .toc {
+    display: none;
+  }
+}
+
 .toc__label {
   margin: 0 8px 16px;
   padding-bottom: 14px;

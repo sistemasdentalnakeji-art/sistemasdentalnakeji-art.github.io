@@ -25,8 +25,6 @@ export interface CatalogGroup {
   id: string
   title: string
   intro: string
-  /** Párrafo bajo la descripción (hoy lorem ipsum, pendiente de redactar). */
-  body: string
   services: CatalogService[]
 }
 
@@ -84,10 +82,6 @@ export const CATALOG_HERO: Record<
   },
 }
 
-// Texto de relleno bajo la descripción de cada categoría (pendiente de redactar).
-const LOREM_BODY =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.'
-
 const buildGroups = (lang: Lang): CatalogGroup[] => {
 const en = lang === 'en'
 /** La ruta sale de la clave del servicio: si se quita, falla al compilar (no deja un enlace roto). */
@@ -105,7 +99,6 @@ return [
     intro: en
       ? 'Options to replace missing teeth, from a single tooth to a full arch.'
       : 'Opciones para reponer dientes ausentes, desde una pieza hasta toda la arcada.',
-    body: LOREM_BODY,
     services: [
       entry('implants', 'implant'),
       entry('all-on-4', 'bridge4'),
@@ -119,7 +112,6 @@ return [
     intro: en
       ? 'Crowns, veneers and whitening to care for the shape, color and look of your teeth.'
       : 'Coronas, carillas y blanqueamiento para cuidar la forma, el color y la apariencia de tus dientes.',
-    body: LOREM_BODY,
     services: [entry('crowns', 'crown'), entry('veneers', 'tooth'), entry('whitening', 'sparkle')],
   },
   {
@@ -128,14 +120,12 @@ return [
     intro: en
       ? 'To align your smile and care for the teeth of the little ones.'
       : 'Para alinear la sonrisa y cuidar los dientes de los más pequeños.',
-    body: LOREM_BODY,
     services: [entry('orthodontics', 'braces'), entry('aligners', 'aligner'), entry('pediatric', 'user')],
   },
   {
     id: 'limpieza-y-encias',
     title: en ? 'Cleaning and gum health' : 'Limpieza y salud de encías',
     intro: en ? 'Basic care: dental cleaning and gum treatment.' : 'El cuidado de base: limpieza dental y atención de las encías.',
-    body: LOREM_BODY,
     services: [entry('cleaning', 'drop'), entry('gum', 'shield')],
   },
   {
@@ -144,7 +134,6 @@ return [
     intro: en
       ? 'Treatments to save a tooth or remove it when needed.'
       : 'Tratamientos para conservar una pieza dental o retirarla cuando es necesario.',
-    body: LOREM_BODY,
     services: [entry('root-canal', 'endo'), entry('extractions', 'tooth')],
   },
 ]
