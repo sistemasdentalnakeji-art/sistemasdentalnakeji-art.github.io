@@ -312,6 +312,11 @@
   color: var(--color-brand);
 }
 
+.field__control:has(input:not(:placeholder-shown)) .field__icon {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .field input:not([type='radio'], [type='checkbox']),
 .field select,
 .field textarea {
@@ -347,6 +352,19 @@
 .field input[type='date']::-webkit-date-and-time-value {
   min-width: 0;
   text-align: left;
+}
+
+.field input[type='date']::-webkit-calendar-picker-indicator {
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: opacity 0.2s var(--ease);
+}
+
+.field input[type='date']:hover::-webkit-calendar-picker-indicator,
+.field input[type='date']:focus::-webkit-calendar-picker-indicator {
+  opacity: 1;
 }
 
 .field textarea {

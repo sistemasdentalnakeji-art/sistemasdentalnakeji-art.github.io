@@ -259,21 +259,24 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       <Group step={1} title={t.groups.data}>
         <div className="form-grid">
           <Field name="firstName" label={t.labels.firstName} icon="user" required error={errors.firstName}>
-            <input {...fieldProps('firstName')} type="text" autoComplete="given-name" maxLength={50} required />
+            <input {...fieldProps('firstName')} type="text" autoComplete="given-name" maxLength={50} required placeholder=" "
+              onKeyDown={(e) => { if (e.key.length === 1 && !/[\p{L}\s'\-]/u.test(e.key)) e.preventDefault() }} />
           </Field>
 
           <Field name="lastName" label={t.labels.lastName} icon="user" required error={errors.lastName}>
-            <input {...fieldProps('lastName')} type="text" autoComplete="family-name" maxLength={50} required />
+            <input {...fieldProps('lastName')} type="text" autoComplete="family-name" maxLength={50} required placeholder=" "
+              onKeyDown={(e) => { if (e.key.length === 1 && !/[\p{L}\s'\-]/u.test(e.key)) e.preventDefault() }} />
           </Field>
         </div>
 
         <div className="form-grid">
           <Field name="phone" label={t.labels.phone} icon="phone" required error={errors.phone}>
-            <input {...fieldProps('phone')} type="tel" autoComplete="tel" inputMode="tel" maxLength={20} required />
+            <input {...fieldProps('phone')} type="tel" autoComplete="tel" inputMode="tel" maxLength={20} required placeholder=" "
+              onKeyDown={(e) => { if (e.key.length === 1 && !/[\d+\s\-()]/.test(e.key)) e.preventDefault() }} />
           </Field>
 
           <Field name="email" label={t.labels.email} icon="mail" error={errors.email}>
-            <input {...fieldProps('email')} type="email" autoComplete="email" maxLength={120} />
+            <input {...fieldProps('email')} type="email" autoComplete="email" maxLength={120} placeholder=" " />
           </Field>
         </div>
       </Group>
@@ -294,7 +297,7 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
         </Field>
 
         <Field name="date" label={t.labels.date} required error={errors.date}>
-          <input {...fieldProps('date')} type="date" min={minDate} max={maxDate} required />
+          <input {...fieldProps('date')} type="date" min={minDate} max={maxDate ?? '2099-12-31'} required />
         </Field>
 
         {/* Horario: lista desplegable con los valores de BOOKING.slots. */}
