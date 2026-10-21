@@ -153,8 +153,8 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
     }
 
     if (payload.hp_x) return showSuccess()
-    // Sin Apps Script conectado (vista previa): no se envía nada, solo se muestra la confirmación.
-    if (!isBookingConfigured) return showSuccess()
+    // Sin Apps Script conectado no se envía nada: se avisa (con enlace a WhatsApp) en vez de mostrar una confirmación falsa.
+    if (!isBookingConfigured) return setState({ status: 'error', code: 'network' })
 
     setState({ status: 'sending' })
     // Si el servidor no responde a tiempo, se cancela y se ofrece reintentar o usar WhatsApp.
