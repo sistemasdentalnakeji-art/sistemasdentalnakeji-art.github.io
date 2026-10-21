@@ -1,4 +1,4 @@
-// ─────────────────────────────────────────────────────────────────────────────
+﻿// ─────────────────────────────────────────────────────────────────────────────
 // TEXTOS DE LA PÁGINA /nosotros/ (pages/about/AboutPage.tsx), en inglés (en) y español (es).
 //
 // La historia usa el texto aprobado para la página. La misión, la visión y los integrantes pendientes siguen provisionales.
@@ -200,7 +200,7 @@ export const TEAM: Record<Lang, { title: string; lead: string; areas: TeamArea[]
           person('Dr.', 'Gustavo Garduño', 'Dental surgeon and implantologist', 'gustavo-garduno'),
           person('Dr.', 'Leslie Brizuela', 'Dental surgeon and orthodontist', 'leslie-brizuela'),
           person('Dr.', 'Alejandra Blanco', undefined, 'alejandra-blanco'),
-          person(undefined, 'Fernanda López', 'Dental assistant', 'fernanda-lopez'),
+          person('Asst.', 'Fernanda López', 'Dental assistant', 'fernanda-lopez'),
         ],
       },
       {
@@ -208,22 +208,22 @@ export const TEAM: Record<Lang, { title: string; lead: string; areas: TeamArea[]
         icon: 'calendar',
         title: 'Administration',
         members: [
-          person(undefined, 'Damaris Llamas', 'Laboratory administrator', 'damaris-llamas'),
-          person(undefined, 'Michelle López', 'Patient coordinator', 'michelle-lopez'),
+          person('Lic.', 'Damaris Llamas', 'Laboratory administrator', 'damaris-llamas'),
+          person('Lic.', 'Michelle López', 'Patient coordinator', 'michelle-lopez'),
         ],
       },
       {
         id: 'laboratorio',
         icon: 'flask',
         title: 'Dental lab',
-        members: [person(undefined, 'Isaac Ramírez', 'Laboratory manager and dental technician', 'isaac-ramirez')],
+        members: [person('TDP', 'Isaac Ramírez', 'Laboratory manager and dental technician', 'isaac-ramirez')],
       },
       // Sin foto: se muestra el icono de persona hasta que haya una.
       {
         id: 'tecnico',
         icon: 'chip',
         title: 'Technology infrastructure',
-        members: [{ name: 'Jadro Montes', specialty: 'Head of the company’s technology area' }],
+        members: [{ title: 'Ing. Mtro.', name: 'Jadro Montes', specialty: 'Head of the company’s technology area' }],
       },
     ],
   },
@@ -273,7 +273,7 @@ export const TEAM: Record<Lang, { title: string; lead: string; areas: TeamArea[]
         id: 'tecnico',
         icon: 'chip',
         title: 'Infraestructura tecnológica',
-        members: [{ title: 'Ing.', name: 'Jadro Montes', specialty: 'Responsable del área tecnológica de la empresa' }],
+        members: [{ title: 'Ing. Mtro.', name: 'Jadro Montes', specialty: 'Responsable del área tecnológica de la empresa' }],
       },
     ],
   },
