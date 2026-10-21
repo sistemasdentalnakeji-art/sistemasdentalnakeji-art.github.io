@@ -83,12 +83,8 @@ function MemberCard({ member, order, flipped, onToggle }: MemberCardProps) {
         </span>
         <span className="member__face member__face--back" aria-hidden="true">
           <canvas ref={fibersRef} className="member__canvas" />
-          <BrandOrb lazy />
+          <BrandOrb />
           <span className="member__brand">{SITE.name}</span>
-          <span className="member__back-info">
-            <span className="member__back-name">{member.name}</span>
-            {member.specialty && <span className="member__back-specialty">{member.specialty}</span>}
-          </span>
         </span>
       </button>
     </li>

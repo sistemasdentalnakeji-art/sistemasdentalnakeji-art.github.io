@@ -592,8 +592,8 @@
   text-align: center;
   cursor: pointer;
   transform-style: preserve-3d;
-  /* Giro corto y que arranca rápido (ease-out fuerte): al voltear y al regresar responde al instante. */
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  /* Giro simétrico: el ease-out fuerte de antes llegaba al canto en ~60 ms y el resto parecía un salto. */
+  transition: transform 0.6s cubic-bezier(0.45, 0, 0.25, 1);
   will-change: transform;
 }
 
@@ -610,6 +610,21 @@
   border-radius: var(--radius-card);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  /* Safari/iOS deja ver (en espejo) los hijos con capa propia (foto, lienzo) pese a backface-visibility:
+     cada cara se oculta/muestra con visibility justo al llegar al canto (mitad del giro). */
+  transition: visibility 0s 0.3s;
+}
+
+.member__face--back {
+  visibility: hidden;
+}
+
+.member[data-flipped] .member__face--front {
+  visibility: hidden;
+}
+
+.member[data-flipped] .member__face--back {
+  visibility: visible;
 }
 
 /* Frente: la fotografía arriba y la identidad en una franja inferior. */
@@ -717,8 +732,10 @@
   opacity: 0.72;
 }
 
-.member__face--back .member__canvas.is-ready {
+/* Reverso sin fundido: el lienzo ya está listo al verse, así el logo y los hilos no "aparecen" tras el giro. */
+.member__face--back .member__canvas {
   opacity: 0.68;
+  transition: none;
 }
 
 .member__brand {
@@ -728,29 +745,6 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1;
-}
-
-.member__back-info {
-  display: grid;
-  gap: 5px;
-  max-width: 82%;
-  color: var(--color-white);
-  text-align: center;
-}
-
-.member__back-name {
-  font-family: var(--font-body);
-  font-size: clamp(0.95rem, 0.85rem + 0.5vw, 1.2rem);
-  font-weight: 500;
-  line-height: 1.2;
-}
-
-.member__back-specialty {
-  color: rgba(255, 255, 255, 0.72);
-  font-family: var(--font-body);
-  font-size: clamp(0.7rem, 0.64rem + 0.3vw, 0.84rem);
-  font-weight: 400;
-  line-height: 1.4;
 }
 
 /* El orbe del reverso solo gira mientras se ve (las tarjetas de frente lo tienen escondido). */
@@ -779,7 +773,8 @@
     transition: none;
   }
 
-  .member__flip {
+  .member__flip,
+  .member__face {
     transition: none;
   }
 }
@@ -879,7 +874,8 @@ html[data-motion='paused'] .timeline__reveal {
   animation: none;
 }
 
-html[data-motion='paused'] .member__flip {
+html[data-motion='paused'] .member__flip,
+html[data-motion='paused'] .member__face {
   transition: none;
 }
 
