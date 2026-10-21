@@ -203,7 +203,10 @@ const noSubscribe = () => () => {}
 
 /** ¿Hace falta el respaldo? Sí si el navegador no tiene `animation-timeline` (o con `?story-scrub`), salvo "reducir movimiento". */
 const needsScrub = () =>
-  (new URLSearchParams(window.location.search).has('story-scrub') || !CSS.supports('animation-timeline', 'view()')) &&
+  // Celular: el diente no seguía el `offset-path` (se quedaba en la esquina), así que ahí siempre se coloca con JS.
+  (new URLSearchParams(window.location.search).has('story-scrub') ||
+    !CSS.supports('animation-timeline', 'view()') ||
+    window.matchMedia('(max-width: 767.98px)').matches) &&
   !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /**
