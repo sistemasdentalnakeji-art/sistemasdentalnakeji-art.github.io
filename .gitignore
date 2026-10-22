@@ -23,3 +23,6 @@ gan-harness/
 CLAUDE.md
 Prompt_Claude_Homepage_Nakeji.md
 .claudeignore
+
+# Informes de auditoría locales (contienen detalles internos; no van a git)
+AUDITORIA-*

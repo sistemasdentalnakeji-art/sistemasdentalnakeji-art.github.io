@@ -83,6 +83,9 @@ function doPost(e) {
       const cache = CacheService.getScriptCache();
       const hourKey = 'count-' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMddHH');
       const phoneKey = 'phone-' + String(data.phone).replace(/\D/g, '');
+      // Un reintento de la misma solicitud (mismo teléfono, fecha y hora; p. ej. por mala señal) responde "ok" sin crear otro evento.
+      const sameRequestKey = phoneKey + '-' + data.date + '-' + data.time;
+      if (cache.get(sameRequestKey)) return json_({ ok: true });
       const requestsThisHour = Number(cache.get(hourKey) || 0);
       if (requestsThisHour >= CONFIG.MAX_REQUESTS_PER_HOUR || cache.get(phoneKey)) {
         return json_({ ok: false, error: 'limit' });
@@ -117,6 +120,7 @@ function doPost(e) {
       event.setColor(CONFIG.EVENT_COLOR);
       cache.put(hourKey, String(requestsThisHour + 1), 3600);
       cache.put(phoneKey, '1', CONFIG.PHONE_COOLDOWN_HOURS * 3600);
+      cache.put(sameRequestKey, '1', CONFIG.PHONE_COOLDOWN_HOURS * 3600);
     } finally {
       lock.releaseLock();
     }
@@ -127,7 +131,7 @@ function doPost(e) {
         MailApp.sendEmail({
           to: CONFIG.NOTIFY_EMAIL,
           subject: `Nueva solicitud de cita: ${fullName_(data)}`,
-          body: `${fullName_(data)} solicitó ${clean_(data.service)} el ${data.date} a las ${data.time}.\nTeléfono: ${clean_(data.phone)}\nRevisa Google Calendar para confirmar.`,
+          body: `${fullName_(data)} solicitó ${clean_(data.service)} el ${data.date} a las ${data.time}.\nLos datos de contacto están en el evento de Google Calendar.`,
         });
       } catch (mailError) {
         console.error(mailError);
@@ -150,13 +154,10 @@ function validate_(data) {
   const errors = [];
   const text = (value) => String(value || '').trim();
 
-  if (text(data.firstName).length < 2 || text(data.firstName).length > 50) errors.push('firstName');
-  if (text(data.lastName).length < 2 || text(data.lastName).length > 50) errors.push('lastName');
-  // Solo dígitos y los signos normales de un teléfono: sin letras ni etiquetas HTML.
-  // Al menos 10 dígitos (igual que la web): sin esto, "++++++++++" pasaba y bloqueaba ese teléfono.
-  if (!/^[+\d\s()-]{10,20}$/.test(text(data.phone)) || text(data.phone).replace(/\D/g, '').length < 10) {
-    errors.push('phone');
-  }
+  // Mismas reglas que la web (src/features/booking/booking.ts): nombre solo con letras; teléfono solo dígitos con "+" opcional al inicio.
+  if (!/^\p{L}{2,}(?: \p{L}+)*$/u.test(text(data.firstName)) || text(data.firstName).length > 50) errors.push('firstName');
+  if (!/^\p{L}{2,}(?: \p{L}+)*$/u.test(text(data.lastName)) || text(data.lastName).length > 50) errors.push('lastName');
+  if (!/^\+?\d{10,15}$/.test(text(data.phone))) errors.push('phone');
   if (text(data.email) && (text(data.email).length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(text(data.email)))) {
     errors.push('email');
   }
@@ -166,18 +167,28 @@ function validate_(data) {
   if (data.consent !== true) errors.push('consent');
   if (CONFIG.SLOTS.indexOf(text(data.time)) === -1) errors.push('time');
 
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(text(data.date))) {
+  // La fecha de hoy se toma en la zona horaria del proyecto (no la del servidor) y las fechas inexistentes (31 de febrero) se rechazan.
+  const requested = dayNumber_(text(data.date));
+  const today = dayNumber_(Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd'));
+  if (requested === null) {
     errors.push('date');
   } else {
-    const day = toDate_(data.date, '00:00');
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const diffDays = Math.round((day.getTime() - today.getTime()) / 86400000);
+    const diffDays = requested - today;
     if (diffDays < 1 || diffDays > CONFIG.DAYS_AHEAD) errors.push('date');
-    else if (CONFIG.CLOSED_WEEKDAYS.indexOf(day.getDay()) !== -1) errors.push('date');
+    else if (CONFIG.CLOSED_WEEKDAYS.indexOf(new Date(requested * 86400000).getUTCDay()) !== -1) errors.push('date');
   }
 
   return errors;
+}
+
+/** Número de día (desde 1970) de una fecha "AAAA-MM-DD", o null si el formato o la fecha no existen. */
+function dayNumber_(iso) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
+  const [y, m, d] = iso.split('-').map(Number);
+  const time = Date.UTC(y, m - 1, d);
+  const back = new Date(time);
+  if (back.getUTCFullYear() !== y || back.getUTCMonth() !== m - 1 || back.getUTCDate() !== d) return null;
+  return time / 86400000;
 }
 
 /** Fecha y hora en la zona horaria del proyecto (appsscript.json → America/Tijuana). */
