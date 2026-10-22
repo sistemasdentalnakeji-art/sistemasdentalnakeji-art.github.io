@@ -186,11 +186,6 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
     }
   }
 
-  const startOver = () => {
-    setState({ status: 'idle' })
-    requestAnimationFrame(() => titleRef.current?.focus())
-  }
-
   if (state.status === 'success') {
     const { summary } = state
     const details: { icon: IconName; label: string; value: string }[] = [
@@ -218,9 +213,6 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
           ))}
         </dl>
         <p className="booking-success__text">{t.success.text}</p>
-        <button type="button" className="btn btn--ghost" onClick={startOver}>
-          {t.success.again}
-        </button>
       </div>
     )
   }

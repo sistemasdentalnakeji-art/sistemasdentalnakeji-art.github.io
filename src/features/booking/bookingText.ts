@@ -48,7 +48,6 @@ export interface FormText {
     date: string
     time: string
     text: string
-    again: string
   }
   validation: {
     firstName: string
@@ -117,7 +116,6 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       date: 'Date',
       time: 'Time',
       text: 'We will contact you by phone or WhatsApp to confirm your appointment.',
-      again: 'Send another request',
     },
     validation: {
       firstName: 'Enter your first name.',
@@ -179,7 +177,6 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       date: 'Fecha',
       time: 'Hora',
       text: 'Te contactaremos por teléfono o WhatsApp para confirmar tu cita.',
-      again: 'Enviar otra solicitud',
     },
     validation: {
       firstName: 'Escribe tu nombre.',
