@@ -1,0 +1,95 @@
+/* ==========================================================================
+   Social Orbit (components/ui/SocialOrbit.tsx): las redes del header en una órbita 3D mini (versión chica del Spin Shutter).
+   Misma geometría que components/spin-shutter.css: cada icono se coloca en el anillo (rotateY + radio hacia delante) y se
+   CONTRA-GIRA para mirar de frente; --spin lo escribe el componente cada frame y --ss-spread (0 a 1) abre el anillo desde una
+   pila. Ángulo plano: no hay --tilt ni --roll, el anillo se ve de canto y los iconos viajan de lado y hacia atrás.
+   Sin movimiento: órbita quieta y completa, sin transición.
+   ========================================================================== */
+@property --ss-spread {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+.social-orbit {
+  --ss-spread: 1;
+  position: relative;
+  flex: none;
+  width: 92px;
+  height: 44px;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y; /* el dedo arrastra la órbita en horizontal; en vertical sigue siendo scroll de la página */
+}
+
+.social-orbit:active {
+  cursor: grabbing;
+}
+
+.social-orbit__link {
+  cursor: inherit;
+  -webkit-user-drag: none;
+}
+
+.social-orbit__link svg {
+  pointer-events: none; /* el arrastre empieza siempre en el enlace, no en el dibujo */
+}
+
+.social-orbit[data-phase='stacked'] {
+  --ss-spread: 0;
+}
+
+.social-orbit[data-phase='open'] {
+  transition: --ss-spread 1.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.social-orbit[data-phase='static'] {
+  --ss-spread: 1;
+}
+
+@media (scripting: none) {
+  .social-orbit[data-phase='stacked'] {
+    --ss-spread: 1;
+  }
+}
+
+.social-orbit__scene {
+  position: absolute;
+  inset: 0;
+  perspective: 110px; /* cámara cerca: el icono del frente se ve más grande que los de atrás */
+  perspective-origin: 50% 50%;
+}
+
+.social-orbit__ring {
+  --spin: 0deg;
+  --radius: 32px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  padding: 0;
+  list-style: none;
+  transform: rotateY(var(--spin));
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.social-orbit__item {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(calc(var(--k) * 360deg / var(--n) * var(--ss-spread)))
+    translateZ(calc(var(--radius) * var(--ss-spread)))
+    rotateY(calc(var(--k) * -360deg / var(--n) * var(--ss-spread)))
+    rotateY(calc(var(--spin) * -1));
+}
+
+.social-orbit__link {
+  width: 36px;
+  height: 36px;
+}
+
+html[data-motion='paused'] .social-orbit {
+  transition: none !important;
+}

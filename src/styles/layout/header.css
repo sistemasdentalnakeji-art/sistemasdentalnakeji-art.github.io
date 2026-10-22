@@ -8,20 +8,24 @@
   transition: box-shadow 0.25s var(--ease);
 }
 
-/* El desenfoque va en un pseudo-elemento: en el propio header convertiría
-   al menú móvil (position: fixed) en hijo de un bloque de 72 px de alto. */
+/* Fondo "Oceanic Shimmer" (degradado de 21st.dev adaptado a la barra) con SOLO los azules de la marca: base marino del logotipo
+   (--color-ink-strong), destellos de azul del isotipo (--color-brand) y azul claro (--color-brand-light), más un grano fino (overlay).
+   Los destellos claros son suaves para que el texto blanco conserve contraste.
+   Va en un pseudo-elemento: en el propio header convertiría al menú móvil (position: fixed) en hijo de un bloque de 72 px. */
 .site-header::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: rgba(255, 255, 255, 0.86);
-  -webkit-backdrop-filter: saturate(160%) blur(14px);
-  backdrop-filter: saturate(160%) blur(14px);
-}
-
-.site-header.menu-open::before {
-  background: var(--color-white);
+  background-color: var(--color-ink-strong);
+  background-image:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.215'/></svg>"),
+    radial-gradient(42% 190% at 4% -20%, color-mix(in srgb, var(--color-brand-light) 36%, transparent) 0%, transparent 62%),
+    radial-gradient(38% 170% at 36% 125%, color-mix(in srgb, var(--color-brand) 80%, transparent) 0%, transparent 64%),
+    radial-gradient(40% 190% at 70% -25%, color-mix(in srgb, var(--color-brand-light) 28%, transparent) 0%, transparent 62%),
+    radial-gradient(34% 170% at 100% 115%, color-mix(in srgb, var(--color-brand) 75%, transparent) 0%, transparent 64%);
+  background-size: 120px 120px, auto, auto, auto, auto;
+  background-blend-mode: overlay, normal, normal, normal, normal;
 }
 
 .site-header.is-scrolled,
@@ -43,9 +47,11 @@
   border-radius: 8px;
 }
 
+/* El logo oficial es azul marino: sobre el degradado oscuro se ve en blanco. */
 .logo__img {
   width: auto;
   height: 29px;
+  filter: brightness(0) invert(1);
 }
 
 .site-header__actions {
@@ -96,6 +102,11 @@
   display: none;
 }
 
+/* Redes: en escritorio van en el grupo derecho de la barra; en móvil y tableta, en el pie del panel del menú. */
+.site-header__actions .site-header__social {
+  display: none;
+}
+
 .lang-switch--menu {
   align-self: flex-start;
   min-height: 44px;
@@ -112,8 +123,13 @@
   }
 
   .lang-switch--menu,
-  .schedule-link--menu {
+  .schedule-link--menu,
+  .site-menu__row .site-menu__social {
     display: none;
+  }
+
+  .site-header__actions .site-header__social {
+    display: block;
   }
 
   /* Escritorio: la fila del menú no existe; sus elementos siguen en línea como antes. */
@@ -189,6 +205,7 @@
 .dropdown__overview {
   display: flex;
   align-items: center;
+  gap: 12px;
   min-height: 44px;
   padding: 10px 14px;
   border-radius: var(--radius-tag);
@@ -211,10 +228,39 @@
   font-weight: 600;
 }
 
+/* Beneficios: línea divisora entre cada opción. */
+.dropdown--beneficios .dropdown__list li + li {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--color-fog);
+}
+
+/* Icono de cada opción del submenú: cuadro azul de marca con líneas blancas; al pasar el cursor (o en la página actual)
+   el azul se mantiene y las líneas pasan al dorado de la marca. */
+.dropdown__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--color-brand);
+  color: var(--color-white);
+  transition: color 0.2s var(--ease);
+}
+
+.dropdown__link:hover .dropdown__icon,
+.dropdown__link:focus-visible .dropdown__icon,
+.dropdown__link[aria-current='page'] .dropdown__icon {
+  color: var(--color-gold);
+}
+
 .dropdown__overview {
   justify-content: space-between;
   gap: 8px;
+  width: fit-content;
   margin-top: 8px;
+  font-size: 0.9375rem;
   background: var(--color-ink);
   color: var(--color-white);
   font-weight: 600;
@@ -330,14 +376,71 @@
   }
 }
 
+/* Botón ☰ sobre el degradado: icono blanco (la barra se ve igual con el panel abierto). */
+.menu-toggle {
+  color: var(--color-white);
+}
+
+.menu-toggle:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--color-white);
+}
+
 /* Escritorio: menú en línea con submenús flotantes */
 @media (min-width: 1080px) {
   .menu-toggle {
     display: none;
   }
 
-  .site-header__bar {
+  /* Sobre el degradado oscuro los enlaces de la barra, redes e idioma van en blanco; los submenús conservan su panel blanco. */
+  .site-header .nav-link,
+  .site-header .lang-switch--bar,
+  .site-header .social-links .icon-button,
+  .site-header .social-orbit__link {
+    color: var(--color-white);
+  }
+
+  .site-header .nav-link:hover,
+  .site-header .has-dropdown.is-open > .nav-link,
+  .site-header .social-links .icon-button:hover,
+  .site-header .social-orbit__link:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: var(--color-white);
+  }
+
+  .site-header .schedule-link--bar {
+    min-height: 44px;
+    background: var(--color-white);
+    color: var(--color-ink);
+    font-size: calc(var(--text-body) - 2px);
+  }
+
+  .site-header .schedule-link--bar:hover {
+    background: var(--color-sky);
+    box-shadow: 0 8px 24px rgba(8, 24, 52, 0.35);
+  }
+
+  /* Tres zonas: logo a la izquierda, rutas centradas y redes + idioma + botón a la derecha. La barra es más ancha que el
+     contenido de la página (hasta 1680 px) para que logo y botón queden más hacia los bordes. Con poco ancho las rutas se
+     centran entre el logo y el grupo derecho; desde 1400 px las columnas laterales miden lo mismo y quedan en el centro real. */
+  .site-header__bar.container {
+    max-width: 1680px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     gap: 24px;
+  }
+
+  .site-nav {
+    justify-self: center;
+  }
+
+  .site-header__bar .logo {
+    justify-self: start;
+    margin-left: 15%; /* % del ancho de su columna */
+  }
+
+  .site-header__actions {
+    justify-self: end;
   }
 
   .logo__img {
@@ -345,11 +448,7 @@
   }
 
   .site-menu {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    display: contents;
   }
 
   .site-header__actions {
@@ -364,6 +463,31 @@
 
   .nav-item {
     position: relative;
+  }
+
+  /* Página actual: en vez del subrayado, una "lámpara" de luz arriba de la pestaña (idea de Tubelight Navbar, 21st.dev). */
+  .site-header .nav-link[aria-current='page'],
+  .site-header .nav-link.is-active {
+    position: relative;
+    background: rgba(255, 255, 255, 0.14);
+    color: var(--color-white);
+    text-decoration: none;
+  }
+
+  .site-header .nav-link[aria-current='page']::before,
+  .site-header .nav-link.is-active::before {
+    content: '';
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    width: 80%;
+    height: 4px;
+    border-radius: 0 0 4px 4px;
+    background: var(--color-white);
+    box-shadow:
+      0 2px 10px 2px color-mix(in srgb, var(--color-brand-light) 90%, transparent),
+      0 6px 22px 5px color-mix(in srgb, var(--color-brand-light) 55%, transparent);
+    transform: translateX(-50%);
   }
 
   .dropdown {
@@ -384,7 +508,7 @@
 
   .dropdown--servicios {
     left: -120px;
-    width: 680px;
+    width: 750px;
   }
 
   /* Servicios: 9 enlaces en 3 columnas x 3 filas, que se leen por filas (orden de navigation.ts). */
@@ -393,11 +517,30 @@
     grid-template-columns: repeat(3, 1fr);
     column-gap: 4px;
   }
+
+  /* Línea divisora entre filas (después de cada 3 enlaces). */
+  .dropdown--servicios .dropdown__list li:nth-child(n + 4) {
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid var(--color-fog);
+  }
+
+  /* "Ver todos los servicios": empieza a la altura de los iconos (14 px de relleno del enlace) y termina al final de la segunda columna. */
+  .dropdown--servicios .dropdown__overview {
+    width: calc((100% - 8px) * 2 / 3 + 4px - 14px);
+    margin-left: 14px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .site-header__bar.container {
+    grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
+  }
 }
 
 /* Escritorio angosto: menú un poco más compacto para que todo quepa en una línea */
 @media (min-width: 1080px) and (max-width: 1279.98px) {
-  .site-header__bar {
+  .site-header__bar.container {
     gap: 10px;
   }
 

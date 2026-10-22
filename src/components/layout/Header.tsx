@@ -19,6 +19,7 @@ import { Icon } from '@/components/ui/Icon'
 import { LanguageSwitch } from '@/components/layout/LanguageSwitch'
 import { Logo } from '@/components/layout/Logo'
 import { SocialLinks } from '@/components/ui/SocialLinks'
+import { SocialOrbit } from '@/components/ui/SocialOrbit'
 
 const MENU_ID = 'menu-principal'
 const DESKTOP_QUERY = '(min-width: 1080px)'
@@ -156,11 +157,12 @@ export function Header({ route }: HeaderProps) {
         </div>
 
         <div className="site-header__actions">
+          <SocialOrbit className="site-header__social" />
           <LanguageSwitch route={route} className="lang-switch--bar" />
           <a className="btn btn--primary btn--sm interactive-hover schedule-link--bar" href={scheduleHref(route)} onClick={() => setMenuOpen(false)}>
             <InteractiveHoverContent>
               {ui.scheduleShort}
-              <span className="hide-xs">{ui.scheduleRest}</span>
+              <span className="visually-hidden">{ui.scheduleRest}</span>
             </InteractiveHoverContent>
           </a>
           <button
@@ -287,6 +289,9 @@ function NavDropdown({ item, currentPath, open, onToggle, onOpen, onClose }: Nav
                 href={child.path}
                 aria-current={ariaCurrent(child.path, currentPath)}
               >
+                <span className="dropdown__icon" aria-hidden="true">
+                  <Icon name={child.icon} size={20} />
+                </span>
                 {child.label}
               </a>
             </li>

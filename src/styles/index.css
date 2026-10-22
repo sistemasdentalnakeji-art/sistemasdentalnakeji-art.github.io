@@ -27,6 +27,7 @@
 @import './components/ghost-fibers.css';
 @import './components/shiny-text.css';
 @import './components/spin-shutter.css';
+@import './components/social-orbit.css';
 @import './layout/sections.css';
 @import './pages/home/story.css';
 @import './pages/home/schedule.css';

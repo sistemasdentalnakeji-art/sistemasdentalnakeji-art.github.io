@@ -9,6 +9,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { LANGS, routeOf, type Lang, type RouteDef, type RouteKey, type ServiceKey } from '@/config/routes'
+import type { IconName } from '@/components/ui/Icon'
+import { CATALOG_SERVICES } from '@/data/servicesCatalog'
+
+/** Ruta del submenú con el icono que se muestra junto a su nombre. */
+export type NavChild = RouteDef & { icon: IconName }
 
 interface NavLink {
   kind: 'link'
@@ -21,7 +26,7 @@ export interface NavMenu {
   kind: 'menu'
   id: string
   label: string
-  children: RouteDef[]
+  children: NavChild[]
   /** Enlace "ver todo" que se muestra dentro del submenú. */
   overview?: { label: string; href: string }
 }
@@ -55,14 +60,22 @@ const buildNav = (lang: Lang): NavItem[] => {
       kind: 'menu',
       id: 'servicios',
       label: to('services').label,
-      children: MENU_SERVICE_KEYS.map(to),
+      children: MENU_SERVICE_KEYS.map((key) => {
+        const icon = CATALOG_SERVICES.find((service) => service.key === key)?.icon
+        if (!icon) throw new Error(`Servicio del menú sin icono: ${key}`)
+        return { ...to(key), icon }
+      }),
       overview: { label: lang === 'en' ? 'View all services' : 'Ver todos los servicios', href: to('services').path },
     },
     {
       kind: 'menu',
       id: 'beneficios',
       label: to('benefits').label,
-      children: [to('promotions'), to('insurance'), to('agreements')],
+      children: [
+        { ...to('promotions'), icon: 'sparkle' },
+        { ...to('insurance'), icon: 'shield' },
+        { ...to('agreements'), icon: 'building' },
+      ],
       overview: { label: lang === 'en' ? 'View all benefits' : 'Ver todos los beneficios', href: to('benefits').path },
     },
     link('contacto', 'contact'),
