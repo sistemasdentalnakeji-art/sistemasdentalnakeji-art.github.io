@@ -132,7 +132,7 @@
 
 .timeline__card {
   position: relative;
-  padding: clamp(20px, 3vw, 36px);
+  padding: clamp(18px, 2.2vw, 28px);
   border: 1px solid var(--about-card-border);
   border-radius: var(--radius-card);
   background: var(--about-card);
@@ -143,14 +143,14 @@
 .timeline__title {
   margin-bottom: 8px;
   color: var(--color-gold);
-  font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2.125rem);
+  font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
   line-height: 1.2;
 }
 
 .timeline__text {
   margin: 0;
   color: var(--about-card-text);
-  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
   line-height: 1.6;
 }
 
@@ -211,7 +211,7 @@
 
 .timeline-carousel__viewport {
   position: relative;
-  height: clamp(320px, 52vw, 520px);
+  height: clamp(280px, 46vw, 400px);
   aspect-ratio: 3 / 4;
   max-width: 100%;
   overflow: hidden;
@@ -316,19 +316,16 @@
 @media (min-width: 900px) {
   .timeline {
     --line-x: 50%;
-    left: 50%;
-    width: min(1500px, calc(100vw - 2 * var(--gutter)));
-    transform: translateX(-50%);
   }
 
   .timeline__item {
     width: 50%;
-    padding-left: 48px;
+    padding-left: 40px;
     margin-left: 50%;
   }
 
   .timeline__item:nth-child(even) {
-    padding-right: 48px;
+    padding-right: 40px;
     padding-left: 0;
     margin-left: 0;
   }
@@ -460,7 +457,8 @@
 /* --card-w sale del ancho de este contenedor (cqw): dos tarjetas por fila en celular y tres en Doctores en escritorio. */
 .team-areas {
   --card-gap: clamp(16px, 2vw, 24px);
-  --card-w: calc((100cqw - var(--card-gap)) / 2);
+  --card-max: 288px;
+  --card-w: min(calc((100cqw - var(--card-gap)) / 2), var(--card-max));
   container-type: inline-size;
   display: grid;
   gap: clamp(36px, 5vw, 60px) clamp(20px, 4vw, 48px);
@@ -468,7 +466,7 @@
 
 @media (min-width: 1000px) {
   .team-areas {
-    --card-w: calc((100cqw - 2 * var(--card-gap)) / 3);
+    --card-w: min(calc((100cqw - 2 * var(--card-gap)) / 3), var(--card-max));
   }
 }
 
@@ -685,7 +683,7 @@
 
 .member__name {
   color: var(--color-white);
-  font-size: clamp(0.9rem, 0.76rem + 0.65vw, 1.25rem);
+  font-size: clamp(0.9rem, 0.76rem + 0.65vw, 1.125rem);
   line-height: 1.15;
   text-wrap: balance;
 }
@@ -693,7 +691,7 @@
 .member__specialty {
   color: rgba(255, 255, 255, 0.8);
   font-family: var(--font-body);
-  font-size: clamp(0.68rem, 0.59rem + 0.38vw, 0.88rem);
+  font-size: clamp(0.68rem, 0.59rem + 0.38vw, 0.8rem);
   font-weight: 400;
   line-height: 1.35;
   text-wrap: pretty;
