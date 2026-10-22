@@ -248,7 +248,7 @@
   border-radius: 16px;
   background: linear-gradient(135deg, var(--color-brand), var(--color-ink));
   box-shadow: 0 8px 18px -8px rgba(42, 66, 105, 0.55);
-  color: var(--color-white);
+  color: var(--color-gold);
 }
 
 .legal-card__title {
@@ -354,5 +354,103 @@
 @keyframes legal-recede {
   to {
     transform: scale(var(--scale));
+  }
+}
+
+/* Celular y tableta: las secciones son un menú desplegable (LegalDocument.tsx pone data-open en la abierta; una a la vez, la primera al
+   entrar). Una sola tarjeta con filas (icono, título y flecha); al abrir una se muestra su texto y las demás filas siguen debajo, en su
+   lugar. Mismo diseño que las categorías de /servicios/. El escritorio no cambia: nada de esto aplica desde 900 px. */
+.legal-card__toggle {
+  display: none;
+}
+
+@media (max-width: 899.98px) {
+  .legal-deck {
+    padding: 4px 16px;
+    border: 1px solid rgba(42, 66, 105, 0.12);
+    border-radius: 26px;
+    background: var(--color-white);
+    box-shadow: 0 14px 30px -22px rgba(42, 66, 105, 0.5);
+  }
+
+  .legal-card {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .legal-card + .legal-card {
+    margin-top: 0;
+    border-top: 1px solid rgba(42, 66, 105, 0.1);
+  }
+
+  /* Fila: icono, título y flecha. */
+  .legal-card__head {
+    position: relative;
+    gap: 14px;
+    min-height: 62px;
+    margin: 0;
+    padding: 10px 2px;
+    border-bottom: 0;
+  }
+
+  .legal-card__icon {
+    width: 40px;
+    border-radius: 13px;
+  }
+
+  .legal-card__title {
+    font-size: 1.0625rem;
+    line-height: 1.25;
+    letter-spacing: 0;
+  }
+
+  .legal-card__head::after {
+    content: '';
+    flex: none;
+    width: 8px;
+    height: 8px;
+    margin: -3px 6px 0 auto;
+    border: solid var(--color-brand);
+    border-width: 0 2px 2px 0;
+    rotate: 45deg;
+    transition: rotate 0.25s var(--ease);
+  }
+
+  .legal-card[data-open] .legal-card__head::after {
+    margin-top: 3px;
+    rotate: 225deg;
+  }
+
+  /* Botón invisible sobre la fila: abre y cierra. */
+  .legal-card__toggle {
+    position: absolute;
+    inset: 0;
+    display: block;
+    padding: 0;
+    border: 0;
+    border-radius: 16px;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .legal-card:not([data-open]) .legal-card__body {
+    display: none;
+  }
+
+  .legal-card__body {
+    padding: 2px 2px 18px;
+  }
+
+  .legal-card[data-open] .legal-card__body {
+    animation: legal-open 0.35s var(--ease) both;
+  }
+}
+
+@keyframes legal-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
   }
 }

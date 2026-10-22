@@ -47,6 +47,8 @@ export function LegalDocument({ doc, titleId, compact = false }: { doc: LegalDoc
   const { sections } = doc
   const [active, setActive] = useState(sections[0].id)
   const [stacked, setStacked] = useState(false)
+  // Celular y tableta: sección abierta del menú desplegable (una a la vez; la primera al entrar). En escritorio no se usa.
+  const [open, setOpen] = useState<number | null>(0)
   const deckRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -133,6 +135,7 @@ export function LegalDocument({ doc, titleId, compact = false }: { doc: LegalDoc
                 key={item.id}
                 id={item.id}
                 className="legal-card"
+                data-open={open === index ? '' : undefined}
                 aria-labelledby={`${item.id}-titulo`}
                 // Las cartas tapadas no se enfocan con el teclado.
                 inert={stacked && active !== item.id}
@@ -152,6 +155,14 @@ export function LegalDocument({ doc, titleId, compact = false }: { doc: LegalDoc
                   <h2 id={`${item.id}-titulo`} className="legal-card__title">
                     {item.title}
                   </h2>
+                  {/* Solo celular y tableta (en escritorio está oculto): abre y cierra la sección. */}
+                  <button
+                    type="button"
+                    className="legal-card__toggle"
+                    aria-expanded={open === index}
+                    aria-labelledby={`${item.id}-titulo`}
+                    onClick={() => setOpen(open === index ? null : index)}
+                  />
                 </header>
                 {/* Con apilado la carta mide lo mismo que las demás y el texto largo se desplaza por dentro (enfocable para el teclado). */}
                 <div className="legal-card__body" tabIndex={stacked ? 0 : undefined}>
