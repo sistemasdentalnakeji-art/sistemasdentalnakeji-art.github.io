@@ -1,26 +1,25 @@
 /**
- * Dental Nakeji — Solicitudes de cita desde el sitio web → Google Calendar.
+ * Dental Nakeji - Solicitudes de cita desde el sitio web -> Google Calendar.
  *
- * Se publica como "Aplicación web" desde la cuenta de Google de la clínica.
+ * Se publica como "Aplicacion web" desde la cuenta de Google de la clinica.
  * Recibe el formulario del homepage (POST, JSON), valida los datos, revisa que el
- * horario esté libre y crea un evento "Solicitud de cita" en el calendario indicado.
- * Instrucciones: integrations/google-calendar/README.md
+ * horario este libre y crea un evento "Solicitud de cita" en el calendario indicado.
  */
 
-// PENDIENTE: confirmar horario real con la clínica. Debe coincidir con src/config/booking.ts
+// Los horarios y servicios deben coincidir con src/config/booking.ts
 const CONFIG = {
-  /** ID del calendario de citas (Configuración del calendario → Integrar calendario). Vacío = calendario principal. */
+  /** ID del calendario de citas (Configuracion del calendario -> Integrar calendario). Vacio = calendario principal. */
   CALENDAR_ID: '',
-  /** Duración de cada cita en minutos. */
+  /** Duracion de cada cita en minutos. */
   DURATION_MINUTES: 60,
-  /** Días sin atención: 0 = domingo … 6 = sábado. */
+  /** Dias sin atencion: 0 = domingo ... 6 = sabado. */
   CLOSED_WEEKDAYS: [0],
   /** Horarios permitidos (24 h). */
   SLOTS: [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
     '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
   ],
-  /** Hasta cuántos días adelante se aceptan solicitudes. */
+  /** Hasta cuantos dias adelante se aceptan solicitudes. */
   DAYS_AHEAD: 60,
   /** Rechazar si ya hay una cita confirmada en ese horario (las solicitudes pendientes, en amarillo, no bloquean). */
   CHECK_CONFLICTS: true,
@@ -46,15 +45,15 @@ const CONFIG = {
     'Periodoncia',
     'Extracciones simples y de juicio',
   ],
-  /** Páginas desde donde se acepta el campo "source" (cualquier otra cosa se guarda como "—"). */
+  /** Paginas desde donde se acepta el campo "source" (cualquier otra cosa se guarda como "-"). */
   SOURCE_PREFIXES: [
     'https://nakejidental.com/',
     'https://www.nakejidental.com/',
     'https://sistemasdentalnakeji-art.github.io/',
   ],
-  /** Límite global de solicitudes por hora (frena que un script llene el calendario). */
+  /** Limite global de solicitudes por hora (frena que un script llene el calendario). */
   MAX_REQUESTS_PER_HOUR: 30,
-  /** Horas en las que un mismo teléfono no puede pedir otra cita. */
+  /** Horas en las que un mismo telefono no puede pedir otra cita. */
   PHONE_COOLDOWN_HOURS: 6,
 };
 
@@ -63,7 +62,7 @@ function doPost(e) {
     const data = JSON.parse((e && e.postData && e.postData.contents) || '{}');
 
     // Trampa anti-spam: si el campo oculto viene lleno, se responde "ok" sin crear nada.
-    // Se llama hp_x (y no "website", "url"…) para que el autocompletado del navegador no lo rellene.
+    // Se llama hp_x (y no "website", "url"...) para que el autocompletado del navegador no lo rellene.
     if (data.hp_x) return json_({ ok: true });
 
     const errors = validate_(data);
@@ -76,14 +75,14 @@ function doPost(e) {
       : CalendarApp.getDefaultCalendar();
     if (!calendar) throw new Error('Calendario no encontrado: revisa CALENDAR_ID');
 
-    // Los límites se leen y se escriben dentro del candado: dos solicitudes simultáneas no pasan ambas el tope.
+    // Los limites se leen y se escriben dentro del candado: dos solicitudes simultaneas no pasan ambas el tope.
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
     try {
       const cache = CacheService.getScriptCache();
       const hourKey = 'count-' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMddHH');
       const phoneKey = 'phone-' + String(data.phone).replace(/\D/g, '');
-      // Un reintento de la misma solicitud (mismo teléfono, fecha y hora; p. ej. por mala señal) responde "ok" sin crear otro evento.
+      // Un reintento de la misma solicitud (mismo telefono, fecha y hora; p. ej. por mala senal) responde "ok" sin crear otro evento.
       const sameRequestKey = phoneKey + '-' + data.date + '-' + data.time;
       if (cache.get(sameRequestKey)) return json_({ ok: true });
       const requestsThisHour = Number(cache.get(hourKey) || 0);
@@ -91,8 +90,7 @@ function doPost(e) {
         return json_({ ok: false, error: 'limit' });
       }
 
-      // Los eventos de todo el día (cumpleaños, festivos) y las solicitudes pendientes no ocupan horario: así un
-      // script no puede bloquear todos los horarios con solicitudes falsas.
+      // Solo cuentan como ocupados los eventos confirmados (no amarillos y no de todo el dia).
       const busy = calendar
         .getEvents(start, end)
         .filter((event) => !event.isAllDayEvent() && event.getColor() !== CONFIG.EVENT_COLOR);
@@ -101,20 +99,20 @@ function doPost(e) {
       }
 
       const source = clean_(data.source);
-      const event = calendar.createEvent(`Solicitud de cita: ${clean_(data.service)} — ${fullName_(data)}`, start, end, {
+      const event = calendar.createEvent(`Solicitud de cita: ${clean_(data.service)} - ${fullName_(data)}`, start, end, {
         description: [
           'Solicitud enviada desde el sitio web (pendiente de confirmar).',
           '',
           `Nombre(s): ${clean_(data.firstName)}`,
           `Apellidos: ${clean_(data.lastName)}`,
-          `Teléfono: ${clean_(data.phone)}`,
-          `Correo: ${clean_(data.email) || '—'}`,
+          `Telefono: ${clean_(data.phone)}`,
+          `Correo: ${clean_(data.email) || '-'}`,
           `Servicio: ${clean_(data.service)}`,
-          `Primera visita: ${data.firstVisit ? 'Sí' : 'No'}`,
-          `Comentarios: ${clean_(data.comments) || '—'}`,
+          `Primera visita: ${data.firstVisit ? 'Si' : 'No'}`,
+          `Comentarios: ${clean_(data.comments) || '-'}`,
           '',
-          `Aceptó el aviso de privacidad: Sí`,
-          `Página: ${CONFIG.SOURCE_PREFIXES.some((prefix) => source.indexOf(prefix) === 0) ? source : '—'}`,
+          `Acepto el aviso de privacidad: Si`,
+          `Pagina: ${CONFIG.SOURCE_PREFIXES.some((prefix) => source.indexOf(prefix) === 0) ? source : '-'}`,
         ].join('\n'),
       });
       event.setColor(CONFIG.EVENT_COLOR);
@@ -125,13 +123,14 @@ function doPost(e) {
       lock.releaseLock();
     }
 
-    // El aviso por correo es opcional: si falla (cuota, dirección), la cita ya quedó creada.
+    // El aviso por correo es opcional: si falla (cuota, direccion), la cita ya quedo creada.
     if (CONFIG.NOTIFY_EMAIL) {
       try {
         MailApp.sendEmail({
           to: CONFIG.NOTIFY_EMAIL,
+          name: 'Dental Nakeji - Formulario Web',
           subject: `Nueva solicitud de cita: ${fullName_(data)}`,
-          body: `${fullName_(data)} solicitó ${clean_(data.service)} el ${data.date} a las ${data.time}.\nLos datos de contacto están en el evento de Google Calendar.`,
+          body: `${fullName_(data)} solicito ${clean_(data.service)} el ${data.date} a las ${data.time}.\nLos datos de contacto estan en el evento de Google Calendar.`,
         });
       } catch (mailError) {
         console.error(mailError);
@@ -145,7 +144,7 @@ function doPost(e) {
   }
 }
 
-/** Permite comprobar en el navegador que la aplicación web está publicada. */
+/** Permite comprobar en el navegador que la aplicacion web esta publicada. */
 function doGet() {
   return json_({ ok: true, service: 'dental-nakeji-citas' });
 }
@@ -154,7 +153,7 @@ function validate_(data) {
   const errors = [];
   const text = (value) => String(value || '').trim();
 
-  // Mismas reglas que la web (src/features/booking/booking.ts): nombre solo con letras; teléfono solo dígitos con "+" opcional al inicio.
+  // Mismas reglas que la web (src/features/booking/BookingForm.tsx): nombre solo con letras Unicode; telefono solo digitos con "+" opcional al inicio.
   if (!/^\p{L}{2,}(?: \p{L}+)*$/u.test(text(data.firstName)) || text(data.firstName).length > 50) errors.push('firstName');
   if (!/^\p{L}{2,}(?: \p{L}+)*$/u.test(text(data.lastName)) || text(data.lastName).length > 50) errors.push('lastName');
   if (!/^\+?\d{10,15}$/.test(text(data.phone))) errors.push('phone');
@@ -181,7 +180,7 @@ function validate_(data) {
   return errors;
 }
 
-/** Número de día (desde 1970) de una fecha "AAAA-MM-DD", o null si el formato o la fecha no existen. */
+/** Numero de dia (desde 1970) de una fecha "AAAA-MM-DD", o null si el formato o la fecha no existen. */
 function dayNumber_(iso) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
   const [y, m, d] = iso.split('-').map(Number);
@@ -191,19 +190,19 @@ function dayNumber_(iso) {
   return time / 86400000;
 }
 
-/** Fecha y hora en la zona horaria del proyecto (appsscript.json → America/Tijuana). */
+/** Fecha y hora en la zona horaria del proyecto (appsscript.json -> America/Tijuana). */
 function toDate_(date, time) {
   const [y, m, d] = String(date).split('-').map(Number);
   const [h, min] = String(time).split(':').map(Number);
   return new Date(y, m - 1, d, h, min, 0);
 }
 
-/** Nombre completo para el título del evento y el aviso por correo (en los datos van separados). */
+/** Nombre completo para el titulo del evento y el aviso por correo (en los datos van separados). */
 function fullName_(data) {
   return clean_(data.firstName) + ' ' + clean_(data.lastName);
 }
 
-/** Quita caracteres de control y `<` `>` (Calendar muestra HTML en la descripción) y acota el largo. */
+/** Quita caracteres de control y "<" ">" (Calendar muestra HTML en la descripcion) y acota el largo. */
 function clean_(value) {
   return String(value || '').replace(/[\u0000-\u001f<>]/g, ' ').trim().slice(0, 500);
 }
