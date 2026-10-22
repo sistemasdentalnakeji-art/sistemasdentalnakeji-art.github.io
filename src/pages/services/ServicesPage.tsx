@@ -60,17 +60,6 @@ function CatalogCard({ service }: { service: CatalogService }) {
  */
 function goToCategory(event: MouseEvent<HTMLAnchorElement>, index: number) {
   const deck = document.querySelector<HTMLElement>('.catalog-groups')
-  // Celular con cartas apiladas (sticky): el ancla nativa no las alcanza, así que se calcula dónde empieza la carta en el flujo
-  // (suma de las anteriores) y se deja justo bajo el encabezado.
-  if (deck && deck.dataset.stack !== undefined) {
-    event.preventDefault()
-    const cards = [...deck.querySelectorAll<HTMLElement>('.catalog-group')]
-    const before = cards.slice(0, index).reduce((sum, card) => sum + card.offsetHeight + parseFloat(getComputedStyle(card).marginTop), 0)
-    const header = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 75
-    window.scrollTo({ top: deck.getBoundingClientRect().top + window.scrollY + before - header - 12, behavior: 'smooth' })
-    document.getElementById(`${CATALOG_GROUPS.en[index].id}-titulo`)?.focus({ preventScroll: true })
-    return
-  }
   const max = deck ? deck.scrollHeight - deck.clientHeight : 0
   if (!deck || max <= 1) return
   event.preventDefault()
@@ -88,6 +77,8 @@ export function ServicesPage() {
   // Categoría de la carta que se ve en la ventana (la carta i queda a i/4 del scroll máximo): su número del índice va en amarillo.
   // Sin apilado (celular, "reducir movimiento") la ventana no tiene scroll y no se marca ninguna.
   const [active, setActive] = useState<number | null>(null)
+  // Celular y tableta: categoría abierta del menú desplegable (una a la vez; la primera al entrar). En escritorio no se usa.
+  const [open, setOpen] = useState<number | null>(0)
   useEffect(() => {
     const deck = document.querySelector<HTMLElement>('.catalog-groups')
     if (!deck) return
@@ -98,53 +89,6 @@ export function ServicesPage() {
     deck.addEventListener('scroll', onScroll, { passive: true })
     return () => deck.removeEventListener('scroll', onScroll)
   }, [])
-
-  // Celular: las categorías se apilan con el scroll de la página (misma idea que la ventana de escritorio). Una carta más alta que la
-  // pantalla no puede fijarse por arriba (quedaría cortada), así que se fija por abajo: top = min(posición en la pila, pantalla - alto).
-  // Aquí se mide cada carta y se escriben sus variables (--top, --span, --cut, --scale-m); el CSS hace el resto (services-index.css).
-  useEffect(() => {
-    const deck = document.querySelector<HTMLElement>('.catalog-groups')
-    if (!deck) return
-    const cards = [...deck.querySelectorAll<HTMLElement>('.catalog-group')]
-    const media = window.matchMedia('(max-width: 899.98px) and (prefers-reduced-motion: no-preference)')
-    const probe = document.createElement('div') // 100svh en píxeles, estable aunque la barra del navegador suba o baje
-    probe.style.cssText = 'position:fixed;visibility:hidden;pointer-events:none;height:100svh'
-    document.body.append(probe)
-    const STEP = 14 // desfase entre cartas apiladas
-    const GAP = 12 // aire bajo una carta alta fijada por abajo
-    const layout = () => {
-      if (!media.matches) {
-        delete deck.dataset.stack
-        return
-      }
-      const vh = probe.offsetHeight
-      const stack = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 75) + 12
-      const heights = cards.map((card) => card.offsetHeight)
-      const tops = heights.map((h, i) => Math.min(stack + i * STEP, vh - h - GAP))
-      cards.forEach((card, i) => {
-        const scale = 1 - (cards.length - i) * 0.03
-        card.style.setProperty('--scale-m', String(scale))
-        card.style.setProperty('--top', `${tops[i]}px`)
-        if (i === cards.length - 1) return
-        // Recorrido de la carta siguiente hasta quedar fija, y recorte de abajo para que esta no asome bajo una carta siguiente más baja.
-        card.style.setProperty('--span', `${vh - tops[i + 1]}px`)
-        const cut = heights[i] - (tops[i + 1] + heights[i + 1] - tops[i] - 6) / scale
-        card.style.setProperty('--cut', `${Math.max(0, cut)}px`)
-      })
-      deck.dataset.stack = ''
-    }
-    layout()
-    const observer = new ResizeObserver(layout)
-    cards.forEach((card) => observer.observe(card))
-    media.addEventListener('change', layout)
-    window.addEventListener('resize', layout)
-    return () => {
-      observer.disconnect()
-      media.removeEventListener('change', layout)
-      window.removeEventListener('resize', layout)
-      probe.remove()
-    }
-  }, [lang])
 
   return (
     <Band
@@ -225,6 +169,7 @@ export function ServicesPage() {
               key={group.id}
               id={group.id}
               className="catalog-group"
+              data-open={open === index ? '' : undefined}
               aria-labelledby={`${group.id}-titulo`}
               style={
                 {
@@ -240,6 +185,14 @@ export function ServicesPage() {
                   {group.title}
                 </h2>
                 <p className="catalog-group__intro">{group.intro}</p>
+                {/* Solo celular y tableta (en escritorio está oculto): abre y cierra la categoría. */}
+                <button
+                  type="button"
+                  className="catalog-group__toggle"
+                  aria-expanded={open === index}
+                  aria-labelledby={`${group.id}-titulo`}
+                  onClick={() => setOpen(open === index ? null : index)}
+                />
               </div>
               <ul className="catalog-grid">
                 {group.services.map((service) => (
