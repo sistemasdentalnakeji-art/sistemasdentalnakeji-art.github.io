@@ -1,7 +1,7 @@
-// Reseñas de Google: MARCADORES DE DISEÑO, no son opiniones reales.
-// Se reemplazarán por reseñas reales (Google Places API o un widget). La estructura
-// sigue los campos que entrega Google: autor, calificación, texto y fecha relativa.
-// Al conectar la API, conserva la atribución que exige Google (nombre/enlace del autor y logo de Google).
+// Reseñas de Google. Mientras no haya conexión, el sitio muestra estos MARCADORES DE DISEÑO (no son opiniones reales).
+// Las reales llegan de api/reviews.ts (Google Places API) y las pide src/lib/useGoogleReviews.ts; los campos son los
+// que entrega Google: autor, calificación, texto y fecha relativa. Se conserva la atribución que exige Google
+// (nombre/enlace del autor y logo de Google).
 
 import type { Lang } from '@/config/routes'
 import { SITE } from '@/config/site'
@@ -14,6 +14,15 @@ export interface Review {
   relativeTime: string
   authorUrl?: string
   photoUrl?: string
+  /** La reseña en Google Maps. */
+  googleUrl?: string
+}
+
+/** Respuesta de api/reviews.ts. */
+export interface GoogleReviews {
+  rating: number | null
+  total: number | null
+  reviews: Review[]
 }
 
 const PLACEHOLDER: Record<Lang, { author: string; text: string; relativeTime: string }> = {

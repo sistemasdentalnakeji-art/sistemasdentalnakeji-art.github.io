@@ -33,6 +33,7 @@
 @import './pages/home/schedule.css';
 @import './pages/home/services.css';
 @import './components/carousel.css';
+@import './components/marquee.css';
 @import './components/location-map.css';
 @import './pages/home/partners.css';
 @import './pages/home/reviews.css';

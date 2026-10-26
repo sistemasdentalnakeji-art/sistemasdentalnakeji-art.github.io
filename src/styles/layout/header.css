@@ -40,18 +40,84 @@
   min-height: var(--header-height);
 }
 
+/* --logo-h = alto de las letras; todo el logo se escala con él. El archivo del logotipo mide 768×133: "Dental" ocupa de 0 a 312 px
+   y "nakeji" de 480 a 768 (el isotipo, en medio, se sustituye por el orbe). */
 .logo {
+  --logo-h: 29px;
   display: inline-flex;
   flex: none;
+  align-items: center;
+  gap: calc(var(--logo-h) * 0.1);
   padding: 6px 0;
   border-radius: 8px;
 }
 
-/* El logo oficial es azul marino: sobre el degradado oscuro se ve en blanco. */
-.logo__img {
-  width: auto;
-  height: 29px;
-  filter: brightness(0) invert(1);
+/* Letras: el logotipo azul se usa solo como máscara y se pinta en blanco con el barrido de luz (keyframes de shiny-text.css). */
+.logo__word {
+  height: var(--logo-h);
+  background-image:
+    linear-gradient(
+      119deg,
+      transparent 18%,
+      rgba(123, 195, 235, 0.3) 34%,
+      rgba(200, 228, 248, 0.85) 44%,
+      #ffffff 50%,
+      rgba(200, 228, 248, 0.85) 56%,
+      rgba(123, 195, 235, 0.3) 66%,
+      transparent 82%
+    ),
+    linear-gradient(#ffffff, #ffffff);
+  background-repeat: no-repeat;
+  background-size: 250% 100%, 100% 100%;
+  background-position: 103% 0, 0 0;
+  -webkit-mask-image: var(--logo-mask);
+  mask-image: var(--logo-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: auto 100%;
+  mask-size: auto 100%;
+  animation: shiny-sweep 4.2s ease-in-out infinite;
+}
+
+.logo__word--left {
+  width: calc(var(--logo-h) * 312 / 133);
+  -webkit-mask-position: left center;
+  mask-position: left center;
+}
+
+.logo__word--right {
+  width: calc(var(--logo-h) * 288 / 133);
+  -webkit-mask-position: right center;
+  mask-position: right center;
+  animation-delay: 0.25s; /* la luz pasa de "Dental" a "nakeji" */
+}
+
+/* Orbe del isotipo: mismo contorno luminoso (.siri) y fondo oscuro del orbe del hero, a tamaño de header. */
+.logo__orb {
+  --siri-width: 2px;
+  --siri-blur: 7px;
+  --siri-d: #ffffff;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: calc(var(--logo-h) * 1.4);
+  height: calc(var(--logo-h) * 1.4);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, #18305a, #070f1e 72%);
+}
+
+.logo__mark {
+  width: 62%;
+  height: 62%;
+  filter: drop-shadow(0 0 5px rgba(123, 195, 235, 0.6));
+}
+
+/* Alto contraste: sin degradados las letras quedarían en blanco sobre blanco; se pintan con el color de texto del sistema. */
+@media (forced-colors: active) {
+  .logo__word {
+    background: CanvasText;
+    animation: none;
+  }
 }
 
 .site-header__actions {
@@ -266,6 +332,11 @@
   font-weight: 600;
 }
 
+/* Beneficios: el botón "Ver todos los beneficios" ocupa todo el ancho del menú. */
+.dropdown--beneficios .dropdown__overview {
+  width: 100%;
+}
+
 /* Móvil y tableta: menú desplegable a pantalla completa */
 @media (max-width: 1079.98px) {
   .site-menu {
@@ -361,8 +432,8 @@
     justify-self: end;
   }
 
-  .logo__img {
-    height: 34px;
+  .logo {
+    --logo-h: 34px;
   }
 }
 
@@ -371,8 +442,8 @@
     display: none;
   }
 
-  .logo__img {
-    height: 24px;
+  .logo {
+    --logo-h: 24px;
   }
 }
 
@@ -443,8 +514,8 @@
     justify-self: end;
   }
 
-  .logo__img {
-    height: 35px;
+  .logo {
+    --logo-h: 35px;
   }
 
   .site-menu {
@@ -535,6 +606,21 @@
 @media (min-width: 1400px) {
   .site-header__bar.container {
     grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
+  }
+
+  /* La órbita de redes queda centrada entre el último enlace del menú y la bandera: el espacio libre del grupo derecho
+     se reparte a ambos lados de la órbita (el margen automático de la bandera hace lo mismo a su derecha). */
+  .site-header__actions {
+    justify-self: stretch;
+  }
+
+  /* 8px = padding del botón de idioma: compensa su caja para que la órbita quede al centro visual. */
+  .site-header__actions .site-header__social {
+    margin-inline: auto 8px;
+  }
+
+  .site-header__actions .lang-switch--bar {
+    margin-left: auto;
   }
 }
 

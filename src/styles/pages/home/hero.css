@@ -156,7 +156,7 @@
 
 .hero__note svg {
   flex: none;
-  color: var(--color-brand-light);
+  color: var(--color-gold);
 }
 
 /* Etiquetas ambientales (decorativas) */
@@ -174,7 +174,7 @@
   align-items: center;
   gap: 10px;
   padding: 12px 20px 12px 12px;
-  border: 1px solid var(--hero-glass-border);
+  border: 1px solid #ffffff;
   border-radius: var(--radius-pill);
   background: var(--hero-glass);
   -webkit-backdrop-filter: blur(12px);
@@ -193,14 +193,14 @@
   box-sizing: content-box;
   padding: 4px;
   border-radius: 50%;
-  background: rgba(123, 195, 235, 0.24);
-  color: #9fd8f5;
+  background: linear-gradient(135deg, var(--color-brand), var(--color-ink));
+  color: var(--color-gold);
   stroke-width: 2.6;
 }
 
 .hero--light .ambient-label svg {
-  background: var(--color-sky-strong);
-  color: var(--color-brand);
+  background: linear-gradient(135deg, var(--color-brand), var(--color-ink));
+  color: var(--color-gold);
 }
 
 /* Posiciones en el lado derecho (el texto ocupa la izquierda). */

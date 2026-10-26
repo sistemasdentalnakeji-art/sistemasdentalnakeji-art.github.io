@@ -23,7 +23,7 @@ interface UiText {
   stars: { pending: string; value: (rating: number) => string }
   map: { toggle: (name: string) => string; hint: string; tag: string }
   contact: { title: string; address: string; directions: string; email: string; hours: string; follow: string; call: string }
-  reviews: { summary: string; pending: string; based: (total: number) => string; carousel: string }
+  reviews: { summary: string; pending: string; based: (total: number) => string; carousel: string; more: string }
   featured: { carousel: string; cta: string; badge: string }
   rights: string
   spin: {
@@ -76,6 +76,7 @@ export const UI: Record<Lang, UiText> = {
       pending: 'Google rating',
       based: (total) => `Based on ${total} Google reviews`,
       carousel: 'Patient reviews',
+      more: 'Read on Google',
     },
     featured: { carousel: 'Most requested services', cta: 'Learn more about this service', badge: 'Most requested' },
     rights: 'All rights reserved.',
@@ -138,6 +139,7 @@ export const UI: Record<Lang, UiText> = {
       pending: 'Calificación en Google',
       based: (total) => `Basado en ${total} reseñas de Google`,
       carousel: 'Reseñas de pacientes',
+      more: 'Leer en Google',
     },
     featured: { carousel: 'Servicios más solicitados', cta: 'Conocer más del servicio', badge: 'Más solicitado' },
     rights: 'Todos los derechos reservados.',

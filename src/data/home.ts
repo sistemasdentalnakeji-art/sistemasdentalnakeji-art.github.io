@@ -102,18 +102,25 @@ export const PARTNERS_SECTION: Record<Lang, { title: string; text: string }> = {
   },
 }
 
-export const REVIEWS_SECTION: Record<Lang, { eyebrow: string; title: string; text: string; cta: string }> = {
+export const REVIEWS_SECTION: Record<
+  Lang,
+  { eyebrow: string; title: string; text: string; cta: string; slogan: string; sloganSub: string }
+> = {
   en: {
     eyebrow: 'Google reviews',
     title: 'What our patients say',
-    text: 'Reviews posted by patients on our Google profile.',
+    text: 'What our patients say, posted by them on our Google profile.',
     cta: 'See reviews on Google',
+    slogan: "We don't lie. Our patients speak for us.",
+    sloganSub: 'Real reviews, straight from Google.',
   },
   es: {
     eyebrow: 'Reseñas de Google',
     title: 'Lo que dicen nuestros pacientes',
-    text: 'Opiniones publicadas por pacientes en nuestro perfil de Google.',
+    text: 'Lo que dicen nuestros pacientes, publicado por ellos en nuestro perfil de Google.',
     cta: 'Ver reseñas en Google',
+    slogan: 'Nosotros no mentimos. Nuestros pacientes hablan por nosotros.',
+    sloganSub: 'Reseñas reales, directo de Google.',
   },
 }
 

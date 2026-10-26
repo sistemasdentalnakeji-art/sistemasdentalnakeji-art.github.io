@@ -1,91 +1,483 @@
 /* ==========================================================================
-   Reseñas de Google
+   Reseñas de Google: título animado, resumen de calificación y dos filas de tarjetas que corren (components/marquee.css).
    ========================================================================== */
-.section-title--spaced {
-  margin-top: 20px;
+
+/* Letras animadas de "Google" */
+.google-brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 0.8rem + 4.5vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
 }
 
-.reviews {
+.google-brand__letter {
+  color: var(--gc);
+  opacity: 0;
+  animation:
+    google-bounce 1.6s cubic-bezier(0.22, 1, 0.36, 1) both,
+    google-hop 2.8s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.13s + 0.2s), calc(var(--i) * 0.09s + 3.2s);
+  animation-play-state: paused;
+}
+
+.google-brand--play .google-brand__letter {
+  animation-play-state: running;
+}
+
+@keyframes google-bounce {
+  0%   { opacity: 0; transform: translateY(-48px) scaleY(0.9); }
+  22%  { opacity: 1; transform: translateY(4px) scaleY(1.04); }
+  34%  { transform: translateY(-18px); }
+  48%  { transform: translateY(2px); }
+  57%  { transform: translateY(-7px); }
+  66%  { transform: translateY(0); }
+  71%  { transform: translateY(-2.5px); }
+  76%  { transform: translateY(0); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes google-hop {
+  0%, 60%, 100% { transform: translateY(0); }
+  12%           { transform: translateY(-16px); }
+  24%           { transform: translateY(0); }
+  34%           { transform: translateY(-6px); }
+  44%           { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .google-brand__letter {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ---------- Bloque Google (izquierda) + ventana de navegador (derecha) ---------- */
+.reviews-intro {
   display: grid;
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 36px;
+  align-items: center;
 }
 
-.reviews-summary {
+.reviews-intro__google {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 32px 24px;
-  box-shadow: var(--shadow);
   text-align: center;
 }
 
-.reviews-summary__score {
-  color: var(--color-ink);
-  font-family: var(--font-display);
-  font-size: 3.5rem;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.04em;
+.reviews-intro__google .google-brand {
+  margin-bottom: 0;
+  font-size: clamp(3.5rem, 1.5rem + 9vw, 7.5rem);
 }
 
-.reviews-summary .card-text {
-  margin-top: 0;
+/* Parte blanca de arriba: un arco ancho que baja hasta las tarjetas y separa la sección de la anterior. */
+.reviews-intro {
+  position: relative;
+  isolation: isolate;
 }
 
-.reviews-summary .btn {
-  margin-top: 8px;
+.reviews-intro::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--band-padding) * -1 - 40px);
+  bottom: -64px;
+  left: 50%;
+  z-index: -1;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill='%23fff' d='M0 0H100V26C90 72 70 100 50 100C30 100 10 72 0 26Z'/%3E%3C/svg%3E")
+    0 0 / 100% 100% no-repeat;
 }
 
-.review-card {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  height: 100%;
-  padding: 24px;
+/* Ventana estilo Mac: tres puntos, barra de dirección y fondo oscuro. */
+.mac-window {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: #0b1220;
+  box-shadow: 0 30px 60px -30px rgba(7, 15, 30, 0.7);
+  color: var(--color-white);
 }
 
-.review-card__header {
+.mac-window__bar {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  padding: 12px 16px;
+  background: #151e30;
+}
+
+.mac-window__dots {
+  display: inline-flex;
+  flex: none;
+  gap: 7px;
+}
+
+.mac-window__dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.mac-window__dots i:nth-child(2) {
+  background: #febc2e;
+}
+
+.mac-window__dots i:nth-child(3) {
+  background: #28c840;
+}
+
+.mac-window__url {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mac-window__body {
+  display: grid;
+  place-items: center;
+  min-height: 290px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.mac-window__scene,
+.mac-window__brand {
+  grid-area: 1 / 1;
+}
+
+.mac-window__scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: mac-scene 11s ease-in-out infinite;
+}
+
+/* Logo oficial: aparece cuando la escena del clic se apaga y se queda unos 4 s. */
+.mac-window__brand {
+  --logo-h: clamp(30px, 8vw, 64px);
+  opacity: 0;
+  animation: mac-brand 11s ease-in-out infinite;
+}
+
+.mac-window__slogan {
+  max-width: 20ch;
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.mac-window__sub {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: var(--text-small);
+}
+
+.mac-window__action {
+  position: relative;
+  margin-top: 8px;
+  padding-bottom: 6px;
+}
+
+.mac-window__btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  background: var(--color-gold);
+  color: #0b1220;
+  font-weight: 600;
+  text-decoration: none;
+  animation: mac-press 11s ease-in-out infinite;
+}
+
+.mac-window__btn:hover {
+  background: #fff;
+}
+
+.mac-window__cursor {
+  position: absolute;
+  top: 55%;
+  left: 55%;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+  animation: mac-cursor 11s ease-in-out infinite;
+}
+
+.mac-window__stars {
+  position: relative;
+  display: flex;
+}
+
+.mac-window__stars .stars {
+  color: var(--color-gold);
+}
+
+.mac-window__stars .stars--empty {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.mac-window__stars-fill {
+  position: absolute;
+  inset: 0;
+  animation: mac-fill 11s ease-in-out infinite;
+}
+
+@keyframes mac-fill {
+  0%, 11.5% { clip-path: inset(0 100% 0 0); }
+  19%, 100% { clip-path: inset(0 0 0 0); }
+}
+
+/* Ciclo de 11 s: clic a ~1.2 s, estrellas llenas a ~2.1 s, pausa de ~3 s, escena se apaga a ~5.7 s, el logo se queda ~4 s. */
+@keyframes mac-cursor {
+  0%, 2%    { opacity: 0; transform: translate(110px, 90px) scale(1); }
+  5%        { opacity: 1; }
+  11%       { opacity: 1; transform: translate(0, 0) scale(1); }
+  12.5%     { transform: translate(0, 0) scale(0.82); }
+  14.5%     { opacity: 1; transform: translate(0, 0) scale(1); }
+  18%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+}
+
+@keyframes mac-press {
+  0%, 11%  { transform: scale(1); box-shadow: 0 0 0 0 rgba(224, 182, 92, 0); }
+  12.5%    { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(224, 182, 92, 0.6); }
+  19%      { transform: scale(1); box-shadow: 0 0 0 16px rgba(224, 182, 92, 0); }
+  100%     { transform: scale(1); box-shadow: 0 0 0 0 rgba(224, 182, 92, 0); }
+}
+
+@keyframes mac-scene {
+  0%, 44%   { opacity: 1; }
+  52%, 92%  { opacity: 0; }
+  100%      { opacity: 1; }
+}
+
+@keyframes mac-brand {
+  0%, 47%   { opacity: 0; }
+  55%, 91%  { opacity: 1; }
+  97%, 100% { opacity: 0; }
+}
+
+@media (min-width: 900px) {
+  .reviews-intro {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 56px;
+  }
+
+  .reviews-intro__google {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .mac-window__body {
+    padding: 52px 40px 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mac-window__btn,
+  .mac-window__scene,
+  .mac-window__stars-fill,
+  .mac-window__brand {
+    animation: none;
+  }
+
+  .mac-window__brand,
+  .mac-window__cursor {
+    display: none;
+  }
+}
+
+/* ---------- Filas (una hacia la derecha, otra hacia la izquierda) ---------- */
+.reviews-rows {
+  display: grid;
+  gap: 6px;
+  margin-top: 36px;
+}
+
+/* ---------- Tarjeta: marco completo, línea inferior y, dentro, el recuadro del autor con su punto de luz ---------- */
+.review-card {
+  --card-r: 22px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: clamp(290px, 84vw, 420px);
+  padding: 26px 26px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--card-r);
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(63, 127, 214, 0.28), transparent 60%),
+    linear-gradient(165deg, #12254d, #070f1e);
+  box-shadow:
+    0 22px 44px -26px rgba(7, 15, 30, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  color: var(--color-white);
+}
+
+/* Línea de acento en el borde inferior, como la del diseño de referencia. */
+.review-card::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 26px;
+  width: 38%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-sky), transparent);
+}
+
+/* Barrido neón: gradiente de luz que recorre el contorno del recuadro del autor. */
+.review-card__author::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: calc(var(--box-r) + 1px);
+  padding: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 20%,
+    rgba(224, 182, 92, 0.3) 35%,
+    var(--color-gold) 48%,
+    #ffffff 52%,
+    var(--color-gold) 56%,
+    rgba(224, 182, 92, 0.3) 70%,
+    transparent 85%,
+    transparent 100%
+  );
+  background-size: 300% 100%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: neon-sweep 10s linear infinite;
+  animation-delay: calc(var(--i, 0) * -2.5s);
+}
+
+@keyframes neon-sweep {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-card__author::before {
+    display: none;
+  }
+}
+
+.review-card__top {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.review-card .google-g {
+  flex: none;
+}
+
+.review-card__text {
+  display: -webkit-box;
+  flex: 1;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.0625rem;
+  font-weight: 300;
+  line-height: 1.6;
+  line-clamp: 5;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+}
+
+/* Recuadro del autor: contorno propio, y por él corre el punto de luz (.review-card__dot). */
+.review-card__author {
+  --box-r: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: var(--box-r);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .review-card__avatar {
   display: inline-grid;
   flex: none;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: var(--color-sky);
-  color: var(--color-brand);
-  font-weight: 700;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 3px #0b1630,
+    0 0 0 4px rgba(255, 255, 255, 0.32);
+  color: var(--color-white);
+  font-weight: 600;
   object-fit: cover;
 }
 
-.review-card__author {
+.review-card__who {
+  min-width: 0;
+  padding-inline-start: 16px;
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.review-card__name {
+  color: var(--color-white);
   font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0;
 }
 
-.review-card__author a {
+.review-card__name a {
   text-decoration: none;
 }
 
-.review-card__author a:hover {
+.review-card__name a:hover {
   text-decoration: underline;
 }
 
 .review-card__time {
-  color: var(--color-muted);
-  font-size: var(--text-small);
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.review-card__text {
-  line-height: 1.6;
+.review-card__more {
+  align-self: flex-start;
+  color: var(--color-sky);
+  font-size: var(--text-small);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.review-card__more:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-card__dot {
+    display: none;
+  }
 }
 
 .stars {
@@ -100,11 +492,4 @@
 
 .stars--empty {
   color: #a3aec0;
-}
-
-@media (min-width: 960px) {
-  .reviews {
-    grid-template-columns: 280px minmax(0, 1fr);
-    align-items: start;
-  }
 }

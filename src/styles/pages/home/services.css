@@ -126,7 +126,8 @@
   height: 24px;
   border-radius: 50%;
   background: var(--color-brand);
-  color: var(--color-white);
+  box-shadow: inset 0 0 0 1.5px var(--color-gold);
+  color: var(--color-gold);
 }
 
 /* Lo único clicable de la tarjeta: el botón, siempre al pie. */

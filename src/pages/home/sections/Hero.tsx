@@ -61,7 +61,7 @@ export function Hero() {
           <ul className="hero__note">
             {hero.highlights.map((text) => (
               <li key={text}>
-                <Icon name="check" size={16} />
+                <Icon name="check" size={20} />
                 {text}
               </li>
             ))}
