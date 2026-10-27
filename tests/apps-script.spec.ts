@@ -23,8 +23,24 @@ function nextOpenDay() {
   return date.toISOString().slice(0, 10)
 }
 
-function loadScript({ secret, mailFails = false }: Options = {}) {
+// Respuestas de Cloudflare según el token: bueno, emitido para otro sitio, emitido para otra acción, o falso.
+const CLOUDFLARE: Record<string, object> = {
+  'token-bueno': { success: true, hostname: 'nakejidental.com', action: 'cita' },
+  'token-otro-sitio': { success: true, hostname: 'malo.example', action: 'cita' },
+  'token-otra-accion': { success: true, hostname: 'nakejidental.com', action: 'otra' },
+}
+
+// Próxima fecha (mañana o después) que cae en ese día de la semana (0 = domingo … 6 = sábado), en la zona de la clínica.
+function nextWeekday(day: number) {
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Tijuana' }).format(new Date()).split('-').map(Number)
+  const date = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2] + 1))
+  while (date.getUTCDay() !== day) date.setUTCDate(date.getUTCDate() + 1)
+  return date.toISOString().slice(0, 10)
+}
+
+function loadScript({ secret = 'secreto', mailFails = false }: Options = {}) {
   const cache = new Map<string, string>()
+  const fetches = { count: 0 }
   const created: { title: string; allDay: boolean }[] = []
   const mails: unknown[] = []
   const sandbox = {
@@ -44,9 +60,10 @@ function loadScript({ secret, mailFails = false }: Options = {}) {
     LockService: { getScriptLock: () => ({ waitLock: () => {}, releaseLock: () => {} }) },
     PropertiesService: { getScriptProperties: () => ({ getProperty: (key: string) => (key === 'TURNSTILE_SECRET' ? (secret ?? null) : null) }) },
     UrlFetchApp: {
-      fetch: (_url: string, options: { payload: { response: string } }) => ({
-        getContentText: () => JSON.stringify({ success: options.payload.response === 'token-bueno' }),
-      }),
+      fetch: (_url: string, options: { payload: { response: string } }) => {
+        fetches.count++
+        return { getContentText: () => JSON.stringify(CLOUDFLARE[options.payload.response] ?? { success: false }) }
+      },
     },
     MailApp: {
       sendEmail: (mail: unknown) => {
@@ -75,7 +92,7 @@ function loadScript({ secret, mailFails = false }: Options = {}) {
     const contents = raw ? String(body) : JSON.stringify(body)
     return JSON.parse(doPost({ postData: { contents } }).text) as Reply
   }
-  return { send, created, mails }
+  return { send, created, mails, fetches }
 }
 
 const request = (extra: Record<string, unknown> = {}) => ({
@@ -89,6 +106,7 @@ const request = (extra: Record<string, unknown> = {}) => ({
   firstVisit: true,
   comments: '',
   consent: true,
+  turnstile: 'token-bueno',
   ...extra,
 })
 
@@ -100,13 +118,47 @@ test.describe('Code.gs (Apps Script)', () => {
     expect(mails).toHaveLength(1)
   })
 
-  test('con TURNSTILE_SECRET: sin token o con token falso se rechaza; con token bueno pasa', () => {
-    const { send, created } = loadScript({ secret: 'secreto' })
-    expect(send(request())).toMatchObject({ ok: false, error: 'captcha' })
+  test('sin token o con token falso se rechaza; con token bueno pasa', () => {
+    const { send, created } = loadScript()
+    expect(send(request({ turnstile: '' }))).toMatchObject({ ok: false, error: 'captcha' })
     expect(send(request({ turnstile: 'token-malo' }))).toMatchObject({ ok: false, error: 'captcha' })
     expect(created).toHaveLength(0)
     expect(send(request({ turnstile: 'token-bueno' }))).toEqual({ ok: true })
     expect(created).toHaveLength(1)
+  })
+
+  test('sin TURNSTILE_SECRET configurado se rechaza todo (falla cerrado)', () => {
+    const { send, created } = loadScript({ secret: '' })
+    expect(send(request())).toMatchObject({ ok: false, error: 'captcha' })
+    expect(created).toHaveLength(0)
+  })
+
+  test('un token válido emitido para otro sitio o para otra acción se rechaza', () => {
+    const { send, created } = loadScript()
+    expect(send(request({ turnstile: 'token-otro-sitio' }))).toMatchObject({ ok: false, error: 'captcha' })
+    expect(send(request({ turnstile: 'token-otra-accion' }))).toMatchObject({ ok: false, error: 'captcha' })
+    expect(created).toHaveLength(0)
+  })
+
+  test('campo trampa lleno: responde ok sin crear nada ni llamar a Cloudflare', () => {
+    const { send, created, fetches } = loadScript()
+    expect(send(request({ hp_x: 'http://spam.example' }))).toEqual({ ok: true })
+    expect(created).toHaveLength(0)
+    expect(fetches.count).toBe(0)
+  })
+
+  test('el tope de intentos por hora corta antes de llamar a Cloudflare', () => {
+    const { send, fetches } = loadScript()
+    for (let i = 0; i < 300; i++) send(request({ turnstile: 'token-malo' }))
+    expect(fetches.count).toBe(300)
+    expect(send(request({ turnstile: 'token-malo' }))).toMatchObject({ ok: false, error: 'limit' })
+    expect(fetches.count).toBe(300)
+  })
+
+  test('un cuerpo demasiado grande se rechaza sin procesarlo', () => {
+    const { send, fetches } = loadScript()
+    expect(send(request({ comments: 'a'.repeat(10000) }))).toMatchObject({ ok: false, error: 'invalid' })
+    expect(fetches.count).toBe(0)
   })
 
   test('el mismo teléfono escrito con y sin código de país cuenta como uno solo', () => {
@@ -146,6 +198,26 @@ test.describe('Code.gs (Apps Script)', () => {
   test('una fecha con espacios de sobra se limpia y se acepta', () => {
     const { send } = loadScript()
     expect(send(request({ date: `${nextOpenDay()}      ` }))).toEqual({ ok: true })
+  })
+
+  test('domingo no se puede agendar', () => {
+    const { send, created } = loadScript()
+    expect(send(request({ date: nextWeekday(0) }))).toMatchObject({ ok: false, error: 'invalid', fields: ['date'] })
+    expect(created).toHaveLength(0)
+  })
+
+  test('sábado: se acepta hasta las 16:00 y después no', () => {
+    const { send, created } = loadScript()
+    expect(send(request({ date: nextWeekday(6), time: '16:30', phone: '6640000001' }))).toMatchObject({ ok: false, error: 'invalid', fields: ['time'] })
+    expect(send(request({ date: nextWeekday(6), time: '17:30', phone: '6640000001' }))).toMatchObject({ ok: false, error: 'invalid', fields: ['time'] })
+    expect(created).toHaveLength(0)
+    expect(send(request({ date: nextWeekday(6), time: '16:00', phone: '6640000001' }))).toEqual({ ok: true })
+    expect(created).toHaveLength(1)
+  })
+
+  test('entre semana se acepta hasta las 17:30', () => {
+    const { send } = loadScript()
+    expect(send(request({ date: nextWeekday(2), time: '17:30' }))).toEqual({ ok: true })
   })
 
   test('comentarios con enlaces se rechazan', () => {

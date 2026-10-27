@@ -25,6 +25,8 @@ interface BookingFields {
   firstVisit: string
   comments: string
   consent: boolean
+  /** Trampa anti-spam: debe llegar vacía. */
+  hp_x: string
 }
 
 export function readForm(formData: FormData): BookingFields {
@@ -40,6 +42,7 @@ export function readForm(formData: FormData): BookingFields {
     firstVisit: text('firstVisit'),
     comments: text('comments'),
     consent: formData.get('consent') === 'on',
+    hp_x: String(formData.get('hp_x') ?? ''),
   }
 }
 
@@ -69,6 +72,12 @@ export const addDays = (iso: string, days: number) => {
 }
 
 const weekday = (iso: string) => parseISODate(iso).getDay()
+
+/** Horarios que se pueden elegir en una fecha (los sábados se corta a la última hora permitida). Sin fecha: todos. */
+export const slotsFor = (iso: string) => {
+  const last = /^\d{4}-\d{2}-\d{2}$/.test(iso) ? BOOKING.lastSlotByWeekday[weekday(iso)] : undefined
+  return last ? BOOKING.slots.filter((slot) => slot <= last) : BOOKING.slots
+}
 
 /** Hora para mostrar: en inglés "9:00 AM", en español "9:00 a. m." (el valor enviado sigue siendo HH:MM de 24 h). */
 export const formatTime = (time: string, lang: Lang) => {
@@ -113,7 +122,7 @@ export function validate(fields: BookingFields, today: string, lang: Lang): Fiel
   else if (fields.date < min || fields.date > max) errors.date = text.dateRange(BOOKING.daysAhead)
   else if (BOOKING.closedWeekdays.includes(weekday(fields.date))) errors.date = text.closed
 
-  if (!BOOKING.slots.includes(fields.time)) errors.time = text.time
+  if (!slotsFor(fields.date).includes(fields.time)) errors.time = text.time
   if (LINK_PATTERN.test(fields.comments)) errors.comments = text.comments
   if (!fields.firstVisit) errors.firstVisit = text.firstVisit
   if (!fields.consent) errors.consent = text.consent

@@ -77,7 +77,7 @@
   font-size: clamp(3.5rem, 1.5rem + 9vw, 7.5rem);
 }
 
-/* Parte blanca de arriba: un arco ancho que baja hasta las tarjetas y separa la sección de la anterior. */
+/* Parte blanca de arriba: un arco que sube en el centro y deja la sección azul por debajo, con Google y la ventana dentro. */
 .reviews-intro {
   position: relative;
   isolation: isolate;
@@ -92,8 +92,9 @@
   z-index: -1;
   width: 100vw;
   transform: translateX(-50%);
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath fill='%23fff' d='M0 0H100V26C90 72 70 100 50 100C30 100 10 72 0 26Z'/%3E%3C/svg%3E")
-    0 0 / 100% 100% no-repeat;
+  /* Arco elíptico: el ancho manda y el alto sale proporcional, así la curva no se recorta ni se aplasta. */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 260'%3E%3Cpath fill='%23fff' d='M0 149A550 227 0 0 1 1000 149V0H0Z'/%3E%3C/svg%3E")
+    center top / 100% auto no-repeat;
 }
 
 /* Ventana estilo Mac: tres puntos, barra de dirección y fondo oscuro. */

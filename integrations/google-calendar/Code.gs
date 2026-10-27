@@ -19,6 +19,8 @@ const CONFIG = {
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
     '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
   ],
+  /** Ultimo horario aceptado en ciertos dias (0 = domingo ... 6 = sabado): los sabados, hasta las 16:00. */
+  LAST_SLOT_BY_WEEKDAY: { 6: '16:00' },
   /** Hasta cuantos dias adelante se aceptan solicitudes. */
   DAYS_AHEAD: 60,
   /** Rechazar si ya hay una cita confirmada en ese horario (las solicitudes pendientes, en amarillo, no bloquean). */
@@ -53,21 +55,42 @@ const CONFIG = {
   ],
   /** Limite global de solicitudes por hora (frena que un script llene el calendario). */
   MAX_REQUESTS_PER_HOUR: 30,
+  /** Limite de intentos por hora ANTES de verificar la casilla: cada verificacion gasta cuota de UrlFetch. */
+  MAX_ATTEMPTS_PER_HOUR: 300,
+  /** Tamano maximo del cuerpo recibido (una solicitud real pesa menos de 2 KB). */
+  MAX_BODY_CHARS: 10000,
+  /** Sitios para los que Cloudflare puede haber emitido el token, y accion del widget (igual que BookingForm.tsx). */
+  TURNSTILE_HOSTNAMES: ['nakejidental.com', 'www.nakejidental.com', 'sistemasdentalnakeji-art.github.io'],
+  TURNSTILE_ACTION: 'cita',
   /** Horas en las que un mismo telefono no puede pedir otra cita. */
   PHONE_COOLDOWN_HOURS: 6,
 };
 
 function doPost(e) {
   try {
-    const data = JSON.parse((e && e.postData && e.postData.contents) || '{}');
+    const body = (e && e.postData && e.postData.contents) || '{}';
+    if (body.length > CONFIG.MAX_BODY_CHARS) return json_({ ok: false, error: 'invalid', fields: [] });
+    const data = JSON.parse(body);
     if (!data || typeof data !== 'object' || Array.isArray(data)) return json_({ ok: false, error: 'invalid', fields: [] });
     // Los textos se recortan una sola vez: validacion, llaves de cache y evento usan los mismos valores.
     ['firstName', 'lastName', 'phone', 'email', 'service', 'date', 'time', 'comments'].forEach((key) => {
       data[key] = String(data[key] || '').trim();
     });
 
+    // Trampa anti-spam: si el campo oculto viene lleno se responde "ok" sin crear nada.
+    if (data.hp_x) return json_({ ok: true });
+
     const errors = validate_(data);
     if (errors.length) return json_({ ok: false, error: 'invalid', fields: errors });
+
+    // Tope de intentos antes de llamar a Cloudflare, para que un bot no agote la cuota de UrlFetch.
+    // shortcut: este conteo va fuera del candado y puede pasarse por unos pocos; basta para frenar un abuso.
+    const hour = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMddHH');
+    const cache = CacheService.getScriptCache();
+    const attemptsKey = 'attempts-' + hour;
+    const attempts = Number(cache.get(attemptsKey) || 0);
+    if (attempts >= CONFIG.MAX_ATTEMPTS_PER_HOUR) return json_({ ok: false, error: 'limit' });
+    cache.put(attemptsKey, String(attempts + 1), 3600);
 
     // Casilla anti-bots. Va antes de los limites: un bot rechazado no gasta el cupo de los pacientes.
     if (!humanVerified_(data.turnstile)) return json_({ ok: false, error: 'captcha' });
@@ -84,8 +107,7 @@ function doPost(e) {
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
     try {
-      const cache = CacheService.getScriptCache();
-      const hourKey = 'count-' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMddHH');
+      const hourKey = 'count-' + hour;
       const phoneKey = 'phone-' + String(data.phone).replace(/\D/g, '').slice(-10);
       // Un reintento de la misma solicitud (mismo telefono, fecha y hora; p. ej. por mala senal) responde "ok" sin crear otro evento.
       const sameRequestKey = phoneKey + '-' + data.date + '-' + data.time;
@@ -155,10 +177,13 @@ function doPost(e) {
   }
 }
 
-/** Verifica el token de Cloudflare Turnstile. Sin TURNSTILE_SECRET (Propiedades del script) no se exige. */
+/** Verifica el token de Cloudflare Turnstile. Sin TURNSTILE_SECRET (Propiedades del script) se rechaza todo: falla cerrado. */
 function humanVerified_(token) {
   const secret = PropertiesService.getScriptProperties().getProperty('TURNSTILE_SECRET');
-  if (!secret) return true;
+  if (!secret) {
+    console.error('Falta TURNSTILE_SECRET en las Propiedades del script');
+    return false;
+  }
   if (!token || String(token).length > 2048) return false;
   try {
     const response = UrlFetchApp.fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
@@ -166,7 +191,13 @@ function humanVerified_(token) {
       payload: { secret: secret, response: String(token) },
       muteHttpExceptions: true,
     });
-    return JSON.parse(response.getContentText()).success === true;
+    const result = JSON.parse(response.getContentText());
+    // Un token valido emitido para otro sitio o para otra accion tampoco sirve.
+    return (
+      result.success === true &&
+      CONFIG.TURNSTILE_HOSTNAMES.indexOf(result.hostname) !== -1 &&
+      result.action === CONFIG.TURNSTILE_ACTION
+    );
   } catch (error) {
     console.error(error);
     return false;
@@ -215,8 +246,10 @@ function validate_(data) {
     errors.push('date');
   } else {
     const diffDays = requested - today;
+    const weekday = new Date(requested * 86400000).getUTCDay();
     if (diffDays < 1 || diffDays > CONFIG.DAYS_AHEAD) errors.push('date');
-    else if (CONFIG.CLOSED_WEEKDAYS.indexOf(new Date(requested * 86400000).getUTCDay()) !== -1) errors.push('date');
+    else if (CONFIG.CLOSED_WEEKDAYS.indexOf(weekday) !== -1) errors.push('date');
+    else if (CONFIG.LAST_SLOT_BY_WEEKDAY[weekday] && text(data.time) > CONFIG.LAST_SLOT_BY_WEEKDAY[weekday]) errors.push('time');
   }
 
   return errors;

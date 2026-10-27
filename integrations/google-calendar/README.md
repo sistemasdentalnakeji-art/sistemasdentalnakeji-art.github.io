@@ -47,7 +47,10 @@ La URL `/exec` es pública, así que cualquiera podría mandarle solicitudes sin
 3. En el Apps Script: **Configuración del proyecto (⚙) → Propiedades de la secuencia de comandos → Añadir** `TURNSTILE_SECRET` = la llave secreta.
 4. Al guardar `Code.gs` y `appsscript.json`, vuelve a implementar (nueva versión) y autoriza el permiso nuevo (conexión a servicios externos).
 
-Mientras `TURNSTILE_SECRET` no exista, el script no exige la casilla y el formulario funciona como antes (solo con los límites de abajo).
+**La casilla es obligatoria:** sin `TURNSTILE_SECRET` el script rechaza todas las solicitudes (falla cerrado), así que
+configura primero la llave secreta y la del sitio, y después publica la nueva versión. El script también exige que el
+token venga de `TURNSTILE_HOSTNAMES` y de la acción `cita` (`CONFIG` en `Code.gs`); si agregas un dominio, agrégalo ahí.
+Para pruebas, Cloudflare publica llaves de prueba, pero devuelven otro `hostname`: no sirven contra el script real.
 
 ## Cambios posteriores
 Cada vez que edites `Code.gs`: **Implementar → Administrar implementaciones → ✏ → Versión: Nueva versión → Implementar**.
@@ -66,7 +69,8 @@ La URL `/exec` no cambia.
 ## Privacidad y seguridad
 - El formulario exige aceptar el **aviso de privacidad** (`/aviso-de-privacidad/`). Falta publicar el texto legal de la clínica (LFPDPPP).
 - La URL `/exec` es pública por diseño. Protecciones incluidas: casilla anti-bots Turnstile (ver sección 5), validación en el
-  servidor (incluida la lista de servicios), rechazo de enlaces en los comentarios, límite de solicitudes por hora
+  servidor (incluida la lista de servicios), campo trampa `hp_x`, tope de 300 intentos por hora antes de verificar la
+  casilla (cuida la cuota de `UrlFetch`), cuerpos de máximo 10 000 caracteres, rechazo de enlaces en los comentarios, límite de solicitudes por hora
   (`MAX_REQUESTS_PER_HOUR`, cuentan también las rechazadas por horario ocupado) y por teléfono (`PHONE_COOLDOWN_HOURS`,
   comparando los últimos 10 dígitos) y bloqueo para evitar dobles reservas.
 - Correo de aviso: solo se envía el de la primera solicitud de cada hora, para no agotar la cuota diaria de la cuenta

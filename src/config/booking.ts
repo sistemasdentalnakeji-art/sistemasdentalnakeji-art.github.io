@@ -51,6 +51,8 @@ export const BOOKING = {
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
     '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
   ],
+  /** Último horario que se puede pedir en ciertos días (0 = domingo … 6 = sábado): los sábados, hasta las 4:00 p. m. */
+  lastSlotByWeekday: { 6: '16:00' } as Record<number, string>,
   /** Opciones del campo "Servicio de interés". */
   services: SERVICES,
 }

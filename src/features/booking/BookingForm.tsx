@@ -19,6 +19,7 @@ import {
   addDays,
   formatDate,
   formatTime,
+  slotsFor,
   isFieldName,
   readForm,
   todayInClinic,
@@ -115,6 +116,9 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
   const today = useSyncExternalStore(subscribe, todayInClinic, getServerToday)
   const [errors, setErrors] = useState<FieldErrors>({})
   const [state, setState] = useState<FormState>({ status: 'idle' })
+  // La fecha elegida decide qué horarios se ofrecen (los sábados hay menos).
+  const [date, setDate] = useState('')
+  const slots = slotsFor(date)
   const successRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
 
@@ -130,6 +134,7 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
         if (cancelled) return
         captcha.current.widgetId = api.render(box, {
           sitekey: BOOKING.turnstileSiteKey,
+          action: 'cita', // el Apps Script exige el mismo valor (CONFIG.TURNSTILE_ACTION)
           language: lang,
           callback: (token: string) => (captcha.current.token = token),
           'expired-callback': () => (captcha.current.token = ''),
@@ -194,6 +199,7 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       firstVisit: fields.firstVisit === 'si',
       comments: fields.comments,
       consent: true,
+      hp_x: fields.hp_x,
       turnstile: captcha.current.token,
       source: window.location.href,
     }
@@ -204,9 +210,12 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
         summary: { name: payload.firstName, service: payload.service, date: payload.date, time: payload.time },
       })
       form.reset()
+      setDate('')
       requestAnimationFrame(() => successRef.current?.focus())
     }
 
+    // Trampa anti-spam: si el campo oculto viene lleno se finge éxito sin enviar nada.
+    if (payload.hp_x) return showSuccess()
     // Sin Apps Script conectado no se envía nada: se avisa (con enlace a WhatsApp) en vez de mostrar una confirmación falsa.
     if (!isBookingConfigured) return setState({ status: 'error', code: 'network' })
     // Con la casilla activa, sin verificación no se envía nada.
@@ -349,16 +358,17 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
         </Field>
 
         <Field name="date" label={t.labels.date} required error={errors.date}>
-          <input {...fieldProps('date')} type="date" min={minDate} max={maxDate ?? '2099-12-31'} required />
+          <input {...fieldProps('date')} type="date" min={minDate} max={maxDate ?? '2099-12-31'} required
+            onChange={(event) => setDate(event.currentTarget.value)} />
         </Field>
 
-        {/* Horario: lista desplegable con los valores de BOOKING.slots. */}
+        {/* Horario: lista desplegable con los horarios de la fecha elegida (BOOKING.slots, recortados los sábados). La key la reinicia al cambiar la lista. */}
         <Field name="time" label={t.labels.time} icon="clock" required error={errors.time}>
-          <select {...fieldProps('time')} defaultValue="" required>
+          <select key={slots.length} {...fieldProps('time')} defaultValue="" required>
             <option value="" disabled>
               {t.labels.timePlaceholder}
             </option>
-            {BOOKING.slots.map((slot) => (
+            {slots.map((slot) => (
               <option key={slot} value={slot}>
                 {formatTime(slot, lang)}
               </option>
@@ -404,6 +414,14 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
             aria-describedby={errors.comments ? 'cita-comments-ayuda cita-comments-error' : 'cita-comments-ayuda'}
           />
         </Field>
+
+        {/* Trampa anti-spam: oculta para personas; si se llena, la solicitud se descarta. */}
+        <div className="hp-field" aria-hidden="true">
+          <label>
+            {t.labels.honeypot}
+            <input type="text" name="hp_x" tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
 
         {BOOKING.turnstileSiteKey && <div ref={captchaBoxRef} className="booking-form__captcha" />}
 

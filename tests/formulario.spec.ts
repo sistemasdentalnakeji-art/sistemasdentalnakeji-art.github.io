@@ -78,6 +78,21 @@ test.describe('Formulario de citas', () => {
     expect(sent[0]).toMatchObject({ firstName: 'Ana', phone: '6641234567', consent: true, turnstile: TOKEN })
   })
 
+  test('sábado: la lista de horarios termina a las 4:00 PM; entre semana llega a las 5:30 PM', async ({ page }) => {
+    await openForm(page)
+    const times = () => page.locator('#cita-time option:not([disabled])').allTextContents()
+    const dateAt = (day: number) => {
+      const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Tijuana' }).format(new Date()).split('-').map(Number)
+      const date = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2] + 1))
+      while (date.getUTCDay() !== day) date.setUTCDate(date.getUTCDate() + 1)
+      return date.toISOString().slice(0, 10)
+    }
+    await page.locator('#cita-date').fill(dateAt(6))
+    expect((await times()).at(-1)).toBe('4:00 PM')
+    await page.locator('#cita-date').fill(dateAt(2))
+    expect((await times()).at(-1)).toBe('5:30 PM')
+  })
+
   test('campos vacíos no se envían y se marcan los errores', async ({ page }) => {
     const sent = await mockScript(page, () => ({ ok: true }))
     await openForm(page)
@@ -126,6 +141,16 @@ test.describe('Formulario de citas', () => {
     await submit(page)
     await expect(page.locator('.form-alert')).toContainText('security check')
     await expect(page.locator('.booking-success')).toHaveCount(0)
+    expect(sent).toHaveLength(0)
+  })
+
+  test('bot: con el campo trampa lleno no se envía nada al servidor', async ({ page }) => {
+    const sent = await mockScript(page, () => ({ ok: true }))
+    await openForm(page)
+    await fillForm(page)
+    await page.locator('input[name="hp_x"]').fill('http://spam.example', { force: true })
+    await solveCaptcha(page)
+    await submit(page)
     expect(sent).toHaveLength(0)
   })
 

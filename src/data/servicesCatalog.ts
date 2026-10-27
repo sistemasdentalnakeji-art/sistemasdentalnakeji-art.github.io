@@ -54,7 +54,7 @@ export const CATALOG_HERO: Record<
     eyebrow: 'Our services',
     titleLead: 'Dental services',
     titleAccent: 'in Tijuana',
-    lead: 'Dental treatments designed for every stage of your smile.',
+    lead: 'At Dental Nakeji we strive for excellence at every stage of your care, which sets us apart. Our doctors work hand in hand with our own dental laboratory to create custom designs and give you agile, careful care.',
     features: [
       { icon: 'chip', text: 'Modern technology' },
       { icon: 'shield', text: 'Personalized care' },
@@ -69,7 +69,7 @@ export const CATALOG_HERO: Record<
     eyebrow: 'Nuestros servicios',
     titleLead: 'Servicios dentales',
     titleAccent: 'en Tijuana',
-    lead: 'Tratamientos dentales pensados para cada etapa de tu sonrisa.',
+    lead: 'En Dental Nakeji nos esmeramos en cada etapa de tu atención con un nivel de excelencia que nos distingue. Nuestros doctores trabajan de la mano con nuestro laboratorio dental propio para crear diseños a la medida y ofrecerte una atención ágil y cuidadosa.',
     features: [
       { icon: 'chip', text: 'Tecnología de vanguardia' },
       { icon: 'shield', text: 'Atención personalizada' },

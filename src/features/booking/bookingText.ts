@@ -33,6 +33,7 @@ export interface FormText {
     firstVisitNo: string
     comments: string
     commentsHint: string
+    honeypot: string
   }
   consent: { before: string; link: string; after: string }
   submit: string
@@ -91,6 +92,7 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       firstVisitNo: 'No, I am an existing patient',
       comments: 'Comments',
       commentsHint: 'Briefly tell us the reason for your visit.',
+      honeypot: 'Website',
     },
     consent: {
       before: 'I accept the ',
@@ -158,6 +160,7 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       firstVisitNo: 'No, ya soy paciente',
       comments: 'Comentarios',
       commentsHint: 'Cuéntanos brevemente el motivo de tu visita.',
+      honeypot: 'Sitio web',
     },
     consent: { before: 'Acepto el ', link: 'aviso de privacidad', after: ' y autorizo que me contacten para agendar.' },
     submit: 'Solicitar cita',
