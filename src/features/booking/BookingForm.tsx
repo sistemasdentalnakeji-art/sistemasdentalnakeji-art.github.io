@@ -2,14 +2,14 @@ import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
 // ─────────────────────────────────────────────────────────────────────────────
 // FORMULARIO DE CITAS (compartido: homepage y las páginas de servicio, vía pages/home/sections/Schedule.tsx)
 //
-// Tres pasos agrupados: 1) Tus datos · 2) Tu cita (servicio, fecha, horario en botones y primera visita) · 3) Para terminar.
+// Tres pasos agrupados: 1) Tus datos · 2) Tu cita (servicio, fecha, horario en lista y primera visita) · 3) Para terminar.
 // • La lógica (lectura, validación y envío al Apps Script) está en features/booking/booking.ts y aquí abajo; el diseño es solo
 //   de presentación. Los nombres de los campos y las reglas no cambian.
 // • En páginas de servicio, `defaultService` preselecciona el servicio y adapta el texto de apoyo.
 // • Estilos → src/styles/pages/home/schedule.css (contorno luminoso del icono: styles/components/siri.css).
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useRef, useState, useSyncExternalStore, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent, type ReactNode } from 'react'
 import { flushSync } from 'react-dom'
 import { BOOKING, isBookingConfigured } from '@/config/booking'
 import { useLang } from '@/app/lang'
@@ -31,7 +31,7 @@ import { cx } from '@/lib/cx'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon, type IconName } from '@/components/ui/Icon'
 
-type ErrorCode = 'busy' | 'invalid' | 'limit' | 'network'
+type ErrorCode = 'busy' | 'invalid' | 'limit' | 'network' | 'captcha'
 
 interface Summary {
   name: string
@@ -49,7 +49,7 @@ type FormState =
 
 /** Qué errores ofrecen el enlace a WhatsApp (el texto de cada uno, por idioma, está en bookingText.ts). */
 // El Apps Script limita las solicitudes por teléfono (unas horas) y por hora en total.
-const OFFER_WHATSAPP: Record<ErrorCode, boolean> = { busy: false, invalid: false, limit: true, network: true }
+const OFFER_WHATSAPP: Record<ErrorCode, boolean> = { busy: false, invalid: false, limit: true, network: true, captcha: true }
 
 interface ServerReply {
   ok: boolean
@@ -70,6 +70,35 @@ const keepOnly = (junk: RegExp) => (event: FormEvent<HTMLInputElement>) => {
   if (clean !== input.value) input.value = clean
 }
 
+// Casilla anti-bots de Cloudflare Turnstile: solo se carga si hay llave pública (VITE_TURNSTILE_SITE_KEY).
+interface TurnstileApi {
+  render: (box: HTMLElement, options: Record<string, unknown>) => string
+  reset: (widgetId: string) => void
+  remove: (widgetId: string) => void
+}
+const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
+const turnstileApi = () => (window as unknown as { turnstile?: TurnstileApi }).turnstile
+
+let turnstileLoading: Promise<TurnstileApi> | undefined
+const loadTurnstile = () =>
+  (turnstileLoading ??= new Promise<TurnstileApi>((resolve, reject) => {
+    const ready = () => {
+      const api = turnstileApi()
+      if (api) resolve(api)
+      else reject(new Error('turnstile'))
+    }
+    if (turnstileApi()) return ready()
+    const script = document.createElement('script')
+    script.src = TURNSTILE_SRC
+    script.async = true
+    script.onload = ready
+    script.onerror = () => {
+      turnstileLoading = undefined
+      reject(new Error('turnstile'))
+    }
+    document.head.append(script)
+  }))
+
 // La fecha de hoy se lee solo en el navegador (en el HTML prerenderizado queda vacía).
 const subscribe = () => () => {}
 const getServerToday = () => ''
@@ -88,6 +117,32 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
   const [state, setState] = useState<FormState>({ status: 'idle' })
   const successRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
+
+  // Casilla anti-bots: el token solo sirve para un envío, así que se renueva después de cada intento.
+  const captcha = useRef({ token: '', widgetId: '' })
+  const captchaBoxRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const box = captchaBoxRef.current
+    if (!BOOKING.turnstileSiteKey || !box) return
+    let cancelled = false
+    loadTurnstile()
+      .then((api) => {
+        if (cancelled) return
+        captcha.current.widgetId = api.render(box, {
+          sitekey: BOOKING.turnstileSiteKey,
+          language: lang,
+          callback: (token: string) => (captcha.current.token = token),
+          'expired-callback': () => (captcha.current.token = ''),
+          'error-callback': () => (captcha.current.token = ''),
+        })
+      })
+      .catch(() => {}) // sin la casilla no se puede enviar: el envío avisa con el mensaje de verificación
+    return () => {
+      cancelled = true
+      if (captcha.current.widgetId) turnstileApi()?.remove(captcha.current.widgetId)
+      captcha.current = { token: '', widgetId: '' }
+    }
+  }, [lang])
 
   const fieldProps = (name: FieldName) => ({
     id: `cita-${name}`,
@@ -139,7 +194,7 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       firstVisit: fields.firstVisit === 'si',
       comments: fields.comments,
       consent: true,
-      hp_x: fields.hp_x,
+      turnstile: captcha.current.token,
       source: window.location.href,
     }
 
@@ -152,9 +207,10 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       requestAnimationFrame(() => successRef.current?.focus())
     }
 
-    if (payload.hp_x) return showSuccess()
     // Sin Apps Script conectado no se envía nada: se avisa (con enlace a WhatsApp) en vez de mostrar una confirmación falsa.
     if (!isBookingConfigured) return setState({ status: 'error', code: 'network' })
+    // Con la casilla activa, sin verificación no se envía nada.
+    if (BOOKING.turnstileSiteKey && !payload.turnstile) return setState({ status: 'error', code: 'captcha' })
 
     setState({ status: 'sending' })
     // Si el servidor no responde a tiempo, se cancela y se ofrece reintentar o usar WhatsApp.
@@ -177,12 +233,14 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
         for (const name of reply.fields ?? []) if (isFieldName(name)) serverErrors[name] = t.validation.server
         setErrors(serverErrors)
       }
-      const known = reply.error === 'busy' || reply.error === 'invalid' || reply.error === 'limit'
+      const known = reply.error === 'busy' || reply.error === 'invalid' || reply.error === 'limit' || reply.error === 'captcha'
       setState({ status: 'error', code: known ? (reply.error as ErrorCode) : 'network' })
     } catch {
       setState({ status: 'error', code: 'network' })
     } finally {
       window.clearTimeout(timeout)
+      captcha.current.token = ''
+      if (captcha.current.widgetId) turnstileApi()?.reset(captcha.current.widgetId)
     }
   }
 
@@ -338,17 +396,16 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       </Group>
 
       <Group step={3} title={t.groups.finish}>
-        <Field name="comments" label={t.labels.comments} hint={t.labels.commentsHint}>
-          <textarea id="cita-comments" name="comments" rows={3} maxLength={500} aria-describedby="cita-comments-ayuda" />
+        <Field name="comments" label={t.labels.comments} hint={t.labels.commentsHint} error={errors.comments}>
+          <textarea
+            {...fieldProps('comments')}
+            rows={3}
+            maxLength={500}
+            aria-describedby={errors.comments ? 'cita-comments-ayuda cita-comments-error' : 'cita-comments-ayuda'}
+          />
         </Field>
 
-        {/* Trampa anti-spam: oculta para personas; si se llena, la solicitud se descarta. */}
-        <div className="hp-field" aria-hidden="true">
-          <label>
-            {t.labels.honeypot}
-            <input type="text" name="hp_x" tabIndex={-1} autoComplete="off" />
-          </label>
-        </div>
+        {BOOKING.turnstileSiteKey && <div ref={captchaBoxRef} className="booking-form__captcha" />}
 
         <div className={cx('field field--consent', errors.consent && 'has-error')}>
           <label className="choice">

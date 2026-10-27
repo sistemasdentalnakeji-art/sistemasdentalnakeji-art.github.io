@@ -201,19 +201,16 @@ function StoryText({ lines }: { lines: StoryLines }) {
 
 const noSubscribe = () => () => {}
 
-/** ¿Hace falta el respaldo? Sí si el navegador no tiene `animation-timeline` (o con `?story-scrub`), salvo "reducir movimiento". */
+/** ¿Hace falta el respaldo? Sí si el navegador no tiene `animation-timeline` o es un celular, salvo "reducir movimiento". */
 const needsScrub = () =>
   // Celular: el diente no seguía el `offset-path` (se quedaba en la esquina), así que ahí siempre se coloca con JS.
-  (new URLSearchParams(window.location.search).has('story-scrub') ||
-    !CSS.supports('animation-timeline', 'view()') ||
-    window.matchMedia('(max-width: 767.98px)').matches) &&
+  (!CSS.supports('animation-timeline', 'view()') || window.matchMedia('(max-width: 767.98px)').matches) &&
   !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /**
  * Respaldo del scroll para navegadores sin `animation-timeline` (Safari anterior a 26): calcula el mismo avance que la línea
  * de tiempo `view()` de story.css (hilo y diente: del 12 % al 80 % del recorrido, ignorando el 30 % inferior de la
  * pantalla) y lo deja en `--story-p`. Devuelve `true` cuando está activo. Con "reducir movimiento" no se activa.
- * Para probarlo en un navegador moderno: añadir `?story-scrub` a la dirección.
  */
 function useScrollScrub(areaRef: RefObject<HTMLDivElement | null>, threadD?: string) {
   // En el servidor (prerender) vale false; ya en el navegador se calcula una vez (sin setState dentro de un efecto).

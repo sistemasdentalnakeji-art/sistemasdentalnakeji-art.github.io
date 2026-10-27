@@ -3,6 +3,7 @@
 // Variables: GOOGLE_PLACES_API_KEY y GOOGLE_PLACE_ID (ver .env.example).
 
 const MIN_RATING = 4
+const ALLOWED_QUERIES = ['', '?lang=es', '?lang=en']
 const MIN_TEXT_LENGTH = 20
 // Un fallo se guarda un minuto: así una caída de Google no dispara una llamada de pago por cada visita.
 const ERROR_CACHE = 'public, s-maxage=60'
@@ -22,10 +23,14 @@ const json = (body: unknown, status: number, cache = ERROR_CACHE) =>
   Response.json(body, { status, headers: { 'Cache-Control': cache } })
 
 export async function GET(request: Request) {
+  // Solo estas tres direcciones exactas: el caché separa por dirección completa y cualquier variante (parámetros extra,
+  // lang repetido, letras codificadas) sería otra llamada de pago a Google.
+  const { search } = new URL(request.url)
+  if (!ALLOWED_QUERIES.includes(search)) return json({ error: 'bad-request' }, 400)
+  const lang = search === '?lang=en' ? 'en' : 'es'
+
   const { GOOGLE_PLACES_API_KEY: key, GOOGLE_PLACE_ID: placeId } = process.env
   if (!key || !placeId) return json({ error: 'not-configured' }, 503)
-
-  const lang = new URL(request.url).searchParams.get('lang') === 'en' ? 'en' : 'es'
 
   const google = await fetch(
     `https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}?languageCode=${lang}`,
@@ -36,7 +41,8 @@ export async function GET(request: Request) {
   ).catch(() => null)
   if (!google?.ok) return json({ error: 'google-unavailable' }, 502)
 
-  const data = (await google.json()) as { rating?: number; userRatingCount?: number; reviews?: GoogleReview[] }
+  const data = (await google.json().catch(() => null)) as { rating?: number; userRatingCount?: number; reviews?: GoogleReview[] } | null
+  if (!data) return json({ error: 'google-unavailable' }, 502)
 
   // Se muestra el texto original del paciente (no la traducción automática de Google), solo reseñas buenas y con texto.
   const reviews = (data.reviews ?? [])

@@ -60,13 +60,17 @@ const CONFIG = {
 function doPost(e) {
   try {
     const data = JSON.parse((e && e.postData && e.postData.contents) || '{}');
-
-    // Trampa anti-spam: si el campo oculto viene lleno, se responde "ok" sin crear nada.
-    // Se llama hp_x (y no "website", "url"...) para que el autocompletado del navegador no lo rellene.
-    if (data.hp_x) return json_({ ok: true });
+    if (!data || typeof data !== 'object' || Array.isArray(data)) return json_({ ok: false, error: 'invalid', fields: [] });
+    // Los textos se recortan una sola vez: validacion, llaves de cache y evento usan los mismos valores.
+    ['firstName', 'lastName', 'phone', 'email', 'service', 'date', 'time', 'comments'].forEach((key) => {
+      data[key] = String(data[key] || '').trim();
+    });
 
     const errors = validate_(data);
     if (errors.length) return json_({ ok: false, error: 'invalid', fields: errors });
+
+    // Casilla anti-bots. Va antes de los limites: un bot rechazado no gasta el cupo de los pacientes.
+    if (!humanVerified_(data.turnstile)) return json_({ ok: false, error: 'captcha' });
 
     const start = toDate_(data.date, data.time);
     const end = new Date(start.getTime() + CONFIG.DURATION_MINUTES * 60 * 1000);
@@ -76,12 +80,13 @@ function doPost(e) {
     if (!calendar) throw new Error('Calendario no encontrado: revisa CALENDAR_ID');
 
     // Los limites se leen y se escriben dentro del candado: dos solicitudes simultaneas no pasan ambas el tope.
+    let notify = false;
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
     try {
       const cache = CacheService.getScriptCache();
       const hourKey = 'count-' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMddHH');
-      const phoneKey = 'phone-' + String(data.phone).replace(/\D/g, '');
+      const phoneKey = 'phone-' + String(data.phone).replace(/\D/g, '').slice(-10);
       // Un reintento de la misma solicitud (mismo telefono, fecha y hora; p. ej. por mala senal) responde "ok" sin crear otro evento.
       const sameRequestKey = phoneKey + '-' + data.date + '-' + data.time;
       if (cache.get(sameRequestKey)) return json_({ ok: true });
@@ -89,6 +94,8 @@ function doPost(e) {
       if (requestsThisHour >= CONFIG.MAX_REQUESTS_PER_HOUR || cache.get(phoneKey)) {
         return json_({ ok: false, error: 'limit' });
       }
+      // Cuentan tambien las solicitudes rechazadas por horario ocupado (si no, se podria insistir sin tope).
+      cache.put(hourKey, String(requestsThisHour + 1), 3600);
 
       // Solo cuentan como ocupados los eventos confirmados (no amarillos y no de todo el dia).
       const busy = calendar
@@ -116,7 +123,10 @@ function doPost(e) {
         ].join('\n'),
       });
       event.setColor(CONFIG.EVENT_COLOR);
-      cache.put(hourKey, String(requestsThisHour + 1), 3600);
+      // Un solo correo por hora: asi un abuso no agota la cuota diaria de correos de la cuenta.
+      const mailKey = hourKey.replace('count-', 'mail-');
+      notify = !cache.get(mailKey);
+      if (notify) cache.put(mailKey, '1', 3600);
       cache.put(phoneKey, '1', CONFIG.PHONE_COOLDOWN_HOURS * 3600);
       cache.put(sameRequestKey, '1', CONFIG.PHONE_COOLDOWN_HOURS * 3600);
     } finally {
@@ -124,16 +134,17 @@ function doPost(e) {
     }
 
     // El aviso por correo es opcional: si falla (cuota, direccion), la cita ya quedo creada.
-    if (CONFIG.NOTIFY_EMAIL) {
+    if (CONFIG.NOTIFY_EMAIL && notify) {
       try {
         MailApp.sendEmail({
           to: CONFIG.NOTIFY_EMAIL,
           name: 'Dental Nakeji - Formulario Web',
           subject: `Nueva solicitud de cita: ${fullName_(data)}`,
-          body: `${fullName_(data)} solicito ${clean_(data.service)} el ${data.date} a las ${data.time}.\nLos datos de contacto estan en el evento de Google Calendar.`,
+          body: `${fullName_(data)} solicito ${clean_(data.service)} el ${data.date} a las ${data.time}.\nLos datos de contacto estan en el evento de Google Calendar.\nPara cuidar la cuota de correo solo se avisa de la primera solicitud de cada hora; las demas estan en Google Calendar.`,
         });
       } catch (mailError) {
         console.error(mailError);
+        warnMailFailed_(calendar);
       }
     }
 
@@ -141,6 +152,36 @@ function doPost(e) {
   } catch (error) {
     console.error(error);
     return json_({ ok: false, error: 'server' });
+  }
+}
+
+/** Verifica el token de Cloudflare Turnstile. Sin TURNSTILE_SECRET (Propiedades del script) no se exige. */
+function humanVerified_(token) {
+  const secret = PropertiesService.getScriptProperties().getProperty('TURNSTILE_SECRET');
+  if (!secret) return true;
+  if (!token || String(token).length > 2048) return false;
+  try {
+    const response = UrlFetchApp.fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'post',
+      payload: { secret: secret, response: String(token) },
+      muteHttpExceptions: true,
+    });
+    return JSON.parse(response.getContentText()).success === true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+/** Si el correo falla (cuota o direccion), deja un aviso visible en el calendario; como maximo uno cada 6 horas. */
+function warnMailFailed_(calendar) {
+  try {
+    const cache = CacheService.getScriptCache();
+    if (cache.get('mailwarn')) return;
+    cache.put('mailwarn', '1', 21600);
+    calendar.createAllDayEvent('AVISO: fallo el correo de solicitudes. Revisa las solicitudes en amarillo', new Date());
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -163,6 +204,7 @@ function validate_(data) {
   if (CONFIG.SERVICES.indexOf(text(data.service)) === -1) errors.push('service');
   if (typeof data.firstVisit !== 'boolean') errors.push('firstVisit');
   if (text(data.comments).length > 500) errors.push('comments');
+  if (/https?:\/\/|www\./i.test(text(data.comments))) errors.push('comments');
   if (data.consent !== true) errors.push('consent');
   if (CONFIG.SLOTS.indexOf(text(data.time)) === -1) errors.push('time');
 

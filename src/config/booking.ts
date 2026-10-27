@@ -38,6 +38,8 @@ for (const key of ALL_SERVICE_KEYS) {
 export const BOOKING = {
   /** URL /exec de la aplicación web de Apps Script (variable VITE_BOOKING_ENDPOINT). */
   endpoint: (import.meta.env.VITE_BOOKING_ENDPOINT ?? '').trim(),
+  /** Llave pública de Cloudflare Turnstile (casilla anti-bots). Vacía = el formulario no la muestra. */
+  turnstileSiteKey: (import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '').trim(),
   /** Zona horaria de la clínica (igual que appsscript.json). */
   timeZone: 'America/Tijuana',
   /** Hasta cuántos días adelante se puede pedir cita. */

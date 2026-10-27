@@ -438,10 +438,6 @@
 }
 
 @media (max-width: 399.98px) {
-  .hide-xs {
-    display: none;
-  }
-
   .logo {
     --logo-h: 24px;
   }
@@ -636,11 +632,6 @@
 
   .nav-link {
     padding-inline: 8px;
-  }
-
-  /* Con el botón de idioma, "Agendar visita" / "Schedule a visit" se acorta a su primera palabra. */
-  .site-header__actions .hide-xs {
-    display: none;
   }
 }
 

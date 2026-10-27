@@ -26,3 +26,11 @@ Prompt_Claude_Homepage_Nakeji.md
 
 # Informes de auditoría locales (contienen detalles internos; no van a git)
 AUDITORIA-*
+
+# Pruebas de Playwright (resultados locales)
+test-results/
+playwright-report/
+tests/**/*-snapshots/
+
+# Configuración de agentes y guía del entorno local (no va al repositorio)
+INSTALAR-ENTORNO.md

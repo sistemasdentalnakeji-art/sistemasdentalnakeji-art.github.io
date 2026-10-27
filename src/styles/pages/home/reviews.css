@@ -403,7 +403,7 @@
   -webkit-box-orient: vertical;
 }
 
-/* Recuadro del autor: contorno propio, y por él corre el punto de luz (.review-card__dot). */
+/* Recuadro del autor: contorno propio. */
 .review-card__author {
   --box-r: 16px;
   position: relative;
@@ -472,12 +472,6 @@
 
 .review-card__more:hover {
   text-decoration: underline;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .review-card__dot {
-    display: none;
-  }
 }
 
 .stars {

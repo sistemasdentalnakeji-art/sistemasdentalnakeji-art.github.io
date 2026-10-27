@@ -52,12 +52,12 @@
   margin-left: auto;
 }
 
-/* Frase en azul con una línea fina y sutil POR DEBAJO de las letras (se dibuja con el scroll; en varias líneas se
+/* Frase en azul con una línea fina amarilla POR DEBAJO de las letras (se dibuja con el scroll; en varias líneas se
    repite en cada una). El padding inferior separa la línea de las letras para que no las toque. */
 .story__accent {
   padding-bottom: 0.1em;
   color: var(--color-brand);
-  background: linear-gradient(90deg, rgba(58, 112, 176, 0.55), rgba(123, 195, 235, 0.45)) no-repeat 0 100% / 100% 0.055em;
+  background: linear-gradient(90deg, #ffc928, rgba(255, 214, 90, 0.75)) no-repeat 0 100% / 100% 0.055em;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
@@ -81,13 +81,13 @@
 
 /* Mensaje central: punto de pausa. Primera línea mayor y en azul; la segunda la completa. */
 .story__item--up {
-  max-width: 22ch;
+  max-width: 34ch;
   margin-inline: auto;
   text-align: center;
 }
 
 .story__item--up .story__line:first-child {
-  font-size: clamp(2.25rem, 1.1rem + 5vw, 5.25rem);
+  font-size: clamp(1.75rem, 0.9rem + 3.6vw, 3.75rem);
 }
 
 .story__item--up .story__line + .story__line {
@@ -383,6 +383,19 @@ path.story__tooth-gloss {
      y entra hacia su lugar; el mismo valor a cada lado para que vayan a la par. */
   .story__item--left {
     --from-x: -110%;
+    view-timeline-inset: 0px 12%;
+  }
+
+  .story__item--left .story__line {
+    animation-range: cover 0% cover 25%;
+  }
+
+  .story__item--left .story__word {
+    animation-range: cover calc(2% + var(--i) * 1.4%) cover calc(20% + var(--i) * 1.4%);
+  }
+
+  .story__item--left .story__accent {
+    animation-range: cover 40% cover 70%;
   }
 
   .story__item--right {

@@ -34,25 +34,24 @@ export const HERO: Record<
   en: {
     theme: THEME,
     // El H1 se muestra en dos tonos: la primera parte resaltada y la segunda atenuada.
-    titleLead: 'Dentists in Tijuana',
-    titleMuted: 'for you, wherever you live.',
-    lead: 'At Dental Nakeji we offer close, professional care across several specialties to look after your oral health. We are in Tijuana and welcome patients from Mexico and the United States, with treatments from dental cleaning to orthodontics. What smile would you like to show off next year?',
+    titleLead: 'Dentists committed',
+    titleMuted: 'to your health.',
+    lead: "From the first evaluation to the development of personalized designs, our doctors work hand in hand with the clinic's own dental laboratory to keep every case moving and speed up treatment, while we strive to provide care in all dental services, which are a priority at Dental Nakeji.",
     primaryCta: 'Schedule a visit',
     secondaryCta: 'Message us on WhatsApp',
     // PENDIENTE (clínica): confirmar "Certified dentists" y "Over 35 years" antes de publicar (ver gan-harness/glosario-en.md).
-    highlights: ['Certified dentists', 'Over 35 years caring for smiles', 'We work with US insurance plans'],
+    highlights: ['Certified dentists', 'Over 35 years caring for your oral health', 'We accept US insurance plans', 'Our own dental laboratory'],
     ambientLabels: ['Dental implants', 'Dental crowns', 'Veneers', 'Teeth whitening', 'Dental cleaning', 'Orthodontics'],
   },
   es: {
     theme: THEME,
-    titleLead: 'Dentistas en Tijuana',
-    titleMuted: 'para ti vivas en donde vivas.',
-    // SEO: "clínica dental", "Zona Río" y "Tijuana" van aquí (antes estaban en una línea sobre el título) junto a los servicios más buscados.
-    lead: 'En Dental Nakeji te acompañamos con una atención cercana y profesional con distintas especialidades para cuidar de tu salud bucal. Desde Tijuana, recibimos pacientes de México y Estados Unidos y les ofrecemos tratamientos que van desde limpieza dental hasta ortodoncia. ¿Qué sonrisa te gustaría lucir el próximo año?',
+    titleLead: 'Dentistas comprometidos',
+    titleMuted: 'por tu salud.',
+    lead: 'Desde la valoración hasta el desarrollo de diseños personalizados, nuestros doctores trabajan de la mano con el laboratorio dental de la clínica para dar continuidad a cada caso y agilizar el tratamiento, mientras nos esmeramos en brindar atención en todos los servicios dentales, que son prioridad en Dental Nakeji.',
     primaryCta: 'Agendar visita',
     secondaryCta: 'Escríbenos por WhatsApp',
     // Frases publicadas en el sitio oficial. Confírmalas con la clínica antes de publicar.
-    highlights: ['Dentistas certificados', 'Más de 35 años cuidando sonrisas', 'Trabajamos con aseguranzas americanas'],
+    highlights: ['Dentistas certificados', 'Más de 35 años cuidando tu salud bucal', 'Aceptamos aseguranzas americanas', 'Laboratorio propio'],
     // Etiquetas decorativas que aparecen y desaparecen sobre la aurora (solo escritorio).
     ambientLabels: ['Implantes dentales', 'Coronas', 'Carillas dentales', 'Blanqueamiento dental', 'Limpieza dental', 'Ortodoncia'],
   },

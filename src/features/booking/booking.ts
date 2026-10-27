@@ -5,7 +5,7 @@ import { BOOKING } from '@/config/booking'
 import type { Lang } from '@/config/routes'
 import { FORM_TEXT } from '@/features/booking/bookingText'
 
-const FIELD_NAMES = ['firstName', 'lastName', 'phone', 'email', 'service', 'date', 'time', 'firstVisit', 'consent'] as const
+const FIELD_NAMES = ['firstName', 'lastName', 'phone', 'email', 'service', 'date', 'time', 'firstVisit', 'comments', 'consent'] as const
 export type FieldName = (typeof FIELD_NAMES)[number]
 export type FieldErrors = Partial<Record<FieldName, string>>
 
@@ -25,8 +25,6 @@ interface BookingFields {
   firstVisit: string
   comments: string
   consent: boolean
-  /** Trampa anti-spam: debe llegar vacía. */
-  hp_x: string
 }
 
 export function readForm(formData: FormData): BookingFields {
@@ -42,7 +40,6 @@ export function readForm(formData: FormData): BookingFields {
     firstVisit: text('firstVisit'),
     comments: text('comments'),
     consent: formData.get('consent') === 'on',
-    hp_x: String(formData.get('hp_x') ?? ''),
   }
 }
 
@@ -95,6 +92,8 @@ export const formatDate = (iso: string, lang: Lang) =>
 export const NAME_PATTERN = /^\p{L}{2,}(?: \p{L}+)*$/u
 /** Teléfono: solo dígitos, con un "+" opcional al inicio; 10 a 15 dígitos. */
 export const PHONE_PATTERN = /^\+?\d{10,15}$/
+/** Enlaces en los comentarios: se rechazan (el personal los vería como enlaces en Google Calendar). */
+export const LINK_PATTERN = /https?:\/\/|www\./i
 
 export function validate(fields: BookingFields, today: string, lang: Lang): FieldErrors {
   const errors: FieldErrors = {}
@@ -115,6 +114,7 @@ export function validate(fields: BookingFields, today: string, lang: Lang): Fiel
   else if (BOOKING.closedWeekdays.includes(weekday(fields.date))) errors.date = text.closed
 
   if (!BOOKING.slots.includes(fields.time)) errors.time = text.time
+  if (LINK_PATTERN.test(fields.comments)) errors.comments = text.comments
   if (!fields.firstVisit) errors.firstVisit = text.firstVisit
   if (!fields.consent) errors.consent = text.consent
 

@@ -33,7 +33,6 @@ export interface FormText {
     firstVisitNo: string
     comments: string
     commentsHint: string
-    honeypot: string
   }
   consent: { before: string; link: string; after: string }
   submit: string
@@ -41,7 +40,7 @@ export interface FormText {
   sendingSr: string
   fine: string
   whatsapp: string
-  errors: { busy: string; invalid: string; limit: string; network: string }
+  errors: { busy: string; invalid: string; limit: string; network: string; captcha: string }
   success: {
     title: (name: string) => string
     service: string
@@ -61,6 +60,7 @@ export interface FormText {
     time: string
     firstVisit: string
     consent: string
+    comments: string
     server: string
   }
 }
@@ -91,7 +91,6 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       firstVisitNo: 'No, I am an existing patient',
       comments: 'Comments',
       commentsHint: 'Briefly tell us the reason for your visit.',
-      honeypot: 'Website',
     },
     consent: {
       before: 'I accept the ',
@@ -109,6 +108,7 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       limit:
         'We already received a recent request from this phone number. To book another appointment, message us on WhatsApp.',
       network: 'We could not send your request. Please try again or message us on WhatsApp.',
+      captcha: 'Please complete the security check and try again.',
     },
     success: {
       title: (name) => `Thank you, ${name}! We received your request.`,
@@ -129,6 +129,7 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       time: 'Choose a time.',
       firstVisit: 'Tell us whether this is your first visit.',
       consent: 'We need your authorization to schedule the appointment.',
+      comments: 'Please remove links from the comments.',
       server: 'Check this field.',
     },
   },
@@ -157,7 +158,6 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       firstVisitNo: 'No, ya soy paciente',
       comments: 'Comentarios',
       commentsHint: 'Cuéntanos brevemente el motivo de tu visita.',
-      honeypot: 'Sitio web',
     },
     consent: { before: 'Acepto el ', link: 'aviso de privacidad', after: ' y autorizo que me contacten para agendar.' },
     submit: 'Solicitar cita',
@@ -170,6 +170,7 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       invalid: 'Revisa los datos del formulario e inténtalo de nuevo.',
       limit: 'Ya recibimos una solicitud reciente desde este teléfono. Para agendar otra cita, escríbenos por WhatsApp.',
       network: 'No pudimos enviar tu solicitud. Inténtalo de nuevo o escríbenos por WhatsApp.',
+      captcha: 'Completa la verificación de seguridad e inténtalo de nuevo.',
     },
     success: {
       title: (name) => `¡Gracias, ${name}! Recibimos tu solicitud.`,
@@ -190,6 +191,7 @@ export const FORM_TEXT: Record<Lang, FormText> = {
       time: 'Elige un horario.',
       firstVisit: 'Indica si es tu primera visita.',
       consent: 'Necesitamos tu autorización para agendar la cita.',
+      comments: 'Quita los enlaces de los comentarios.',
       server: 'Revisa este dato.',
     },
   },

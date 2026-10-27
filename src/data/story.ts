@@ -27,35 +27,31 @@ type StoryMessages = Record<'desire' | 'priority' | 'decision', StoryLines>
 export const STORY: Record<Lang, StoryMessages> = {
   en: {
     desire: [
-      [{ text: 'Smile without a second thought' }],
-      [{ text: 'Talk without covering up,' }],
-      // "With confidence" empieza justo debajo de "covering up": se deja en blanco el ancho de "Talk without ".
-      [{ text: 'With confidence', accent: true, indent: 'Talk without ' }],
+      [{ text: '35 years supporting our patients' }],
+      [{ text: 'A story dedicated to oral care.', accent: true }],
     ],
     priority: [
-      [{ text: 'Caring for your smile is caring for yourself', accent: true }],
-      [{ text: 'Every visit adds to your well-being' }],
+      [{ text: 'All dental specialties and dental laboratory', accent: true }],
+      [{ text: 'To care for every detail of your treatment in one place' }],
     ],
     decision: [
-      [{ text: 'We explain, you decide' }],
-      [{ text: 'In Zona Río, Tijuana', accent: true }],
+      [{ text: 'Dental care in Tijuana for patients from all over the world' }],
+      [{ text: 'Meet Nakeji in Zona Río', accent: true }],
     ],
   },
   es: {
     // Sin puntos finales: las frases se leen como un hilo, no como oraciones sueltas.
     desire: [
-      [{ text: 'Sonreír sin pensarlo' }],
-      [{ text: 'Platicar sin taparte,' }],
-      // "Con confianza" empieza justo debajo de "taparte": se deja en blanco el ancho de "Platicar sin ".
-      [{ text: 'Con confianza', accent: true, indent: 'Platicar sin ' }],
+      [{ text: '35 años acompañando a nuestros pacientes' }],
+      [{ text: 'Una historia dedicada a la atención bucal.', accent: true }],
     ],
     priority: [
-      [{ text: 'Cuidar tu sonrisa es cuidarte', accent: true }],
-      [{ text: 'Cada visita suma a tu bienestar' }],
+      [{ text: 'Todas las especialidades dentales y laboratorio dental', accent: true }],
+      [{ text: 'Para cuidar cada detalle de tu tratamiento en un solo lugar' }],
     ],
     decision: [
-      [{ text: 'Te explicamos, tú decides' }],
-      [{ text: 'En la Zona Río de Tijuana', accent: true }],
+      [{ text: 'Atención dental en Tijuana para pacientes de todo el mundo' }],
+      [{ text: 'Conoce a Nakeji en Zona Río', accent: true }],
     ],
   },
 }

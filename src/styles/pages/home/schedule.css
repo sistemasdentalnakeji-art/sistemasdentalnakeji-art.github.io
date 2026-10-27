@@ -407,76 +407,8 @@
   color: var(--color-error);
 }
 
-/* Horario: botones en lugar de lista desplegable. El radio nativo cubre todo el botón (invisible). */
-.field--slots .field__label,
 .field--choice .field__label {
   margin-bottom: 10px;
-}
-
-.slot-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
-  gap: 10px;
-}
-
-.slot {
-  position: relative;
-  display: grid;
-  place-items: center;
-  min-height: 46px;
-  padding: 8px 10px;
-  border: 1.5px solid var(--color-field-border);
-  border-radius: 12px;
-  background: var(--color-white);
-  color: var(--color-ink);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-    background-color 0.2s var(--ease),
-    border-color 0.2s var(--ease),
-    box-shadow 0.25s var(--ease),
-    color 0.2s var(--ease),
-    transform 0.2s var(--ease);
-}
-
-.slot input {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.slot:hover {
-  border-color: var(--color-ink);
-  background: var(--color-sky);
-}
-
-.field--slots.has-error .slot:not(:has(input:checked)) {
-  border-color: var(--color-error);
-}
-
-.slot:has(input:checked) {
-  border-color: var(--color-ink);
-  background: var(--color-ink);
-  box-shadow: 0 10px 20px -10px rgba(42, 66, 105, 0.7);
-  color: var(--color-white);
-  animation: slot-pop 0.28s var(--ease);
-}
-
-.slot:has(:focus-visible) {
-  outline: 3px solid var(--color-brand);
-  outline-offset: 2px;
-}
-
-@keyframes slot-pop {
-  50% {
-    transform: scale(1.06);
-  }
 }
 
 /* Primera visita: dos tarjetas con radio personalizado. */
@@ -575,8 +507,7 @@
   box-shadow: inset 0 0 0 4px var(--color-white);
 }
 
-.field--choice .field__error,
-.field--slots .field__error {
+.field--choice .field__error {
   margin-top: 8px;
 }
 
@@ -596,12 +527,9 @@
   background: var(--color-error-soft);
 }
 
-.hp-field {
-  position: absolute;
-  left: -10000px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
+/* Casilla anti-bots (Turnstile): reserva su alto para que el formulario no salte al cargar. */
+.booking-form__captcha {
+  min-height: 65px;
 }
 
 /* Pie: botón a todo el ancho con degradado azul marino y un destello al pasar el cursor. */
@@ -848,7 +776,6 @@
 
 /* Alto contraste de Windows: el modo quita fondos y sombras, que es como se marca lo elegido. */
 @media (forced-colors: active) {
-  .slot:has(input:checked),
   .field--choice .choice:has(input:checked) {
     outline: 3px solid Highlight;
     outline-offset: 2px;

@@ -18,8 +18,7 @@ h4 {
 /* Los capítulos narrativos son más ligeros que los títulos de página. */
 .timeline__title,
 .catalog-group__title,
-.legal-card__title,
-.faq-group__title {
+.legal-card__title {
   font-family: var(--font-display);
   font-weight: 500;
 }
@@ -41,7 +40,6 @@ h4 {
 .catalog-card__title,
 .service-card__title,
 .benefit-card__title,
-.card-title,
 .value-card__title,
 .team-area__title,
 .member__name,
@@ -150,7 +148,6 @@ p .text-link,
 .steps__number,
 .booking-group__num,
 .legal-head__date,
-.legal-updated,
 .pill {
   font-family: var(--font-ui);
   font-weight: 600;

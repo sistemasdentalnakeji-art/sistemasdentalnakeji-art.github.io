@@ -40,6 +40,15 @@ No hace falta servidor propio ni claves secretas.
 
 Si la variable está vacía, el formulario se muestra pero avisa que aún no está conectado y ofrece WhatsApp.
 
+## 5. Casilla anti-bots (Cloudflare Turnstile)
+La URL `/exec` es pública, así que cualquiera podría mandarle solicitudes sin pasar por la web. Turnstile (gratis) lo evita:
+1. En <https://dash.cloudflare.com> → **Turnstile → Add site**, con el dominio del sitio. Copia la **llave del sitio** (pública) y la **llave secreta**.
+2. En el sitio: `VITE_TURNSTILE_SITE_KEY=<llave del sitio>` en `.env.production` (y en las variables de Vercel).
+3. En el Apps Script: **Configuración del proyecto (⚙) → Propiedades de la secuencia de comandos → Añadir** `TURNSTILE_SECRET` = la llave secreta.
+4. Al guardar `Code.gs` y `appsscript.json`, vuelve a implementar (nueva versión) y autoriza el permiso nuevo (conexión a servicios externos).
+
+Mientras `TURNSTILE_SECRET` no exista, el script no exige la casilla y el formulario funciona como antes (solo con los límites de abajo).
+
 ## Cambios posteriores
 Cada vez que edites `Code.gs`: **Implementar → Administrar implementaciones → ✏ → Versión: Nueva versión → Implementar**.
 La URL `/exec` no cambia.
@@ -52,11 +61,15 @@ La URL `/exec` no cambia.
 | `{"ok":false,"error":"invalid"}` | Datos fuera de reglas | "Revisa los datos" |
 | `{"ok":false,"error":"server"}` | Error del script | Mensaje + enlace a WhatsApp |
 | `{"ok":false,"error":"limit"}` | Límite anti-abuso (por hora o mismo teléfono) | Mensaje + enlace a WhatsApp |
+| `{"ok":false,"error":"captcha"}` | Falta o falló la casilla anti-bots | "Completa la verificación de seguridad" |
 
 ## Privacidad y seguridad
 - El formulario exige aceptar el **aviso de privacidad** (`/aviso-de-privacidad/`). Falta publicar el texto legal de la clínica (LFPDPPP).
-- La URL `/exec` es pública por diseño. Protecciones incluidas: campo trampa anti-spam, validación en el servidor (incluida la
-  lista de servicios), límite de solicitudes por hora y por teléfono (`MAX_REQUESTS_PER_HOUR`,
-  `PHONE_COOLDOWN_HOURS`) y bloqueo para evitar dobles reservas. Si llega spam, se puede añadir reCAPTCHA.
+- La URL `/exec` es pública por diseño. Protecciones incluidas: casilla anti-bots Turnstile (ver sección 5), validación en el
+  servidor (incluida la lista de servicios), rechazo de enlaces en los comentarios, límite de solicitudes por hora
+  (`MAX_REQUESTS_PER_HOUR`, cuentan también las rechazadas por horario ocupado) y por teléfono (`PHONE_COOLDOWN_HOURS`,
+  comparando los últimos 10 dígitos) y bloqueo para evitar dobles reservas.
+- Correo de aviso: solo se envía el de la primera solicitud de cada hora, para no agotar la cuota diaria de la cuenta
+  (≈100 en Gmail). Las demás están en Calendar. Si el correo falla, el script deja un evento "AVISO" de todo el día.
 - Alternativa sin código: **Google Calendar → Agenda de citas** genera una página de reservas propia
   que se puede enlazar o insertar. Tiene menos control del diseño y de los campos.
