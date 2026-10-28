@@ -77,9 +77,9 @@ La URL `/exec` no cambia.
 - El formulario exige aceptar el **aviso de privacidad** (`/aviso-de-privacidad/`). Falta publicar el texto legal de la clínica (LFPDPPP).
 - La URL `/exec` es pública por diseño. Protecciones incluidas: casilla anti-bots Turnstile (ver sección 5), validación en el
   servidor (incluida la lista de servicios), campo trampa `hp_x`, tope de 300 intentos por hora antes de verificar la
-  casilla (cuida la cuota de `UrlFetch`), cuerpos de máximo 10 000 caracteres, rechazo de enlaces en los comentarios, límite de solicitudes por hora
-  (`MAX_REQUESTS_PER_HOUR`, cuentan también las rechazadas por horario ocupado) y por teléfono (`PHONE_COOLDOWN_HOURS`,
-  comparando los últimos 10 dígitos) y bloqueo para evitar dobles reservas.
+  casilla (cuida la cuota de `UrlFetch`; las solicitudes sin casilla se rechazan antes de contarlas), cuerpos de máximo 10 000 caracteres,
+  rechazo de enlaces en los comentarios, límite de solicitudes por hora (`MAX_REQUESTS_PER_HOUR`, cuentan también las rechazadas por
+  horario ocupado) y por teléfono (`MAX_REQUESTS_PER_PHONE_PER_HOUR`: 3 por hora, comparando los últimos 10 dígitos) y bloqueo para evitar dobles reservas.
 - Correo de aviso: solo se envía el de la primera solicitud de cada hora, para no agotar la cuota diaria de la cuenta
   (≈100 en Gmail). Las demás están en Calendar. Si el correo falla, el script deja un evento "AVISO" de todo el día.
 - Alternativa sin código: **Google Calendar → Agenda de citas** genera una página de reservas propia
