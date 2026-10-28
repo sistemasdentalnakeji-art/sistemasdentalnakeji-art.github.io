@@ -34,3 +34,6 @@ tests/**/*-snapshots/
 
 # Configuración de agentes y guía del entorno local (no va al repositorio)
 INSTALAR-ENTORNO.md
+
+# Candado de habilidades de agentes (no lo usa el sitio)
+skills-lock.json
