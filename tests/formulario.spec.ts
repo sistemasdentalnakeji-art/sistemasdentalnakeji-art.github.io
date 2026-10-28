@@ -93,6 +93,16 @@ test.describe('Formulario de citas', () => {
     expect((await times()).at(-1)).toBe('5:30 PM')
   })
 
+  test('domingo: al elegirlo el campo se vacía y sale el aviso al instante', async ({ page }) => {
+    await openForm(page)
+    const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Tijuana' }).format(new Date()).split('-').map(Number)
+    const sunday = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2] + 1))
+    while (sunday.getUTCDay() !== 0) sunday.setUTCDate(sunday.getUTCDate() + 1)
+    await page.locator('#cita-date').fill(sunday.toISOString().slice(0, 10))
+    await expect(page.locator('#cita-date')).toHaveValue('')
+    await expect(page.locator('#cita-date-error')).toBeVisible()
+  })
+
   test('campos vacíos no se envían y se marcan los errores', async ({ page }) => {
     const sent = await mockScript(page, () => ({ ok: true }))
     await openForm(page)

@@ -19,6 +19,7 @@ import {
   addDays,
   formatDate,
   formatTime,
+  isClosedDay,
   slotsFor,
   isFieldName,
   readForm,
@@ -295,7 +296,12 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
       className="booking-form"
       noValidate
       onSubmit={onSubmit}
-      onChange={(event) => clearError((event.nativeEvent.target as HTMLInputElement).name)}
+      onChange={(event) => {
+        const target = event.nativeEvent.target as HTMLInputElement
+        // La fecha vaciada por ser un día sin atención conserva su aviso (lo pone el propio campo de fecha).
+        if (target.name === 'date' && !target.value) return
+        clearError(target.name)
+      }}
       aria-labelledby="cita-titulo"
     >
       <header className="booking-form__head">
@@ -359,7 +365,19 @@ export function BookingForm({ defaultService = '' }: BookingFormProps) {
 
         <Field name="date" label={t.labels.date} required error={errors.date}>
           <input {...fieldProps('date')} type="date" min={minDate} max={maxDate ?? '2099-12-31'} required
-            onChange={(event) => setDate(event.currentTarget.value)} />
+            onChange={(event) => {
+              const input = event.currentTarget
+              // Día sin atención: se vacía el campo y se avisa al instante, en lugar de dejarlo elegido.
+              if (isClosedDay(input.value)) {
+                input.value = ''
+                setDate('')
+                setErrors((current) => ({ ...current, date: t.validation.closed }))
+                return
+              }
+              // Un valor vacío es el eco de haberlo vaciado arriba: no debe borrar el aviso.
+              if (input.value) clearError('date')
+              setDate(input.value)
+            }} />
         </Field>
 
         {/* Horario: lista desplegable con los horarios de la fecha elegida (BOOKING.slots, recortados los sábados). La key la reinicia al cambiar la lista. */}

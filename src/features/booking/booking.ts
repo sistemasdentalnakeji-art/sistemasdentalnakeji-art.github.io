@@ -73,6 +73,9 @@ export const addDays = (iso: string, days: number) => {
 
 const weekday = (iso: string) => parseISODate(iso).getDay()
 
+/** ¿La clínica no atiende ese día? (el selector de fecha del navegador no puede apagar días, así que se avisa al elegirlo). */
+export const isClosedDay = (iso: string) => /^\d{4}-\d{2}-\d{2}$/.test(iso) && BOOKING.closedWeekdays.includes(weekday(iso))
+
 /** Horarios que se pueden elegir en una fecha (los sábados se corta a la última hora permitida). Sin fecha: todos. */
 export const slotsFor = (iso: string) => {
   const last = /^\d{4}-\d{2}-\d{2}$/.test(iso) ? BOOKING.lastSlotByWeekday[weekday(iso)] : undefined
