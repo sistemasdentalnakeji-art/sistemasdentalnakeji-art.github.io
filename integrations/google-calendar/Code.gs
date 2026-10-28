@@ -27,6 +27,27 @@ const CONFIG = {
   CHECK_CONFLICTS: true,
   /** Citas permitidas del MISMO servicio a la MISMA hora (pendientes y confirmadas cuentan). La siguiente se rechaza como "busy". */
   MAX_PER_SERVICE_PER_SLOT: 5,
+  /**
+   * Palabras (en minusculas) con las que recepcion suele escribir cada servicio en el titulo de una cita a mano; sirven para contarla
+   * en el cupo. Ademas siempre vale el nombre exacto del servicio (lo que escribe el formulario). Agrega aqui las que falten.
+   */
+  SERVICE_KEYWORDS: {
+    'Valoración general': ['valoración', 'valoracion', 'evaluat', 'evaluac'],
+    'Limpieza dental': ['limpieza', 'cleaning'],
+    'Implantes dentales': ['implante'],
+    'All on 4 implants': ['all on 4', 'all-on-4', 'all in 4'],
+    'All on 6 implants': ['all on 6', 'all-on-6', 'all in 6'],
+    'Coronas': ['corona', 'crown'],
+    'Carillas dentales': ['carilla', 'veneer'],
+    'Blanqueamiento dental': ['blanqueamiento', 'whitening'],
+    'Endodoncias': ['endodoncia', 'root canal'],
+    'Ortodoncia': ['ortodoncia', 'brackets', 'braces'],
+    'Alineadores': ['alineador', 'invisalign', 'aligner'],
+    'Odontopediatría': ['odontopediatr', 'pediatr'],
+    'Dentaduras': ['dentadura', 'denture'],
+    'Periodoncia': ['periodoncia'],
+    'Extracciones simples y de juicio': ['extracci', 'extraction'],
+  },
   /** Correo que recibe un aviso por cada solicitud (opcional). */
   NOTIFY_EMAIL: 'info@nakejidental.com',
   /** Color del evento en Calendar (amarillo = por confirmar). */
@@ -121,15 +142,14 @@ function doPost(e) {
       // Cuentan tambien las solicitudes rechazadas por horario ocupado (si no, se podria insistir sin tope).
       cache.put(hourKey, String(requestsThisHour + 1), 3600);
 
-      // Cupo: cuentan los eventos que empiezan a esa misma hora y nombran el mismo servicio en el titulo o la descripcion
-      // (las solicitudes del formulario siempre lo hacen; a mano, recepcion debe escribir el servicio en el titulo). Los de todo el dia no cuentan.
-      const service = clean_(data.service).toLowerCase();
-      const sameSlot = calendar.getEvents(start, end).filter(
-        (event) =>
-          !event.isAllDayEvent() &&
-          event.getStartTime().getTime() === start.getTime() &&
-          (event.getTitle() + ' ' + event.getDescription()).toLowerCase().indexOf(service) !== -1,
-      );
+      // Cupo: cuentan los eventos que empiezan a esa misma hora y nombran el mismo servicio (o una de sus palabras de SERVICE_KEYWORDS)
+      // en el titulo o la descripcion. Las solicitudes del formulario siempre lo hacen. Los de todo el dia no cuentan.
+      const words = [clean_(data.service).toLowerCase()].concat(CONFIG.SERVICE_KEYWORDS[data.service] || []);
+      const sameSlot = calendar.getEvents(start, end).filter((event) => {
+        if (event.isAllDayEvent() || event.getStartTime().getTime() !== start.getTime()) return false;
+        const text = (event.getTitle() + ' ' + event.getDescription()).toLowerCase();
+        return words.some((word) => text.indexOf(word) !== -1);
+      });
       if (CONFIG.CHECK_CONFLICTS && sameSlot.length >= CONFIG.MAX_PER_SERVICE_PER_SLOT) {
         return json_({ ok: false, error: 'busy' });
       }

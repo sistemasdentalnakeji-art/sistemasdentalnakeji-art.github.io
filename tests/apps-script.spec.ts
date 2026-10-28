@@ -240,6 +240,18 @@ test.describe('Code.gs (Apps Script)', () => {
     expect(loadScript({ events }).send(request({ date: day, time: '10:00' }))).toMatchObject({ ok: false, error: 'busy' })
   })
 
+  test('cupo: reconoce los títulos escritos a mano por recepción', () => {
+    const day = nextOpenDay()
+    const five = (title: string) => Array.from({ length: 5 }, (_, i) => ({ title: `${title} ${i}`, start: at(day, '10:00') }))
+    const sent = (title: string, service: string) => loadScript({ events: five(title) }).send(request({ date: day, time: '10:00', service }))
+    expect(sent('Px Alejandro Torres consulta para Implantes', 'Implantes dentales')).toMatchObject({ error: 'busy' })
+    expect(sent('Px Roland Baldwin 1a vez Deep Cleaning', 'Limpieza dental')).toMatchObject({ error: 'busy' })
+    expect(sent('PX HERWIN ACOSTA appo to evaluate', 'Valoración general')).toMatchObject({ error: 'busy' })
+    // "All on 4 implants" no cuenta como "Implantes dentales", ni al revés.
+    expect(sent('Px Ana All on 4 implants', 'Implantes dentales')).toEqual({ ok: true })
+    expect(sent('Px Ana consulta para Implantes', 'All on 4 implants')).toEqual({ ok: true })
+  })
+
   test('domingo no se puede agendar', () => {
     const { send, created } = loadScript()
     expect(send(request({ date: nextWeekday(0) }))).toMatchObject({ ok: false, error: 'invalid', fields: ['date'] })
