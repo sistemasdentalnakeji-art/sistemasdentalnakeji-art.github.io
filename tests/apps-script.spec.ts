@@ -8,6 +8,8 @@ test.skip(({ isMobile }) => isMobile, 'Prueba de servidor: basta con correrla un
 interface Options {
   secret?: string
   mailFails?: boolean
+  /** Eventos que ya existen en el calendario. */
+  events?: { title: string; description?: string; start: Date; allDay?: boolean }[]
 }
 
 interface Reply {
@@ -38,7 +40,14 @@ function nextWeekday(day: number) {
   return date.toISOString().slice(0, 10)
 }
 
-function loadScript({ secret = 'secreto', mailFails = false }: Options = {}) {
+// Fecha y hora de una solicitud tal como las arma Code.gs (zona horaria del proceso).
+function at(date: string, time: string) {
+  const [y, m, d] = date.split('-').map(Number)
+  const [h, min] = time.split(':').map(Number)
+  return new Date(y, m - 1, d, h, min, 0)
+}
+
+function loadScript({ secret = 'secreto', mailFails = false, events = [] }: Options = {}) {
   const cache = new Map<string, string>()
   const fetches = { count: 0 }
   const created: { title: string; allDay: boolean }[] = []
@@ -48,7 +57,13 @@ function loadScript({ secret = 'secreto', mailFails = false }: Options = {}) {
     CalendarApp: {
       EventColor: { YELLOW: '5' },
       getDefaultCalendar: () => ({
-        getEvents: () => [],
+        getEvents: () =>
+          events.map((event) => ({
+            isAllDayEvent: () => Boolean(event.allDay),
+            getStartTime: () => event.start,
+            getTitle: () => event.title,
+            getDescription: () => event.description ?? '',
+          })),
         createEvent: (title: string) => {
           created.push({ title, allDay: false })
           return { setColor: () => {} }
@@ -198,6 +213,31 @@ test.describe('Code.gs (Apps Script)', () => {
   test('una fecha con espacios de sobra se limpia y se acepta', () => {
     const { send } = loadScript()
     expect(send(request({ date: `${nextOpenDay()}      ` }))).toEqual({ ok: true })
+  })
+
+  test('cupo: 5 citas del mismo servicio a la misma hora; la sexta se rechaza', () => {
+    const day = nextOpenDay()
+    const filled = (count: number) =>
+      Array.from({ length: count }, (_, i) => ({ title: `Solicitud de cita: Limpieza dental - Paciente ${i}`, start: at(day, '10:00') }))
+    expect(loadScript({ events: filled(4) }).send(request({ date: day, time: '10:00' }))).toEqual({ ok: true })
+    const full = loadScript({ events: filled(5) })
+    expect(full.send(request({ date: day, time: '10:00' }))).toMatchObject({ ok: false, error: 'busy' })
+    expect(full.created).toHaveLength(0)
+  })
+
+  test('cupo: otro servicio, otra hora o un evento de todo el día no cuentan', () => {
+    const day = nextOpenDay()
+    const five = (event: { title: string; start: Date; allDay?: boolean }) => Array.from({ length: 5 }, () => event)
+    const sent = (events: ReturnType<typeof five>) => loadScript({ events }).send(request({ date: day, time: '10:00' }))
+    expect(sent(five({ title: 'Solicitud de cita: Coronas - Ana', start: at(day, '10:00') }))).toEqual({ ok: true })
+    expect(sent(five({ title: 'Solicitud de cita: Limpieza dental - Ana', start: at(day, '11:00') }))).toEqual({ ok: true })
+    expect(sent(five({ title: 'Limpieza dental', start: at(day, '10:00'), allDay: true }))).toEqual({ ok: true })
+  })
+
+  test('cupo: una cita puesta a mano cuenta si el título dice el servicio', () => {
+    const day = nextOpenDay()
+    const events = Array.from({ length: 5 }, () => ({ title: 'limpieza dental - Sra. Perez', start: at(day, '10:00') }))
+    expect(loadScript({ events }).send(request({ date: day, time: '10:00' }))).toMatchObject({ ok: false, error: 'busy' })
   })
 
   test('domingo no se puede agendar', () => {

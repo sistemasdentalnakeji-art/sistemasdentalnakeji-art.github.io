@@ -23,8 +23,10 @@ const CONFIG = {
   LAST_SLOT_BY_WEEKDAY: { 6: '16:00' },
   /** Hasta cuantos dias adelante se aceptan solicitudes. */
   DAYS_AHEAD: 60,
-  /** Rechazar si ya hay una cita confirmada en ese horario (las solicitudes pendientes, en amarillo, no bloquean). */
+  /** Rechazar si el horario ya esta lleno para ese servicio (ver MAX_PER_SERVICE_PER_SLOT). */
   CHECK_CONFLICTS: true,
+  /** Citas permitidas del MISMO servicio a la MISMA hora (pendientes y confirmadas cuentan). La siguiente se rechaza como "busy". */
+  MAX_PER_SERVICE_PER_SLOT: 5,
   /** Correo que recibe un aviso por cada solicitud (opcional). */
   NOTIFY_EMAIL: 'info@nakejidental.com',
   /** Color del evento en Calendar (amarillo = por confirmar). */
@@ -119,11 +121,16 @@ function doPost(e) {
       // Cuentan tambien las solicitudes rechazadas por horario ocupado (si no, se podria insistir sin tope).
       cache.put(hourKey, String(requestsThisHour + 1), 3600);
 
-      // Solo cuentan como ocupados los eventos confirmados (no amarillos y no de todo el dia).
-      const busy = calendar
-        .getEvents(start, end)
-        .filter((event) => !event.isAllDayEvent() && event.getColor() !== CONFIG.EVENT_COLOR);
-      if (CONFIG.CHECK_CONFLICTS && busy.length > 0) {
+      // Cupo: cuentan los eventos que empiezan a esa misma hora y nombran el mismo servicio en el titulo o la descripcion
+      // (las solicitudes del formulario siempre lo hacen; a mano, recepcion debe escribir el servicio en el titulo). Los de todo el dia no cuentan.
+      const service = clean_(data.service).toLowerCase();
+      const sameSlot = calendar.getEvents(start, end).filter(
+        (event) =>
+          !event.isAllDayEvent() &&
+          event.getStartTime().getTime() === start.getTime() &&
+          (event.getTitle() + ' ' + event.getDescription()).toLowerCase().indexOf(service) !== -1,
+      );
+      if (CONFIG.CHECK_CONFLICTS && sameSlot.length >= CONFIG.MAX_PER_SERVICE_PER_SLOT) {
         return json_({ ok: false, error: 'busy' });
       }
 

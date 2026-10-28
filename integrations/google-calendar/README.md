@@ -60,11 +60,18 @@ La URL `/exec` no cambia.
 | Respuesta | Significado | Lo que ve el paciente |
 |---|---|---|
 | `{"ok":true}` | Evento creado | Confirmación con resumen |
-| `{"ok":false,"error":"busy"}` | Ya hay un evento en ese horario | "Ese horario ya está ocupado" |
+| `{"ok":false,"error":"busy"}` | El horario ya tiene el cupo lleno para ese servicio (`MAX_PER_SERVICE_PER_SLOT`, 5 por defecto) | "Ese horario ya está ocupado" |
 | `{"ok":false,"error":"invalid"}` | Datos fuera de reglas | "Revisa los datos" |
 | `{"ok":false,"error":"server"}` | Error del script | Mensaje + enlace a WhatsApp |
 | `{"ok":false,"error":"limit"}` | Límite anti-abuso (por hora o mismo teléfono) | Mensaje + enlace a WhatsApp |
 | `{"ok":false,"error":"captcha"}` | Falta o falló la casilla anti-bots | "Completa la verificación de seguridad" |
+
+## Cupos y colores
+- **Cupo:** se aceptan hasta `MAX_PER_SERVICE_PER_SLOT` citas (5) del **mismo servicio** que empiecen a la **misma hora**; la siguiente
+  responde `busy`. Cuentan las solicitudes del formulario (pendientes y confirmadas) y las citas puestas a mano **si el título o la
+  descripción nombran el servicio** (por eso recepción y ventas deben escribir el servicio en el título). Los eventos de todo el día no cuentan.
+- **Colores** (solo una convención del personal; el script no depende de ellos): amarillo = solicitud nueva del formulario (el script
+  lo pone solo); al confirmarla se cambia a otro color (azul = citas de `info`, gris = recepción).
 
 ## Privacidad y seguridad
 - El formulario exige aceptar el **aviso de privacidad** (`/aviso-de-privacidad/`). Falta publicar el texto legal de la clínica (LFPDPPP).
