@@ -53,7 +53,7 @@ export function BenefitsPage() {
   const cta = BENEFITS_CTA[lang]
   return (
     <Band
-      tone="white"
+      tone="gradient"
       className="benefits"
       labelledBy="beneficios-titulo"
       decor={
@@ -76,7 +76,7 @@ export function BenefitsPage() {
         <header className="benefits-hero">
           <div className="benefits-hero__text">
             <p className="benefits-hero__eyebrow pill-label">{hero.eyebrow}</p>
-            <h1 id="beneficios-titulo" className="benefits-hero__title">
+            <h1 id="beneficios-titulo" className="benefits-hero__title shiny-text">
               <span className="benefits-hero__lead-line">{hero.titleLead}</span>{' '}
               <span className="benefits-hero__accent">{hero.titleAccent}</span>
             </h1>
@@ -93,7 +93,7 @@ export function BenefitsPage() {
             </ul>
           </div>
 
-          <div className="benefits-hero__photo siri">
+          <div className="benefits-hero__photo">
             <div className="benefits-hero__frame">
               <img
                 className="benefits-hero__image"

@@ -156,8 +156,8 @@
   line-height: 1.4;
   text-decoration: none;
   transition:
-    color 0.25s var(--ease),
-    background-color 0.25s var(--ease);
+    color var(--dur) var(--ease-out),
+    background-color var(--dur) var(--ease-out);
 }
 
 .toc__link:hover {
@@ -181,8 +181,8 @@
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.4);
   transition:
-    width 0.3s var(--ease),
-    background-color 0.3s var(--ease);
+    width var(--dur) var(--ease-out),
+    background-color var(--dur) var(--ease-out);
 }
 
 .toc__link:hover {
@@ -409,7 +409,7 @@
     border: solid var(--color-brand);
     border-width: 0 2px 2px 0;
     rotate: 45deg;
-    transition: rotate 0.25s var(--ease);
+    transition: rotate var(--dur) var(--ease-out);
   }
 
   .legal-card[data-open] .legal-card__head::after {
@@ -438,7 +438,7 @@
   }
 
   .legal-card[data-open] .legal-card__body {
-    animation: legal-open 0.35s var(--ease) both;
+    animation: legal-open var(--dur) var(--ease-out) both;
   }
 }
 
@@ -447,4 +447,32 @@
     opacity: 0;
     transform: translateY(-6px);
   }
+}
+
+/* ---- Sobre el fondo aurora (Band tone="aurora"): encabezado en tonos claros; las cartas se quedan blancas ---- */
+.legal-page .legal-head--doc {
+  border-bottom-color: rgb(255 255 255 / 0.28);
+}
+
+.legal-page .legal-head__eyebrow {
+  background: rgb(255 255 255 / 0.12);
+  color: var(--color-gold);
+}
+
+.legal-page .legal-head__lead {
+  color: rgb(213 232 246 / 0.85);
+}
+
+.legal-page .legal-head__date {
+  border-color: rgb(255 255 255 / 0.2);
+  background: rgb(255 255 255 / 0.08);
+  color: var(--color-white);
+}
+
+.legal-page .legal-head__date svg {
+  color: var(--color-brand-light);
+}
+
+.legal-page .toc {
+  border: var(--border-on-dark);
 }

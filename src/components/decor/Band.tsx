@@ -1,11 +1,14 @@
 import type { ReactNode } from 'react'
 import { cx } from '@/lib/cx'
+import { PageAurora } from '@/components/decor/PageAurora'
+import { PageGradient } from '@/components/decor/PageGradient'
 import { SectionDecor, type FlowLayout } from '@/components/decor/SectionDecor'
 
 type Wave = 'plain' | 'flip'
 
 interface BandProps {
-  tone: 'white' | 'tint' | 'night'
+  /** gradient: el degradado azul fijo del homepage (PageGradient); aurora: azul noche con luces y estrellas (PageAurora). Ambos se quedan fijos: la banda usa overflow: clip. */
+  tone: 'white' | 'tint' | 'night' | 'gradient' | 'aurora'
   id?: string
   labelledBy: string
   className?: string
@@ -19,7 +22,7 @@ interface BandProps {
 }
 
 /**
- * Sección de la hoja continua: fondo blanco, azul claro o azul noche, olas de unión y decoraciones.
+ * Sección de la hoja continua: fondo blanco, azul claro, azul noche o degradado fijo, olas de unión y decoraciones.
  * Une las clases de la banda (tono, ola superior, curvas) con las decoraciones que se pintan dentro (`SectionDecor`).
  */
 export function Band({ tone, id, labelledBy, className, waveTop, flow, decor, children }: BandProps) {
@@ -35,8 +38,10 @@ export function Band({ tone, id, labelledBy, className, waveTop, flow, decor, ch
       )}
       aria-labelledby={labelledBy}
     >
+      {tone === 'gradient' && <PageGradient />}
+      {tone === 'aurora' && <PageAurora />}
       {decor}
-      {flow && <SectionDecor variant="flow" layout={flow} />}
+      {flow &&<SectionDecor variant="flow" layout={flow} />}
       {waveTop && <SectionDecor variant="wave" position="top" flip={waveTop === 'flip'} />}
       {children}
     </section>

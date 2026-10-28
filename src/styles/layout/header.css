@@ -5,7 +5,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  transition: box-shadow 0.25s var(--ease);
+  transition: box-shadow var(--dur) var(--ease-out);
 }
 
 /* Fondo "Oceanic Shimmer" (degradado de 21st.dev adaptado a la barra) con SOLO los azules de la marca: base marino del logotipo
@@ -241,8 +241,8 @@
   text-decoration: none;
   cursor: pointer;
   transition:
-    background-color 0.2s var(--ease),
-    color 0.2s var(--ease);
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
 }
 
 .nav-link:hover,
@@ -260,7 +260,7 @@
 }
 
 .nav-chevron {
-  transition: transform 0.2s var(--ease);
+  transition: transform var(--dur-fast) var(--ease-out);
 }
 
 .has-dropdown.is-open .nav-chevron {
@@ -279,8 +279,8 @@
   font-size: 1rem;
   text-decoration: none;
   transition:
-    background-color 0.2s var(--ease),
-    color 0.2s var(--ease);
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
 }
 
 .dropdown__link:hover,
@@ -294,8 +294,9 @@
   font-weight: 600;
 }
 
-/* Beneficios: línea divisora entre cada opción. */
-.dropdown--beneficios .dropdown__list li + li {
+/* Beneficios y Más: línea divisora entre cada opción. */
+.dropdown--beneficios .dropdown__list li + li,
+.dropdown--mas .dropdown__list li + li {
   margin-top: 4px;
   padding-top: 4px;
   border-top: 1px solid var(--color-fog);
@@ -312,7 +313,7 @@
   border-radius: 10px;
   background: var(--color-brand);
   color: var(--color-white);
-  transition: color 0.2s var(--ease);
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
 .dropdown__link:hover .dropdown__icon,

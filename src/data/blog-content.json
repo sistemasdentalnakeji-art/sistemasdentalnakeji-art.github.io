@@ -1,0 +1,540 @@
+{
+  "hub": {
+    "label": "BLOG DENTAL NAKEJI",
+    "h1": "Entiende mejor tu salud bucal",
+    "intro": "En este espacio respondemos preguntas frecuentes sobre el cuidado de dientes y encías y sobre los tratamientos que ofrece Dental Nakeji. Encontrarás explicaciones sencillas, fuentes confiables y enlaces para conocer cada servicio. La información te ayuda a prepararte para una consulta; la recomendación adecuada para ti depende de una valoración profesional.",
+    "exploreTitle": "Explora por tema",
+    "exploreText": "Elige el tema que responde mejor a tu duda. Cada artículo está relacionado con un servicio que sí aparece en el catálogo oficial de Dental Nakeji.",
+    "featuredText": "Artículos para resolver tus dudas",
+    "featuredLead": "Empieza por el tema que te interesa. Al final de cada lectura encontrarás el servicio relacionado y las fuentes consultadas.",
+    "ctaTitle": "¿Tienes preguntas sobre tu caso?",
+    "ctaText": "Las necesidades de cada persona son distintas. En Dental Nakeji puedes solicitar una visita para hablar de tus síntomas, dudas y opciones de atención con un profesional."
+  },
+  "categories": [
+    {
+      "name": "Implantes y rehabilitación dental",
+      "description": "Información sobre opciones para reemplazar dientes ausentes y preguntas útiles para tu valoración.",
+      "route": "/es/blog/implantes-y-rehabilitacion/",
+      "intro": "Perder uno o varios dientes puede cambiar la forma de masticar y la confianza al sonreír. En esta sección explicamos las opciones de rehabilitación que aparecen en el catálogo de Dental Nakeji: implantes dentales, All on 4 implants, All on 6 implants y dentaduras. Cada opción requiere una valoración individual."
+    },
+    {
+      "name": "Estética y restauración",
+      "description": "Conoce las diferencias entre tratamientos que pueden restaurar o mejorar la apariencia de los dientes.",
+      "route": "/es/blog/estetica-y-restauracion/",
+      "intro": "La apariencia de una sonrisa también depende de la salud y la función de los dientes. Aquí encontrarás información sobre coronas, carillas dentales y blanqueamiento dental: qué hace cada tratamiento, qué no hace y por qué la evaluación previa es importante."
+    },
+    {
+      "name": "Ortodoncia y odontopediatría",
+      "description": "Respuestas sobre alineación dental, mordida y atención bucal para niños.",
+      "route": "/es/blog/ortodoncia-y-odontopediatria/",
+      "intro": "Alinear los dientes y cuidar la boca desde la infancia son temas distintos que comparten una idea: cada etapa necesita atención adecuada. Reunimos respuestas sobre ortodoncia, alineadores y odontopediatría, los tres servicios de esta categoría en Dental Nakeji."
+    },
+    {
+      "name": "Limpieza y salud de encías",
+      "description": "Aprende por qué la prevención y la valoración de las encías forman parte del cuidado dental.",
+      "route": "/es/blog/limpieza-y-salud-de-encias/",
+      "intro": "La higiene diaria ayuda a cuidar dientes y encías, y las visitas profesionales permiten detectar problemas que no siempre se ven en casa. Aprende la diferencia entre limpieza dental y atención periodontal, dos servicios disponibles en Dental Nakeji."
+    },
+    {
+      "name": "Endodoncia y extracciones",
+      "description": "Entiende cuándo se busca conservar un diente y cuándo puede valorarse retirarlo.",
+      "route": "/es/blog/endodoncia-y-extracciones/",
+      "intro": "Cuando un diente presenta un problema, la atención puede orientarse a conservarlo o, si es necesario, a retirarlo. Esta sección explica de forma general qué es una endodoncia y cómo se valoran las extracciones simples y de muelas del juicio."
+    }
+  ],
+  "cards": [
+    {
+      "category": "Implantes y rehabilitación dental",
+      "route": "/es/blog/implantes-dentales-que-son/",
+      "cardTitle": "Implantes dentales: qué son y qué se revisa antes de colocarlos",
+      "excerpt": "Un implante puede sostener una restauración para reemplazar un diente ausente. Conoce qué se evalúa antes de recomendarlo."
+    },
+    {
+      "category": "Implantes y rehabilitación dental",
+      "route": "/es/blog/all-on-4-implants/",
+      "cardTitle": "All on 4 implants: una arcada fija sobre cuatro implantes",
+      "excerpt": "Descubre qué significa este tratamiento y por qué el estudio del hueso forma parte de la valoración."
+    },
+    {
+      "category": "Implantes y rehabilitación dental",
+      "route": "/es/blog/all-on-6-implants/",
+      "cardTitle": "All on 6 implants: qué cambia respecto a All on 4",
+      "excerpt": "La diferencia principal es el número de implantes que sostienen la prótesis. La elección depende de cada caso."
+    },
+    {
+      "category": "Implantes y rehabilitación dental",
+      "route": "/es/blog/dentaduras-parciales-completas/",
+      "cardTitle": "Dentaduras parciales y completas: diferencias básicas",
+      "excerpt": "Las dentaduras son prótesis removibles hechas a medida para reemplazar algunos o todos los dientes de una arcada."
+    },
+    {
+      "category": "Estética y restauración",
+      "route": "/es/blog/coronas-dentales/",
+      "cardTitle": "Coronas dentales: cuándo se valora cubrir un diente",
+      "excerpt": "Una corona cubre el diente y puede ayudar a recuperar su forma y función. Conoce qué revisa el dentista antes."
+    },
+    {
+      "category": "Estética y restauración",
+      "route": "/es/blog/carillas-dentales/",
+      "cardTitle": "Carillas dentales: qué pueden cambiar y qué no",
+      "excerpt": "Las carillas actúan sobre la apariencia de la cara frontal del diente. Antes se debe evaluar la salud bucal."
+    },
+    {
+      "category": "Estética y restauración",
+      "route": "/es/blog/blanqueamiento-dental/",
+      "cardTitle": "Blanqueamiento dental: por qué conviene una evaluación previa",
+      "excerpt": "El blanqueamiento no responde igual en todos los dientes y no cambia el color de las restauraciones existentes."
+    },
+    {
+      "category": "Ortodoncia y odontopediatría",
+      "route": "/es/blog/ortodoncia-mordida-alineacion/",
+      "cardTitle": "Ortodoncia: alineación dental y mordida",
+      "excerpt": "La valoración permite entender la posición de los dientes y la mordida antes de elegir un tratamiento."
+    },
+    {
+      "category": "Ortodoncia y odontopediatría",
+      "route": "/es/blog/alineadores-transparentes/",
+      "cardTitle": "Alineadores transparentes: cuándo pueden ser una opción",
+      "excerpt": "Son una alternativa discreta para mover dientes, pero no son la mejor elección para todos los casos."
+    },
+    {
+      "category": "Ortodoncia y odontopediatría",
+      "route": "/es/blog/primera-visita-odontopediatria/",
+      "cardTitle": "La primera visita dental de tu hijo: qué esperar",
+      "excerpt": "La atención infantil se adapta a cada edad. Una visita temprana permite orientar la prevención de caries."
+    },
+    {
+      "category": "Limpieza y salud de encías",
+      "route": "/es/blog/limpieza-dental-profesional/",
+      "cardTitle": "Limpieza dental profesional: qué aporta a tu cuidado diario",
+      "excerpt": "El cepillado es esencial, pero el sarro acumulado necesita retirarse con una limpieza profesional."
+    },
+    {
+      "category": "Limpieza y salud de encías",
+      "route": "/es/blog/periodoncia-encias-que-sangran/",
+      "cardTitle": "Periodoncia: por qué pueden sangrar las encías",
+      "excerpt": "El sangrado puede ser una señal de inflamación. Una revisión ayuda a saber qué sucede y qué atención corresponde."
+    },
+    {
+      "category": "Endodoncia y extracciones",
+      "route": "/es/blog/endodoncia-conservar-diente/",
+      "cardTitle": "Endodoncia: tratar el interior para intentar conservar el diente",
+      "excerpt": "Conoce qué se atiende en una endodoncia y por qué la restauración posterior también importa."
+    },
+    {
+      "category": "Endodoncia y extracciones",
+      "route": "/es/blog/extracciones-muelas-del-juicio/",
+      "cardTitle": "Extracciones y muelas del juicio: cómo se toma la decisión",
+      "excerpt": "No toda muela del juicio debe retirarse. La decisión se basa en el examen y los estudios que indique el dentista."
+    }
+  ],
+  "articles": [
+    {
+      "title": "Implantes dentales: qué son y qué se revisa antes de colocarlos",
+      "sections": [
+        {
+          "title": "¿Qué puede resolver un implante?",
+          "paragraphs": [
+            "Cuando falta un diente, puede resultar más difícil masticar con comodidad. Un implante ofrece una base para sustituirlo con una restauración diseñada para el caso. También puede formar parte de una rehabilitación de varios dientes. Eso no significa que sea la opción adecuada para todas las personas ni que el resultado sea idéntico en todos los casos."
+          ]
+        },
+        {
+          "title": "¿Qué se revisa antes?",
+          "paragraphs": [
+            "El dentista necesita conocer el estado de las encías, la cantidad y condiciones del hueso y los antecedentes de salud relevantes. La FDA señala que la salud general y hábitos como fumar pueden influir en la cicatrización y en el resultado. Por eso, una explicación responsable incluye tanto las posibles ventajas como los riesgos y el seguimiento necesario."
+          ]
+        },
+        {
+          "title": "¿Qué conviene preguntar en la consulta?",
+          "paragraphs": [
+            "Puedes preguntar qué estudios hacen falta, qué restauración se colocaría sobre el implante, qué cuidados necesitarías y qué alternativas existen para tu situación. La decisión se toma con un plan individual, después de que el profesional revise tu caso y responda tus dudas."
+          ]
+        }
+      ],
+      "route": "/es/blog/implantes-dentales-que-son/",
+      "category": "Implantes y rehabilitación dental",
+      "lead": "Un implante dental puede ayudar a reemplazar un diente ausente, pero su colocación se decide después de estudiar la boca y la salud de cada persona.",
+      "answer": "Un implante es una pieza que se coloca quirúrgicamente en el hueso de la mandíbula o el maxilar para servir de soporte a una restauración. Según la necesidad, puede sostener una corona, un puente o una prótesis. En Dental Nakeji, la valoración del hueso y las encías forma parte del proceso previo.",
+      "related": "[Implantes dentales en Dental Nakeji](https://www.nakejidental.com/es/implantes-dentales-en-tijuana/)",
+      "sources": "[Dental Nakeji, servicio de implantes](https://www.nakejidental.com/es/implantes-dentales-en-tijuana/); [FDA, información para pacientes sobre implantes dentales](https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know)."
+    },
+    {
+      "title": "All on 4 implants: una arcada fija sobre cuatro implantes",
+      "sections": [
+        {
+          "title": "¿Qué significa “una arcada completa”?",
+          "paragraphs": [
+            "Una arcada es el conjunto de dientes superiores o inferiores. Cuando faltan casi todos, la rehabilitación busca reemplazar esa zona con una sola prótesis. “Fija” describe la forma en que se sostiene sobre los implantes; no significa que esté libre de mantenimiento ni que la solución sea adecuada para cualquier persona."
+          ]
+        },
+        {
+          "title": "¿Por qué importa la valoración?",
+          "paragraphs": [
+            "Los implantes se colocan mediante cirugía. El equipo necesita revisar el hueso disponible, las encías, la mordida y la salud general antes de proponer un plan. Los tiempos, las etapas y los cuidados se explican según lo que se encuentre en consulta. La FDA recomienda conversar con el profesional sobre beneficios, riesgos y posibilidad de ser candidato antes de elegir implantes."
+          ]
+        },
+        {
+          "title": "Preguntas útiles",
+          "paragraphs": [
+            "Pregunta qué estudios necesitas, cómo sería el plan para cada arcada, qué tipo de prótesis se considera y cómo se daría seguimiento. Esa conversación permite entender las opciones sin asumir que una técnica concreta es la mejor para todos."
+          ]
+        }
+      ],
+      "route": "/es/blog/all-on-4-implants/",
+      "category": "Implantes y rehabilitación dental",
+      "lead": "All on 4 implants es una opción de rehabilitación para reemplazar los dientes de una arcada con una prótesis fija sostenida por cuatro implantes.",
+      "answer": "En este tratamiento, cuatro implantes se usan como soporte de una prótesis para una arcada completa. Dental Nakeji lo presenta como una alternativa para personas a quienes les faltan casi todos los dientes de una arcada. Su indicación exige estudiar el hueso y valorar el caso individual.",
+      "related": "[All on 4 implants en Dental Nakeji](https://www.nakejidental.com/es/all-in-4-implants-en-tijuana/)",
+      "sources": "[Dental Nakeji, All on 4 implants](https://www.nakejidental.com/es/all-in-4-implants-en-tijuana/); [FDA, implantes dentales](https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know)."
+    },
+    {
+      "title": "All on 6 implants: qué cambia respecto a All on 4",
+      "sections": [
+        {
+          "title": "¿Cuándo se estudia esta alternativa?",
+          "paragraphs": [
+            "Puede considerarse cuando faltan casi todos los dientes de una arcada y se busca una opción fija. Antes de hablar de una técnica determinada, se revisa la situación de la boca. El profesional debe explicar qué encuentra, qué estudios requiere y qué posibilidades son razonables para ese caso."
+          ]
+        },
+        {
+          "title": "Lo que no dice el número",
+          "paragraphs": [
+            "Seis implantes no permiten prometer automáticamente un resultado mejor, más rápido o más duradero. Cada colocación tiene consideraciones quirúrgicas y necesita cuidados posteriores. La FDA recomienda revisar con el dentista la salud general, los posibles riesgos, las instrucciones de higiene y las visitas de seguimiento."
+          ]
+        },
+        {
+          "title": "Lleva estas preguntas a tu valoración",
+          "paragraphs": [
+            "¿Qué condiciones de mi hueso y mordida influyen en la recomendación? ¿Qué restauración se planearía? ¿Qué cuidados tendría que seguir? Pedir respuestas claras ayuda a decidir con información ajustada a tu caso."
+          ]
+        }
+      ],
+      "route": "/es/blog/all-on-6-implants/",
+      "category": "Implantes y rehabilitación dental",
+      "lead": "Ambos tratamientos buscan sostener una prótesis fija para una arcada completa. La diferencia que describe Dental Nakeji es el número de implantes de apoyo.",
+      "answer": "All on 6 implants utiliza seis implantes por arcada para sostener la prótesis fija. All on 4 implants utiliza cuatro. La elección no se hace por el número solamente: Dental Nakeji indica que el plan depende del hueso y de la mordida de cada paciente.",
+      "related": "[All on 6 implants en Dental Nakeji](https://www.nakejidental.com/es/all-in-6-implants-en-tijuana/)",
+      "sources": "[Dental Nakeji, All on 6 implants](https://www.nakejidental.com/es/all-in-6-implants-en-tijuana/); [Dental Nakeji, All on 4 implants](https://www.nakejidental.com/es/all-in-4-implants-en-tijuana/); [FDA, implantes dentales](https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know)."
+    },
+    {
+      "title": "Dentaduras parciales y completas: diferencias básicas",
+      "sections": [
+        {
+          "title": "¿Qué se busca recuperar?",
+          "paragraphs": [
+            "La ausencia de dientes puede afectar la masticación, el habla y la apariencia. Una prótesis removible puede ayudar a recuperar parte de esas funciones. El profesional revisa la boca y conversa con el paciente sobre sus necesidades antes de indicar el tipo de dentadura y explicar qué puede esperar de ella."
+          ]
+        },
+        {
+          "title": "¿Por qué son importantes los ajustes?",
+          "paragraphs": [
+            "La forma de la boca puede cambiar, especialmente después de perder dientes o de una extracción. Una dentadura que deja de ajustar bien puede causar molestias. Las revisiones permiten comprobar su adaptación y orientar sobre su limpieza y cuidado. No conviene intentar modificarla en casa."
+          ]
+        },
+        {
+          "title": "Qué preguntar",
+          "paragraphs": [
+            "Pregunta si la prótesis sería parcial, completa o inmediata, cómo se limpiaría y cuándo se revisaría el ajuste. Dental Nakeji puede explicarte la alternativa que corresponda después de examinar tu caso."
+          ]
+        }
+      ],
+      "route": "/es/blog/dentaduras-parciales-completas/",
+      "category": "Implantes y rehabilitación dental",
+      "lead": "Una dentadura es una prótesis removible diseñada para reemplazar dientes faltantes. El tipo que se valora depende de cuántos dientes conserva la persona y de las condiciones de su boca.",
+      "answer": "Una dentadura parcial reemplaza algunos dientes; una completa reemplaza los de una arcada. Dental Nakeji también menciona dentaduras inmediatas dentro de su catálogo. Todas se diseñan a medida y necesitan revisiones y, en ocasiones, ajustes.",
+      "related": "[Dentaduras en Dental Nakeji](https://www.nakejidental.com/es/dentaduras-en-tijuana/)",
+      "sources": "[Dental Nakeji, dentaduras](https://www.nakejidental.com/es/dentaduras-en-tijuana/); [NHS, dentaduras](https://www.nhs.uk/tests-and-treatments/dentures/)."
+    },
+    {
+      "title": "Coronas dentales: cuándo se valora cubrir un diente",
+      "sections": [
+        {
+          "title": "¿Por qué podría necesitarse una corona?",
+          "paragraphs": [
+            "La Asociación Dental Americana explica que una corona puede ayudar a proteger un diente débil, restaurar uno roto o cubrirlo cuando ya no queda suficiente estructura para sostener una restauración grande. La necesidad concreta se determina en consulta. No todo diente con una mancha, una caries o una fractura requiere una corona."
+          ]
+        },
+        {
+          "title": "La mordida también cuenta",
+          "paragraphs": [
+            "Una restauración debe adaptarse al diente y a la forma de cerrar la boca. Por eso, el dentista revisa la mordida y explica qué preparación y seguimiento serían necesarios. La corona no sustituye el cepillado, la limpieza entre dientes ni las revisiones periódicas."
+          ]
+        },
+        {
+          "title": "Antes de decidir",
+          "paragraphs": [
+            "Pregunta qué problema se busca resolver, qué otras opciones pueden considerarse y qué cuidados necesitaría la restauración. Así podrás entender el objetivo del tratamiento y sus límites."
+          ]
+        }
+      ],
+      "route": "/es/blog/coronas-dentales/",
+      "category": "Estética y restauración",
+      "lead": "Una corona cubre el diente para ayudar a restaurar su forma, tamaño o resistencia cuando el profesional considera que esa opción es adecuada.",
+      "answer": "Las coronas se usan para cubrir dientes dañados o debilitados. También pueden colocarse sobre implantes. Antes de indicar una, el dentista revisa cuánto tejido sano queda y cómo encajan los dientes al morder. Dental Nakeji incluye esa evaluación en su explicación del servicio.",
+      "related": "[Coronas en Dental Nakeji](https://www.nakejidental.com/es/coronas-en-tijuana/)",
+      "sources": "[Dental Nakeji, coronas](https://www.nakejidental.com/es/coronas-en-tijuana/); [ADA, coronas dentales](https://www.mouthhealthy.org/all-topics-a-z/crowns)."
+    },
+    {
+      "title": "Carillas dentales: qué pueden cambiar y qué no",
+      "sections": [
+        {
+          "title": "Primero se revisa la salud bucal",
+          "paragraphs": [
+            "Antes de pensar en estética, el dentista debe revisar si hay caries o enfermedad de las encías. La ADA advierte que colocar carillas sobre dientes no sanos puede agravar problemas existentes. En Dental Nakeji, la consulta incluye hablar de lo que la persona desea cambiar y observar la sonrisa en conjunto."
+          ]
+        },
+        {
+          "title": "¿Son adecuadas para todos?",
+          "paragraphs": [
+            "No necesariamente. La forma de morder, el estado del esmalte y los hábitos como apretar los dientes influyen en la recomendación. Algunas carillas requieren retirar parte del esmalte, por lo que el tratamiento puede ser irreversible. También pueden dañarse o necesitar reparación con el tiempo."
+          ]
+        },
+        {
+          "title": "Conversa sobre expectativas reales",
+          "paragraphs": [
+            "Lleva a la consulta ejemplos de lo que te preocupa y pregunta qué cambios son posibles, qué preparación se requiere y cómo cuidarías las carillas. Un plan estético responsable empieza por una boca sana y expectativas claras."
+          ]
+        }
+      ],
+      "route": "/es/blog/carillas-dentales/",
+      "category": "Estética y restauración",
+      "lead": "Las carillas son una opción para modificar la apariencia de la parte visible de algunos dientes, después de revisar su salud y planificar el resultado buscado.",
+      "answer": "Una carilla cubre la superficie frontal del diente, a diferencia de una corona, que lo cubre de forma más amplia. Puede ayudar a mejorar la apariencia de dientes con ciertas manchas, fracturas pequeñas o cambios de forma. La indicación depende de la evaluación individual.",
+      "related": "[Carillas dentales en Dental Nakeji](https://www.nakejidental.com/es/carillasdentalesentijuana/)",
+      "sources": "[Dental Nakeji, carillas](https://www.nakejidental.com/es/carillasdentalesentijuana/); [ADA, carillas dentales](https://www.mouthhealthy.org/all-topics-a-z/veneers)."
+    },
+    {
+      "title": "Blanqueamiento dental: por qué conviene una evaluación previa",
+      "sections": [
+        {
+          "title": "¿Por qué puede variar el resultado?",
+          "paragraphs": [
+            "No todas las decoloraciones tienen la misma causa. Algunas responden mejor al blanqueamiento que otras; las asociadas a lesiones o medicamentos pueden comportarse de otra manera. Si hay restauraciones visibles, el color final de los dientes naturales puede no coincidir con ellas."
+          ]
+        },
+        {
+          "title": "La salud va antes que el color",
+          "paragraphs": [
+            "El dentista revisa el estado de la boca y escucha lo que esperas del tratamiento. Esa conversación permite saber si el blanqueamiento es apropiado y qué límites tendría. No conviene prometer un tono exacto ni asumir que todas las personas obtendrán el mismo cambio."
+          ]
+        },
+        {
+          "title": "Preguntas para tu visita",
+          "paragraphs": [
+            "Pregunta qué tipo de manchas presentas, si tus restauraciones afectarían la apariencia del resultado y qué cuidados serían adecuados para ti. La respuesta debe basarse en una revisión de tu boca."
+          ]
+        }
+      ],
+      "route": "/es/blog/blanqueamiento-dental/",
+      "category": "Estética y restauración",
+      "lead": "El blanqueamiento busca aclarar el tono de los dientes naturales. Antes de empezar, conviene revisar dientes, encías y restauraciones existentes.",
+      "answer": "Los productos de blanqueamiento actúan sobre ciertas manchas de los dientes naturales, pero la respuesta varía. La ADA indica que no cambian el color de coronas, carillas o empastes. Por eso, Dental Nakeji propone una evaluación previa y un plan según cada caso.",
+      "related": "[Blanqueamiento dental en Dental Nakeji](https://www.nakejidental.com/es/blanqueamiento-dental-en-tijuana/)",
+      "sources": "[Dental Nakeji, blanqueamiento dental](https://www.nakejidental.com/es/blanqueamiento-dental-en-tijuana/); [ADA, blanqueamiento dental](https://www.mouthhealthy.org/all-topics-a-z/teeth-whitening)."
+    },
+    {
+      "title": "Ortodoncia: alineación dental y mordida",
+      "sections": [
+        {
+          "title": "¿Qué se estudia primero?",
+          "paragraphs": [
+            "La posición de los dientes es solo una parte. El profesional también observa la mordida y las condiciones de salud bucal. Según la Asociación Americana de Ortodoncistas, un plan comienza con un diagnóstico que puede incluir examen, fotografías, radiografías u otros registros indicados para el caso."
+          ]
+        },
+        {
+          "title": "¿Por qué se necesitan controles?",
+          "paragraphs": [
+            "Los movimientos se planifican y se revisan a lo largo del tratamiento. En las visitas de seguimiento, el profesional comprueba el avance y determina si hacen falta ajustes. No es responsable prometer una duración única ni un resultado idéntico para todas las personas."
+          ]
+        },
+        {
+          "title": "Qué llevar a la consulta",
+          "paragraphs": [
+            "Explica qué te preocupa de la posición de tus dientes o de tu mordida. Pregunta qué opciones existen, cómo se realizaría el seguimiento y qué hábitos de higiene necesitarías mantener. La recomendación se adapta a tus necesidades."
+          ]
+        }
+      ],
+      "route": "/es/blog/ortodoncia-mordida-alineacion/",
+      "category": "Ortodoncia y odontopediatría",
+      "lead": "La ortodoncia busca mover los dientes de forma planificada y revisar cómo se relacionan al morder. El tipo de aparato y el tiempo se determinan después de una valoración.",
+      "answer": "Dental Nakeji explica que la ortodoncia puede ayudar cuando hay dientes encimados, separados o una mordida que no cierra bien. El tratamiento puede utilizar brackets u otros aparatos, con ajustes y seguimiento para revisar el avance.",
+      "related": "[Ortodoncia en Dental Nakeji](https://www.nakejidental.com/es/ortodoncia-en-tijuana/)",
+      "sources": "[Dental Nakeji, ortodoncia](https://www.nakejidental.com/es/ortodoncia-en-tijuana/); [AAO, cómo elegir un ortodoncista y valorar opciones](https://aaoinfo.org/resources/how-to-choose-an-orthodontist/)."
+    },
+    {
+      "title": "Alineadores transparentes: cuándo pueden ser una opción",
+      "sections": [
+        {
+          "title": "¿Qué considera el profesional?",
+          "paragraphs": [
+            "Se revisan los dientes, la mordida y los movimientos necesarios. Algunas situaciones pueden tratarse con alineadores y otras requieren brackets u otro enfoque. La elección no debería basarse solo en qué aparato se ve menos, sino en el diagnóstico y en lo que el paciente puede cumplir durante el tratamiento."
+          ]
+        },
+        {
+          "title": "El seguimiento sigue siendo necesario",
+          "paragraphs": [
+            "Los alineadores forman parte de un plan supervisado. El profesional revisa cómo cambian los dientes y orienta sobre el uso de cada etapa. La cantidad de alineadores y el tiempo varían según el caso; no conviene publicar una cifra universal."
+          ]
+        },
+        {
+          "title": "Una pregunta útil",
+          "paragraphs": [
+            "“¿Por qué los alineadores sí o no serían adecuados para mi mordida?” Pedir esa explicación ayuda a comparar opciones con criterios clínicos, no solo estéticos."
+          ]
+        }
+      ],
+      "route": "/es/blog/alineadores-transparentes/",
+      "category": "Ortodoncia y odontopediatría",
+      "lead": "Los alineadores transparentes son una alternativa menos visible que los brackets para determinados movimientos dentales. Una valoración indica si son adecuados.",
+      "answer": "Dental Nakeji ofrece alineadores y explica que el tratamiento se planifica según la posición de los dientes y el resultado buscado. Durante el proceso se realizan revisiones. La Asociación Americana de Ortodoncistas aclara que los alineadores no son la opción apropiada para todos los casos.",
+      "related": "[Alineadores en Dental Nakeji](https://www.nakejidental.com/es/invisalign-in-tijuana/)",
+      "sources": "[Dental Nakeji, alineadores](https://www.nakejidental.com/es/invisalign-in-tijuana/); [AAO, alineadores transparentes](https://aaoinfo.org/treatments/aligners/)."
+    },
+    {
+      "title": "La primera visita dental de tu hijo: qué esperar",
+      "sections": [
+        {
+          "title": "¿Por qué empezar temprano?",
+          "paragraphs": [
+            "Los dientes de leche pueden presentar caries. En una primera visita, el profesional puede revisar dientes y encías, observar el desarrollo de la boca y orientar a la familia sobre limpieza y alimentación. También es una oportunidad para preguntar por hábitos como el uso del chupón o la succión del dedo."
+          ]
+        },
+        {
+          "title": "¿Cómo preparar a tu hijo?",
+          "paragraphs": [
+            "Puedes anotar tus preguntas, contar al equipo si hay alguna inquietud de salud y elegir, cuando sea posible, un momento del día en que el niño esté descansado. La ADA explica que la exploración se adapta a la edad; en niños pequeños puede realizarse con el padre o la madre acompañándolos de cerca."
+          ]
+        },
+        {
+          "title": "Después de la primera visita",
+          "paragraphs": [
+            "La frecuencia de las siguientes revisiones depende de la evaluación del profesional. El objetivo es acompañar el crecimiento y ayudar a prevenir caries con indicaciones apropiadas para cada niño."
+          ]
+        }
+      ],
+      "route": "/es/blog/primera-visita-odontopediatria/",
+      "category": "Ortodoncia y odontopediatría",
+      "lead": "Una visita dental temprana ayuda a cuidar los dientes de leche, conversar sobre hábitos de higiene y detectar posibles problemas antes de que avancen.",
+      "answer": "La Asociación Dental Americana recomienda programar la primera visita después de que aparezca el primer diente y a más tardar al cumplir un año. Dental Nakeji ofrece odontopediatría con una consulta adaptada a la edad y a las necesidades de cada niño.",
+      "related": "[Odontopediatría en Dental Nakeji](https://www.nakejidental.com/es/odontologia-pediatrica-en-tijuana/)",
+      "sources": "[Dental Nakeji, odontopediatría](https://www.nakejidental.com/es/odontologia-pediatrica-en-tijuana/); [ADA, primera visita dental del bebé](https://www.mouthhealthy.org/life-stages/babies-and-kids/first-dental-visit-for-baby); [NIDCR, caries dental](https://www.nidcr.nih.gov/espanol/temas-de-salud/la-caries-dental)."
+    },
+    {
+      "title": "Limpieza dental profesional: qué aporta a tu cuidado diario",
+      "sections": [
+        {
+          "title": "¿La limpieza reemplaza el cepillado?",
+          "paragraphs": [
+            "No. La higiene diaria ayuda a controlar la placa entre visitas. El NIDCR aconseja cepillarse dos veces al día con pasta con flúor y limpiar entre los dientes con regularidad. La limpieza profesional complementa esos hábitos y permite detectar señales que requieren atención adicional."
+          ]
+        },
+        {
+          "title": "¿Es lo mismo que un tratamiento periodontal?",
+          "paragraphs": [
+            "No necesariamente. Una limpieza de rutina y una limpieza profunda indicada por enfermedad periodontal responden a situaciones distintas. Si hay inflamación, sangrado o bolsas alrededor de los dientes, el profesional puede valorar si hace falta un tratamiento de encías."
+          ]
+        },
+        {
+          "title": "¿Cada cuánto acudir?",
+          "paragraphs": [
+            "La frecuencia se adapta al riesgo y al estado de salud bucal de cada persona. En lugar de asumir un intervalo fijo para todos, consulta al dentista qué seguimiento necesitas."
+          ]
+        }
+      ],
+      "route": "/es/blog/limpieza-dental-profesional/",
+      "category": "Limpieza y salud de encías",
+      "lead": "Cepillarse y limpiar entre los dientes son hábitos esenciales. La limpieza profesional permite retirar el sarro que ya se formó y revisar la salud de dientes y encías.",
+      "answer": "La placa puede acumularse y endurecerse hasta formar sarro. El NIDCR explica que ese sarro solo puede retirarlo un profesional de la salud dental. Dental Nakeji incluye en su servicio la retirada de placa y sarro, el pulido de manchas superficiales y una revisión de dientes y encías.",
+      "related": "[Limpieza dental en Dental Nakeji](https://www.nakejidental.com/es/limpieza-dental-en-tijuana/)",
+      "sources": "[Dental Nakeji, limpieza dental](https://www.nakejidental.com/es/limpieza-dental-en-tijuana/); [NIDCR, higiene oral](https://www.nidcr.nih.gov/espanol/temas-de-salud/la-higiene-oral); [NIDCR, enfermedad de las encías](https://www.nidcr.nih.gov/espanol/temas-de-salud/la-enfermedad-de-las-encias)."
+    },
+    {
+      "title": "Periodoncia: por qué pueden sangrar las encías",
+      "sections": [
+        {
+          "title": "¿Qué puede pasar si se acumula placa?",
+          "paragraphs": [
+            "La placa es una película de bacterias que se forma sobre los dientes. Si no se retira, puede endurecerse como sarro y favorecer la inflamación de las encías. El NIDCR explica que una enfermedad periodontal más avanzada puede afectar el hueso que sostiene los dientes. El sangrado es una señal para consultar, no un diagnóstico por sí solo."
+          ]
+        },
+        {
+          "title": "¿Cómo se evalúan las encías?",
+          "paragraphs": [
+            "El profesional revisa si hay inflamación o retracción, mide con una sonda los espacios entre encía y diente y puede indicar radiografías cuando sean útiles. Según el diagnóstico, el tratamiento puede incluir instrucciones de higiene, limpieza profunda mediante raspado y alisado radicular u otras medidas. No todas las personas necesitan el mismo procedimiento."
+          ]
+        },
+        {
+          "title": "El cuidado continúa después",
+          "paragraphs": [
+            "La atención de encías incluye hábitos diarios y controles según la situación clínica. Pregunta qué encontró el dentista, qué tratamiento recomienda y qué señales deben motivar una nueva consulta."
+          ]
+        }
+      ],
+      "route": "/es/blog/periodoncia-encias-que-sangran/",
+      "category": "Limpieza y salud de encías",
+      "lead": "Las encías que sangran al cepillarse merecen una revisión. El sangrado puede relacionarse con inflamación, pero solo una valoración permite conocer la causa y decidir la atención adecuada.",
+      "answer": "La periodoncia se ocupa de los tejidos que sostienen los dientes. Dental Nakeji señala que su atención incluye observar encías que sangran, medir las bolsas alrededor de los dientes y dar seguimiento después del tratamiento.",
+      "related": "[Periodoncia en Dental Nakeji](https://www.nakejidental.com/es/periodoncia-en-tijuana/)",
+      "sources": "[Dental Nakeji, periodoncia](https://www.nakejidental.com/es/periodoncia-en-tijuana/); [NIDCR, enfermedad periodontal](https://www.nidcr.nih.gov/espanol/temas-de-salud/la-enfermedad-de-las-encias)."
+    },
+    {
+      "title": "Endodoncia: tratar el interior para intentar conservar el diente",
+      "sections": [
+        {
+          "title": "¿Cuándo se valora?",
+          "paragraphs": [
+            "El dolor o las molestias pueden llevar a una consulta, pero no indican por sí solos que se necesite una endodoncia. El profesional examina el diente y determina la causa. La inflamación o infección de la pulpa es una de las situaciones en las que podría indicarse este tratamiento."
+          ]
+        },
+        {
+          "title": "¿Qué ocurre después?",
+          "paragraphs": [
+            "Tratar los conductos es una parte del cuidado. El diente también necesita una restauración apropiada para protegerlo y permitir que vuelva a funcionar. El tipo de restauración depende de cuánto tejido queda y de la evaluación de la mordida; no siempre será igual."
+          ]
+        },
+        {
+          "title": "Pregunta por el plan completo",
+          "paragraphs": [
+            "Conviene saber cuál es el diagnóstico, qué se busca conservar, qué restauración se necesitaría después y qué seguimiento se recomienda. Así se entiende el tratamiento como un proceso, no como una sola cita aislada."
+          ]
+        }
+      ],
+      "route": "/es/blog/endodoncia-conservar-diente/",
+      "category": "Endodoncia y extracciones",
+      "lead": "Cuando la pulpa del interior de un diente está inflamada o infectada, una endodoncia puede ser una forma de tratar el problema e intentar conservar esa pieza.",
+      "answer": "Durante una endodoncia se trata la parte interna del diente. La Asociación Americana de Endodoncistas explica que se retira la pulpa afectada, se limpian y sellan los conductos. Dental Nakeji presenta el tratamiento como una opción para ayudar a conservar el diente y su función.",
+      "related": "[Endodoncias en Dental Nakeji](https://www.nakejidental.com/es/endodoncias-en-tijuana/)",
+      "sources": "[Dental Nakeji, endodoncias](https://www.nakejidental.com/es/endodoncias-en-tijuana/); [AAE, tratamiento de conductos](https://www.aae.org/patients/root-canal-treatment/)."
+    },
+    {
+      "title": "Extracciones y muelas del juicio: cómo se toma la decisión",
+      "sections": [
+        {
+          "title": "¿Por qué podría indicarse una extracción?",
+          "paragraphs": [
+            "Un diente puede requerir extracción por daño, enfermedad u otras condiciones que el profesional determine. En el caso de las muelas del juicio, la ADA menciona problemas como dolor, infección, caries, daño a dientes vecinos o falta de espacio. También explica que las muelas conservadas deben seguir vigilándose."
+          ]
+        },
+        {
+          "title": "¿Qué diferencia hay entre simple y quirúrgica?",
+          "paragraphs": [
+            "La forma de retirar el diente depende de su posición y de la evaluación del profesional. Dental Nakeji contempla ambos tipos de extracción. El dentista debe explicar cuál propone, por qué y qué cuidados posteriores son apropiados para esa persona."
+          ]
+        },
+        {
+          "title": "Antes y después de la cita",
+          "paragraphs": [
+            "Pregunta por el diagnóstico, los estudios necesarios, las alternativas y las indicaciones para la recuperación. Sigue las instrucciones que te dé tu equipo tratante; las recomendaciones generales de internet no sustituyen las indicaciones para tu caso.",
+            "---"
+          ]
+        }
+      ],
+      "route": "/es/blog/extracciones-muelas-del-juicio/",
+      "category": "Endodoncia y extracciones",
+      "lead": "Una extracción puede ser necesaria en determinadas situaciones, pero la decisión se toma después de revisar el diente y considerar las opciones de atención.",
+      "answer": "Dental Nakeji ofrece extracciones simples y quirúrgicas, incluidas las de muelas del juicio. Antes de decidir, el dentista valora la pieza y las radiografías cuando corresponden. Una muela del juicio que no causa problemas no siempre necesita retirarse.",
+      "related": "[Extracciones simples y de juicio en Dental Nakeji](https://www.nakejidental.com/es/extracciones-dentales-en-tijuana/)",
+      "sources": "[Dental Nakeji, extracciones](https://www.nakejidental.com/es/extracciones-dentales-en-tijuana/); [ADA, muelas del juicio](https://www.mouthhealthy.org/all-topics-a-z/wisdom-teeth); [ADA, extracciones](https://www.mouthhealthy.org/all-topics-a-z/extractions)."
+    }
+  ]
+}

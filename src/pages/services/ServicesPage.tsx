@@ -92,7 +92,7 @@ export function ServicesPage() {
 
   return (
     <Band
-      tone="white"
+      tone="gradient"
       className="catalog"
       labelledBy="servicios-titulo"
       decor={
@@ -115,7 +115,7 @@ export function ServicesPage() {
         <header className="catalog-hero">
           <div className="catalog-hero__text">
             <p className="catalog-hero__eyebrow pill-label">{hero.eyebrow}</p>
-            <h1 id="servicios-titulo" className="catalog-hero__title">
+            <h1 id="servicios-titulo" className="catalog-hero__title shiny-text">
               {hero.titleLead} <span className="catalog-hero__accent">{hero.titleAccent}</span>
             </h1>
             <p className="catalog-hero__lead">{hero.lead}</p>

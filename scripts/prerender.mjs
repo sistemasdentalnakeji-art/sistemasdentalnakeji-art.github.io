@@ -15,7 +15,7 @@ const dist = path.join(root, 'dist')
 const production = process.argv.includes('--production') || process.env.SITE_ENV === 'production'
 
 const serverEntry = pathToFileURL(path.join(root, 'dist-server', 'entry-server.js')).href
-const { render, ALL_ROUTES, NOT_FOUND, SITE, BOOKING, LOCALES, counterpart, routeOf } = await import(serverEntry)
+const { render, lazySourceOf, ALL_ROUTES, NOT_FOUND, SITE, BOOKING, LOCALES, counterpart, routeOf } = await import(serverEntry)
 
 // Seguro del formulario: el Apps Script valida al final, así que sus listas deben coincidir con las del sitio.
 // Sin esto, cambiar SERVICES de config/booking.ts (u otras listas) sin actualizar Code.gs haría que el script rechace citas.
@@ -53,12 +53,32 @@ if (fontPreloads.length === 0) {
   console.warn('AVISO: no se encontraron las fuentes latinas para precargar (¿cambió el nombre de los archivos de @fontsource?).')
 }
 
+// Paquetes de cada página diferida (React.lazy) con sus dependencias, desde el manifiesto de Vite: el navegador los pide junto
+// con el paquete principal en vez de esperar a que este los descubra. El manifiesto no se publica.
+const manifestPath = path.join(dist, '.vite', 'manifest.json')
+const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8'))
+const chunkFiles = (key, seen = new Set()) => {
+  const entry = manifest[key]
+  if (!entry || seen.has(key) || entry.isEntry) return []
+  seen.add(key)
+  return [entry.file, ...(entry.imports ?? []).flatMap((dep) => chunkFiles(dep, seen))]
+}
+const modulePreloads = (routePath) => {
+  const source = lazySourceOf(routePath)
+  if (!source) return []
+  if (!manifest[source]) throw new Error(`Sin entrada en el manifiesto de Vite para ${source} (¿cambió LAZY_SOURCES en App.tsx?)`)
+  // Sin repetir los que index.html ya precarga (paquetes compartidos con el principal).
+  return chunkFiles(source).filter((file) => !template.includes(file)).map((file) => `<link rel="modulepreload" crossorigin href="/${file}" />`)
+}
+
 const written = []
 for (const route of [...ALL_ROUTES, NOT_FOUND]) {
   const indexable = production && route.status === 'ready'
   // Sin descripción, head.ts emitiría og:description vacío en una página indexable.
   if (route.status === 'ready' && !route.description) throw new Error(`Ruta 'ready' sin description: ${route.path}`)
-  const { html, head } = render(route.path, { indexable })
+  const { html, head } = await render(route.path, { indexable })
+  // Una página diferida que no terminó de cargar saldría vacía (o con un límite de Suspense pendiente) sin avisar.
+  if (!html.includes('<h1') || html.includes('<!--$?-->')) throw new Error(`HTML incompleto en el prerender: ${route.path}`)
   // Una página con textos de marcador (lorem ipsum, "Texto provisional", "Integrante N", reseñas "Paciente N", promociones
   // y preguntas numeradas) no puede salir indexable. Los textos de las reseñas y promociones van en su idioma.
   const MARKER = /Lorem ipsum|Texto provisional|Integrante \d|Team member \d|Paciente \d|Patient \d|Aquí se mostrará|will appear here|Fecha de la reseña|Review date|Promoci[oó]n \d|Promotion \d|Pregunta \d|Question \d/
@@ -69,7 +89,7 @@ for (const route of [...ALL_ROUTES, NOT_FOUND]) {
     // Cada página fija su idioma (en: "en"; es: "es-MX").
     .replace(LANG_ATTR, `<html lang="${LOCALES[route.lang].lang}"`)
     // Reemplazo con función: evita que "$&", "$'"… del contenido se interpreten como patrones.
-    .replace(HEAD_SLOT, () => [head, ...fontPreloads].join('\n    '))
+    .replace(HEAD_SLOT, () => [head, ...fontPreloads, ...modulePreloads(route.path)].join('\n    '))
     .replace(APP_SLOT, () => `<div id="root" data-path="${route.path}">${html}</div>`)
 
   const file = route === NOT_FOUND ? path.join(dist, '404.html') : path.join(dist, route.path, 'index.html')
@@ -162,4 +182,6 @@ if (production) {
 
 console.log(`\nPrerender (${production ? 'PRODUCCIÓN' : 'vista previa, todo noindex'}):`)
 console.log(written.map((line) => `  ${line}`).join('\n'))
+// El manifiesto solo le sirve al prerender: no se publica.
+await fs.rm(path.join(dist, '.vite'), { recursive: true, force: true })
 console.log(production ? '  + robots.txt, sitemap.xml\n' : '  + robots.txt (Disallow), sin sitemap\n')

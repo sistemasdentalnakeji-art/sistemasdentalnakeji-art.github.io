@@ -92,7 +92,7 @@ export function AboutPage() {
       <div className="container">
         <header>
           <p className="page-eyebrow">{intro.eyebrow}</p>
-          <h1 id="nosotros-titulo" className="page-title">
+          <h1 id="nosotros-titulo" className="page-title shiny-text">
             {intro.title}
           </h1>
           <p className="page-lead">{intro.lead}</p>

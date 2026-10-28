@@ -5,7 +5,8 @@ import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
 // Fondo de fibras de luz animadas + orbe con el isotipo + título, texto, botones y frases.
 // • Textos y tema (oscuro/claro) → src/data/home.ts (HERO).
 // • Burbujas flotantes → hero.ambientLabels en src/data/home.ts.
-// • Animación de fondo → src/components/decor/FibersBackground.tsx (el mismo fondo de /nosotros/).
+// • Fibras de luz animadas → src/components/decor/FibersBackground.tsx (solo aquí). El degradado azul es el fondo fijo
+//   compartido por toda la homepage (HomePage.tsx y home/canvas.css).
 // • Estilos → src/styles/pages/home/hero.css.
 // ─────────────────────────────────────────────────────────────────────────────
 

@@ -1,0 +1,947 @@
+/* ==========================================================================
+   Blog: portada, categorías y artículos (pages/blog/), en español e inglés.
+   La tarjeta usa el diseño "Glass Blog Card" de 21st.dev (código propio, sin librerías): vidrio, zoom
+   de la foto y botón "Leer artículo" al pasar el cursor. El contorno azul (.siri) solo aparece en hover.
+   Portada: cabecera con el índice de temas, barra de temas fija al bajar y los artículos agrupados por tema.
+   El riel de capítulos (components/ui/ChapterScrubber.tsx) sigue la lectura del artículo.
+   ========================================================================== */
+
+/* Cabecera azul noche (portada, categorías y artículos): el titular manda. */
+.blog-head {
+  color: var(--color-sky-strong);
+}
+
+.blog-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: var(--space-8);
+  align-items: center;
+  padding-block: 64px 24px;
+}
+
+/* Categoría: solo migas, título e introducción (las tarjetas de abajo son el índice). */
+.blog-hero--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.blog-kicker {
+  margin: 0 0 20px;
+  color: var(--color-brand-light);
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.blog-hero__title {
+  margin: 0 0 28px;
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 1.6rem + 4vw, 4.75rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.blog-hero__intro {
+  max-width: 52ch;
+  margin: 0;
+  color: var(--color-sky-strong);
+  font-size: var(--text-body-lg);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.blog-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+/* Botones sobre azul noche. */
+.blog-head .btn--primary {
+  background: var(--color-white);
+  color: var(--color-night);
+}
+
+.blog-head .btn--primary:hover {
+  background: var(--color-sky);
+}
+
+.blog-head .btn--ghost {
+  border-color: rgb(213 232 246 / 0.45);
+  color: var(--color-white);
+}
+
+.blog-head .btn--ghost:hover {
+  border-color: var(--color-white);
+  background: rgb(255 255 255 / 0.08);
+}
+
+/* Índice de la cabecera (temas en la portada, artículos en una categoría): un panel con renglones, no una caja vacía. */
+.blog-index {
+  padding: var(--space-5);
+  border: var(--border-on-dark);
+  border-radius: var(--radius-lg);
+  background: rgb(255 255 255 / 0.04);
+}
+
+.blog-index__title {
+  margin: 0;
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.blog-index__text {
+  margin: var(--space-2) 0 0;
+  color: rgb(213 232 246 / 0.75);
+  font-size: var(--text-small);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.blog-index__list {
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.blog-index__list li + li {
+  border-top: var(--border-on-dark);
+}
+
+.blog-index__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: var(--tap-min);
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-xs);
+  color: var(--color-white);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.blog-index__link:hover {
+  background: rgb(255 255 255 / 0.07);
+}
+
+.blog-index__name {
+  font-weight: 600;
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+
+.blog-index__count {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-brand-light);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Barra de temas: se queda fija bajo el header mientras se recorre la biblioteca; en celular se desliza de lado. */
+.blog-chips {
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-2));
+  z-index: 5;
+  margin: var(--space-6) 0 var(--space-2);
+}
+
+.blog-chips ul {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2);
+  overflow-x: auto;
+  border: var(--border-hairline);
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 0.85);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(10px);
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.blog-chips a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  color: var(--color-ink);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.blog-chips a:hover {
+  background: var(--color-sky);
+}
+
+/* Un estante por tema: título (enlace a la categoría), descripción y sus tarjetas. */
+.blog-shelf {
+  padding-top: var(--space-7);
+  /* La barra de temas fija no tapa el título al saltar a #tema-… */
+  scroll-margin-top: 48px;
+}
+
+.blog-shelf__head {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 62ch;
+  margin-bottom: var(--space-5);
+}
+
+.blog-shelf__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+.blog-shelf__title a {
+  color: var(--color-ink-strong);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.blog-shelf__title a:hover {
+  color: var(--color-brand);
+}
+
+.blog-shelf__text {
+  margin: 0;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+
+/* Tira de temas (categoría: "Otros temas"): columnas separadas por líneas, no tarjetas. */
+.blog-more__title {
+  margin: 0 0 var(--space-5);
+  color: var(--color-ink-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 1.2rem + 1.2vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.blog-topics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid var(--color-ink);
+  list-style: none;
+}
+
+.blog-topics li + li {
+  border-left: var(--border-hairline);
+}
+
+.blog-topic {
+  display: block;
+  height: 100%;
+  padding: var(--space-5) var(--space-5) 28px;
+  text-decoration: none;
+  transition: background-color var(--dur) var(--ease-out);
+}
+
+.blog-topic:hover {
+  background: var(--color-porcelain);
+}
+
+.blog-topic__name {
+  display: block;
+  color: var(--color-ink-strong);
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.blog-topic:hover .blog-topic__name {
+  color: var(--color-brand);
+}
+
+.blog-topic__text {
+  display: block;
+  margin-top: var(--space-3);
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+/* Cuadrícula de tarjetas. */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+/* Cierre de la portada: una sola línea de lectura y el botón. */
+.blog-cta {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+.blog-cta__title {
+  margin: 0;
+  color: var(--color-ink-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.blog-cta__text {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--text-body-lg);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+/* ---------- Tarjeta (Glass Blog Card) ---------- */
+.blog-card {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-card); /* el contorno .siri hereda este radio */
+  color: inherit;
+  text-decoration: none;
+}
+
+.blog-card__frame {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(213, 232, 246, 0.9);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  transition:
+    box-shadow 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+
+.blog-card:hover .blog-card__frame {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-3px);
+}
+
+.blog-card__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.blog-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease);
+}
+
+.blog-card:hover .blog-card__img {
+  transform: scale(1.08);
+}
+
+.blog-card__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 21, 41, 0.35), transparent 60%);
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.blog-card:hover .blog-card__shade {
+  opacity: 0.4;
+}
+
+/* Botón "Leer artículo": aparece sobre la foto al pasar el cursor. */
+.blog-card__cta {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.blog-card:hover .blog-card__cta {
+  opacity: 1;
+}
+
+.blog-card__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  background: var(--color-ink);
+  color: var(--color-white);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow:
+    0 10px 15px -3px rgba(42, 66, 105, 0.25),
+    0 4px 6px -4px rgba(42, 66, 105, 0.25);
+}
+
+.blog-card__body {
+  display: grid;
+  gap: 8px;
+  padding: 20px 20px 0;
+}
+
+.blog-card__title {
+  margin: 0;
+  color: var(--color-ink-strong);
+  font-family: var(--font-display);
+  font-size: var(--text-card-title);
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+  transition: color 0.3s;
+}
+
+.blog-card:hover .blog-card__title {
+  color: var(--color-brand);
+}
+
+.blog-card__excerpt {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--color-muted);
+  font-size: var(--text-small);
+  line-height: 1.5;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Arriba del título: fecha (izquierda) y minutos de lectura (derecha). */
+.blog-card__stamp {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Pie: logo (izquierda) y tema del artículo (derecha). */
+.blog-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding: 16px 20px 18px;
+  border-top: 1px solid var(--color-fog);
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.blog-card__brand {
+  flex: none;
+  height: 18px;
+  width: auto;
+}
+
+.blog-card__date {
+  color: var(--color-muted);
+}
+
+.blog-card__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.blog-card__topic {
+  overflow: hidden;
+  color: var(--color-brand);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Con teclado, la tarjeta enfocada muestra lo mismo que con el cursor encima (botón y título resaltado). */
+.blog-card:focus-visible .blog-card__cta {
+  opacity: 1;
+}
+
+.blog-card:focus-visible .blog-card__title {
+  color: var(--color-brand);
+}
+
+/* Contorno azul "aura" solo con el cursor encima (clase .siri, components/siri.css). */
+.blog-card.siri::before,
+.blog-card.siri::after {
+  display: none;
+}
+
+.blog-card.siri:hover::before,
+.blog-card.siri:hover::after {
+  display: block;
+}
+
+/* ---------- Migas de pan (sobre azul noche) ---------- */
+.blog-crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 40px;
+  padding: 0;
+  color: var(--color-sky-strong);
+  font-size: 0.875rem;
+  list-style: none;
+}
+
+.blog-crumbs li + li::before {
+  content: '/';
+  margin-right: 8px;
+  opacity: 0.6;
+}
+
+/* Área de clic de 24 px (WCAG 2.5.8) sin cambiar el tamaño del texto. */
+.blog-crumbs a {
+  display: inline-block;
+  padding-block: 4px;
+  color: var(--color-white);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+  text-underline-offset: 3px;
+}
+
+/* ---------- Artículo (el mismo diseño para los 14): cabecera con foto y lectura en una sola columna ---------- */
+.blog-article-head {
+  display: grid;
+  gap: var(--space-6);
+  padding-block: 40px var(--space-4);
+}
+
+.blog-article__title {
+  max-width: 20ch;
+  margin: 0 0 var(--space-5);
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.4rem + 3.6vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.blog-article__lead {
+  max-width: 36ch;
+  margin: 0;
+  color: var(--color-sky-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+
+/* Fecha y minutos de lectura bajo la entradilla. */
+.blog-article__stamp {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-5) 0 0;
+  color: rgb(213 232 246 / 0.75);
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.blog-article__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Foto del servicio: contorno neutro para que el borde no se funda con el fondo oscuro. */
+.blog-article-head__photo {
+  margin: 0;
+}
+
+.blog-article-head__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-3);
+  outline: 1px solid rgb(255 255 255 / 0.14);
+  outline-offset: -1px;
+}
+
+.blog-article {
+  display: grid;
+  grid-template-columns: minmax(0, var(--measure)) 244px;
+  justify-content: center;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.blog-article__body {
+  color: var(--color-text);
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+/* La respuesta llega primero: una hoja blanca con barra dorada. */
+.blog-answer {
+  margin: 0 0 var(--space-6);
+  padding: var(--space-5) var(--space-6);
+  border: var(--border-hairline);
+  border-left: 6px solid var(--color-gold);
+  border-radius: var(--radius-xs) var(--radius-lg) var(--radius-lg) var(--radius-xs);
+  background: var(--color-white);
+  box-shadow: var(--shadow-1);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1.1875rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.blog-answer strong {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--color-ink-strong);
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+/* Cada sección: el título arriba y el texto debajo, a ancho de lectura. */
+.blog-article__section {
+  padding-block: var(--space-7);
+  border-top: var(--border-hairline);
+}
+
+.blog-article__section:first-of-type {
+  padding-top: var(--space-4);
+  border-top: 0;
+}
+
+.blog-article__h2 {
+  margin: 0 0 var(--space-4);
+  color: var(--color-ink-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 1.2rem + 1.2vw, 2.125rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.14;
+  text-wrap: balance;
+}
+
+.blog-article__section p {
+  margin: 0 0 var(--space-5);
+  text-wrap: pretty;
+}
+
+/* Primer párrafo de cada sección: un peldaño más grande. */
+.blog-article__section p:first-of-type {
+  color: var(--color-ink);
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+
+/* Cierre: fuentes, servicio relacionado y la cita, juntos en una tarjeta. */
+.blog-article__end {
+  margin-top: var(--space-4);
+  padding: var(--space-5);
+  border: var(--border-hairline);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  box-shadow: var(--shadow-1);
+}
+
+.blog-article__meta {
+  margin: 0;
+  font-size: var(--text-small);
+  line-height: 1.7;
+}
+
+.blog-article__meta + .blog-article__meta {
+  margin-top: var(--space-3);
+}
+
+.blog-article__meta a {
+  color: var(--color-brand);
+}
+
+.blog-article__end .btn {
+  margin-top: var(--space-5);
+}
+
+/* ---------- Riel de capítulos (tipo Chapter Scrubber de 21st.dev) ---------- */
+.chapter {
+  --chapter-pitch: 24px; /* igual que PITCH en ChapterScrubber.tsx (24 px: tamaño mínimo de toque, WCAG 2.5.8) */
+  position: sticky;
+  top: calc(var(--header-height) + 32px);
+}
+
+.chapter__rail {
+  width: 56px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chapter__tick {
+  display: flex;
+  align-items: center;
+  height: var(--chapter-pitch);
+  border-radius: var(--radius-xs);
+}
+
+/* Marca de 14 px; crece con transform (origen a la izquierda) y se aclara con opacity. */
+.chapter__line {
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-ink-strong);
+  transform-origin: left center;
+  transition-property: transform, opacity;
+  transition-duration: var(--dur);
+  transition-timing-function: var(--ease-out);
+}
+
+.chapter__line[data-state='active'] {
+  background: var(--color-brand);
+}
+
+/* Tarjeta con el título de la sección: baja junto a la marca activa o a la que señala el cursor. */
+.chapter__card {
+  position: absolute;
+  top: 0;
+  left: 72px;
+  width: 170px;
+  margin: 0;
+  padding: 10px 14px;
+  border: var(--border-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  box-shadow: var(--shadow-2);
+  color: var(--color-ink-strong);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  pointer-events: none;
+  transition: transform var(--dur) var(--ease-out);
+}
+
+@media (min-width: 961px) {
+  .blog-article-head {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-7);
+  }
+}
+
+/* ---------- Pantallas pequeñas ---------- */
+@media (max-width: 960px) {
+  .blog-hero,
+  .blog-article {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .blog-hero {
+    gap: 32px;
+    padding-block: 40px 16px;
+  }
+
+  .blog-article {
+    gap: 0;
+  }
+
+  .blog-article__section {
+    padding-block: 36px;
+  }
+
+  .blog-answer {
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .blog-topics li + li {
+    border-left: 0;
+    border-top: var(--border-hairline);
+  }
+
+  .chapter {
+    display: none;
+  }
+
+  /* En la portada, la barra de temas ya cumple esa función: así la primera tarjeta queda más arriba. */
+  .blog-index--hub {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  /* En celular la barra de temas ocupa todo el ancho y se desliza de lado sin cortar la primera píldora. */
+  .blog-chips {
+    margin-inline: calc(var(--gutter) * -1);
+  }
+
+  .blog-chips ul {
+    border-radius: 0;
+    border-inline: 0;
+  }
+}
+
+/* ---------- Fondo aurora (Band tone="aurora"): toda la página es una sola banda oscura ---------- */
+.blog-aurora {
+  padding-block: 0 var(--band-padding);
+}
+
+/* Cada bloque (biblioteca, tema, cierre) es una sección dentro de la misma banda. */
+.blog-library {
+  padding-top: var(--space-8);
+}
+
+.blog-aurora .section-title,
+.blog-aurora .blog-more__title,
+.blog-aurora .blog-cta__title {
+  color: var(--color-white);
+}
+
+.blog-aurora .section-text,
+.blog-aurora .blog-shelf__text,
+.blog-aurora .blog-cta__text {
+  color: rgb(213 232 246 / 0.8);
+}
+
+.blog-aurora .blog-shelf__title a {
+  color: var(--color-white);
+}
+
+.blog-aurora .blog-shelf__title a:hover {
+  color: var(--color-brand-light);
+}
+
+.blog-aurora .blog-topics {
+  border-top-color: rgb(255 255 255 / 0.45);
+}
+
+.blog-aurora .blog-topics li + li {
+  border-left: var(--border-on-dark);
+}
+
+.blog-aurora .blog-topic:hover {
+  background: rgb(255 255 255 / 0.06);
+}
+
+.blog-aurora .blog-topic__name {
+  color: var(--color-white);
+}
+
+.blog-aurora .blog-topic:hover .blog-topic__name {
+  color: var(--color-brand-light);
+}
+
+.blog-aurora .blog-topic__text {
+  color: rgb(213 232 246 / 0.75);
+}
+
+/* Tarjetas: el mismo vidrio, pero más claro para que no se vea gris sobre el fondo oscuro. */
+.blog-aurora .blog-card__frame {
+  background: rgb(247 249 253 / 0.95);
+}
+
+/* El botón del cierre del artículo va sobre la hoja clara: vuelve al azul de marca (el blanco de .blog-head es para fondos oscuros). */
+.blog-aurora .blog-article__end .btn--primary {
+  background: var(--color-ink);
+  color: var(--color-white);
+}
+
+.blog-aurora .blog-article__end .btn--primary:hover {
+  background: var(--color-ink-strong);
+}
+
+.blog-aurora .blog-cta {
+  padding-top: var(--space-8);
+}
+
+/* Barra de temas: vidrio oscuro sobre el aurora. */
+.blog-aurora .blog-chips ul {
+  border: var(--border-on-dark);
+  background: rgb(10 21 41 / 0.72);
+}
+
+.blog-aurora .blog-chips a {
+  color: var(--color-white);
+}
+
+.blog-aurora .blog-chips a:hover {
+  background: rgb(255 255 255 / 0.12);
+}
+
+/* Artículo: el texto largo va sobre una hoja clara para leerse con comodidad; el aurora queda alrededor. */
+.blog-aurora .blog-article__body {
+  padding: var(--space-6) clamp(20px, 4vw, var(--space-7));
+  border-radius: var(--radius-xl);
+  background: var(--color-porcelain);
+  box-shadow: var(--shadow-3);
+}
+
+.blog-aurora .blog-article {
+  padding-top: var(--space-7);
+}
+
+.blog-aurora .chapter__line {
+  background: var(--color-white);
+}
+
+.blog-aurora .chapter__line[data-state='active'] {
+  background: var(--color-brand-light);
+}
+
+@media (max-width: 960px) {
+  .blog-aurora .blog-article__body {
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* "Reducir movimiento": la tarjeta del riel y los resaltados cambian sin transición. */
+@media (prefers-reduced-motion: reduce) {
+  .blog-index__link,
+  .blog-chips a,
+  .blog-shelf__title a,
+  .blog-topic {
+    transition: none;
+  }
+}

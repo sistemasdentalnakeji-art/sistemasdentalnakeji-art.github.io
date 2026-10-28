@@ -70,7 +70,7 @@ const buildCards = (lang: Lang): BenefitCard[] => {
       title: en ? 'US insurance plans' : 'Aseguranzas americanas',
       // "Aceptamos aseguranzas americanas" está publicado en el sitio oficial.
       text: en
-        ? 'We accept US dental insurance plans. Contact us before your appointment to answer your questions.'
+        ? 'We accept US dental insurance plans. Contact us before your appointment and we’ll answer your questions.'
         : 'Aceptamos aseguranzas americanas. Consúltanos antes de tu cita para resolver tus dudas.',
       icon: 'shield',
       href: routeOf('insurance', lang).path,
@@ -94,7 +94,7 @@ export const BENEFIT_CARDS_CTA: Record<Lang, string> = { en: 'See options', es: 
 export const BENEFITS_CTA: Record<Lang, { title: string; text: string; label: string }> = {
   en: {
     title: 'Questions about your coverage?',
-    text: 'Message us on WhatsApp and we will tell you whether your plan or your company applies.',
+    text: 'Message us on WhatsApp and we will tell you whether your plan or your company qualifies.',
     label: 'Message us on WhatsApp',
   },
   es: {

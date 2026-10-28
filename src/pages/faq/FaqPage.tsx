@@ -50,7 +50,7 @@ function FaqContent({ lang }: { lang: Lang }) {
   }
 
   return (
-    <Band tone="white" className="faq-page band--clip" labelledBy="faq-titulo">
+    <Band tone="aurora" className="faq-page" labelledBy="faq-titulo">
       <div className="container">
         <header className="faq-head">
           <p className="page-eyebrow">FAQ</p>

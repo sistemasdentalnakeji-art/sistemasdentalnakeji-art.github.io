@@ -35,7 +35,7 @@
     width 0.7s var(--loc-spring),
     height 0.7s var(--loc-spring),
     border-radius 0.7s var(--loc-spring),
-    transform 0.2s var(--ease);
+    transform var(--dur-fast) var(--ease-out);
 }
 
 .loc[data-expanded] .loc__card {
@@ -55,7 +55,7 @@
     linear-gradient(90deg, rgba(var(--loc-line), 0.12) 1px, transparent 1px);
   background-size: 20px 20px;
   opacity: 0.6;
-  transition: opacity 0.3s var(--ease);
+  transition: opacity var(--dur) var(--ease-out);
 }
 
 .loc[data-expanded] .loc__grid {
@@ -67,7 +67,7 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.4s var(--ease);
+  transition: opacity var(--dur-slow) var(--ease-out);
   pointer-events: none;
 }
 
@@ -177,7 +177,7 @@
   transition:
     translate 0.6s var(--loc-spring) 0.7s,
     scale 0.6s var(--loc-spring) 0.7s,
-    opacity 0.3s var(--ease) 0.7s;
+    opacity var(--dur) var(--ease-out) 0.7s;
 }
 
 .loc[data-expanded] .loc__pin {
@@ -198,7 +198,7 @@
   stroke-linejoin: round;
   stroke-width: 7px;
   opacity: 0;
-  transition: opacity 0.4s var(--ease) 1s;
+  transition: opacity var(--dur-slow) var(--ease-out) 1s;
 }
 
 .loc[data-expanded] .loc__pin-label {
@@ -239,7 +239,7 @@
   justify-content: space-between;
   padding: 18px 20px;
   opacity: 1;
-  transition: opacity 0.25s var(--ease) 0.1s;
+  transition: opacity var(--dur) var(--ease-out) 0.1s;
   pointer-events: none;
 }
 
@@ -259,7 +259,7 @@
   display: grid;
   color: var(--color-brand-light);
   filter: drop-shadow(0 0 4px rgba(var(--loc-line), 0.35));
-  transition: filter 0.3s var(--ease);
+  transition: filter var(--dur) var(--ease-out);
 }
 
 .loc:hover:not([data-expanded]) .loc__icon {
@@ -320,7 +320,7 @@
   font-size: 0.9375rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  transition: translate 0.3s var(--ease);
+  transition: translate var(--dur) var(--ease-out);
 }
 
 .loc:hover:not([data-expanded]) .loc__name {
@@ -333,7 +333,7 @@
   width: 30%;
   height: 1px;
   background: linear-gradient(90deg, rgba(var(--loc-line), 0.8), rgba(var(--loc-line), 0.2), transparent);
-  transition: width 0.4s var(--ease);
+  transition: width var(--dur-slow) var(--ease-out);
 }
 
 .loc:hover:not([data-expanded]) .loc__line {
@@ -376,8 +376,8 @@
   opacity: 0;
   scale: 0.8;
   transition:
-    opacity 0.3s var(--ease) 0.4s,
-    scale 0.3s var(--ease) 0.4s;
+    opacity var(--dur) var(--ease-out) 0.4s,
+    scale var(--dur) var(--ease-out) 0.4s;
   pointer-events: none;
 }
 
@@ -399,8 +399,8 @@
   opacity: 0;
   translate: -50% 4px;
   transition:
-    opacity 0.25s var(--ease),
-    translate 0.25s var(--ease);
+    opacity var(--dur) var(--ease-out),
+    translate var(--dur) var(--ease-out);
   pointer-events: none;
 }
 

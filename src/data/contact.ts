@@ -35,7 +35,7 @@ export const CONTACT_DIRECT: Record<Lang, ContactDirect> = {
     whatsappText: 'Schedule your appointment or ask about a treatment.',
     whatsappCta: 'Message us on WhatsApp',
     emailLabel: 'Email',
-    emailText: 'Ideal for quotes, sending studies or X-rays, and following up on your treatment.',
+    emailText: 'Ideal for quotes, sending test results or X-rays, and following up on your treatment.',
     emailCta: 'Send an email',
   },
   es: {

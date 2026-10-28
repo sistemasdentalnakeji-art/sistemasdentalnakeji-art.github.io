@@ -167,7 +167,7 @@
   background: rgba(255, 255, 255, 0.08);
   color: var(--color-white);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
 
 .spin-shutter__nav:hover {
@@ -201,7 +201,7 @@
     width 0.7s var(--ss-spring),
     height 0.7s var(--ss-spring),
     border-radius 0.7s var(--ss-spring),
-    opacity 0.2s var(--ease) 0.5s,
+    opacity var(--dur-fast) var(--ease-out) 0.5s,
     visibility 0s 0.7s;
 }
 

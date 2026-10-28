@@ -34,6 +34,25 @@ interface UiText {
     close: string
   }
   service: { crumbs: string; whatsapp: string; book: string; aboutEyebrow: string; blogCta: string }
+  /** Blog (src/pages/blog/): rótulos y botones fijos; el contenido de los artículos va en blog-content(.en).json. */
+  blog: {
+    explore: string
+    allServices: string
+    book: string
+    readArticle: string
+    minutes: (n: number) => string
+    answer: string
+    sources: string
+    related: string
+    crumbs: string
+    chapters: string
+    topicsNav: string
+    articleCount: (n: number) => string
+    inCategory: string
+    moreTopics: string
+    moreInTopic: string
+    dateLocale: string
+  }
   empty: { soon: string; notFound: string; backHome: string }
   /** Aviso en /es/ mientras el documento legal oficial solo existe en inglés (pendiente: traducción de la clínica). */
   legalNotice?: string
@@ -93,6 +112,24 @@ export const UI: Record<Lang, UiText> = {
       book: 'Book an appointment',
       aboutEyebrow: 'About the treatment',
       blogCta: 'Learn more about this treatment',
+    },
+    blog: {
+      explore: 'Browse articles',
+      allServices: 'See all services',
+      book: 'Schedule a visit',
+      readArticle: 'Read article',
+      minutes: (n) => `${n} min read`,
+      answer: 'Short answer.',
+      sources: 'Sources:',
+      related: 'Related service:',
+      crumbs: 'Breadcrumb',
+      chapters: 'Article sections',
+      topicsNav: 'Blog topics',
+      articleCount: (n) => (n === 1 ? '1 article' : `${n} articles`),
+      inCategory: 'In this topic',
+      moreTopics: 'Other topics',
+      moreInTopic: 'More on this topic',
+      dateLocale: 'en-US',
     },
     faqSoon: {
       title: 'Coming soon',
@@ -156,6 +193,24 @@ export const UI: Record<Lang, UiText> = {
       book: 'Reservar cita',
       aboutEyebrow: 'Acerca del tratamiento',
       blogCta: 'Conocer más sobre este tratamiento',
+    },
+    blog: {
+      explore: 'Explorar artículos',
+      allServices: 'Ver todos los servicios',
+      book: 'Agendar visita',
+      readArticle: 'Leer artículo',
+      minutes: (n) => `${n} min de lectura`,
+      answer: 'Respuesta breve.',
+      sources: 'Fuentes:',
+      related: 'Servicio relacionado:',
+      crumbs: 'Migas de pan',
+      chapters: 'Secciones del artículo',
+      topicsNav: 'Temas del blog',
+      articleCount: (n) => (n === 1 ? '1 artículo' : `${n} artículos`),
+      inCategory: 'En este tema',
+      moreTopics: 'Otros temas',
+      moreInTopic: 'Más de este tema',
+      dateLocale: 'es-MX',
     },
     faqSoon: {
       title: 'Próximamente',

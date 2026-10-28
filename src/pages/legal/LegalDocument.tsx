@@ -12,7 +12,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react'
 import type { LegalBlock, LegalDoc } from '@/data/legal'
 import { Band } from '@/components/decor/Band'
-import { PagePlasma } from '@/components/decor/PagePlasma'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon } from '@/components/ui/Icon'
 
@@ -93,11 +92,11 @@ export function LegalDocument({ doc, titleId, compact = false }: { doc: LegalDoc
   }
 
   return (
-    <Band tone="white" className="legal-page band--clip" labelledBy={titleId} decor={<PagePlasma />}>
+    <Band tone="aurora" className="legal-page" labelledBy={titleId}>
       <div className="container">
         <header className="legal-head legal-head--doc">
           <p className="legal-head__eyebrow pill-label">{doc.eyebrow}</p>
-          <h1 id={titleId} className="legal-head__title">
+          <h1 id={titleId} className="legal-head__title shiny-text">
             {doc.title}
           </h1>
           <p className="legal-head__lead">{doc.lead}</p>

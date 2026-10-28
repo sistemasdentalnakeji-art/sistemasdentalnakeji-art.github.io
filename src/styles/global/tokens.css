@@ -56,4 +56,38 @@
   --color-night: #0a1529;
   --hero-scrim-rgb: 10, 21, 41;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Sistema de diseño (rediseño de contacto, blog y beneficios). Solo nombres nuevos: los de arriba no cambian de valor. */
+  /* Sombras: reposo, elevada y sobre fondo oscuro */
+  --shadow-1: 0 1px 2px rgb(42 66 105 / 0.08), 0 4px 14px rgb(42 66 105 / 0.06);
+  --shadow-2: 0 2px 4px rgb(42 66 105 / 0.08), 0 12px 32px rgb(42 66 105 / 0.1);
+  --shadow-3: 0 10px 30px rgb(3 10 24 / 0.28);
+  /* Bordes */
+  --border-hairline: 1px solid rgb(42 66 105 / 0.12);
+  --border-strong: 1px solid var(--color-field-border);
+  --border-on-dark: 1px solid rgb(255 255 255 / 0.14);
+  /* Radios */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  /* Espaciado (escala de 4 px) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  /* Movimiento */
+  --dur-fast: 150ms;
+  --dur: 250ms;
+  --dur-slow: 450ms;
+  --ease-out: var(--ease);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* Lectura y áreas de clic */
+  --measure: 68ch;
+  --tap-min: 44px;
 }

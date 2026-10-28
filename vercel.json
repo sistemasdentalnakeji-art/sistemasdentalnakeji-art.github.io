@@ -205,6 +205,101 @@
       "statusCode": 302
     },
     {
+      "source": "/blog/implantes-y-rehabilitacion/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/estetica-y-restauracion/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/ortodoncia-y-odontopediatria/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/limpieza-y-salud-de-encias/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/endodoncia-y-extracciones/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/implantes-dentales-que-son/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/all-on-4-implants/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/all-on-6-implants/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/dentaduras-parciales-completas/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/coronas-dentales/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/carillas-dentales/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/blanqueamiento-dental/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/ortodoncia-mordida-alineacion/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/alineadores-transparentes/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/primera-visita-odontopediatria/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/limpieza-dental-profesional/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/periodoncia-encias-que-sangran/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/endodoncia-conservar-diente/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
+      "source": "/blog/extracciones-muelas-del-juicio/",
+      "destination": "/es/",
+      "statusCode": 302
+    },
+    {
       "source": "/cuidado-dental/",
       "destination": "/es/",
       "statusCode": 302
