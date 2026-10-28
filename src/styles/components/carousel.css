@@ -69,9 +69,9 @@
   box-shadow: var(--shadow);
   cursor: pointer;
   transition:
-    box-shadow 0.2s var(--ease),
-    color 0.2s var(--ease),
-    opacity 0.2s var(--ease);
+    box-shadow var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
 }
 
 .carousel__button:hover:not([aria-disabled='true']) {

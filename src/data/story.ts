@@ -27,11 +27,11 @@ type StoryMessages = Record<'desire' | 'priority' | 'decision', StoryLines>
 export const STORY: Record<Lang, StoryMessages> = {
   en: {
     desire: [
-      [{ text: '35 years supporting our patients' }],
+      [{ text: '35 years caring for our patients' }],
       [{ text: 'A story dedicated to oral care.', accent: true }],
     ],
     priority: [
-      [{ text: 'All dental specialties and dental laboratory', accent: true }],
+      [{ text: 'All dental specialties and a dental laboratory', accent: true }],
       [{ text: 'To care for every detail of your treatment in one place' }],
     ],
     decision: [

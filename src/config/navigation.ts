@@ -80,6 +80,17 @@ const buildNav = (lang: Lang): NavItem[] => {
     },
     link('contacto', 'contact'),
     link('nosotros', 'about'),
+    // Información de la clínica, en este orden: blog, términos de SMS y aviso de privacidad.
+    {
+      kind: 'menu',
+      id: 'mas',
+      label: lang === 'en' ? 'More' : 'Más',
+      children: [
+        { ...to('blog'), icon: 'book' },
+        { ...to('terms'), icon: 'document' },
+        { ...to('privacy'), icon: 'lock' },
+      ],
+    },
   ]
 }
 

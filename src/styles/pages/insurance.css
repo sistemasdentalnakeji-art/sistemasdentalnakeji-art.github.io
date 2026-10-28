@@ -107,7 +107,7 @@
   min-height: clamp(92px, 10vw, 128px);
   padding: 16px;
   background: var(--color-white);
-  transition: background-color 0.2s var(--ease);
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
 
 .insurers__cell:hover {

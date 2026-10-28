@@ -13,6 +13,9 @@ const PAGES = [
   '/en/faq/',
   '/en/privacy/',
   '/en/terms/',
+  '/es/blog/',
+  '/en/blog/',
+  '/en/blog/dental-crowns/',
 ]
 
 // La casilla anti-bots de Cloudflare se sustituye por una vacía: las pruebas no dependen de internet.

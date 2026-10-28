@@ -1,0 +1,158 @@
+/* ==========================================================================
+   Fondo compartido de la homepage (pages/home/HomePage.tsx): el degradado azul del hero queda fijo del tamaño de la
+   pantalla detrás de TODAS las secciones; las fibras de luz animadas solo en el hero. El footer no cambia.
+   Como en /nosotros/: títulos dorados, textos claros y paneles de vidrio azul translúcido para que el contenido no se
+   pierda. Las decoraciones propias de cada sección (diente, curvas del formulario, círculos) se conservan; solo se
+   ocultan las olas y el arco blanco, que unían bandas de colores distintos.
+   ========================================================================== */
+.home-canvas {
+  --text-on-dark: rgba(255, 255, 255, 0.8);
+  --home-glass: linear-gradient(145deg, rgba(24, 49, 84, 0.86), rgba(9, 24, 46, 0.82));
+  --home-glass-border: rgba(123, 195, 235, 0.32);
+  position: relative;
+  isolation: isolate;
+  margin: var(--band-gap) var(--band-gap) 0;
+  border-radius: var(--band-radius) var(--band-radius) 0 0;
+  /* clip (no hidden): las fibras sticky y las animaciones ligadas al scroll necesitan que no sea contenedor de scroll. */
+  overflow: clip;
+  color: var(--text-on-dark);
+}
+
+/* Fondo: el degradado fijo compartido (components/decor/PageGradient.tsx). Las fibras de luz van solo en el hero (Hero.tsx). */
+
+/* Las secciones ya no llevan fondo propio: se ven sobre el fondo compartido. */
+.home-canvas .hero,
+.home-canvas .band {
+  margin-inline: 0;
+  background: transparent;
+}
+
+.home-canvas .hero {
+  margin-top: 0;
+  border-radius: 0;
+}
+
+/* Las fibras del hero se desvanecen solo en los últimos 140 px, para no dejar un corte con la sección siguiente sin
+   recortar la animación. */
+.home-canvas .hero .fibers-bg {
+  -webkit-mask-image: linear-gradient(#000 calc(100% - 140px), transparent);
+  mask-image: linear-gradient(#000 calc(100% - 140px), transparent);
+}
+
+/* Las fibras se ven igual que en /nosotros/ (about.css): la misma intensidad atenuada. */
+.home-canvas .hero .fibers-bg__view {
+  opacity: 0.76;
+  filter: saturate(0.82) contrast(0.92);
+}
+
+.home-canvas .band {
+  margin-top: 0;
+}
+
+/* Olas y arco blanco: unían bandas de color distinto; sobre un fondo continuo sobran. El velo del hero dejaría un corte. */
+.home-canvas .decor--wave,
+.home-canvas .hero__scrim,
+.home-canvas .reviews-intro::before {
+  display: none;
+}
+
+/* Foco del teclado en blanco (el azul no se ve sobre el fondo oscuro). */
+.home-canvas :focus-visible {
+  outline-color: var(--color-white);
+}
+
+/* ---------- Títulos dorados y textos claros ---------- */
+.home-canvas .section-title,
+.home-canvas .schedule__alt-title,
+.home-canvas .rail__title {
+  color: var(--color-gold);
+}
+
+.home-canvas .section-text,
+.home-canvas .rail__text {
+  color: var(--text-on-dark);
+}
+
+.home-canvas .text-link {
+  color: var(--color-brand-light);
+}
+
+/* Botón principal fuera de tarjetas y formulario: blanco para que destaque sobre el azul. */
+.home-canvas .section-cta .btn--primary,
+.home-canvas .rail__cta {
+  background: var(--color-white);
+  color: var(--color-night);
+}
+
+/* Mensajes animados (CareStory). */
+.home-canvas .story__item {
+  color: var(--color-white);
+}
+
+.home-canvas .story__accent {
+  color: var(--color-brand-light);
+}
+
+.home-canvas .story__item--up .story__line + .story__line {
+  color: var(--text-on-dark);
+}
+
+/* Agenda: pasos en claro; el formulario conserva su panel claro (los campos necesitan fondo blanco). */
+.home-canvas .steps__item {
+  color: var(--color-white);
+}
+
+.home-canvas .steps__number {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-gold);
+}
+
+.home-canvas .schedule__form,
+.home-canvas .card,
+.home-canvas .plate,
+.home-canvas .contact__map {
+  color: var(--color-text);
+}
+
+/* ---------- Paneles de vidrio (como las tarjetas de /nosotros/) ---------- */
+.home-canvas .rail,
+.home-canvas .rail--convenios,
+.home-canvas .contact-item {
+  border: 1px solid var(--home-glass-border);
+  background: var(--home-glass);
+  backdrop-filter: blur(16px) saturate(0.8);
+}
+
+.home-canvas .rail--convenios {
+  border-style: dashed;
+}
+
+/* Logos sueltos (aseguranzas): sobre azul se perderían los oscuros, así que van en una tarjeta blanca. */
+.home-canvas .plate--logo {
+  width: 300px;
+  height: 120px;
+  border-radius: 20px;
+  background: var(--color-white);
+}
+
+.home-canvas .plate--logo img {
+  max-width: 84%;
+  max-height: 72%;
+  object-fit: contain;
+}
+
+/* Las filas de contacto llevan el contorno luminoso (.siri) detrás con z-index -1: sin backdrop-filter (crearía un contexto
+   de apilamiento y el brillo taparía el panel) y con fondo opaco para que el brillo quede solo en el borde. */
+.home-canvas .contact-item {
+  background: linear-gradient(145deg, rgb(24, 49, 84), rgb(9, 24, 46));
+  backdrop-filter: none;
+}
+
+.home-canvas .contact-item__label {
+  color: var(--color-brand-light);
+}
+
+.home-canvas .contact-item__value,
+.home-canvas .contact-item__value a {
+  color: var(--color-white);
+}

@@ -75,3 +75,19 @@ html[data-motion='paused'] .faq-page * { transition: none !important; }
   .faq-item__answer { color: CanvasText; }
   .faq-filters button[aria-pressed='true'] { outline: 2px solid Highlight; }
 }
+
+/* ---- Sobre el fondo aurora (Band tone="aurora"): los colores de tinta pasan a tonos claros solo dentro de esta página ---- */
+.faq-page {
+  --color-ink: #fff;
+  --color-ink-strong: #fff;
+  --color-text: rgb(213 232 246 / 0.9);
+  --color-muted: rgb(213 232 246 / 0.78);
+  --color-field-border: rgb(255 255 255 / 0.35);
+  --color-sky: rgb(255 255 255 / 0.1);
+}
+.faq-head .page-eyebrow { background: rgb(255 255 255 / 0.12); }
+.faq-item__fill { background: rgb(255 255 255 / 0.1); }
+.faq-item__row--inverse { color: var(--color-gold); }
+.faq-filters button[aria-pressed='true'] { background: var(--color-white); border-color: var(--color-white); color: #2a4269; }
+/* La tarjeta "¿No encuentras tu respuesta?" pasa a vidrio oscuro, con los mismos textos claros. */
+.faq-help { border: var(--border-on-dark); background: rgb(255 255 255 / 0.08); }

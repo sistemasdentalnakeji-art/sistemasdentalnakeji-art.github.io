@@ -1,0 +1,558 @@
+{
+  "hub": {
+    "label": "DENTAL NAKEJI BLOG",
+    "h1": "Understand your oral health better",
+    "intro": "Here we answer common questions about caring for your teeth and gums and about the treatments Dental Nakeji offers. You will find clear explanations, reliable sources and links to learn about each service. This information helps you prepare for a consultation; the right recommendation for you depends on a professional evaluation.",
+    "exploreTitle": "Browse by topic",
+    "exploreText": "Choose the topic that best matches your question. Every article is related to a service that is part of Dental Nakeji's official catalog.",
+    "featuredText": "Articles to answer your questions",
+    "featuredLead": "Start with the topic you are interested in. At the end of each article you will find the related service and the sources consulted.",
+    "ctaTitle": "Do you have questions about your case?",
+    "ctaText": "Every person's needs are different. At Dental Nakeji you can request a visit to talk about your symptoms, questions and care options with a professional."
+  },
+  "categories": [
+    {
+      "key": "implantes-y-rehabilitacion",
+      "name": "Implants and tooth replacement",
+      "description": "Information about options to replace missing teeth and useful questions for your evaluation.",
+      "route": "/en/blog/implants-and-tooth-replacement/",
+      "intro": "Losing one or more teeth can change the way you chew and your confidence when you smile. In this section we explain the restoration options in Dental Nakeji's catalog: dental implants, All on 4 implants, All on 6 implants and dentures. Each option requires an individual evaluation."
+    },
+    {
+      "key": "estetica-y-restauracion",
+      "name": "Cosmetic and restorative dentistry",
+      "description": "Learn the differences between treatments that can restore or improve the appearance of your teeth.",
+      "route": "/en/blog/cosmetic-and-restorative-dentistry/",
+      "intro": "The appearance of a smile also depends on the health and function of the teeth. Here you will find information about crowns, dental veneers and teeth whitening: what each treatment does, what it does not do and why an evaluation beforehand matters."
+    },
+    {
+      "key": "ortodoncia-y-odontopediatria",
+      "name": "Orthodontics and pediatric dentistry",
+      "description": "Answers about tooth alignment, bite and oral care for children.",
+      "route": "/en/blog/orthodontics-and-pediatric-dentistry/",
+      "intro": "Straightening teeth and caring for the mouth from childhood are different topics that share one idea: every stage needs the right care. Here are answers about orthodontics, aligners and pediatric dentistry, the three services in this category at Dental Nakeji."
+    },
+    {
+      "key": "limpieza-y-salud-de-encias",
+      "name": "Cleanings and gum health",
+      "description": "Learn why prevention and gum evaluations are part of dental care.",
+      "route": "/en/blog/cleanings-and-gum-health/",
+      "intro": "Daily hygiene helps care for teeth and gums, and professional visits make it possible to detect problems that are not always visible at home. Learn the difference between a dental cleaning and periodontal care, two services available at Dental Nakeji."
+    },
+    {
+      "key": "endodoncia-y-extracciones",
+      "name": "Root canals and extractions",
+      "description": "Understand when the goal is to save a tooth and when removing it may be considered.",
+      "route": "/en/blog/root-canals-and-extractions/",
+      "intro": "When a tooth has a problem, care may focus on saving it or, if necessary, removing it. This section gives a general explanation of what a root canal is and how simple extractions and wisdom tooth extractions are evaluated."
+    }
+  ],
+  "cards": [
+    {
+      "category": "Implants and tooth replacement",
+      "route": "/en/blog/dental-implants-what-they-are/",
+      "cardTitle": "Dental implants: what they are and what is checked before placing them",
+      "excerpt": "An implant can support a restoration that replaces a missing tooth. Learn what is evaluated before it is recommended."
+    },
+    {
+      "category": "Implants and tooth replacement",
+      "route": "/en/blog/all-on-4-implants/",
+      "cardTitle": "All on 4 implants: a fixed arch on four implants",
+      "excerpt": "Learn what this treatment means and why a bone assessment is part of the evaluation."
+    },
+    {
+      "category": "Implants and tooth replacement",
+      "route": "/en/blog/all-on-6-implants/",
+      "cardTitle": "All on 6 implants: how it differs from All on 4",
+      "excerpt": "The main difference is the number of implants that support the prosthesis. The choice depends on each case."
+    },
+    {
+      "category": "Implants and tooth replacement",
+      "route": "/en/blog/partial-and-complete-dentures/",
+      "cardTitle": "Partial and complete dentures: the basic differences",
+      "excerpt": "Dentures are custom-made removable prostheses that replace some or all of the teeth in an arch."
+    },
+    {
+      "category": "Cosmetic and restorative dentistry",
+      "route": "/en/blog/dental-crowns/",
+      "cardTitle": "Dental crowns: when covering a tooth is considered",
+      "excerpt": "A crown covers the tooth and can help restore its shape and function. Learn what the dentist checks first."
+    },
+    {
+      "category": "Cosmetic and restorative dentistry",
+      "route": "/en/blog/dental-veneers/",
+      "cardTitle": "Dental veneers: what they can and cannot change",
+      "excerpt": "Veneers change the appearance of the front surface of the tooth. Your oral health should be evaluated first."
+    },
+    {
+      "category": "Cosmetic and restorative dentistry",
+      "route": "/en/blog/teeth-whitening/",
+      "cardTitle": "Teeth whitening: why an evaluation first is a good idea",
+      "excerpt": "Whitening does not work the same on every tooth and does not change the color of existing restorations."
+    },
+    {
+      "category": "Orthodontics and pediatric dentistry",
+      "route": "/en/blog/orthodontics-alignment-and-bite/",
+      "cardTitle": "Orthodontics: tooth alignment and bite",
+      "excerpt": "An evaluation helps understand the position of the teeth and the bite before choosing a treatment."
+    },
+    {
+      "category": "Orthodontics and pediatric dentistry",
+      "route": "/en/blog/clear-aligners/",
+      "cardTitle": "Clear aligners: when they can be an option",
+      "excerpt": "They are a discreet way to move teeth, but they are not the best choice for every case."
+    },
+    {
+      "category": "Orthodontics and pediatric dentistry",
+      "route": "/en/blog/your-childs-first-dental-visit/",
+      "cardTitle": "Your child's first dental visit: what to expect",
+      "excerpt": "Children's dental care is adapted to each age. An early visit helps guide cavity prevention."
+    },
+    {
+      "category": "Cleanings and gum health",
+      "route": "/en/blog/professional-dental-cleaning/",
+      "cardTitle": "Professional dental cleaning: what it adds to your daily care",
+      "excerpt": "Brushing is essential, but built-up tartar needs to be removed with a professional cleaning."
+    },
+    {
+      "category": "Cleanings and gum health",
+      "route": "/en/blog/bleeding-gums-periodontics/",
+      "cardTitle": "Periodontics: why your gums may bleed",
+      "excerpt": "Bleeding can be a sign of inflammation. A checkup helps find out what is happening and what care is needed."
+    },
+    {
+      "category": "Root canals and extractions",
+      "route": "/en/blog/root-canal-saving-the-tooth/",
+      "cardTitle": "Root canal treatment: treating the inside to try to save the tooth",
+      "excerpt": "Learn what a root canal treats and why the restoration afterwards also matters."
+    },
+    {
+      "category": "Root canals and extractions",
+      "route": "/en/blog/extractions-and-wisdom-teeth/",
+      "cardTitle": "Extractions and wisdom teeth: how the decision is made",
+      "excerpt": "Not every wisdom tooth needs to be removed. The decision is based on the exam and the tests and X-rays the dentist orders."
+    }
+  ],
+  "articles": [
+    {
+      "key": "implantes-dentales-que-son",
+      "title": "Dental implants: what they are and what is checked before placing them",
+      "sections": [
+        {
+          "title": "What can an implant solve?",
+          "paragraphs": [
+            "When a tooth is missing, chewing comfortably can become harder. An implant provides a base to replace it with a restoration designed for the case. It can also be part of a restoration of several teeth. That does not mean it is the right option for everyone or that the result is the same in every case."
+          ]
+        },
+        {
+          "title": "What is checked first?",
+          "paragraphs": [
+            "The dentist needs to know the condition of the gums, the amount and condition of the bone and any relevant health history. The FDA notes that general health and habits such as smoking can affect healing and the result. That is why a responsible explanation covers both the possible benefits and the risks and follow-up involved."
+          ]
+        },
+        {
+          "title": "What should you ask at your consultation?",
+          "paragraphs": [
+            "You can ask which tests or X-rays are needed, which restoration would be placed on the implant, what care you would need and what alternatives exist for your situation. The decision is made with an individual plan, after the professional reviews your case and answers your questions."
+          ]
+        }
+      ],
+      "route": "/en/blog/dental-implants-what-they-are/",
+      "category": "Implants and tooth replacement",
+      "lead": "A dental implant can help replace a missing tooth, but placing one is decided after examining each person's mouth and health.",
+      "answer": "An implant is a piece that is surgically placed in the bone of the lower or upper jaw to support a restoration. Depending on the need, it can hold a crown, a bridge or a prosthesis. At Dental Nakeji, evaluating the bone and gums is part of the process beforehand.",
+      "related": "[Dental implants at Dental Nakeji](https://www.nakejidental.com/en/dental-implants-in-tijuana/)",
+      "sources": "[Dental Nakeji, dental implants](https://www.nakejidental.com/en/dental-implants-in-tijuana/); [FDA, patient information about dental implants](https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know)."
+    },
+    {
+      "key": "all-on-4-implants",
+      "title": "All on 4 implants: a fixed arch on four implants",
+      "sections": [
+        {
+          "title": "What does “a full arch” mean?",
+          "paragraphs": [
+            "An arch is the set of upper or lower teeth. When almost all of them are missing, the restoration aims to replace that area with a single prosthesis. “Fixed” describes how it is held on the implants; it does not mean it needs no maintenance or that the solution is right for everyone."
+          ]
+        },
+        {
+          "title": "Why does the evaluation matter?",
+          "paragraphs": [
+            "Implants are placed surgically. The team needs to review the available bone, the gums, the bite and your general health before proposing a plan. Timelines, stages and care are explained based on what is found at the consultation. The FDA recommends talking with the professional about benefits, risks and whether you are a candidate before choosing implants."
+          ]
+        },
+        {
+          "title": "Useful questions",
+          "paragraphs": [
+            "Ask which tests or X-rays you need, what the plan would be for each arch, what type of prosthesis is being considered and how follow-up would work. That conversation helps you understand the options without assuming that one specific technique is best for everyone."
+          ]
+        }
+      ],
+      "route": "/en/blog/all-on-4-implants/",
+      "category": "Implants and tooth replacement",
+      "lead": "All on 4 implants is a restoration option that replaces the teeth of an arch with a fixed prosthesis held by four implants.",
+      "answer": "In this treatment, four implants support a prosthesis for a full arch. Dental Nakeji presents it as an option for people who are missing almost all the teeth in an arch. Whether it is indicated requires a bone assessment and an evaluation of the individual case.",
+      "related": "[All on 4 implants at Dental Nakeji](https://www.nakejidental.com/en/all-on-4-implants-in-tijuana/)",
+      "sources": "[Dental Nakeji, All on 4 implants](https://www.nakejidental.com/en/all-on-4-implants-in-tijuana/); [FDA, dental implants](https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know)."
+    },
+    {
+      "key": "all-on-6-implants",
+      "title": "All on 6 implants: how it differs from All on 4",
+      "sections": [
+        {
+          "title": "When is this option considered?",
+          "paragraphs": [
+            "It may be considered when almost all the teeth in an arch are missing and a fixed option is the goal. Before talking about a specific technique, the condition of the mouth is reviewed. The professional should explain what they find, which tests or X-rays are needed and which options are reasonable for that case."
+          ]
+        },
+        {
+          "title": "What the number does not tell you",
+          "paragraphs": [
+            "Six implants do not automatically promise a better, faster or longer-lasting result. Every placement has surgical considerations and needs care afterwards. The FDA recommends reviewing your general health, possible risks, hygiene instructions and follow-up visits with your dentist."
+          ]
+        },
+        {
+          "title": "Bring these questions to your evaluation",
+          "paragraphs": [
+            "Which conditions of my bone and bite affect the recommendation? Which restoration would be planned? What care would I need to follow? Asking for clear answers helps you decide with information that fits your case."
+          ]
+        }
+      ],
+      "route": "/en/blog/all-on-6-implants/",
+      "category": "Implants and tooth replacement",
+      "lead": "Both treatments aim to hold a fixed prosthesis for a full arch. The difference Dental Nakeji describes is the number of supporting implants.",
+      "answer": "All on 6 implants uses six implants per arch to hold the fixed prosthesis. All on 4 implants uses four. The choice is not made by the number alone: Dental Nakeji explains that the plan depends on each patient's bone and bite.",
+      "related": "[All on 6 implants at Dental Nakeji](https://www.nakejidental.com/en/all-on-6-implants-in-tijuana/)",
+      "sources": "[Dental Nakeji, All on 6 implants](https://www.nakejidental.com/en/all-on-6-implants-in-tijuana/); [Dental Nakeji, All on 4 implants](https://www.nakejidental.com/en/all-on-4-implants-in-tijuana/); [FDA, dental implants](https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know)."
+    },
+    {
+      "key": "dentaduras-parciales-completas",
+      "title": "Partial and complete dentures: the basic differences",
+      "sections": [
+        {
+          "title": "What is the goal?",
+          "paragraphs": [
+            "Missing teeth can affect chewing, speech and appearance. A removable prosthesis can help restore part of those functions. The professional examines the mouth and talks with the patient about their needs before recommending a type of denture and explaining what to expect from it."
+          ]
+        },
+        {
+          "title": "Why do adjustments matter?",
+          "paragraphs": [
+            "The shape of the mouth can change, especially after losing teeth or after an extraction. A denture that no longer fits well can cause discomfort. Checkups make it possible to confirm the fit and get guidance on cleaning and care. Do not try to modify it at home."
+          ]
+        },
+        {
+          "title": "What to ask",
+          "paragraphs": [
+            "Ask whether the prosthesis would be partial, complete or immediate, how to clean it and when the fit would be checked. Dental Nakeji can explain the right option after examining your case."
+          ]
+        }
+      ],
+      "route": "/en/blog/partial-and-complete-dentures/",
+      "category": "Implants and tooth replacement",
+      "lead": "A denture is a removable prosthesis designed to replace missing teeth. The type considered depends on how many teeth the person still has and on the condition of their mouth.",
+      "answer": "A partial denture replaces some teeth; a complete denture replaces all the teeth in an arch. Dental Nakeji also lists immediate dentures in its catalog. All of them are custom-made and need checkups and, at times, adjustments.",
+      "related": "[Dentures at Dental Nakeji](https://www.nakejidental.com/en/dentures-in-tijuana/)",
+      "sources": "[Dental Nakeji, dentures](https://www.nakejidental.com/en/dentures-in-tijuana/); [NHS, dentures](https://www.nhs.uk/tests-and-treatments/dentures/)."
+    },
+    {
+      "key": "coronas-dentales",
+      "title": "Dental crowns: when covering a tooth is considered",
+      "sections": [
+        {
+          "title": "Why might a crown be needed?",
+          "paragraphs": [
+            "The American Dental Association explains that a crown can help protect a weak tooth, restore a broken one or cover it when there is not enough tooth left to hold a large restoration. The specific need is determined at the consultation. Not every tooth with a stain, a cavity or a fracture requires a crown."
+          ]
+        },
+        {
+          "title": "Your bite matters too",
+          "paragraphs": [
+            "A restoration must fit the tooth and the way you close your mouth. That is why the dentist checks your bite and explains what preparation and follow-up would be needed. A crown does not replace brushing, cleaning between your teeth or regular checkups."
+          ]
+        },
+        {
+          "title": "Before you decide",
+          "paragraphs": [
+            "Ask what problem the treatment is meant to solve, what other options could be considered and what care the restoration would need. That way you can understand the goal of the treatment and its limits."
+          ]
+        }
+      ],
+      "route": "/en/blog/dental-crowns/",
+      "category": "Cosmetic and restorative dentistry",
+      "lead": "A crown covers the tooth to help restore its shape, size or strength when the professional considers it the right option.",
+      "answer": "Crowns are used to cover damaged or weakened teeth. They can also be placed on implants. Before recommending one, the dentist checks how much healthy tooth remains and how your teeth fit together when you bite. Dental Nakeji includes that evaluation in its description of the service.",
+      "related": "[Crowns at Dental Nakeji](https://www.nakejidental.com/en/dental-crowns-in-tijuana/)",
+      "sources": "[Dental Nakeji, crowns](https://www.nakejidental.com/en/dental-crowns-in-tijuana/); [ADA, dental crowns](https://www.mouthhealthy.org/all-topics-a-z/crowns)."
+    },
+    {
+      "key": "carillas-dentales",
+      "title": "Dental veneers: what they can and cannot change",
+      "sections": [
+        {
+          "title": "Your oral health comes first",
+          "paragraphs": [
+            "Before thinking about cosmetics, the dentist should check for cavities or gum disease. The ADA warns that placing veneers on unhealthy teeth can make existing problems worse. At Dental Nakeji, the consultation includes talking about what the person would like to change and looking at the smile as a whole."
+          ]
+        },
+        {
+          "title": "Are they right for everyone?",
+          "paragraphs": [
+            "Not necessarily. The way you bite, the condition of the enamel and habits such as clenching your teeth all affect the recommendation. Some veneers require removing part of the enamel, so the treatment can be irreversible. They can also get damaged or need repair over time."
+          ]
+        },
+        {
+          "title": "Talk about realistic expectations",
+          "paragraphs": [
+            "Bring examples of what concerns you to the consultation and ask what changes are possible, what preparation is required and how you would care for the veneers. A responsible cosmetic plan starts with a healthy mouth and clear expectations."
+          ]
+        }
+      ],
+      "route": "/en/blog/dental-veneers/",
+      "category": "Cosmetic and restorative dentistry",
+      "lead": "Veneers are an option to change the appearance of the visible part of some teeth, after checking their health and planning the desired result.",
+      "answer": "A veneer covers the front surface of the tooth, unlike a crown, which covers it more fully. It can help improve the appearance of teeth with certain stains, small chips or changes in shape. Whether it is recommended depends on the individual evaluation.",
+      "related": "[Dental veneers at Dental Nakeji](https://www.nakejidental.com/en/dental-veneers-in-tijuana/)",
+      "sources": "[Dental Nakeji, veneers](https://www.nakejidental.com/en/dental-veneers-in-tijuana/); [ADA, dental veneers](https://www.mouthhealthy.org/all-topics-a-z/veneers)."
+    },
+    {
+      "key": "blanqueamiento-dental",
+      "title": "Teeth whitening: why an evaluation first is a good idea",
+      "sections": [
+        {
+          "title": "Why can the result vary?",
+          "paragraphs": [
+            "Not all discoloration has the same cause. Some responds better to whitening than others; discoloration related to injuries or medications may behave differently. If you have visible restorations, the final color of your natural teeth may not match them."
+          ]
+        },
+        {
+          "title": "Health comes before color",
+          "paragraphs": [
+            "The dentist checks the condition of your mouth and listens to what you expect from the treatment. That conversation shows whether whitening is appropriate and what its limits would be. It is not advisable to promise an exact shade or to assume everyone will see the same change."
+          ]
+        },
+        {
+          "title": "Questions for your visit",
+          "paragraphs": [
+            "Ask what type of stains you have, whether your restorations would affect how the result looks and what care would be right for you. The answer should be based on an examination of your mouth."
+          ]
+        }
+      ],
+      "route": "/en/blog/teeth-whitening/",
+      "category": "Cosmetic and restorative dentistry",
+      "lead": "Whitening aims to lighten the shade of natural teeth. Before starting, it is a good idea to check your teeth, gums and existing restorations.",
+      "answer": "Whitening products work on certain stains on natural teeth, but the response varies. The ADA notes that they do not change the color of crowns, veneers or fillings. That is why Dental Nakeji recommends an evaluation first and a plan based on each case.",
+      "related": "[Teeth whitening at Dental Nakeji](https://www.nakejidental.com/en/teeth-whitening-in-tijuana/)",
+      "sources": "[Dental Nakeji, teeth whitening](https://www.nakejidental.com/en/teeth-whitening-in-tijuana/); [ADA, teeth whitening](https://www.mouthhealthy.org/all-topics-a-z/teeth-whitening)."
+    },
+    {
+      "key": "ortodoncia-mordida-alineacion",
+      "title": "Orthodontics: tooth alignment and bite",
+      "sections": [
+        {
+          "title": "What is studied first?",
+          "paragraphs": [
+            "The position of the teeth is only one part. The professional also looks at the bite and your oral health. According to the American Association of Orthodontists, a plan begins with a diagnosis that may include an exam, photos, X-rays or other records needed for the case."
+          ]
+        },
+        {
+          "title": "Why are checkups needed?",
+          "paragraphs": [
+            "Tooth movements are planned and reviewed throughout treatment. At follow-up visits, the professional checks progress and decides whether adjustments are needed. It is not responsible to promise a single treatment length or an identical result for everyone."
+          ]
+        },
+        {
+          "title": "What to bring to your consultation",
+          "paragraphs": [
+            "Explain what concerns you about the position of your teeth or your bite. Ask what options exist, how follow-up would work and what hygiene habits you would need to keep. The recommendation is tailored to your needs."
+          ]
+        }
+      ],
+      "route": "/en/blog/orthodontics-alignment-and-bite/",
+      "category": "Orthodontics and pediatric dentistry",
+      "lead": "Orthodontics aims to move teeth in a planned way and to review how they meet when you bite. The type of appliance and the timeline are decided after an evaluation.",
+      "answer": "Dental Nakeji explains that orthodontics can help when teeth are crowded, spaced apart or when the bite does not close properly. Treatment may use braces or other appliances, with adjustments and follow-up to check progress.",
+      "related": "[Orthodontics at Dental Nakeji](https://www.nakejidental.com/en/orthodontics-in-tijuana/)",
+      "sources": "[Dental Nakeji, orthodontics](https://www.nakejidental.com/en/orthodontics-in-tijuana/); [AAO, how to choose an orthodontist and weigh your options](https://aaoinfo.org/resources/how-to-choose-an-orthodontist/)."
+    },
+    {
+      "key": "alineadores-transparentes",
+      "title": "Clear aligners: when they can be an option",
+      "sections": [
+        {
+          "title": "What does the professional consider?",
+          "paragraphs": [
+            "The teeth, the bite and the movements needed are reviewed. Some situations can be treated with aligners and others require braces or a different approach. The choice should not be based only on which appliance is less visible, but on the diagnosis and on what the patient can commit to during treatment."
+          ]
+        },
+        {
+          "title": "Follow-up is still necessary",
+          "paragraphs": [
+            "Aligners are part of a supervised plan. The professional checks how the teeth are changing and gives guidance on wearing each stage. The number of aligners and the timeline vary from case to case; there is no universal figure to publish."
+          ]
+        },
+        {
+          "title": "A useful question",
+          "paragraphs": [
+            "“Why would aligners be, or not be, right for my bite?” Asking for that explanation helps you compare options using clinical criteria, not just appearance."
+          ]
+        }
+      ],
+      "route": "/en/blog/clear-aligners/",
+      "category": "Orthodontics and pediatric dentistry",
+      "lead": "Clear aligners are a less visible alternative to braces for certain tooth movements. An evaluation shows whether they are suitable.",
+      "answer": "Dental Nakeji offers aligners and explains that treatment is planned around the position of the teeth and the desired result. Checkups are done throughout the process. The American Association of Orthodontists points out that aligners are not the right option for every case.",
+      "related": "[Aligners at Dental Nakeji](https://www.nakejidental.com/en/clear-aligners-in-tijuana/)",
+      "sources": "[Dental Nakeji, aligners](https://www.nakejidental.com/en/clear-aligners-in-tijuana/); [AAO, clear aligners](https://aaoinfo.org/treatments/aligners/)."
+    },
+    {
+      "key": "primera-visita-odontopediatria",
+      "title": "Your child's first dental visit: what to expect",
+      "sections": [
+        {
+          "title": "Why start early?",
+          "paragraphs": [
+            "Baby teeth can get cavities. At a first visit, the professional can check the teeth and gums, look at how the mouth is developing and guide the family on cleaning and diet. It is also a chance to ask about habits such as pacifier use or thumb sucking."
+          ]
+        },
+        {
+          "title": "How to prepare your child",
+          "paragraphs": [
+            "You can write down your questions, tell the team about any health concerns and, when possible, choose a time of day when your child is well rested. The ADA explains that the exam is adapted to the child's age; with young children it can be done with a parent close by."
+          ]
+        },
+        {
+          "title": "After the first visit",
+          "paragraphs": [
+            "How often your child needs checkups depends on the professional's evaluation. The goal is to support healthy growth and help prevent cavities with guidance suited to each child."
+          ]
+        }
+      ],
+      "route": "/en/blog/your-childs-first-dental-visit/",
+      "category": "Orthodontics and pediatric dentistry",
+      "lead": "An early dental visit helps care for baby teeth, talk about hygiene habits and catch possible problems before they progress.",
+      "answer": "The American Dental Association recommends scheduling the first visit after the first tooth appears and no later than the first birthday. Dental Nakeji offers pediatric dentistry with a visit adapted to each child's age and needs.",
+      "related": "[Pediatric dentistry at Dental Nakeji](https://www.nakejidental.com/en/pediatric-dentistry-in-tijuana/)",
+      "sources": "[Dental Nakeji, pediatric dentistry](https://www.nakejidental.com/en/pediatric-dentistry-in-tijuana/); [ADA, baby's first dental visit](https://www.mouthhealthy.org/life-stages/babies-and-kids/first-dental-visit-for-baby); [NIDCR, tooth decay](https://www.nidcr.nih.gov/health-info/tooth-decay)."
+    },
+    {
+      "key": "limpieza-dental-profesional",
+      "title": "Professional dental cleaning: what it adds to your daily care",
+      "sections": [
+        {
+          "title": "Does a cleaning replace brushing?",
+          "paragraphs": [
+            "No. Daily hygiene helps control plaque between visits. The NIDCR advises brushing twice a day with fluoride toothpaste and cleaning between your teeth regularly. A professional cleaning complements those habits and helps detect signs that need further attention."
+          ]
+        },
+        {
+          "title": "Is it the same as periodontal treatment?",
+          "paragraphs": [
+            "Not necessarily. A routine cleaning and a deep cleaning recommended for gum disease address different situations. If there is inflammation, bleeding or pockets around the teeth, the professional can evaluate whether gum treatment is needed."
+          ]
+        },
+        {
+          "title": "How often should you go?",
+          "paragraphs": [
+            "How often depends on each person's risk and oral health. Instead of assuming one fixed interval for everyone, ask your dentist what follow-up you need."
+          ]
+        }
+      ],
+      "route": "/en/blog/professional-dental-cleaning/",
+      "category": "Cleanings and gum health",
+      "lead": "Brushing and cleaning between your teeth are essential habits. A professional cleaning removes tartar that has already formed and checks the health of your teeth and gums.",
+      "answer": "Plaque can build up and harden into tartar. The NIDCR explains that only a dental professional can remove tartar. Dental Nakeji's service includes removing plaque and tartar, polishing surface stains and checking your teeth and gums.",
+      "related": "[Dental cleaning at Dental Nakeji](https://www.nakejidental.com/en/dental-cleaning-in-tijuana/)",
+      "sources": "[Dental Nakeji, dental cleaning](https://www.nakejidental.com/en/dental-cleaning-in-tijuana/); [NIDCR, oral hygiene](https://www.nidcr.nih.gov/health-info/oral-hygiene); [NIDCR, gum disease](https://www.nidcr.nih.gov/health-info/gum-disease)."
+    },
+    {
+      "key": "periodoncia-encias-que-sangran",
+      "title": "Periodontics: why your gums may bleed",
+      "sections": [
+        {
+          "title": "What can happen if plaque builds up?",
+          "paragraphs": [
+            "Plaque is a film of bacteria that forms on the teeth. If it is not removed, it can harden into tartar and lead to inflamed gums. The NIDCR explains that more advanced gum disease can affect the bone that supports the teeth. Bleeding is a sign to see a dentist, not a diagnosis on its own."
+          ]
+        },
+        {
+          "title": "How are the gums evaluated?",
+          "paragraphs": [
+            "The professional checks for inflammation or receding gums, measures the spaces between gum and tooth with a probe and may order X-rays when useful. Depending on the diagnosis, treatment can include hygiene instructions, a deep cleaning with scaling and root planing, or other measures. Not everyone needs the same procedure."
+          ]
+        },
+        {
+          "title": "Care continues afterwards",
+          "paragraphs": [
+            "Gum care includes daily habits and checkups based on your clinical situation. Ask what the dentist found, which treatment they recommend and which signs should prompt another visit."
+          ]
+        }
+      ],
+      "route": "/en/blog/bleeding-gums-periodontics/",
+      "category": "Cleanings and gum health",
+      "lead": "Gums that bleed when you brush deserve a checkup. Bleeding can be related to inflammation, but only an evaluation can show the cause and the right care.",
+      "answer": "Periodontics deals with the tissues that support the teeth. Dental Nakeji explains that its care includes examining bleeding gums, measuring the pockets around the teeth and providing follow-up after treatment.",
+      "related": "[Periodontics at Dental Nakeji](https://www.nakejidental.com/en/gum-treatment-in-tijuana/)",
+      "sources": "[Dental Nakeji, periodontics](https://www.nakejidental.com/en/gum-treatment-in-tijuana/); [NIDCR, gum disease](https://www.nidcr.nih.gov/health-info/gum-disease)."
+    },
+    {
+      "key": "endodoncia-conservar-diente",
+      "title": "Root canal treatment: treating the inside to try to save the tooth",
+      "sections": [
+        {
+          "title": "When is it considered?",
+          "paragraphs": [
+            "Pain or discomfort may lead you to a consultation, but on their own they do not mean a root canal is needed. The professional examines the tooth and finds the cause. Inflammation or infection of the pulp is one of the situations in which this treatment may be recommended."
+          ]
+        },
+        {
+          "title": "What happens afterwards?",
+          "paragraphs": [
+            "Treating the canals is only one part of the care. The tooth also needs an appropriate restoration to protect it and let it work again. The type of restoration depends on how much tooth remains and on the bite evaluation; it will not always be the same."
+          ]
+        },
+        {
+          "title": "Ask about the complete plan",
+          "paragraphs": [
+            "It helps to know the diagnosis, what the treatment aims to save, which restoration would be needed afterwards and what follow-up is recommended. That way the treatment is understood as a process, not a single isolated appointment."
+          ]
+        }
+      ],
+      "route": "/en/blog/root-canal-saving-the-tooth/",
+      "category": "Root canals and extractions",
+      "lead": "When the pulp inside a tooth is inflamed or infected, a root canal can be a way to treat the problem and try to save that tooth.",
+      "answer": "During a root canal, the inside of the tooth is treated. The American Association of Endodontists explains that the affected pulp is removed and the canals are cleaned and sealed. Dental Nakeji presents the treatment as an option to help save the tooth and its function.",
+      "related": "[Root canals at Dental Nakeji](https://www.nakejidental.com/en/root-canal-in-tijuana/)",
+      "sources": "[Dental Nakeji, root canals](https://www.nakejidental.com/en/root-canal-in-tijuana/); [AAE, root canal treatment](https://www.aae.org/patients/root-canal-treatment/)."
+    },
+    {
+      "key": "extracciones-muelas-del-juicio",
+      "title": "Extractions and wisdom teeth: how the decision is made",
+      "sections": [
+        {
+          "title": "Why might an extraction be recommended?",
+          "paragraphs": [
+            "A tooth may need to be extracted because of damage, disease or other conditions the professional identifies. For wisdom teeth, the ADA mentions problems such as pain, infection, cavities, damage to nearby teeth or lack of space. It also explains that wisdom teeth that are kept should continue to be monitored."
+          ]
+        },
+        {
+          "title": "What is the difference between a simple and a surgical extraction?",
+          "paragraphs": [
+            "How the tooth is removed depends on its position and on the professional's evaluation. Dental Nakeji offers both types of extraction. The dentist should explain which one they recommend, why, and what aftercare is right for that person."
+          ]
+        },
+        {
+          "title": "Before and after your appointment",
+          "paragraphs": [
+            "Ask about the diagnosis, the tests or X-rays needed, the alternatives and the recovery instructions. Follow the instructions your care team gives you; general advice from the internet does not replace guidance for your case."
+          ]
+        }
+      ],
+      "route": "/en/blog/extractions-and-wisdom-teeth/",
+      "category": "Root canals and extractions",
+      "lead": "An extraction may be necessary in certain situations, but the decision is made after examining the tooth and considering the care options.",
+      "answer": "Dental Nakeji offers simple and surgical extractions, including wisdom teeth. Before deciding, the dentist evaluates the tooth and reviews X-rays when needed. A wisdom tooth that is not causing problems does not always need to be removed.",
+      "related": "[Simple and wisdom tooth extractions at Dental Nakeji](https://www.nakejidental.com/en/tooth-extractions-in-tijuana/)",
+      "sources": "[Dental Nakeji, extractions](https://www.nakejidental.com/en/tooth-extractions-in-tijuana/); [ADA, wisdom teeth](https://www.mouthhealthy.org/all-topics-a-z/wisdom-teeth); [ADA, extractions](https://www.mouthhealthy.org/all-topics-a-z/extractions)."
+    }
+  ]
+}

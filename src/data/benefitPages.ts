@@ -46,7 +46,7 @@ export const PROMOTIONS: Record<Lang, PromoPoster[]> = {
   en: Array.from({ length: 5 }, (_, index) => ({
     name: `Promotion ${index + 1}`,
     badge: 'Coming soon',
-    period: 'Validity to be announced',
+    period: 'Dates to be announced',
   })),
   es: Array.from({ length: 5 }, (_, index) => ({
     name: `Promoción ${index + 1}`,
@@ -76,7 +76,7 @@ export const INSURANCE_INTRO: Record<Lang, PageIntro> = {
     eyebrow: 'Insurance',
     title: 'US insurance plans',
     // "Aceptamos aseguranzas americanas" está publicado en el sitio oficial.
-    lead: 'We accept US dental insurance plans. Contact us before your appointment to answer your questions.',
+    lead: 'We accept US dental insurance plans. Contact us before your appointment and we’ll answer your questions.',
   },
   es: {
     eyebrow: 'Aseguranzas',

@@ -1,0 +1,20 @@
+/* ==========================================================================
+   Degradado de página (components/decor/PageGradient.tsx): el azul del hero, fijo detrás de todo el contenido.
+   ========================================================================== */
+.page-gradient {
+  position: absolute;
+  inset: 0;
+  /* Por debajo de las animaciones de fondo (plasma, z-index -1) y del contenido. */
+  z-index: -2;
+  pointer-events: none;
+}
+
+.page-gradient__view {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  background:
+    radial-gradient(55% 60% at 70% 45%, rgba(47, 99, 173, 0.55), transparent 70%),
+    radial-gradient(40% 45% at 82% 70%, rgba(63, 181, 200, 0.22), transparent 70%),
+    var(--color-night);
+}
