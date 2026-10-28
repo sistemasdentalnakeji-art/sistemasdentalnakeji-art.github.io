@@ -1,18 +1,16 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// PÁGINA /contacto/ — "Bento": rejilla de tarjetas de distinto tamaño (teléfonos, WhatsApp, correo y el plano animado
-// de la ubicación) y dos marcos sociales (Facebook e Instagram).
+// PÁGINA /contacto/ — "Ficha de la clínica": una tarjeta con los datos para escribir o llamar (teléfonos y correo), una franja
+// de WhatsApp (la acción principal) y la ubicación con el plano animado; debajo, el muro de redes.
 //
-// • Luz que sigue al cursor en cada tarjeta (inspirada en "Spotlight" de 21st.dev, código propio): un solo pointermove en la
-//   rejilla escribe --spot-x/--spot-y en la tarjeta bajo el puntero; nada se vuelve a renderizar. Sin efecto en táctil.
-// • Las tarjetas entran escalonadas con el scroll (CSS animation-timeline, sin JS); sin soporte se ven quietas.
 // • El plano es el mismo LocationMap de la home (se abre solo al verse).
+// • Las tarjetas entran con el scroll (CSS animation-timeline, sin JS); sin soporte se ven quietas.
 // • Sin fondo propio. Textos → src/data/contact.ts; datos de contacto → src/config/site.ts.
 // • Redes ("muro"): panel oscuro con texto y enlaces a la izquierda y dos ventanas a la derecha con el contenido real,
 //   que se carga solo (iframes con loading="lazy"): plugin de página de Facebook e incrustación del perfil de Instagram.
 // • Estilos → src/styles/pages/contact.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLang } from '@/app/lang'
 import { SITE } from '@/config/site'
 import {
@@ -36,39 +34,18 @@ import { Icon, type IconName } from '@/components/ui/Icon'
 import { LocationMap } from '@/components/ui/LocationMap'
 import { cx } from '@/lib/cx'
 
-// La luz se mueve con el puntero dentro de la tarjeta que esté debajo.
-function moveSpot(event: PointerEvent<HTMLUListElement>) {
-  if (event.pointerType === 'touch') return
-  const card = (event.target as HTMLElement).closest<HTMLElement>('.bento__card')
-  if (!card) return
-  const box = card.getBoundingClientRect()
-  card.style.setProperty('--spot-x', `${event.clientX - box.left}px`)
-  card.style.setProperty('--spot-y', `${event.clientY - box.top}px`)
-}
-
-interface CardProps {
-  area: string
-  /** Ícono de línea; o `brand` para el logo de marca en sus colores. */
-  icon?: IconName
-  brand?: 'whatsapp'
-  title: string
-  index: number
-  tone?: 'night'
-  children: ReactNode
-}
-
-function BentoCard({ area, icon, brand, title, index, tone, children }: CardProps) {
+// Bloque de la ficha: icono + título y su contenido.
+function Group({ icon, title, children }: { icon: IconName; title: string; children: ReactNode }) {
   return (
-    <li className={cx('bento__card', `bento__card--${area}`, tone && 'bento__card--night')} style={{ '--i': index } as CSSProperties}>
-      <span className="bento__ring" aria-hidden="true" />
-      <div className="bento__head">
-        <span className={cx('bento__icon', brand ? 'bento__icon--brand' : 'siri')}>
-          {brand ? <BrandIcon name={brand} size={42} /> : icon && <Icon name={icon} size={20} />}
+    <div className="contact-group">
+      <div className="contact-group__head">
+        <span className="contact-group__icon">
+          <Icon name={icon} size={20} />
         </span>
-        <h2 className="bento__title">{title}</h2>
+        <h2 className="contact-group__title">{title}</h2>
       </div>
       {children}
-    </li>
+    </div>
   )
 }
 
@@ -168,7 +145,7 @@ export function ContactPage() {
   const a11y = CONTACT_A11Y[lang]
   return (
     <Band
-      tone="white"
+      tone="gradient"
       className="contact-page band--clip"
       labelledBy="contacto-titulo"
       decor={<PagePlasma />}
@@ -176,15 +153,15 @@ export function ContactPage() {
       <div className="container">
         <header>
           <p className="page-eyebrow pill-label">{intro.eyebrow}</p>
-          <h1 id="contacto-titulo" className="page-title">
+          <h1 id="contacto-titulo" className="page-title shiny-text">
             {intro.title}
           </h1>
           <p className="page-lead">{intro.tagline}</p>
         </header>
 
-        <section className="contact-page__section" aria-label={a11y.sections}>
-          <ul className="bento" onPointerMove={moveSpot}>
-            <BentoCard area="phone" icon="phone" title={direct.phoneLabel} index={0}>
+        <section className="contact-page__section contact-sheet" aria-label={a11y.sections}>
+          <div className="contact-card contact-card--directory">
+            <Group icon="phone" title={direct.phoneLabel}>
               <div className="bento__phones">
                 {SITE.phones.map((phone) => (
                   <div key={phone.e164} className="bento__phone">
@@ -198,22 +175,9 @@ export function ContactPage() {
                   </div>
                 ))}
               </div>
-            </BentoCard>
+            </Group>
 
-            <BentoCard area="wa" brand="whatsapp" title={direct.whatsappTitle} index={1} tone="night">
-              <span className="bento__typing" aria-hidden="true">
-                <i />
-                <i />
-                <i />
-              </span>
-              <p className="bento__copy">{direct.whatsappText}</p>
-              <ExternalLink className="btn bento__wa" href={SITE.social.whatsapp}>
-                <Icon name="whatsapp" size={20} />
-                {direct.whatsappCta}
-              </ExternalLink>
-            </BentoCard>
-
-            <BentoCard area="mail" icon="mail" title={direct.emailLabel} index={2}>
+            <Group icon="mail" title={direct.emailLabel}>
               <div className="bento__row">
                 <a className="bento__value bento__value--mail" href={`mailto:${SITE.email}`}>
                   {SITE.email}
@@ -233,22 +197,42 @@ export function ContactPage() {
               <a className="btn btn--primary btn--sm bento__mail-cta interactive-hover" href={`mailto:${SITE.email}`}>
                 <InteractiveHoverContent>{direct.emailCta}</InteractiveHoverContent>
               </a>
-            </BentoCard>
+            </Group>
+          </div>
 
-            <BentoCard area="map" icon="pin" title={direct.addressLabel} index={3}>
-              <div className="bento__map">
-                <LocationMap name={SITE.name} tag={UI[lang].map.tag} />
+          <div className="contact-card contact-wa">
+            <div className="contact-wa__body">
+              <div className="contact-group__head">
+                <BrandIcon name="whatsapp" size={40} />
+                <h2 className="contact-group__title">{direct.whatsappTitle}</h2>
               </div>
-              <div className="bento__row bento__row--address">
-                <address className="bento__text">
-                  <AddressText />
-                </address>
-                <ExternalLink className="btn btn--primary btn--sm interactive-hover" href={SITE.address.mapsUrl}>
-                  <InteractiveHoverContent>{direct.addressCta}</InteractiveHoverContent>
-                </ExternalLink>
-              </div>
-            </BentoCard>
-          </ul>
+              <p className="bento__copy">{direct.whatsappText}</p>
+            </div>
+            <ExternalLink className="btn bento__wa" href={SITE.social.whatsapp}>
+              <Icon name="whatsapp" size={20} />
+              {direct.whatsappCta}
+            </ExternalLink>
+          </div>
+
+          <div className="contact-card contact-map">
+            <div className="contact-group__head">
+              <span className="contact-group__icon">
+                <Icon name="pin" size={20} />
+              </span>
+              <h2 className="contact-group__title">{direct.addressLabel}</h2>
+            </div>
+            <div className="bento__map">
+              <LocationMap name={SITE.name} tag={UI[lang].map.tag} />
+            </div>
+            <div className="bento__row bento__row--address">
+              <address className="bento__text">
+                <AddressText />
+              </address>
+              <ExternalLink className="btn btn--primary btn--sm interactive-hover" href={SITE.address.mapsUrl}>
+                <InteractiveHoverContent>{direct.addressCta}</InteractiveHoverContent>
+              </ExternalLink>
+            </div>
+          </div>
         </section>
 
         <section className="contact-page__section social-wall" aria-labelledby="contacto-redes">

@@ -22,16 +22,16 @@ export const SERVICE_TEXT_EN: Record<string, ServiceTextEn> = {
     highlights: ['An artificial root placed in the jawbone.', 'Supports a crown, bridge or denture.', 'Bone and gum evaluation first.'],
     about: {
       title: 'The dental implant',
-      text: 'If you are missing a tooth, chewing can be hard. An implant is a titanium root placed with surgery that supports a crown. The dentist evaluates your bone and gums.',
+      text: 'If you are missing a tooth, chewing can be hard. An implant is a titanium root, placed surgically, that supports a crown. The dentist evaluates your bone and gums.',
     },
   },
   'all-on-4': {
     title: 'All-on-4 Implants',
     subtitle: 'A fixed prosthesis that replaces a full arch with four implants.',
-    highlights: ['A full arch on 4 implants.', 'Fixed teeth in a single prosthesis.', 'Bone study for each arch.'],
+    highlights: ['A full arch on 4 implants.', 'Fixed teeth in a single prosthesis.', 'Bone evaluation for each arch.'],
     about: {
       title: 'All-on-4: a fixed full arch',
-      text: 'If you are missing almost all the teeth in an arch, All-on-4 replaces them with a fixed prosthesis on four implants. It is surgery under anesthesia. The dentist evaluates your bone.',
+      text: 'If you are missing almost all the teeth in an arch, All-on-4 replaces them with a fixed prosthesis on four implants. It is a surgical procedure done under anesthesia. The dentist evaluates your bone.',
     },
   },
   'all-on-6': {
@@ -40,7 +40,7 @@ export const SERVICE_TEXT_EN: Record<string, ServiceTextEn> = {
     highlights: ['Six implants per arch.', 'Fixed prosthesis on implants.', 'Plan based on bone and bite.'],
     about: {
       title: 'All-on-6: a fixed full arch',
-      text: 'If you are missing almost all the teeth in an arch, All-on-6 uses six implants, not four, to support a fixed prosthesis. It is surgery. The dentist decides based on your bone.',
+      text: 'If you are missing almost all the teeth in an arch, All-on-6 uses six implants, not four, to support a fixed prosthesis. It is a surgical procedure. The dentist decides based on your bone.',
     },
   },
   crowns: {
@@ -73,10 +73,10 @@ export const SERVICE_TEXT_EN: Record<string, ServiceTextEn> = {
   cleaning: {
     title: 'Dental Cleaning',
     subtitle: 'Take care of your teeth and gums, starting today.',
-    highlights: ['Removes built-up tartar and plaque.', 'Polishing of surface stains.', 'Check of teeth and gums.'],
+    highlights: ['Removes built-up tartar and plaque.', 'Polishes away surface stains.', 'Teeth and gum check-up.'],
     about: {
       title: 'Professional dental cleaning',
-      text: 'A toothbrush does not always reach every area. A dental cleaning is a simple way to look after the health of your teeth and gums and keep your smile fresh and healthy. It is care that matters, and many people skip it.',
+      text: 'A toothbrush does not always reach every area. A dental cleaning is a simple way to look after the health of your teeth and gums and keep your smile fresh and healthy. It is care that really matters, yet many people skip it.',
     },
   },
   'root-canal': {
@@ -112,13 +112,13 @@ export const SERVICE_TEXT_EN: Record<string, ServiceTextEn> = {
     highlights: ['A first visit to get to know us.', 'Prevention of childhood cavities.', 'Care tailored to each child.'],
     about: {
       title: 'Pediatric dentistry for kids',
-      text: 'Your children’s dental health matters. Pediatric dentistry helps care for their teeth from an early age, prevent cavities and catch in time anything that could affect their smile. The visit is adapted to their age and aims to help them feel safe, supported and calm.',
+      text: 'Your children’s dental health matters. Pediatric dentistry helps care for their teeth from an early age, prevent cavities and catch early anything that could affect their smile. The visit is adapted to their age and aims to help them feel safe, supported and calm.',
     },
   },
   dentures: {
     title: 'Dentures Made to Fit You',
     subtitle: 'Replace the teeth you are missing.',
-    highlights: ['Complete, partial or immediate.', 'Removable prosthesis made to measure.', 'Regular adjustments and check-ups.'],
+    highlights: ['Complete, partial or immediate.', 'Custom-made removable prosthesis.', 'Regular adjustments and check-ups.'],
     about: {
       title: 'Dentures made to fit you',
       text: 'Dentures can be an option to replace several or all missing teeth. The dentist reviews your case, the condition of your mouth and what you need to guide you toward the most suitable alternative. During the process, they support you and follow up so the treatment fits you.',

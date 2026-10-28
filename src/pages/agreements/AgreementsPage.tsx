@@ -29,7 +29,7 @@ export function AgreementsPage() {
         </a>
         <header className="agreements__head">
           <p className="page-eyebrow pill-label">{AGREEMENTS_INTRO[lang].eyebrow}</p>
-          <h1 id="convenios-titulo" className="page-title">
+          <h1 id="convenios-titulo" className="page-title shiny-text shiny-text--ink">
             {AGREEMENTS_INTRO[lang].title}
           </h1>
         </header>

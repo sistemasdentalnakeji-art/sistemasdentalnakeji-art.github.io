@@ -19,7 +19,7 @@ export function EmptyPage({ route, message }: EmptyPageProps) {
   return (
     <Band className="empty-page" tone="white" labelledBy="pagina-titulo">
       <div className="container empty-page__inner">
-        <h1 id="pagina-titulo" className="empty-page__title">
+        <h1 id="pagina-titulo" className="empty-page__title shiny-text shiny-text--ink">
           {route.label}
         </h1>
         <p className="section-text">{message ?? (route.key === 'notFound' ? ui.notFound : ui.soon)}</p>

@@ -1,7 +1,6 @@
 /* Zilla Slab para titulares; Inter y Montserrat permanecen autoalojadas. */
 @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&display=swap');
-@import '@fontsource-variable/inter/wght.css';
-@import '@fontsource-variable/montserrat/wght.css';
+@import './global/fonts.css';
 
 /* ==========================================================================
    ÍNDICE DE ESTILOS
@@ -23,6 +22,8 @@
 @import './components/decor.css';
 @import './components/siri.css';
 @import './components/brand-orb.css';
+@import './components/page-gradient.css';
+@import './components/page-aurora.css';
 @import './components/page-plasma.css';
 @import './components/ghost-fibers.css';
 @import './components/shiny-text.css';
@@ -38,6 +39,7 @@
 @import './pages/home/partners.css';
 @import './pages/home/reviews.css';
 @import './pages/home/contact.css';
+@import './pages/home/canvas.css';
 @import './layout/footer.css';
 @import './pages/service.css';
 @import './pages/services-index.css';
@@ -50,6 +52,7 @@
 @import './pages/about.css';
 @import './pages/legal.css';
 @import './pages/faq.css';
+@import './pages/blog.css';
 @import './pages/empty.css';
 @import './components/animated-buttons.css';
 @import './global/typography.css';

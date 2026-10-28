@@ -103,7 +103,7 @@ const buildGroups = (lang: Lang): PartnerGroup[] => [
     // "Aceptamos aseguranzas americanas" está publicado en el sitio oficial.
     text:
       lang === 'en'
-        ? 'We accept US dental insurance plans. Message us and we will check whether your plan applies to your treatment.'
+        ? 'We accept US dental insurance plans. Message us and we will check whether your plan covers your treatment.'
         : 'Aceptamos aseguranzas americanas. Escríbenos y revisamos si tu plan aplica para tu tratamiento.',
     link: { label: lang === 'en' ? 'View insurance' : 'Ver aseguranzas', href: routeOf('insurance', lang).path },
     items: HOME_INSURANCES.flatMap((name) => INSURANCES.filter((insurer) => insurer.name === name)),

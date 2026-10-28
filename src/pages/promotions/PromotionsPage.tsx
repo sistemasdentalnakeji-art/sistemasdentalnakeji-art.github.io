@@ -47,7 +47,7 @@ export function PromotionsPage() {
         </a>
         <header className="promotions__head">
           <p className="page-eyebrow pill-label">{PROMOTIONS_INTRO[lang].eyebrow}</p>
-          <h1 id="promociones-titulo" className="page-title">
+          <h1 id="promociones-titulo" className="page-title shiny-text shiny-text--ink">
             {PROMOTIONS_INTRO[lang].title}
           </h1>
           <p className="page-lead">{PROMOTIONS_INTRO[lang].lead}</p>

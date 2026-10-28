@@ -18,8 +18,9 @@
   color: var(--color-white);
 }
 
-/* Si la página termina en una banda oscura (Nosotros), la ola toma ese tono: con blanco se vería una franja entre las dos. */
-main:has(> .band--night:last-child) + .site-footer .decor--wave {
+/* Si la página termina en una banda oscura (Nosotros, Servicios, Beneficios, Contacto, el aurora del blog, preguntas y avisos),
+   la ola toma ese tono: con blanco se vería una franja entre las dos. */
+main:has(> :is(.band--night, .band--gradient, .band--aurora, .home-canvas):last-child) + .site-footer .decor--wave {
   color: var(--color-night);
 }
 

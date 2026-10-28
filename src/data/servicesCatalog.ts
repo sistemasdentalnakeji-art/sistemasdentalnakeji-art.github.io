@@ -54,7 +54,7 @@ export const CATALOG_HERO: Record<
     eyebrow: 'Our services',
     titleLead: 'Dental services',
     titleAccent: 'in Tijuana',
-    lead: 'At Dental Nakeji we strive for excellence at every stage of your care, which sets us apart. Our doctors work hand in hand with our own dental laboratory to create custom designs and give you agile, careful care.',
+    lead: 'At Dental Nakeji we strive for excellence at every stage of your care, which sets us apart. Our doctors work hand in hand with our own dental laboratory to create custom designs and give you efficient, attentive care.',
     features: [
       { icon: 'chip', text: 'Modern technology' },
       { icon: 'shield', text: 'Personalized care' },
@@ -118,14 +118,14 @@ return [
     id: 'ortodoncia-y-odontopediatria',
     title: en ? 'Orthodontics and pediatric dentistry' : 'Ortodoncia y odontopediatría',
     intro: en
-      ? 'To align your smile and care for the teeth of the little ones.'
+      ? 'To align your smile and care for children’s teeth.'
       : 'Para alinear la sonrisa y cuidar los dientes de los más pequeños.',
     services: [entry('orthodontics', 'braces'), entry('aligners', 'aligner'), entry('pediatric', 'user')],
   },
   {
     id: 'limpieza-y-encias',
     title: en ? 'Cleaning and gum health' : 'Limpieza y salud de encías',
-    intro: en ? 'Basic care: dental cleaning and gum treatment.' : 'El cuidado de base: limpieza dental y atención de las encías.',
+    intro: en ? 'The foundation of your care: dental cleaning and gum care.' : 'El cuidado de base: limpieza dental y atención de las encías.',
     services: [entry('cleaning', 'drop'), entry('gum', 'shield')],
   },
   {

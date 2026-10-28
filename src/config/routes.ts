@@ -12,6 +12,9 @@
 // Servicios (paso 3): nombre, título y descripción SEO ya están en inglés (la clínica debe confirmarlos antes de publicar).
 // Para traducir otra página, separa su `text` en { en, es } dentro de `page(...)` (ver PAGES).
 
+import blogContent from '@/data/blog-content.json'
+import blogContentEn from '@/data/blog-content.en.json'
+
 export type Lang = 'en' | 'es'
 export const LANGS: Lang[] = ['en', 'es']
 
@@ -48,6 +51,8 @@ export type RouteKey =
   | 'faq'
   | 'notFound'
   | ServiceKey
+  /** Categoría o artículo del blog: `blog:<slug>` (ver BLOG_PAGES). */
+  | `blog:${string}`
 
 export interface RouteDef {
   key: RouteKey
@@ -58,7 +63,8 @@ export interface RouteDef {
   description?: string
   status: RouteStatus
   /** 'service': se dibuja con la plantilla de servicio (textos en src/data/services.ts). */
-  template?: 'service'
+  /** 'blog': hub, categorías y artículos del blog (src/pages/blog/BlogRoute.tsx). */
+  template?: 'service' | 'blog'
 }
 
 interface Text {
@@ -72,7 +78,7 @@ interface PageDef {
   paths: Record<Lang, string>
   text: Record<Lang, Text>
   status: RouteStatus
-  template?: 'service'
+  template?: 'service' | 'blog'
 }
 
 /**
@@ -83,7 +89,7 @@ const page = (
   key: RouteKey,
   paths: Record<Lang, string>,
   text: Text | Record<Lang, Text>,
-  extra: { status?: RouteStatus; template?: 'service' } = {},
+  extra: { status?: RouteStatus; template?: 'service' | 'blog' } = {},
 ): PageDef => ({
   key,
   paths,
@@ -151,7 +157,7 @@ const SERVICE_SEO_EN: Record<ServiceKey, { title: string; description: string }>
   gum: {
     title: 'Gum treatment in Tijuana | Dental Nakeji',
     description:
-      'Periodontal treatment in Tijuana: care for your gums and the support of your teeth. Schedule an evaluation at Dental Nakeji, Zona Río.',
+      'Periodontal treatment in Tijuana: care for your gums and the tissues that support your teeth. Schedule an evaluation at Dental Nakeji, Zona Río.',
   },
   extractions: {
     title: 'Tooth extractions in Tijuana | Dental Nakeji',
@@ -223,6 +229,44 @@ export const MORE_SERVICE_KEYS: ServiceKey[] = ['dentures', 'gum', 'extractions'
 
 /** Los 14, en orden. */
 export const ALL_SERVICE_KEYS: ServiceKey[] = [...SERVICE_KEYS, ...MORE_SERVICE_KEYS]
+
+/** Par en inglés de una categoría o artículo del blog (blog-content.en.json lo marca con `key`, el slug en español). */
+function blogPairEn<T extends { key: string }>(list: T[], key: string): T {
+  const pair = list.find((item) => item.key === key)
+  if (!pair) throw new Error(`Falta la traducción al inglés del blog (src/data/blog-content.en.json): ${key}`)
+  return pair
+}
+
+/**
+ * Categorías (5) y artículos (14) del blog, con los textos de src/data/blog-content.json y su traducción en blog-content.en.json.
+ * La clave (`blog:<slug en español>`) es la misma en los dos idiomas. Empiezan en 'empty' (noindex).
+ */
+const BLOG_PAGES: PageDef[] = [
+  ...blogContent.categories.map((c) => {
+    const key = c.route.split('/').at(-2) ?? ''
+    const en = blogPairEn(blogContentEn.categories, key)
+    return page(
+      `blog:${key}`,
+      { en: en.route, es: c.route },
+      { en: withTitle(en.name, { description: en.description }), es: withTitle(c.name, { description: c.description }) },
+      { template: 'blog' },
+    )
+  }),
+  ...blogContent.articles.map((a) => {
+    const key = a.route.split('/').at(-2) ?? ''
+    const en = blogPairEn(blogContentEn.articles, key)
+    const excerptOf = (content: typeof blogContent, route: string) => content.cards.find((card) => card.route === route)?.excerpt
+    return page(
+      `blog:${key}`,
+      { en: en.route, es: a.route },
+      {
+        en: withTitle(en.title, { description: excerptOf(blogContentEn, en.route) }),
+        es: withTitle(a.title, { description: excerptOf(blogContent, a.route) }),
+      },
+      { template: 'blog' },
+    )
+  }),
+]
 
 const PAGES: PageDef[] = [
   page(
@@ -367,7 +411,8 @@ const PAGES: PageDef[] = [
       }),
     },
   ),
-  page('blog', { en: '/en/blog/', es: '/es/blog/' }, withTitle('Blog')),
+  page('blog', { en: '/en/blog/', es: '/es/blog/' }, withTitle('Blog'), { template: 'blog' }),
+  ...BLOG_PAGES,
   // Requerido por el formulario de citas (LFPDPPP). El texto es el oficial de la clínica, en inglés (src/data/legal.ts).
   // PENDIENTE: la traducción al español de /es/ (la pide la clínica; no se inventa).
   page(

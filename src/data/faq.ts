@@ -19,7 +19,7 @@ export const FAQ_INTERFACE = {
   en: {
     headline: ['Questions', '& answers'], search: 'Find your answer',
     placeholder: 'Appointments, treatments, payments…', clear: 'Clear search', all: 'All questions',
-    categories: 'Filter questions by topic', results: 'questions', empty: 'No matching questions yet.',
+    categories: 'Filter questions by topic', results: 'questions', empty: 'We couldn’t find that question.',
     emptyText: 'Try another search or get in touch. We’re happy to help.', reset: 'View all questions',
     preview: 'Design preview. Final questions and answers are still to come.',
     sample: 'Sample question', sampleAnswer: 'The clinic’s approved answer will appear here. This text is only for reviewing the layout and accordion interaction.',
@@ -39,7 +39,7 @@ export const FAQ_PAGE: Record<
   en: {
     eyebrow: 'Help',
     title: 'Questions & answers',
-    lead: 'A little clarity before your visit. Find answers about appointments, treatments, and payment options—or reach out and we’ll help you with your question.',
+    lead: 'We want you to come to your appointment feeling at ease. Here you can find answers about appointments, treatments, and payment options. If you need anything else, message us and we’ll work it out together.',
     helpTitle: 'Can’t find your answer?',
     helpText: 'Message us on WhatsApp and we will reply during business hours.',
     helpCta: 'Ask on WhatsApp',
@@ -60,8 +60,8 @@ export const FAQ_GROUPS: Record<Lang, { id: string; title: string; items: FaqIte
       id: 'citas',
       title: 'Appointments',
       items: [
-        { question: 'Can I change my appointment?', answer: 'Yes. Call us and we will help you reschedule according to our schedule availability.' },
-        { question: 'Do I need to book any service in advance?', answer: 'Generally you do not need to book days in advance, but some treatments with specialists require prior coordination. Call us for details.' },
+        { question: 'Can I change my appointment?', answer: 'Yes. Call us and we will help you reschedule based on our availability.' },
+        { question: 'Do I need to book services in advance?', answer: 'Generally you do not need to book days in advance, but some treatments with specialists require prior coordination. Call us for details.' },
         { question: 'What happens if I arrive late to my appointment?', answer: 'You have a 15-minute grace period. If you arrive later, you may have to wait or reschedule according to the clinic’s availability.' },
       ],
     },
@@ -69,8 +69,8 @@ export const FAQ_GROUPS: Record<Lang, { id: string; title: string; items: FaqIte
       id: 'servicios',
       title: 'Services and treatments',
       items: [
-        { question: 'How do I know what treatment I need?', answer: 'Book an assessment so the dentist can review your case and tell you the right treatment.' },
-        { question: 'Do you see children?', answer: 'Yes, we see children from 5 years old.' },
+        { question: 'How do I know what treatment I need?', answer: 'Book an assessment so the dentist can review your case and recommend the right treatment.' },
+        { question: 'Do you see children?', answer: 'Yes, we see children ages 5 and up.' },
         { question: 'Do treatments come with a warranty?', answer: 'Some treatments include a warranty. Your doctor will explain the conditions for your case during or at the end of treatment.' },
         { question: 'Can I request a report of my dental history?', answer: 'Yes, you can request a report with your dental history and the treatments completed or pending.' },
       ],
@@ -82,7 +82,7 @@ export const FAQ_GROUPS: Record<Lang, { id: string; title: string; items: FaqIte
         { question: 'Can I get a quote before my consultation?', answer: 'To give you a quote, we need to review your case. You can explain it by filling out the form on our website or contacting us via WhatsApp or phone.' },
         { question: 'Is a deposit required to book an appointment?', answer: 'Yes, we ask for a $500 MXN deposit, which is deducted from the cost of your treatment.' },
         { question: 'What payment methods and currencies do you accept?', answer: 'We accept cash in Mexican pesos or US dollars, as well as card payments, bank transfer, Zelle, and PayPal.' },
-        { question: 'Can I pay for a treatment in stages?', answer: 'Staged payment is available for certain treatments. Contact us via WhatsApp or phone to learn about the options.' },
+        { question: 'Can I pay for a treatment in stages?', answer: 'Paying in stages is available for certain treatments. Contact us via WhatsApp or phone to learn about the options.' },
         { question: 'Do you offer interest-free installments?', answer: 'We currently do not offer interest-free installments.' },
       ],
     },
@@ -92,8 +92,8 @@ export const FAQ_GROUPS: Record<Lang, { id: string; title: string; items: FaqIte
       items: [
         { question: 'Do you accept all insurance providers?', answer: 'Acceptance depends on the insurer. Contact us via WhatsApp or phone to confirm whether we work with yours.' },
         { question: 'How can I know if my insurance covers the services I need?', answer: 'Contact us via WhatsApp or phone with your insurer’s details and we will help you review your coverage.' },
-        { question: 'What benefits do I get with my agreement?', answer: 'Your agreement includes a free assessment and discounts on treatments.' },
-        { question: 'Can I combine promotions, agreements, and insurance benefits?', answer: 'No, only one of these options can be applied per service.' },
+        { question: 'What benefits do I get with my company agreement?', answer: 'Your company agreement includes a free assessment and discounts on treatments.' },
+        { question: 'Can I combine promotions, company agreements, and insurance benefits?', answer: 'No, only one of these options can be applied per service.' },
       ],
     },
     {
@@ -101,7 +101,7 @@ export const FAQ_GROUPS: Record<Lang, { id: string; title: string; items: FaqIte
       title: 'Dental emergencies',
       items: [
         { question: 'Do you treat dental emergencies?', answer: 'Yes. Contact us via WhatsApp or phone and we will tell you how we can help.' },
-        { question: 'What types of dental emergencies do you treat?', answer: 'We treat cases such as the loss or fracture of a tooth. Each situation requires an assessment by the doctor to confirm how we can help you.' },
+        { question: 'What types of dental emergencies do you treat?', answer: 'We treat cases such as a lost or broken tooth. Each situation requires an assessment by the doctor to confirm how we can help you.' },
       ],
     },
   ],

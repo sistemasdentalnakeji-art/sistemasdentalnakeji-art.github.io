@@ -3,6 +3,9 @@
    Inspirado en "Shiny Text" de React Bits (código propio): una franja de luz diagonal cruza el texto de
    izquierda a derecha y hace una pausa antes de repetir. Aquí en blanco perla, con un degradado muy suave hacia el azul claro de la marca (sutil: el fondo ya tiene su propia animación).
    • Color base del texto: --shiny-base. Ángulo: --shiny-angle. Duración del ciclo (barrido + pausa): --shiny-speed.
+   • Sobre fondo CLARO se añade .shiny-text--ink: la misma animación, pero en tinta azul con el barrido en azul de la marca
+     (el perla y el blanco no se verían sobre blanco).
+   • En un h1, el elemento mide lo que su texto (fit-content) para que el barrido cruce las letras y no la caja entera.
    • Usa background-clip: text, así que el elemento debe medir lo mismo que su texto en ancho (display: block o
      inline-block dentro de un contenedor ajustado al texto).
    ========================================================================== */
@@ -10,14 +13,16 @@
   --shiny-base: #c9c7c2;
   --shiny-angle: 119deg;
   --shiny-speed: 4.2s;
+  --shiny-glow: #ffffff;
+  --shiny-mid: rgba(200, 228, 248, 0.85);
   background-image:
     linear-gradient(
       var(--shiny-angle),
       transparent 18%,
       rgba(123, 195, 235, 0.3) 34%,
-      rgba(200, 228, 248, 0.85) 44%,
-      #ffffff 50%,
-      rgba(200, 228, 248, 0.85) 56%,
+      var(--shiny-mid) 44%,
+      var(--shiny-glow) 50%,
+      var(--shiny-mid) 56%,
       rgba(123, 195, 235, 0.3) 66%,
       transparent 82%
     ),
@@ -34,6 +39,18 @@
   -webkit-text-fill-color: transparent;
   color: transparent;
   animation: shiny-sweep var(--shiny-speed) ease-in-out infinite;
+}
+
+/* Fondo claro: tinta azul con el barrido en azul de la marca. */
+.shiny-text--ink {
+  --shiny-base: var(--color-ink-strong);
+  --shiny-glow: var(--color-brand-light);
+  --shiny-mid: rgba(58, 112, 176, 0.55);
+}
+
+h1.shiny-text {
+  width: fit-content;
+  max-width: 100%;
 }
 
 @keyframes shiny-sweep {

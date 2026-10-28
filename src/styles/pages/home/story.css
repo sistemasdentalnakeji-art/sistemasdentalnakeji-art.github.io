@@ -108,8 +108,8 @@
   }
 }
 
-/* Hilo de curvas detrás de los mensajes (se estira al alto de la sección). Son las mismas curvas animadas de la sección de
-   Agendar (clases .decor, .decor-line y .decor-line__light de components/decor.css: ondulan y las recorre una luz). */
+/* Hilo detrás de los mensajes (se estira al alto de la sección): tramos rectos con vueltas de 90° (CareStory.tsx), con las
+   clases de las líneas de Agendar (.decor, .decor-line y .decor-line__light de components/decor.css: las recorre una luz). */
 .story__thread {
   position: absolute;
   inset: 0;
@@ -135,7 +135,7 @@
   pointer-events: none;
 }
 
-/* Celular: hilo y diente activos (usa THREAD_JOINTS_NARROW). Tamaño de punta reducido en celular. */
+/* Celular: hilo y diente activos (usa THREAD_CORNERS_NARROW). Tamaño de punta reducido en celular. */
 @media (max-width: 767.98px) {
   .story__tip {
     width: clamp(48px, 12vw, 64px);

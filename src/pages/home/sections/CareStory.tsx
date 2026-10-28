@@ -5,13 +5,14 @@
 //   2. Lo importante del cuidado (h2) → sube desde abajo y queda centrado.
 //   3. Comprender para decidir → entra desde la derecha.
 // • Cada línea entra enfocándose (de borrosa a nítida); sus palabras se encienden una tras otra; las frases en azul se
-//   subrayan con una línea fina; y un hilo de curvas (las mismas que las de la sección de Agendar: ondulan y las recorre
-//   una luz) se va cargando con el scroll de un mensaje al siguiente.
+//   subrayan con una línea fina; y un hilo de tramos rectos con vueltas en semicírculo (con el estilo de las líneas de
+//   Agendar, recorrido por una luz) se va cargando con el scroll de un mensaje al siguiente.
 // • Textos → src/data/story.ts.
 // • Movimiento y estilos → src/styles/pages/home/story.css (animaciones CSS ligadas al scroll). Navegadores sin
 //   `animation-timeline` (Safari anterior a 26, p. ej. iPhone 12): un efecto mide el scroll y pone `--story-p` (0 a 1) en el
 //   área; story.css lo usa para mover el hilo y el diente (clase `story--scrub`).
-// • En pantallas angostas el hilo usa otro trazado (THREAD_JOINTS_NARROW) que pasa por los huecos entre mensajes.
+// • El trazado del hilo se calcula con las cajas reales del texto (cualquier idioma y ancho) para no tocarlo:
+//   src/lib/storyThread.ts (prueba en tests/story-thread.spec.ts).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { Fragment, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type RefObject } from 'react'
@@ -19,55 +20,22 @@ import { useLang } from '@/app/lang'
 import { STORY, type StoryLines } from '@/data/story'
 import { AnimatedLines, type Line } from '@/components/decor/SectionDecor'
 import { Band } from '@/components/decor/Band'
+import { storyThread, type StoryLayout } from '@/lib/storyThread'
 
-// Hilo (viewBox 100×100 = el área de los tres mensajes): una sola curva que baja por la derecha del mensaje 1, rodea por
-// la izquierda al 2 y da la vuelta por debajo del 3. Los valores se salen un poco de 0–100 a propósito (el SVG no recorta):
-// así la línea queda separada del texto. Ondula entre su forma `a` y `b`.
-// Cada unión tiene UNA dirección (x, y) y las dos curvas que se encuentran en ella usan esa misma dirección (una entra y la
-// otra sale): así la línea no hace esquinas, ni siquiera mientras ondula (`wave` solo gira esas direcciones).
-const THREAD_JOINTS: [x: number, y: number, dx: number, dy: number][] = [
-  [33.5, -18, 1, 0.1],
-  [85, 12, 0.15, 1],
-  [55, 31, -1, 0.15],
-  [8, 58, 0, 1],
-  [55, 78, 1, 0.15],
-  [108, 92, 0.3, 1],
-  // Final un poco más arriba que el boceto: el diente se detiene aquí y la ola de la sección siguiente lo taparía.
-  [63, 106, -1, 0.02],
-  [31, 105, -1, 0],
-]
-
-// Pantallas angostas (celular): el texto ocupa casi todo el ancho, así que el hilo baja por los costados y cruza de un lado
-// al otro por los huecos entre mensajes (≈ 33–48 % y 71–86 % de la altura), y termina bajo el último.
-const THREAD_JOINTS_NARROW: typeof THREAD_JOINTS = [
-  [74, -14, 0.3, 1],
-  [93, 14, 0, 1],
-  [58, 40.5, -1, 0.05],
-  [7, 60, 0, 1],
-  [45, 79, 1, 0.05],
-  [93, 90, 0, 1],
-  [62, 108, -1, 0.02],
-  [28, 107, -1, 0],
-]
-
-/** Ancho del área (px) por debajo del cual se usa el trazado de celular. */
+/** Ancho del área (px) por debajo del cual el hilo pasa más pegado al texto (celular: el texto llega casi a la orilla). */
 const NARROW_AREA = 740
 
-/** `scaleX`/`scaleY` pasan la curva de 0–100 a píxeles (el ancho y alto del área divididos entre 100). */
-const threadPath = (joints: typeof THREAD_JOINTS, wave: number, scaleX = 1, scaleY = 1) => {
-  const turn = (dx: number, dy: number, index: number) => {
-    const angle = wave * (index % 2 ? 1 : -1)
-    return [dx * Math.cos(angle) - dy * Math.sin(angle), dx * Math.sin(angle) + dy * Math.cos(angle)]
-  }
-  const n = (x: number, y: number) => `${(x * scaleX).toFixed(2)} ${(y * scaleY).toFixed(2)}`
-  return joints.map(([x, y, dx, dy], i) => {
-    if (i === 0) return `M${n(x, y)}`
-    const [px, py, pdx, pdy] = joints[i - 1]
-    const reach = Math.hypot(x - px, y - py) * 0.4
-    const [ox, oy] = turn(pdx, pdy, i - 1)
-    const [ix, iy] = turn(dx, dy, i)
-    return `C${n(px + ox * reach, py + oy * reach)} ${n(x - ix * reach, y - iy * reach)} ${n(x, y)}`
-  }).join('')
+// Antes de medir (prerender y primer render) el hilo se dibuja en un lienzo de 100×100 estirado, con cajas aproximadas.
+const ROUGH_LAYOUT: StoryLayout = {
+  width: 100,
+  height: 100,
+  outside: 2,
+  gap: 2,
+  boxes: [
+    { left: 3, right: 90, top: 0, bottom: 26 },
+    { left: 15, right: 85, top: 43, bottom: 63 },
+    { left: 30, right: 95, top: 80, bottom: 100 },
+  ],
 }
 
 /** Destello de cuatro puntas (como el del emoji ✨), viewBox 24×24. */
@@ -144,23 +112,55 @@ function ThreadTip({ path }: { path?: string }) {
   )
 }
 
+/** Posición (px) de un elemento dentro de `area`, sin contar transformaciones (las palabras se mueven al animarse). */
+function offsetIn(el: HTMLElement, area: HTMLElement) {
+  let x = 0
+  let y = 0
+  for (let node: HTMLElement | null = el; node && node !== area; node = node.offsetParent as HTMLElement | null) {
+    x += node.offsetLeft
+    y += node.offsetTop
+  }
+  return { x, y }
+}
+
 /**
- * Mide el área de los mensajes. Hasta medirla (prerender y primer render) es `null` y el hilo usa un lienzo de 100×100
- * estirado; después, el hilo se dibuja en píxeles reales: así la máscara que lo revela y la ruta del diente coinciden.
+ * Mide el área de los mensajes y la caja del texto de cada uno (sus palabras). Hasta medirla (prerender y primer render) es
+ * `null`; después, el hilo se dibuja en píxeles reales: así la máscara que lo revela y la ruta del diente coinciden.
+ * Se vuelve a medir al cambiar de tamaño, al cargar las fuentes y al cambiar de idioma (`text`).
  */
-function useAreaSize() {
+function useStoryLayout(text: unknown) {
   const ref = useRef<HTMLDivElement>(null)
-  const [size, setSize] = useState<{ width: number; height: number } | null>(null)
+  const [layout, setLayout] = useState<StoryLayout | null>(null)
 
   useEffect(() => {
     const area = ref.current
     if (!area) return
-    const observer = new ResizeObserver(() => setSize({ width: area.clientWidth, height: area.clientHeight }))
+    const measure = () => {
+      const items = [...area.querySelectorAll<HTMLElement>('.story__item')]
+      const boxes = items.map((item) => {
+        const words = [...item.querySelectorAll<HTMLElement>('.story__word')].map((word) => ({ ...offsetIn(word, area), word }))
+        const { y: top } = offsetIn(item, area)
+        return {
+          left: Math.min(...words.map(({ x }) => x)),
+          right: Math.max(...words.map(({ x, word }) => x + word.offsetWidth)),
+          top,
+          bottom: top + item.offsetHeight,
+        }
+      })
+      // Cuánto puede salir el hilo del área: hasta la orilla de la sección (que recorta), menos un respiro.
+      const band = area.closest('section')?.getBoundingClientRect()
+      const rect = area.getBoundingClientRect()
+      const outside = band ? Math.max(0, Math.min(rect.left - band.left, band.right - rect.right) - 4) : 0
+      const width = area.clientWidth
+      setLayout({ width, height: area.clientHeight, boxes, outside, gap: width < NARROW_AREA ? 8 : 24 })
+    }
+    const observer = new ResizeObserver(measure)
     observer.observe(area)
+    void document.fonts?.ready.then(measure)
     return () => observer.disconnect()
-  }, [])
+  }, [text])
 
-  return [ref, size] as const
+  return [ref, layout] as const
 }
 
 /** Cada palabra lleva su número (--i, contando desde la primera del mensaje) para encenderse en cascada. */
@@ -264,12 +264,11 @@ function useScrollScrub(areaRef: RefObject<HTMLDivElement | null>, threadD?: str
 
 export function CareStory() {
   const story = STORY[useLang()]
-  const [areaRef, size] = useAreaSize()
-  const scaleX = size ? size.width / 100 : 1
-  const scaleY = size ? size.height / 100 : 1
-  const joints = size && size.width < NARROW_AREA ? THREAD_JOINTS_NARROW : THREAD_JOINTS
-  const thread: Line[] = [{ a: threadPath(joints, 0, scaleX, scaleY), b: threadPath(joints, 0.2, scaleX, scaleY) }]
-  const scrub = useScrollScrub(areaRef, size ? thread[0].a : undefined)
+  const [areaRef, layout] = useStoryLayout(story)
+  // Sin ondular: la forma `b` es igual a la `a` para que los tramos sigan rectos.
+  const { d } = storyThread(layout ?? ROUGH_LAYOUT)
+  const thread: Line[] = [{ a: d, b: d }]
+  const scrub = useScrollScrub(areaRef, layout ? d : undefined)
 
   return (
     <Band tone="tint" className="story" labelledBy="historia-titulo">
@@ -279,10 +278,10 @@ export function CareStory() {
         <AnimatedLines
           lines={thread}
           className="decor story__thread"
-          viewBox={size ? `0 0 ${size.width} ${size.height}` : '0 0 100 100'}
+          viewBox={layout ? `0 0 ${layout.width} ${layout.height}` : '0 0 100 100'}
           revealId="story-thread-reveal"
         />
-        <ThreadTip path={size ? thread[0].a : undefined} />
+        <ThreadTip path={layout ? d : undefined} />
 
         <p className="story__item story__item--left">
           <StoryText lines={story.desire} />

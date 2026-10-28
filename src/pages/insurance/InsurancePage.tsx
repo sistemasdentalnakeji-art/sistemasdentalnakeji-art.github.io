@@ -30,7 +30,7 @@ export function InsurancePage() {
         <div className="insurance__head">
           <div>
             <p className="page-eyebrow pill-label">{INSURANCE_INTRO[lang].eyebrow}</p>
-            <h1 id="aseguranzas-pagina-titulo" className="page-title">
+            <h1 id="aseguranzas-pagina-titulo" className="page-title shiny-text shiny-text--ink">
               {INSURANCE_INTRO[lang].title}
             </h1>
             <p className="page-lead">{INSURANCE_INTRO[lang].lead}</p>

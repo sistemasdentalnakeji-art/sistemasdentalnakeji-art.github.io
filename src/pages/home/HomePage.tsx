@@ -3,9 +3,10 @@
 //
 // Para mover, quitar o agregar una sección, edita la lista de abajo.
 // Cada sección vive en ./sections/ y sus textos en src/data/ (home.ts y otros).
-// Estilos de las secciones: src/styles/pages/home/.
+// Estilos de las secciones: src/styles/pages/home/. Fondo compartido de toda la página: home/canvas.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { PageGradient } from '@/components/decor/PageGradient'
 import { Hero } from '@/pages/home/sections/Hero'
 import { CareStory } from '@/pages/home/sections/CareStory'
 import { Schedule } from '@/pages/home/sections/Schedule'
@@ -16,8 +17,11 @@ import { ContactLocation } from '@/pages/home/sections/ContactLocation'
 
 export function HomePage() {
   return (
-    <>
-      {/* Primera pantalla con las fibras de luz */}
+    // Un solo fondo para toda la página (el degradado azul del hero), fijo detrás de las secciones. Las fibras de luz
+    // animadas van solo en el hero. El footer queda fuera y conserva su diseño.
+    <div className="home-canvas">
+      <PageGradient />
+      {/* Primera pantalla, con las fibras de luz */}
       <Hero />
       {/* Tres mensajes animados con el scroll */}
       <CareStory />
@@ -31,6 +35,6 @@ export function HomePage() {
       <Reviews />
       {/* Contacto y ubicación (id="ubicacion") */}
       <ContactLocation />
-    </>
+    </div>
   )
 }

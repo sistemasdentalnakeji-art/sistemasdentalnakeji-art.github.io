@@ -45,6 +45,13 @@
   animation-play-state: paused;
 }
 
+/* Cualquier otra animación infinita (marquesinas, reseñas, plano, decoraciones): pauseOffscreen marca su elemento. */
+[data-offscreen-loop],
+[data-offscreen-loop]::before,
+[data-offscreen-loop]::after {
+  animation-play-state: paused;
+}
+
 /* "Pausar animaciones" (botón del footer, WCAG 2.2.2). La historia animada se excluye (todo elemento con una clase
    story__…: líneas, palabras, subrayado, hilo y diente, más la máscara .decor-reveal que dibuja el hilo): sus movimientos
    dependen del scroll y, pausados, dejarían el texto a medio entrar. */

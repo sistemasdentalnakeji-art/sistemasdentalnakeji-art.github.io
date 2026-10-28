@@ -27,13 +27,13 @@ const app = (
 )
 
 if (container.dataset.path === route.path) {
-  // HTML prerenderizado para esta ruta: solo se hidrata.
+  // HTML prerenderizado para esta ruta: solo se hidrata. Tras el primer cuadro pausa los contornos y brillos fuera de pantalla.
   hydrateRoot(container, app)
+  requestAnimationFrame(pauseOffscreen)
 } else {
   // Desarrollo (sin prerender) o una URL sin HTML propio.
   applyHead(route)
   createRoot(container).render(app)
+  // shortcut: espera 1 s a que llegue la página diferida (React.lazy); si tarda más, sus animaciones no se pausan fuera de pantalla.
+  window.setTimeout(pauseOffscreen, 1000)
 }
-
-// Tras el primer cuadro (en desarrollo, React ya dibujó la página): pausa los contornos y brillos fuera de pantalla.
-requestAnimationFrame(pauseOffscreen)

@@ -46,7 +46,7 @@ export const HISTORY: Record<Lang, { title: string; milestones: HistoryMilestone
     milestones: [
       {
         label: 'Beginnings',
-        text: 'It all began with the wish to help people smile with confidence, security and peace of mind by caring for their oral health. With more than 35 years of experience, that dream still guides our commitment to professional, human, quality care.',
+        text: 'It all began with the wish to help people smile with confidence, assurance and peace of mind by caring for their oral health. With more than 35 years of experience, that dream still guides our commitment to professional, compassionate, high-quality care.',
       },
       {
         label: 'Growth',
@@ -63,7 +63,7 @@ export const HISTORY: Record<Lang, { title: string; milestones: HistoryMilestone
       },
       {
         label: 'Today',
-        text: 'Today, all of that path shows in a dental clinic in Tijuana that brings together experience, specialists and technology to care for patients from Mexico and the United States. From preventive care to specialized treatments, we want every person to receive quality care and feel listened to and at ease.',
+        text: 'Today, that whole journey is reflected in a dental clinic in Tijuana that brings together experience, specialists and technology to care for patients from Mexico and the United States. From preventive care to specialized treatments, we want every person to receive quality care and feel heard and at ease.',
         topPhoto: photo('clinica-hoy-consultorio.jpg', 'Dental Nakeji office with dental equipment and a view of Tijuana'),
         photo: photo('clinica-hoy-vista-general.jpg', 'Dental Nakeji clinical area with a panoramic view of Tijuana'),
       },
