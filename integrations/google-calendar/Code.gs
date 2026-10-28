@@ -85,8 +85,8 @@ const CONFIG = {
   /** Sitios para los que Cloudflare puede haber emitido el token, y accion del widget (igual que BookingForm.tsx). */
   TURNSTILE_HOSTNAMES: ['nakejidental.com', 'www.nakejidental.com', 'sistemasdentalnakeji-art.github.io'],
   TURNSTILE_ACTION: 'cita',
-  /** Horas en las que un mismo telefono no puede pedir otra cita. */
-  PHONE_COOLDOWN_HOURS: 6,
+  /** Solicitudes aceptadas por telefono en una hora (comparando los ultimos 10 digitos). */
+  MAX_REQUESTS_PER_PHONE_PER_HOUR: 3,
 };
 
 function doPost(e) {
@@ -105,6 +105,8 @@ function doPost(e) {
 
     const errors = validate_(data);
     if (errors.length) return json_({ ok: false, error: 'invalid', fields: errors });
+    // Sin casilla no cuenta como intento: asi un bot que no manda token no puede agotar el tope de todos.
+    if (!data.turnstile) return json_({ ok: false, error: 'captcha' });
 
     // Tope de intentos antes de llamar a Cloudflare, para que un bot no agote la cuota de UrlFetch.
     // shortcut: este conteo va fuera del candado y puede pasarse por unos pocos; basta para frenar un abuso.
@@ -131,12 +133,14 @@ function doPost(e) {
     lock.waitLock(10000);
     try {
       const hourKey = 'count-' + hour;
-      const phoneKey = 'phone-' + String(data.phone).replace(/\D/g, '').slice(-10);
+      const phone = String(data.phone).replace(/\D/g, '').slice(-10);
+      const phoneKey = 'phone-' + phone + '-' + hour;
       // Un reintento de la misma solicitud (mismo telefono, fecha y hora; p. ej. por mala senal) responde "ok" sin crear otro evento.
-      const sameRequestKey = phoneKey + '-' + data.date + '-' + data.time;
+      const sameRequestKey = 'same-' + phone + '-' + data.date + '-' + data.time;
       if (cache.get(sameRequestKey)) return json_({ ok: true });
       const requestsThisHour = Number(cache.get(hourKey) || 0);
-      if (requestsThisHour >= CONFIG.MAX_REQUESTS_PER_HOUR || cache.get(phoneKey)) {
+      const phoneThisHour = Number(cache.get(phoneKey) || 0);
+      if (requestsThisHour >= CONFIG.MAX_REQUESTS_PER_HOUR || phoneThisHour >= CONFIG.MAX_REQUESTS_PER_PHONE_PER_HOUR) {
         return json_({ ok: false, error: 'limit' });
       }
       // Cuentan tambien las solicitudes rechazadas por horario ocupado (si no, se podria insistir sin tope).
@@ -176,8 +180,8 @@ function doPost(e) {
       const mailKey = hourKey.replace('count-', 'mail-');
       notify = !cache.get(mailKey);
       if (notify) cache.put(mailKey, '1', 3600);
-      cache.put(phoneKey, '1', CONFIG.PHONE_COOLDOWN_HOURS * 3600);
-      cache.put(sameRequestKey, '1', CONFIG.PHONE_COOLDOWN_HOURS * 3600);
+      cache.put(phoneKey, String(phoneThisHour + 1), 3600);
+      cache.put(sameRequestKey, '1', 3600);
     } finally {
       lock.releaseLock();
     }
