@@ -51,15 +51,6 @@ main > .band:first-child {
   background: transparent;
 }
 
-/* Aurora: azul noche con luces y estrellas (PageAurora) fijas detrás del contenido; clip (no hidden) para que el sticky funcione. */
-.band--aurora {
-  background: var(--color-night);
-}
-
-.band.band--aurora {
-  overflow: clip;
-}
-
 @media (min-width: 768px) {
   :root {
     --band-gap: 12px;

@@ -51,17 +51,18 @@ const DRAG_START_PX = 8 // hasta moverse esto, es un toque o clic; más, es un a
 const WOBBLE_DEG = 7 // cuánto se inclina la órbita hacia el cursor
 
 /** Apagado y desenfoque de una foto según qué tan al frente está (c = coseno de su ángulo: 1 al frente, -1 atrás).
- *  El desenfoque va en pasos de 0.5 px y solo se reescribe si cambió: un filtro nuevo cada frame sale caro en equipos modestos. */
-function depthStyle(card: HTMLElement, c: number) {
+ *  El desenfoque va en pasos de 0.5 px y solo se reescribe si cambió: un filtro nuevo cada frame sale caro en equipos modestos.
+ *  En celular no hay desenfoque (solo apagado): repintar filtros en cada vuelta trababa el giro. */
+function depthStyle(card: HTMLElement, c: number, blurOn: boolean) {
   const t = (c + 1) / 2
-  const blur = Math.round((1 - t) ** 1.3 * 3.5 * 2) / 2
+  const blur = blurOn ? Math.round((1 - t) ** 1.3 * 3.5 * 2) / 2 : 0
   card.style.opacity = (0.22 + 0.78 * t ** 1.6).toFixed(3)
   const filter = blur > 0 ? `blur(${blur}px)` : 'none'
   if (card.style.filter !== filter) card.style.filter = filter
 }
 
 export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }: Props) {
-  const ui = UI[useLang()].spin
+  const { spin: ui, carousel } = UI[useLang()]
   const count = photos.length
   const step = 360 / count
   const rootRef = useRef<HTMLDivElement>(null)
@@ -97,6 +98,7 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
     let last = 0
     let painted = ''
     const wobble = { tilt: 0, roll: 0 }
+    const blurOn = !window.matchMedia('(max-width: 699.98px)').matches
     let opened = motionOff() // sin movimiento no hay apertura: la órbita ya está completa
     // Si cambia a "sin movimiento" mientras está en pila y fuera de pantalla, al verse queda completa y sin transición.
     const finishOpen = () => {
@@ -116,7 +118,7 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
       cardRefs.current.forEach((card, k) => {
         if (!card) return
         const c = Math.cos((k * step + angle.current) * RAD)
-        depthStyle(card, c)
+        depthStyle(card, c, blurOn)
         if (c > best) {
           best = c
           nearest = k
@@ -317,7 +319,7 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
       ref={rootRef}
       className="spin-shutter"
       role="group"
-      aria-roledescription="carrusel"
+      aria-roledescription={carousel.role}
       aria-label={label}
       data-phase="stacked"
       // El giro automático espera mientras el foco del teclado está dentro de los botones.

@@ -164,11 +164,26 @@
   transform: translate(50%, -50%);
 }
 
-/* Contacto (móvil y tableta): a la derecha de "Síguenos", centrado con la fila de redes */
-.decor-rings--contact-mobile {
-  --cx: 44px;
-  top: calc(50% - var(--rings-size) / 2);
+/* Contacto (móvil y tableta): arriba a la derecha de la fila de redes, entre el correo y "Síguenos" (detrás del contenido) */
+.decor-rings.decor-rings--contact-mobile {
+  /* Chico y con 3 anillos: así se ve completo dentro de la banda y no llega a las líneas del footer. */
+  --rings-scale: 0.27;
+  --cx: 24px;
+  top: calc(50% - var(--rings-size) / 2 - 44px);
   right: calc(var(--cx) - var(--rings-size) / 2);
+}
+
+.decor-rings--contact-mobile g:nth-of-type(n + 4) {
+  display: none;
+}
+
+.decor-rings--contact-mobile .decor-ring {
+  opacity: calc(0.75 - var(--i) * 0.15);
+}
+
+.decor-rings--contact-mobile .decor-ring__light {
+  animation-duration: 8s;
+  animation-delay: calc(var(--i) * -2.7s);
 }
 
 .decor-rings--contact {

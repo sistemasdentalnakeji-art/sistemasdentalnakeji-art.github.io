@@ -59,7 +59,7 @@ export const AGREEMENTS_INTRO: Record<Lang, PageIntro> = {
   en: {
     eyebrow: 'Partner companies',
     title: 'Partner companies',
-    lead: 'Does your company have or want a dental agreement? Message us and we will go over your options together.',
+    lead: 'Does your company have a dental agreement, or want one? Message us and we will go over your options together.',
   },
   es: {
     eyebrow: 'Convenios',
@@ -109,7 +109,7 @@ export const AGREEMENT_SUMMARY: Record<Lang, { title: string; text: string }> = 
 }
 export const AGREEMENT_JOIN: Record<Lang, { title: string; text: string }> = {
   en: {
-    title: 'Does your company have or want a dental agreement?',
+    title: 'Does your company have a dental agreement, or want one?',
     text: 'Message us and we will go over your options together.',
   },
   es: {

@@ -449,7 +449,7 @@
   }
 }
 
-/* ---- Sobre el fondo aurora (Band tone="aurora"): encabezado en tonos claros; las cartas se quedan blancas ---- */
+/* ---- Sobre el degradado fijo con plasma (Band tone="gradient" + PagePlasma): encabezado en tonos claros; las cartas se quedan blancas ---- */
 .legal-page .legal-head--doc {
   border-bottom-color: rgb(255 255 255 / 0.28);
 }

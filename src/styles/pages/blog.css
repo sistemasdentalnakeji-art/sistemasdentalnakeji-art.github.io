@@ -150,9 +150,6 @@
 
 /* Barra de temas: se queda fija bajo el header mientras se recorre la biblioteca; en celular se desliza de lado. */
 .blog-chips {
-  position: sticky;
-  top: calc(var(--header-height) + var(--space-2));
-  z-index: 5;
   margin: var(--space-6) 0 var(--space-2);
 }
 
@@ -193,7 +190,7 @@
 /* Un estante por tema: título (enlace a la categoría), descripción y sus tarjetas. */
 .blog-shelf {
   padding-top: var(--space-7);
-  /* La barra de temas fija no tapa el título al saltar a #tema-… */
+  /* Aire bajo el header al saltar a #tema-… desde la barra de temas */
   scroll-margin-top: 48px;
 }
 
@@ -811,19 +808,157 @@
 }
 
 @media (max-width: 640px) {
-  /* En celular la barra de temas ocupa todo el ancho y se desliza de lado sin cortar la primera píldora. */
-  .blog-chips {
-    margin-inline: calc(var(--gutter) * -1);
+  /* En celular los temas bajan a varias filas de píldoras (todas visibles), sin barra que se corte de lado. */
+  /* Clase repetida: le gana a la regla del vidrio oscuro (.blog-dark .blog-chips ul) que va más abajo. */
+  .blog-chips.blog-chips ul,
+  .blog-dark .blog-chips.blog-chips ul {
+    flex-wrap: wrap;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    backdrop-filter: none;
   }
 
-  .blog-chips ul {
-    border-radius: 0;
-    border-inline: 0;
+  .blog-chips a {
+    min-height: 40px;
+    border: var(--border-on-dark);
+    background: rgb(10 21 41 / 0.55);
+  }
+
+  /* Tarjeta en celular: todo va sobre la foto. Título arriba a la izquierda, logo abajo a la izquierda y fecha con minutos
+     abajo a la derecha; sin extracto ni tema. */
+  .blog-card__frame {
+    position: relative;
+  }
+
+  .blog-card__media {
+    aspect-ratio: 4 / 3;
+  }
+
+  .blog-card__shade,
+  .blog-card:hover .blog-card__shade {
+    background: linear-gradient(to bottom, rgb(10 21 41 / 0.78), transparent 45%, transparent 62%, rgb(10 21 41 / 0.8));
+    opacity: 1;
+  }
+
+  .blog-card__body {
+    position: absolute;
+    inset: 0;
+    display: block;
+    padding: 16px;
+    pointer-events: none;
+  }
+
+  .blog-card__title,
+  .blog-card:hover .blog-card__title,
+  .blog-card:focus-visible .blog-card__title {
+    max-width: 92%;
+    color: var(--color-gold);
+    font-size: 1.125rem;
+    text-shadow: 0 1px 8px rgb(0 0 0 / 0.45);
+  }
+
+  .blog-card__excerpt,
+  .blog-card__topic {
+    display: none;
+  }
+
+  .blog-card__stamp {
+    position: absolute;
+    right: 16px;
+    bottom: 14px;
+    gap: 12px;
+    color: var(--color-white);
+  }
+
+  .blog-card__date {
+    color: inherit;
+  }
+
+  .blog-card__meta {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    padding: 6px 10px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: rgb(255 255 255 / 0.92);
+  }
+
+  .blog-card__brand {
+    height: 15px;
+  }
+
+  /* Artículo en celular: más compacto (menos aire y letra un peldaño menor) para que no se haga tan largo. */
+  .blog-article-head {
+    gap: var(--space-4);
+    padding-block: 24px 0;
+  }
+
+  .blog-article__title {
+    margin-bottom: var(--space-3);
+    font-size: 2rem;
+  }
+
+  .blog-article__lead {
+    font-size: 1.125rem;
+  }
+
+  .blog-article__stamp {
+    margin-top: var(--space-3);
+  }
+
+  .blog-dark .blog-article {
+    padding-top: var(--space-5);
+  }
+
+  /* La hoja de lectura usa casi todo el ancho: más palabras por línea, menos alto. */
+  .blog-dark .blog-article .blog-article__body {
+    margin-inline: -10px;
+    padding: 20px 14px;
+  }
+
+  .blog-article__body {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .blog-answer {
+    margin-bottom: var(--space-4);
+    padding: 14px 16px;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .blog-answer strong {
+    font-size: 1.25rem;
+  }
+
+  .blog-article__section {
+    padding-block: 22px;
+  }
+
+  .blog-article__h2 {
+    margin-bottom: var(--space-2);
+    font-size: 1.375rem;
+  }
+
+  .blog-article__section p,
+  .blog-article__section p:first-of-type {
+    margin-bottom: var(--space-3);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .blog-article__end {
+    padding: var(--space-4);
   }
 }
 
-/* ---------- Fondo aurora (Band tone="aurora"): toda la página es una sola banda oscura ---------- */
-.blog-aurora {
+/* ---------- Fondo oscuro (Band tone="gradient" + PagePlasma): toda la página es una sola banda oscura ---------- */
+.blog-dark {
   padding-block: 0 var(--band-padding);
 }
 
@@ -832,105 +967,105 @@
   padding-top: var(--space-8);
 }
 
-.blog-aurora .section-title,
-.blog-aurora .blog-more__title,
-.blog-aurora .blog-cta__title {
+.blog-dark .section-title,
+.blog-dark .blog-more__title,
+.blog-dark .blog-cta__title {
   color: var(--color-white);
 }
 
-.blog-aurora .section-text,
-.blog-aurora .blog-shelf__text,
-.blog-aurora .blog-cta__text {
+.blog-dark .section-text,
+.blog-dark .blog-shelf__text,
+.blog-dark .blog-cta__text {
   color: rgb(213 232 246 / 0.8);
 }
 
-.blog-aurora .blog-shelf__title a {
+.blog-dark .blog-shelf__title a {
   color: var(--color-white);
 }
 
-.blog-aurora .blog-shelf__title a:hover {
+.blog-dark .blog-shelf__title a:hover {
   color: var(--color-brand-light);
 }
 
-.blog-aurora .blog-topics {
+.blog-dark .blog-topics {
   border-top-color: rgb(255 255 255 / 0.45);
 }
 
-.blog-aurora .blog-topics li + li {
+.blog-dark .blog-topics li + li {
   border-left: var(--border-on-dark);
 }
 
-.blog-aurora .blog-topic:hover {
+.blog-dark .blog-topic:hover {
   background: rgb(255 255 255 / 0.06);
 }
 
-.blog-aurora .blog-topic__name {
+.blog-dark .blog-topic__name {
   color: var(--color-white);
 }
 
-.blog-aurora .blog-topic:hover .blog-topic__name {
+.blog-dark .blog-topic:hover .blog-topic__name {
   color: var(--color-brand-light);
 }
 
-.blog-aurora .blog-topic__text {
+.blog-dark .blog-topic__text {
   color: rgb(213 232 246 / 0.75);
 }
 
 /* Tarjetas: el mismo vidrio, pero más claro para que no se vea gris sobre el fondo oscuro. */
-.blog-aurora .blog-card__frame {
+.blog-dark .blog-card__frame {
   background: rgb(247 249 253 / 0.95);
 }
 
 /* El botón del cierre del artículo va sobre la hoja clara: vuelve al azul de marca (el blanco de .blog-head es para fondos oscuros). */
-.blog-aurora .blog-article__end .btn--primary {
+.blog-dark .blog-article__end .btn--primary {
   background: var(--color-ink);
   color: var(--color-white);
 }
 
-.blog-aurora .blog-article__end .btn--primary:hover {
+.blog-dark .blog-article__end .btn--primary:hover {
   background: var(--color-ink-strong);
 }
 
-.blog-aurora .blog-cta {
+.blog-dark .blog-cta {
   padding-top: var(--space-8);
 }
 
-/* Barra de temas: vidrio oscuro sobre el aurora. */
-.blog-aurora .blog-chips ul {
+/* Barra de temas: vidrio oscuro sobre el fondo oscuro. */
+.blog-dark .blog-chips ul {
   border: var(--border-on-dark);
   background: rgb(10 21 41 / 0.72);
 }
 
-.blog-aurora .blog-chips a {
+.blog-dark .blog-chips a {
   color: var(--color-white);
 }
 
-.blog-aurora .blog-chips a:hover {
+.blog-dark .blog-chips a:hover {
   background: rgb(255 255 255 / 0.12);
 }
 
-/* Artículo: el texto largo va sobre una hoja clara para leerse con comodidad; el aurora queda alrededor. */
-.blog-aurora .blog-article__body {
+/* Artículo: el texto largo va sobre una hoja clara para leerse con comodidad; el fondo oscuro queda alrededor. */
+.blog-dark .blog-article__body {
   padding: var(--space-6) clamp(20px, 4vw, var(--space-7));
   border-radius: var(--radius-xl);
   background: var(--color-porcelain);
   box-shadow: var(--shadow-3);
 }
 
-.blog-aurora .blog-article {
+.blog-dark .blog-article {
   padding-top: var(--space-7);
 }
 
-.blog-aurora .chapter__line {
+.blog-dark .chapter__line {
   background: var(--color-white);
 }
 
-.blog-aurora .chapter__line[data-state='active'] {
+.blog-dark .chapter__line[data-state='active'] {
   background: var(--color-brand-light);
 }
 
 @media (max-width: 960px) {
-  .blog-aurora .blog-article__body {
+  .blog-dark .blog-article__body {
     padding-inline: var(--space-4);
     border-radius: var(--radius-lg);
   }

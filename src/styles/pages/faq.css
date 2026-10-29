@@ -76,7 +76,7 @@ html[data-motion='paused'] .faq-page * { transition: none !important; }
   .faq-filters button[aria-pressed='true'] { outline: 2px solid Highlight; }
 }
 
-/* ---- Sobre el fondo aurora (Band tone="aurora"): los colores de tinta pasan a tonos claros solo dentro de esta página ---- */
+/* ---- Sobre el degradado fijo con plasma (Band tone="gradient" + PagePlasma): los colores de tinta pasan a tonos claros solo dentro de esta página ---- */
 .faq-page {
   --color-ink: #fff;
   --color-ink-strong: #fff;

@@ -16,7 +16,7 @@
       "name": "Implants and tooth replacement",
       "description": "Information about options to replace missing teeth and useful questions for your evaluation.",
       "route": "/en/blog/implants-and-tooth-replacement/",
-      "intro": "Losing one or more teeth can change the way you chew and your confidence when you smile. In this section we explain the restoration options in Dental Nakeji's catalog: dental implants, All on 4 implants, All on 6 implants and dentures. Each option requires an individual evaluation."
+      "intro": "Losing one or more teeth can change the way you chew and your confidence when you smile. In this section we explain the restoration options in Dental Nakeji's catalog: dental implants, All-on-4 implants, All-on-6 implants and dentures. Each option requires an individual evaluation."
     },
     {
       "key": "estetica-y-restauracion",
@@ -57,13 +57,13 @@
     {
       "category": "Implants and tooth replacement",
       "route": "/en/blog/all-on-4-implants/",
-      "cardTitle": "All on 4 implants: a fixed arch on four implants",
+      "cardTitle": "All-on-4 implants: a fixed arch on four implants",
       "excerpt": "Learn what this treatment means and why a bone assessment is part of the evaluation."
     },
     {
       "category": "Implants and tooth replacement",
       "route": "/en/blog/all-on-6-implants/",
-      "cardTitle": "All on 6 implants: how it differs from All on 4",
+      "cardTitle": "All-on-6 implants: how it differs from All-on-4",
       "excerpt": "The main difference is the number of implants that support the prosthesis. The choice depends on each case."
     },
     {
@@ -166,7 +166,7 @@
     },
     {
       "key": "all-on-4-implants",
-      "title": "All on 4 implants: a fixed arch on four implants",
+      "title": "All-on-4 implants: a fixed arch on four implants",
       "sections": [
         {
           "title": "What does “a full arch” mean?",
@@ -189,14 +189,14 @@
       ],
       "route": "/en/blog/all-on-4-implants/",
       "category": "Implants and tooth replacement",
-      "lead": "All on 4 implants is a restoration option that replaces the teeth of an arch with a fixed prosthesis held by four implants.",
+      "lead": "All-on-4 implants is a restoration option that replaces the teeth of an arch with a fixed prosthesis held by four implants.",
       "answer": "In this treatment, four implants support a prosthesis for a full arch. Dental Nakeji presents it as an option for people who are missing almost all the teeth in an arch. Whether it is indicated requires a bone assessment and an evaluation of the individual case.",
-      "related": "[All on 4 implants at Dental Nakeji](https://www.nakejidental.com/en/all-on-4-implants-in-tijuana/)",
-      "sources": "[Dental Nakeji, All on 4 implants](https://www.nakejidental.com/en/all-on-4-implants-in-tijuana/); [FDA, dental implants](https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know)."
+      "related": "[All-on-4 implants at Dental Nakeji](https://www.nakejidental.com/en/all-on-4-implants-in-tijuana/)",
+      "sources": "[Dental Nakeji, All-on-4 implants](https://www.nakejidental.com/en/all-on-4-implants-in-tijuana/); [FDA, dental implants](https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know)."
     },
     {
       "key": "all-on-6-implants",
-      "title": "All on 6 implants: how it differs from All on 4",
+      "title": "All-on-6 implants: how it differs from All-on-4",
       "sections": [
         {
           "title": "When is this option considered?",
@@ -220,9 +220,9 @@
       "route": "/en/blog/all-on-6-implants/",
       "category": "Implants and tooth replacement",
       "lead": "Both treatments aim to hold a fixed prosthesis for a full arch. The difference Dental Nakeji describes is the number of supporting implants.",
-      "answer": "All on 6 implants uses six implants per arch to hold the fixed prosthesis. All on 4 implants uses four. The choice is not made by the number alone: Dental Nakeji explains that the plan depends on each patient's bone and bite.",
-      "related": "[All on 6 implants at Dental Nakeji](https://www.nakejidental.com/en/all-on-6-implants-in-tijuana/)",
-      "sources": "[Dental Nakeji, All on 6 implants](https://www.nakejidental.com/en/all-on-6-implants-in-tijuana/); [Dental Nakeji, All on 4 implants](https://www.nakejidental.com/en/all-on-4-implants-in-tijuana/); [FDA, dental implants](https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know)."
+      "answer": "All-on-6 implants uses six implants per arch to hold the fixed prosthesis. All-on-4 implants uses four. The choice is not made by the number alone: Dental Nakeji explains that the plan depends on each patient's bone and bite.",
+      "related": "[All-on-6 implants at Dental Nakeji](https://www.nakejidental.com/en/all-on-6-implants-in-tijuana/)",
+      "sources": "[Dental Nakeji, All-on-6 implants](https://www.nakejidental.com/en/all-on-6-implants-in-tijuana/); [Dental Nakeji, All-on-4 implants](https://www.nakejidental.com/en/all-on-4-implants-in-tijuana/); [FDA, dental implants](https://www.fda.gov/medical-devices/dental-devices/dental-implants-what-you-should-know)."
     },
     {
       "key": "dentaduras-parciales-completas",

@@ -1,13 +1,12 @@
 import type { ReactNode } from 'react'
 import { cx } from '@/lib/cx'
-import { PageAurora } from '@/components/decor/PageAurora'
 import { SectionDecor, type FlowLayout } from '@/components/decor/SectionDecor'
 
 type Wave = 'plain' | 'flip'
 
 interface BandProps {
-  /** gradient: sin fondo propio, deja ver el degradado azul fijo de la página (PageGradient en App.tsx); aurora: azul noche con luces y estrellas (PageAurora), fijo: la banda usa overflow: clip. */
-  tone: 'white' | 'tint' | 'night' | 'gradient' | 'aurora'
+  /** gradient: sin fondo propio, deja ver el degradado azul fijo de la página (PageGradient en App.tsx). Con algo fijo dentro (PagePlasma) sumar la clase band--clip. */
+  tone: 'white' | 'tint' | 'night' | 'gradient'
   id?: string
   labelledBy: string
   className?: string
@@ -37,7 +36,6 @@ export function Band({ tone, id, labelledBy, className, waveTop, flow, decor, ch
       )}
       aria-labelledby={labelledBy}
     >
-      {tone === 'aurora' && <PageAurora />}
       {decor}
       {flow &&<SectionDecor variant="flow" layout={flow} />}
       {waveTop && <SectionDecor variant="wave" position="top" flip={waveTop === 'flip'} />}

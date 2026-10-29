@@ -1,4 +1,5 @@
 import { Band } from '@/components/decor/Band'
+import { PagePlasma } from '@/components/decor/PagePlasma'
 import { routeOf, type RouteDef } from '@/config/routes'
 import { UI } from '@/data/ui'
 import { BlogCard } from '@/pages/blog/BlogCard'
@@ -13,7 +14,7 @@ export function BlogCategoryPage({ route, category }: { route: RouteDef; categor
   const others = BLOG[lang].categories.filter((c) => c.route !== category.route)
   return (
     <>
-      <Band tone="aurora" labelledBy="blog-categoria" className="blog-head blog-aurora">
+      <Band tone="gradient" labelledBy="blog-categoria" className="blog-head blog-dark band--clip" decor={<PagePlasma />}>
         <div className="container blog-hero blog-hero--single">
           <div>
             <BlogCrumbs trail={[{ label: 'Blog', href: routeOf('blog', lang).path }, { label: category.name }]} />

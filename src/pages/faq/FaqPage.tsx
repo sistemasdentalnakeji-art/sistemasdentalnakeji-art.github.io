@@ -7,6 +7,7 @@ import { SITE } from '@/config/site'
 import { FAQ_GROUPS, FAQ_INTERFACE, FAQ_PAGE } from '@/data/faq'
 import { UI } from '@/data/ui'
 import { Band } from '@/components/decor/Band'
+import { PagePlasma } from '@/components/decor/PagePlasma'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon } from '@/components/ui/Icon'
 
@@ -50,7 +51,7 @@ function FaqContent({ lang }: { lang: Lang }) {
   }
 
   return (
-    <Band tone="aurora" className="faq-page" labelledBy="faq-titulo">
+    <Band tone="gradient" className="faq-page band--clip" decor={<PagePlasma />} labelledBy="faq-titulo">
       <div className="container">
         <header className="faq-head">
           <p className="page-eyebrow">FAQ</p>

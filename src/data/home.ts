@@ -36,7 +36,7 @@ export const HERO: Record<
     // El H1 se muestra en dos tonos: la primera parte resaltada y la segunda atenuada.
     titleLead: 'Dentists committed',
     titleMuted: 'to your health.',
-    lead: "From your first evaluation to the creation of personalized designs, our doctors work hand in hand with the clinic's own dental laboratory to keep every case on track and speed up treatment, while we take great care in every dental service we offer, each one a priority at Dental Nakeji.",
+    lead: 'From your first evaluation to your custom-designed restorations, our doctors work hand in hand with our in-house dental lab to keep every case on track and speed up your treatment. Every service we offer gets the same care, because each one is a priority at Dental Nakeji.',
     primaryCta: 'Schedule a visit',
     secondaryCta: 'Message us on WhatsApp',
     // PENDIENTE (clínica): confirmar "Certified dentists" y "Over 35 years" antes de publicar (ver gan-harness/glosario-en.md).
@@ -110,7 +110,7 @@ export const REVIEWS_SECTION: Record<
     title: 'What our patients say',
     text: 'What our patients say, in their own words, on our Google profile.',
     cta: 'See reviews on Google',
-    slogan: "We don't lie. Our patients speak for us.",
+    slogan: "Don't just take our word for it. Our patients speak for us.",
     sloganSub: 'Real reviews, straight from Google.',
   },
   es: {

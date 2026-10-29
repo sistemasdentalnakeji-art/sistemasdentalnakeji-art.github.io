@@ -46,7 +46,7 @@ export const HISTORY: Record<Lang, { title: string; milestones: HistoryMilestone
     milestones: [
       {
         label: 'Beginnings',
-        text: 'It all began with the wish to help people smile with confidence, assurance and peace of mind by caring for their oral health. With more than 35 years of experience, that dream still guides our commitment to professional, compassionate, high-quality care.',
+        text: 'It all began with the wish to help people smile with confidence and peace of mind by caring for their oral health. With more than 35 years of experience, that dream still guides our commitment to professional, compassionate, high-quality care.',
       },
       {
         label: 'Growth',
@@ -196,11 +196,11 @@ export const TEAM: Record<Lang, { title: string; lead: string; areas: TeamArea[]
         title: 'Doctors',
         members: [
           person('Dr.', 'Laura Tamez', 'Dental surgeon, coordinator and manager', 'laura-tamez'),
-          person('Dr.', 'Sergio Palacio', 'Clinical dental surgeon and health officer', 'sergio-palacio'),
+          person('Dr.', 'Sergio Palacio', 'Dental surgeon and the clinic’s health officer', 'sergio-palacio'),
           person('Dr.', 'Gustavo Garduño', 'Dental surgeon and implantologist', 'gustavo-garduno'),
           person('Dr.', 'Leslie Brizuela', 'Dental surgeon and orthodontist', 'leslie-brizuela'),
           person('Dr.', 'Alejandra Blanco', 'General dental surgeon', 'alejandra-blanco'),
-          person('Asst.', 'Fernanda López', 'Dental assistant', 'fernanda-lopez'),
+          person(undefined, 'Fernanda López', 'Dental assistant', 'fernanda-lopez'),
         ],
       },
       {
@@ -208,22 +208,22 @@ export const TEAM: Record<Lang, { title: string; lead: string; areas: TeamArea[]
         icon: 'calendar',
         title: 'Administration',
         members: [
-          person('Lic.', 'Damaris Llamas', 'Laboratory administrator', 'damaris-llamas'),
-          person('Lic.', 'Michelle López', 'Patient coordinator', 'michelle-lopez'),
+          person(undefined, 'Damaris Llamas', 'Laboratory administrator', 'damaris-llamas'),
+          person(undefined, 'Michelle López', 'Patient coordinator', 'michelle-lopez'),
         ],
       },
       {
         id: 'laboratorio',
         icon: 'flask',
         title: 'Dental lab',
-        members: [person('TDP', 'Isaac Ramírez', 'Laboratory manager and dental technician', 'isaac-ramirez')],
+        members: [person(undefined, 'Isaac Ramírez', 'Dental lab manager and dental technician', 'isaac-ramirez')],
       },
       // Sin foto: se muestra el icono de persona hasta que haya una.
       {
         id: 'tecnico',
         icon: 'chip',
         title: 'Technology infrastructure',
-        members: [{ title: 'Ing. Mtro.', name: 'Jadro Montes', specialty: 'Head of the company’s technology area' }],
+        members: [{ name: 'Jadro Montes', specialty: 'Head of technology' }],
       },
     ],
   },

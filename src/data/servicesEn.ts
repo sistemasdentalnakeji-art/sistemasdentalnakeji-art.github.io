@@ -73,10 +73,10 @@ export const SERVICE_TEXT_EN: Record<string, ServiceTextEn> = {
   cleaning: {
     title: 'Dental Cleaning',
     subtitle: 'Take care of your teeth and gums, starting today.',
-    highlights: ['Removes built-up tartar and plaque.', 'Polishes away surface stains.', 'Teeth and gum check-up.'],
+    highlights: ['Removes built-up tartar and plaque.', 'Polishes away surface stains.', 'Teeth and gum checkup.'],
     about: {
       title: 'Dental cleaning',
-      text: 'A professional dental cleaning removes the plaque and tartar built up on teeth, even in areas that are hard to clean at home. It can include polishing to reduce some surface stains, and a check-up of your teeth and gums. It complements brushing and cleaning between teeth, which are still needed every day.',
+      text: 'A professional dental cleaning removes the plaque and tartar built up on teeth, even in areas that are hard to clean at home. It can include polishing to reduce some surface stains, and a checkup of your teeth and gums. It complements brushing and cleaning between teeth, which are still needed every day.',
     },
   },
   'root-canal': {
@@ -94,7 +94,7 @@ export const SERVICE_TEXT_EN: Record<string, ServiceTextEn> = {
     highlights: ['Bite evaluation.', 'Regular adjustments to the appliance.', 'Follow-up to check your progress.'],
     about: {
       title: 'Orthodontics',
-      text: 'Orthodontics helps move teeth gradually to improve their position and the way they fit together when you bite. It can be done with braces or other appliances, depending on each person’s needs. Treatment begins with an evaluation of your teeth and bite, and continues with check-ups and adjustments to track progress.',
+      text: 'Orthodontics helps move teeth gradually to improve their position and the way they fit together when you bite. It can be done with braces or other appliances, depending on each person’s needs. Treatment begins with an evaluation of your teeth and bite, and continues with checkups and adjustments to track progress.',
     },
   },
   aligners: {
@@ -103,7 +103,7 @@ export const SERVICE_TEXT_EN: Record<string, ServiceTextEn> = {
     highlights: ['A discreet option to improve your smile.', 'Help improve tooth alignment.', 'Support a more balanced smile.'],
     about: {
       title: 'Aligners',
-      text: 'Aligners are clear, removable pieces made to fit your teeth. They are used in a planned sequence to move teeth little by little, and they require check-ups during treatment. They are a discreet option, although they are not suitable for every case. The dentist evaluates your bite and the position of your teeth before recommending them.',
+      text: 'Aligners are clear, removable pieces made to fit your teeth. They are used in a planned sequence to move teeth little by little, and they require checkups during treatment. They are a discreet option, although they are not suitable for every case. The dentist evaluates your bite and the position of your teeth before recommending them.',
     },
   },
   pediatric: {
@@ -118,10 +118,10 @@ export const SERVICE_TEXT_EN: Record<string, ServiceTextEn> = {
   dentures: {
     title: 'Dentures Made to Fit You',
     subtitle: 'Replace the teeth you are missing.',
-    highlights: ['Complete, partial or immediate.', 'Custom-made removable prosthesis.', 'Regular adjustments and check-ups.'],
+    highlights: ['Complete, partial or immediate.', 'Custom-made removable prosthesis.', 'Regular adjustments and checkups.'],
     about: {
       title: 'Dentures',
-      text: 'Dentures are removable prostheses made to measure to replace missing teeth. They can be partial, when you still have some teeth, or complete, when a whole arch needs to be replaced. The dentist checks your mouth to design an option that suits you, and makes adjustments and check-ups to make sure it keeps fitting well.',
+      text: 'Dentures are removable prostheses made to measure to replace missing teeth. They can be partial, when you still have some teeth, or complete, when a whole arch needs to be replaced. The dentist checks your mouth to design an option that suits you, and makes adjustments and checkups to make sure it keeps fitting well.',
     },
   },
   gum: {

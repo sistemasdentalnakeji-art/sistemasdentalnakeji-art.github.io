@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Plasma de página (components/decor/PagePlasma.tsx): /contacto/ y las páginas legales.
+   Plasma de página (components/decor/PagePlasma.tsx): /contacto/, convenios, aseguranzas, blog, preguntas frecuentes y páginas legales.
    El plasma se dibuja del tamaño de la pantalla y queda fijo (sticky) detrás de la banda (que lleva .band--clip).
    ========================================================================== */
 .page-plasma {
@@ -16,11 +16,22 @@
   position: sticky;
   top: 0;
   width: 100%;
-  height: 100svh;
+  height: 100vh;
+  height: 100lvh;
   opacity: 0;
   transition: opacity 1.2s var(--ease);
 }
 
 .page-plasma__view.is-ready {
   opacity: 1;
+}
+
+/* Móvil: en un lienzo alto y angosto el plasma llena casi toda la pantalla de azul claro; se atenúa para que el
+   degradado azul fijo siga mandando. Escritorio sin cambios. */
+@media (max-width: 767px) {
+  .page-plasma,
+  .catalog__plasma,
+  .benefits__plasma {
+    opacity: 0.4;
+  }
 }

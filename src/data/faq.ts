@@ -62,14 +62,14 @@ export const FAQ_GROUPS: Record<Lang, { id: string; title: string; items: FaqIte
       items: [
         { question: 'Can I change my appointment?', answer: 'Yes. Call us and we will help you reschedule based on our availability.' },
         { question: 'Do I need to book services in advance?', answer: 'Generally you do not need to book days in advance, but some treatments with specialists require prior coordination. Call us for details.' },
-        { question: 'What happens if I arrive late to my appointment?', answer: 'You have a 15-minute grace period. If you arrive later, you may have to wait or reschedule according to the clinic’s availability.' },
+        { question: 'What happens if I arrive late for my appointment?', answer: 'You have a 15-minute grace period. If you arrive later, you may have to wait or reschedule according to the clinic’s availability.' },
       ],
     },
     {
       id: 'servicios',
       title: 'Services and treatments',
       items: [
-        { question: 'How do I know what treatment I need?', answer: 'Book an assessment so the dentist can review your case and recommend the right treatment.' },
+        { question: 'How do I know what treatment I need?', answer: 'Book an evaluation so the dentist can review your case and recommend the right treatment.' },
         { question: 'Do you see children?', answer: 'Yes, we see children ages 5 and up.' },
         { question: 'Do treatments come with a warranty?', answer: 'Some treatments include a warranty. Your doctor will explain the conditions for your case during or at the end of treatment.' },
         { question: 'Can I request a report of my dental history?', answer: 'Yes, you can request a report with your dental history and the treatments completed or pending.' },
@@ -91,8 +91,8 @@ export const FAQ_GROUPS: Record<Lang, { id: string; title: string; items: FaqIte
       title: 'Insurance and agreements',
       items: [
         { question: 'Do you accept all insurance providers?', answer: 'Acceptance depends on the insurer. Contact us via WhatsApp or phone to confirm whether we work with yours.' },
-        { question: 'How can I know if my insurance covers the services I need?', answer: 'Contact us via WhatsApp or phone with your insurer’s details and we will help you review your coverage.' },
-        { question: 'What benefits do I get with my company agreement?', answer: 'Your company agreement includes a free assessment and discounts on treatments.' },
+        { question: 'How do I know if my insurance covers the services I need?', answer: 'Contact us via WhatsApp or phone with your insurer’s details and we will help you review your coverage.' },
+        { question: 'What benefits do I get with my company agreement?', answer: 'Your company agreement includes a free evaluation and discounts on treatments.' },
         { question: 'Can I combine promotions, company agreements, and insurance benefits?', answer: 'No, only one of these options can be applied per service.' },
       ],
     },
@@ -101,7 +101,7 @@ export const FAQ_GROUPS: Record<Lang, { id: string; title: string; items: FaqIte
       title: 'Dental emergencies',
       items: [
         { question: 'Do you treat dental emergencies?', answer: 'Yes. Contact us via WhatsApp or phone and we will tell you how we can help.' },
-        { question: 'What types of dental emergencies do you treat?', answer: 'We treat cases such as a lost or broken tooth. Each situation requires an assessment by the doctor to confirm how we can help you.' },
+        { question: 'What types of dental emergencies do you treat?', answer: 'We treat cases such as a lost or broken tooth. Each situation requires an evaluation by the doctor to confirm how we can help you.' },
       ],
     },
   ],

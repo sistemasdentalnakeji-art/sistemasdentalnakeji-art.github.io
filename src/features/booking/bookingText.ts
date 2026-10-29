@@ -70,7 +70,7 @@ export const FORM_TEXT: Record<Lang, FormText> = {
   en: {
     eyebrow: 'Book online',
     title: 'Request an appointment',
-    lead: (service) => `Choose the day and time that work best for your appointment (${service}).`,
+    lead: (service) => `Choose the best day and time for your appointment: ${service}.`,
     leadGeneric: 'Choose the service, day and time that work best for you.',
     requiredBefore: 'Fields marked with ',
     requiredSr: 'asterisk',

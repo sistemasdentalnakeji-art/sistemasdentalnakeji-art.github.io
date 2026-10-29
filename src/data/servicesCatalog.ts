@@ -35,7 +35,7 @@ const LAB_PHOTO = { src: '/images/servicios/laboratorio.webp', width: 1600, heig
 
 /**
  * Encabezado de la página: título en dos tonos, beneficios y tarjeta flotante sobre el espacio de la foto.
- * PENDIENTE (clínica): confirmar "Certified specialists"/"Especialistas certificados" y la frase de "Lasting care"/"Resultados que perduran"
+ * PENDIENTE (clínica): confirmar "Certified specialists"/"Especialistas certificados" y la frase de "Long-lasting results"/"Resultados que perduran"
  * (en inglés se suavizó para no prometer resultados).
  */
 export const CATALOG_HERO: Record<
@@ -54,12 +54,12 @@ export const CATALOG_HERO: Record<
     eyebrow: 'Our services',
     titleLead: 'Dental services',
     titleAccent: 'in Tijuana',
-    lead: 'At Dental Nakeji we strive for excellence at every stage of your care, which sets us apart. Our doctors work hand in hand with our own dental laboratory to create custom designs and give you efficient, attentive care.',
+    lead: 'At Dental Nakeji, excellence at every stage of your care is what sets us apart. Our doctors work hand in hand with our own dental lab to create custom designs and give you fast, attentive care.',
     features: [
-      { icon: 'chip', text: 'Modern technology' },
+      { icon: 'chip', text: 'State-of-the-art technology' },
       { icon: 'shield', text: 'Personalized care' },
       { icon: 'users', text: 'Certified specialists' },
-      { icon: 'tooth', text: 'Lasting care' },
+      { icon: 'tooth', text: 'Long-lasting results' },
     ],
     indexLabel: 'Explore by category',
     // Foto del laboratorio de la clínica (la dio la clínica). Va sola, sin etiquetas.
@@ -95,7 +95,7 @@ const entry = (key: ServiceKey, icon: IconName): CatalogService => {
 return [
   {
     id: 'implantes-y-rehabilitacion',
-    title: en ? 'Implants and dental rehabilitation' : 'Implantes y rehabilitación dental',
+    title: en ? 'Implants and tooth replacement' : 'Implantes y rehabilitación dental',
     intro: en
       ? 'Options to replace missing teeth, from a single tooth to a full arch.'
       : 'Opciones para reponer dientes ausentes, desde una pieza hasta toda la arcada.',
@@ -108,7 +108,7 @@ return [
   },
   {
     id: 'estetica-dental',
-    title: en ? 'Aesthetics and restoration' : 'Estética y restauración',
+    title: en ? 'Cosmetic and restorative dentistry' : 'Estética y restauración',
     intro: en
       ? 'Crowns, veneers and whitening to care for the shape, color and look of your teeth.'
       : 'Coronas, carillas y blanqueamiento para cuidar la forma, el color y la apariencia de tus dientes.',
@@ -124,13 +124,13 @@ return [
   },
   {
     id: 'limpieza-y-encias',
-    title: en ? 'Cleaning and gum health' : 'Limpieza y salud de encías',
+    title: en ? 'Cleanings and gum health' : 'Limpieza y salud de encías',
     intro: en ? 'The foundation of your care: dental cleaning and gum care.' : 'El cuidado de base: limpieza dental y atención de las encías.',
     services: [entry('cleaning', 'drop'), entry('gum', 'shield')],
   },
   {
     id: 'endodoncia-y-extracciones',
-    title: en ? 'Root canal and extractions' : 'Endodoncia y extracciones',
+    title: en ? 'Root canals and extractions' : 'Endodoncia y extracciones',
     intro: en
       ? 'Treatments to save a tooth or remove it when needed.'
       : 'Tratamientos para conservar una pieza dental o retirarla cuando es necesario.',

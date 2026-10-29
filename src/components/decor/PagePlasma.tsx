@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// PLASMA DE PÁGINA: el fondo de plasma azul claro de las páginas internas (/contacto/ y las páginas legales), ya configurado.
+// PLASMA DE PÁGINA: el fondo de plasma azul claro de las páginas internas (/contacto/, convenios, aseguranzas, blog, preguntas frecuentes y páginas legales), ya configurado.
 // Va en el `decor` de una Band con la clase `band--clip` (si no, el sticky del plasma no se pega). Estilos → src/styles/components/page-plasma.css.
 // ─────────────────────────────────────────────────────────────────────────────
 

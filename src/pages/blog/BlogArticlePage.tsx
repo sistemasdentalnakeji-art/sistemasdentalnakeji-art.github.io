@@ -1,5 +1,6 @@
 import { Fragment, useMemo } from 'react'
 import { Band } from '@/components/decor/Band'
+import { PagePlasma } from '@/components/decor/PagePlasma'
 import { ChapterScrubber } from '@/components/ui/ChapterScrubber'
 import { Icon } from '@/components/ui/Icon'
 import { routeOf, scheduleHref, type RouteDef } from '@/config/routes'
@@ -48,8 +49,8 @@ export function BlogArticlePage({ route, article }: { route: RouteDef; article: 
 
   return (
     <>
-      {/* Una sola banda aurora para toda la página: el fondo es continuo, sin costuras entre secciones. */}
-      <Band tone="aurora" labelledBy="articulo-titulo" className="blog-head blog-aurora">
+      {/* Una sola banda (degradado fijo + plasma) para toda la página: el fondo es continuo, sin costuras entre secciones. */}
+      <Band tone="gradient" labelledBy="articulo-titulo" className="blog-head blog-dark band--clip" decor={<PagePlasma />}>
         <div className="container blog-article-head">
           <div className="blog-article-head__text">
             <BlogCrumbs trail={trail} />

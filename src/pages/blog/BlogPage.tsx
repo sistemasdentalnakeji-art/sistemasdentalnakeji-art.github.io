@@ -1,4 +1,5 @@
 import { Band } from '@/components/decor/Band'
+import { PagePlasma } from '@/components/decor/PagePlasma'
 import { routeOf, scheduleHref, type RouteDef } from '@/config/routes'
 import { UI } from '@/data/ui'
 import { BlogCard } from '@/pages/blog/BlogCard'
@@ -14,8 +15,8 @@ export function BlogPage({ route }: { route: RouteDef }) {
   const { hub, categories } = BLOG[lang]
   return (
     <>
-      {/* Una sola banda aurora para toda la página: el fondo es continuo, sin costuras entre secciones. */}
-      <Band tone="aurora" labelledBy="blog-titulo" className="blog-head blog-aurora">
+      {/* Una sola banda (degradado fijo + plasma) para toda la página: el fondo es continuo, sin costuras entre secciones. */}
+      <Band tone="gradient" labelledBy="blog-titulo" className="blog-head blog-dark band--clip" decor={<PagePlasma />}>
         <div className="container blog-hero">
           <div>
             <p className="blog-kicker">{hub.label}</p>
