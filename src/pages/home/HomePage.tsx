@@ -6,7 +6,6 @@
 // Estilos de las secciones: src/styles/pages/home/. Fondo compartido de toda la página: home/canvas.css.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { PageGradient } from '@/components/decor/PageGradient'
 import { Hero } from '@/pages/home/sections/Hero'
 import { CareStory } from '@/pages/home/sections/CareStory'
 import { Schedule } from '@/pages/home/sections/Schedule'
@@ -17,10 +16,9 @@ import { ContactLocation } from '@/pages/home/sections/ContactLocation'
 
 export function HomePage() {
   return (
-    // Un solo fondo para toda la página (el degradado azul del hero), fijo detrás de las secciones. Las fibras de luz
-    // animadas van solo en el hero. El footer queda fuera y conserva su diseño.
+    // Un solo fondo para toda la página (el degradado azul del hero, en App.tsx), fijo detrás de las secciones. Las
+    // fibras de luz animadas van solo en el hero.
     <div className="home-canvas">
-      <PageGradient />
       {/* Primera pantalla, con las fibras de luz */}
       <Hero />
       {/* Tres mensajes animados con el scroll */}

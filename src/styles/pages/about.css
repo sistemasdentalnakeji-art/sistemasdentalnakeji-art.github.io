@@ -15,6 +15,14 @@
   --about-card-shadow: 0 22px 56px -28px rgba(0, 8, 24, 0.82), inset 0 1px rgba(255, 255, 255, 0.06);
 }
 
+/* Las fibras terminan al pie de Administración (--fibers-end lo mide AboutPage.tsx) y se desvanecen, para no encimarse con
+   los hilos del footer. Sin JS (prerender) llegan hasta el final, como antes. */
+.about-page .fibers-bg {
+  bottom: var(--fibers-end, 0px);
+  -webkit-mask-image: linear-gradient(#000 calc(100% - 220px), transparent);
+  mask-image: linear-gradient(#000 calc(100% - 220px), transparent);
+}
+
 /* El fondo conserva su presencia, pero deja de competir con las tarjetas y los retratos. */
 .about-page .fibers-bg__view {
   opacity: 0.76;

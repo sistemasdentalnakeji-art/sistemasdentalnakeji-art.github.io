@@ -11,9 +11,14 @@
   z-index: 1;
 }
 
-@media (max-width: 599px) {
-  .band:has(.rails) .section-head .section-title {
-    margin-top: 48px;
+/* Celular: menos aire arriba (los anillos de esta sección solo se dibujan en escritorio). */
+@media (max-width: 767.98px) {
+  .home-canvas .partners-band {
+    padding-top: 20px;
+  }
+
+  .home-canvas .band:has(+ .partners-band) {
+    padding-bottom: 20px;
   }
 }
 
@@ -30,6 +35,12 @@
     radial-gradient(circle at 0 0, rgba(123, 195, 235, 0.32), transparent 52%),
     var(--color-tint);
   overflow: hidden;
+}
+
+/* Los anillos (decor-rings--partners) salen por arriba de la banda: sin recorte, sus arcos se ven completos. */
+.partners-band,
+.band:has(> .container .decor-rings--contact-mobile) {
+  overflow: visible;
 }
 
 /* Aseguranzas: fondo claro con borde; Convenios: fondo blanco con borde punteado, para distinguirlas de un vistazo. */
@@ -95,6 +106,11 @@
 .rail__cta {
   justify-self: center;
   margin-top: 4px;
+}
+
+/* WhatsApp dentro de cada tarjeta, debajo del botón "Ver ...". */
+.rail__whatsapp {
+  justify-self: center;
 }
 
 .rail__icon {
@@ -282,7 +298,7 @@
   /* La línea va de borde a borde de la tarjeta: el encabezado se extiende por el padding y ocupa las dos filas. */
   .rail__head {
     margin-block: calc(-1 * var(--rail-pad));
-    padding: var(--rail-pad) 40px calc(var(--rail-pad) + 64px) 0;
+    padding: var(--rail-pad) 40px calc(var(--rail-pad) + 128px) 0;
     border-right: 1px dashed var(--color-brand);
   }
 
@@ -297,6 +313,12 @@
   }
 
   .rail .rail__cta {
+    position: absolute;
+    left: var(--rail-pad);
+    bottom: calc(var(--rail-pad) + 64px);
+  }
+
+  .rail > .rail__whatsapp.btn {
     position: absolute;
     left: var(--rail-pad);
     bottom: var(--rail-pad);

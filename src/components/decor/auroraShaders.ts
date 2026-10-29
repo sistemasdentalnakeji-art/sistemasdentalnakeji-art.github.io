@@ -163,9 +163,9 @@ void main() {
 
   // Más luz hacia la derecha, menos detrás del texto de la izquierda.
   float side = smoothstep(-0.9, 0.7, p.x);
-  vec3 color = uBase + light * uIntensity * (0.35 + 0.65 * side);
-
-  color += (hash(gl_FragCoord.xy + fract(uTime)) - 0.5) * 0.012;
-  gl_FragColor = vec4(min(color, vec3(1.0)), 1.0);
+  // Solo los hilos, sin fondo (uBase): el canvas es transparente y se ve el degradado fijo de la página detrás.
+  // Alfa premultiplicado: el color ya es la luz y el alfa es su brillo.
+  vec3 color = min(light * uIntensity * (0.35 + 0.65 * side), vec3(1.0));
+  gl_FragColor = vec4(color, max(color.r, max(color.g, color.b)));
 }
 `

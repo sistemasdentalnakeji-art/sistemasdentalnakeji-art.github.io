@@ -173,7 +173,9 @@ export function AuroraBackground({ theme, effect = 'aurora', fiberCount = 14, cl
     // si no, se queda el degradado CSS de respaldo.
     const pixel = new Uint8Array(4)
     gl.readPixels(Math.floor(canvas.width / 2), Math.floor(canvas.height / 2), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel)
-    if (pixel[3] === 255 && pixel[0] + pixel[1] + pixel[2] > 0) canvas.classList.add('is-ready')
+    // Los hilos (fibers) se pintan sobre fondo transparente: ahí basta con que WebGL no haya dado error.
+    const painted = effect === 'fibers' ? gl.getError() === gl.NO_ERROR : pixel[3] === 255 && pixel[0] + pixel[1] + pixel[2] > 0
+    if (painted) canvas.classList.add('is-ready')
     update()
 
     return () => {

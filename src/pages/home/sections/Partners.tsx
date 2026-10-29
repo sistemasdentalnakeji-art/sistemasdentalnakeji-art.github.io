@@ -56,6 +56,7 @@ export function Partners() {
   return (
     <Band
       tone="white"
+      className="partners-band"
       labelledBy="aseguranzas-titulo"
       waveTop="plain"
       decor={<SectionDecor variant="rings" placement="partners" />}
@@ -109,18 +110,14 @@ export function Partners() {
                 <a className="btn btn--primary btn--sm rail__cta interactive-hover" href={group.link.href}>
                   <InteractiveHoverContent>{group.link.label}</InteractiveHoverContent>
                 </a>
+                {/* WhatsApp dentro de cada tarjeta (escritorio y celular). */}
+                <ExternalLink className="btn btn--secondary rail__whatsapp" href={PARTNERS_CTA.href}>
+                  <Icon name="whatsapp" size={20} />
+                  {PARTNERS_CTA_LABEL[lang]}
+                </ExternalLink>
               </section>
             )
           })}
-        </div>
-
-        <div className="section-cta section-cta--ringed">
-          {/* Celular y tableta: anillos abajo a la izquierda, detrás del botón de WhatsApp (en escritorio van arriba, en la banda). */}
-          <SectionDecor variant="rings" placement="partners-cta" />
-          <ExternalLink className="btn btn--secondary" href={PARTNERS_CTA.href}>
-            <Icon name="whatsapp" size={20} />
-            {PARTNERS_CTA_LABEL[lang]}
-          </ExternalLink>
         </div>
       </div>
     </Band>

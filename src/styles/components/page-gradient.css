@@ -1,6 +1,14 @@
 /* ==========================================================================
    Degradado de página (components/decor/PageGradient.tsx): el azul del hero, fijo detrás de todo el contenido.
    ========================================================================== */
+/* Contenedor de la página y el footer: el degradado fijo llega hasta el pie. flow-root para que el margen del footer
+   quede dentro del degradado y no se vea el fondo de la página. */
+.page-shell {
+  position: relative;
+  isolation: isolate;
+  display: flow-root;
+}
+
 .page-gradient {
   position: absolute;
   inset: 0;

@@ -312,6 +312,41 @@
   margin-top: 36px;
 }
 
+/* Por encima de la banda de Contacto: sus anillos suben hasta aquí y no deben pasar sobre las tarjetas. */
+.reviews-band {
+  z-index: 1;
+}
+
+/* Las tarjetas se desvanecen hacia los costados (invisibles a ~14 % de cada orilla (escritorio)), en vez de cortarse en el borde. */
+.reviews-rows {
+  -webkit-mask-image: linear-gradient(90deg, transparent 3%, #000 9%, #000 91%, transparent 97%);
+  mask-image: linear-gradient(90deg, transparent 3%, #000 9%, #000 91%, transparent 97%);
+}
+
+@media (min-width: 900px) {
+  .reviews-rows {
+    -webkit-mask-image: linear-gradient(90deg, transparent 12%, #000 21%, #000 79%, transparent 88%);
+    mask-image: linear-gradient(90deg, transparent 12%, #000 21%, #000 79%, transparent 88%);
+  }
+}
+
+/* Separación entre tarjetas de cada fila (más que la del carrusel general). */
+.reviews-rows .marquee {
+  --marquee-gap: 24px;
+}
+
+@media (min-width: 900px) {
+  .reviews-rows .marquee {
+    --marquee-gap: 36px;
+  }
+
+  /* Las cuatro reseñas a la vez en cada fila: un cuarto de la pantalla menos el espacio entre ellas, sin pasar de un ancho
+     cómodo para leer. */
+  .reviews-rows .review-card {
+    width: clamp(270px, calc(25vw - 45px), 440px);
+  }
+}
+
 /* ---------- Tarjeta: marco completo, línea inferior y, dentro, el recuadro del autor con su punto de luz ---------- */
 .review-card {
   --card-r: 22px;
@@ -319,7 +354,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  width: clamp(290px, 84vw, 420px);
+  width: clamp(320px, 84vw, 460px);
   padding: 26px 26px 22px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--card-r);
@@ -330,17 +365,6 @@
     0 22px 44px -26px rgba(7, 15, 30, 0.8),
     inset 0 1px 0 rgba(255, 255, 255, 0.07);
   color: var(--color-white);
-}
-
-/* Línea de acento en el borde inferior, como la del diseño de referencia. */
-.review-card::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 26px;
-  width: 38%;
-  height: 1px;
-  background: linear-gradient(90deg, var(--color-sky), transparent);
 }
 
 /* Barrido neón: gradiente de luz que recorre el contorno del recuadro del autor. */
@@ -487,4 +511,39 @@
 
 .stars--empty {
   color: #a3aec0;
+}
+
+/* Celular y tableta: dos tarjetas por fila a la vez, compactas (el autor va en vertical para que quepa). */
+@media (max-width: 899.98px) {
+  .reviews-rows .marquee {
+    --marquee-gap: 12px;
+  }
+
+  .reviews-rows .review-card {
+    width: calc((100vw - 36px) / 2);
+    min-width: 0;
+    gap: 12px;
+    padding: 14px 12px 12px;
+  }
+
+  .reviews-rows .review-card__author {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .reviews-rows .review-card__avatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  .reviews-rows .review-card__name {
+    font-size: 0.875rem;
+  }
+
+  .reviews-rows .review-card__text {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
 }

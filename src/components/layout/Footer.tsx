@@ -37,7 +37,7 @@ export function Footer({ route }: FooterProps) {
 
   return (
     <footer className="site-footer band band--night">
-      <AuroraBackground theme="dark" effect="fibers" className="site-footer__fibers" />
+      <AuroraBackground theme="dark" effect="fibers" fiberCount={10} className="site-footer__fibers" />
       <div className="site-footer__scrim" aria-hidden="true" />
       {/* Ola blanca arriba: los hilos de luz llegan hasta la curva, sin franja lisa. */}
       <SectionDecor variant="wave" position="top" inverse />

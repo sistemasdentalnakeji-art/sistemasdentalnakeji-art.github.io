@@ -115,14 +115,15 @@ export function Reviews() {
   const live = useGoogleReviews(lang)
   const { profileUrl } = REVIEWS_SUMMARY
   const domain = new URL(SITE.origin).host.replace(/^www\./, '')
-  const cards = (live?.reviews ?? REVIEWS[lang]).map((review, index) => (
+  // Cuatro tarjetas: con seis la sección se vuelve pesada en celular.
+  const cards = (live?.reviews ?? REVIEWS[lang]).slice(0, 4).map((review, index) => (
     <ReviewCard review={review} more={ui.more} index={index} />
   ))
   // La segunda fila arranca por otra tarjeta para que, con pocas reseñas, las dos filas no se vean iguales.
   const shift = Math.ceil(cards.length / 2)
   const cardsBottom = [...cards.slice(shift), ...cards.slice(0, shift)]
   return (
-    <Band tone="tint" labelledBy="resenas-titulo">
+    <Band tone="tint" className="reviews-band" labelledBy="resenas-titulo">
       <div className="container">
         <div className="reviews-intro">
           <div className="reviews-intro__google">
@@ -177,8 +178,9 @@ export function Reviews() {
       </div>
 
       <div className="reviews-rows">
-        <Marquee label={ui.carousel} items={cards} direction="ltr" />
-        <Marquee label={ui.carousel} items={cardsBottom} direction="rtl" secondsPerCard={13} />
+        {/* Despacio, para alcanzar a leer cada reseña antes de que salga. */}
+        <Marquee label={ui.carousel} items={cards} direction="ltr" secondsPerCard={22} />
+        <Marquee label={ui.carousel} items={cardsBottom} direction="rtl" secondsPerCard={26} />
       </div>
     </Band>
   )

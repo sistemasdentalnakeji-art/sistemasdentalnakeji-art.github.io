@@ -24,6 +24,7 @@ import { UI } from '@/data/ui'
 import { findRoute, type RouteKey, type ServiceKey } from '@/config/routes'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { PageGradient } from '@/components/decor/PageGradient'
 import { HomePage } from '@/pages/home/HomePage'
 import { EmptyPage } from '@/pages/empty/EmptyPage'
 import { BenefitsPage } from '@/pages/benefits/BenefitsPage'
@@ -95,21 +96,25 @@ export function App({ path }: AppProps) {
       <a className="skip-link" href="#contenido">
         {UI[route.lang].skipLink}
       </a>
-      <Header route={route} />
-      <main id="contenido" tabIndex={-1}>
-        <Suspense fallback={null}>
-          {Page ? (
-            <Page />
-          ) : service ? (
-            <ServicePage route={route} content={service} />
-          ) : route.template === 'blog' ? (
-            <BlogRoute route={route} />
-          ) : (
-            <EmptyPage route={route} />
-          )}
-        </Suspense>
-      </main>
-      <Footer route={route} />
+      {/* El degradado fijo cubre header, contenido y footer (page-shell): el header y el pie lo llevan de fondo. */}
+      <div className="page-shell">
+        <PageGradient />
+        <Header route={route} />
+        <main id="contenido" tabIndex={-1}>
+          <Suspense fallback={null}>
+            {Page ? (
+              <Page />
+            ) : service ? (
+              <ServicePage route={route} content={service} />
+            ) : route.template === 'blog' ? (
+              <BlogRoute route={route} />
+            ) : (
+              <EmptyPage route={route} />
+            )}
+          </Suspense>
+        </main>
+        <Footer route={route} />
+      </div>
     </LangContext>
   )
 }

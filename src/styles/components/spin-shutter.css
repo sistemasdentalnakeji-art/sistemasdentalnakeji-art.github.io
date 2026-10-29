@@ -110,7 +110,7 @@
   height: calc(var(--w) * 0.75);
   margin: calc(var(--w) * -0.375) 0 0 calc(var(--w) / -2);
   /* --tilt positivo = cámara por encima del anillo: el arco cercano queda abajo y el lejano arriba (por eso rotateX negativo). */
-  transform: rotateZ(var(--roll)) rotateX(calc(var(--tilt) * -1)) rotateY(var(--spin));
+  transform: rotateZ(calc(var(--roll) * var(--roll-k, 1))) rotateX(calc(var(--tilt) * -1)) rotateY(var(--spin));
   transform-style: preserve-3d;
   will-change: transform;
 }
@@ -138,7 +138,7 @@
     rotateY(calc(var(--k) * -360deg / var(--n) * var(--ss-spread)))
     rotateY(calc(var(--spin) * -1))
     rotateX(var(--tilt))
-    rotateZ(calc(var(--roll) * -1));
+    rotateZ(calc(var(--roll) * var(--roll-k, 1) * -1));
 }
 
 .spin-shutter__card img {

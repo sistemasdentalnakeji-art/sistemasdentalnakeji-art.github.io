@@ -52,8 +52,8 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     highlights: ['Una raíz artificial en el hueso.', 'Sostiene corona, puente o prótesis.', 'Valoración previa de hueso y encías.'],
     image: { src: '/images/servicios/implantes-dentales.webp', width: 2000, height: 1125, position: 'center', cardPosition: '75% center' },
     about: {
-      title: 'El implante dental',
-      text: 'Si te falta un diente, masticar puede costar trabajo. Un implante es una raíz de titanio que se coloca con cirugía y sostiene una corona. El dentista valora tu hueso y tus encías.',
+      title: 'Implantes dentales',
+      text: 'Un implante dental es una pieza que se coloca en el hueso para sustituir la raíz de un diente perdido. Sobre él puede apoyarse una corona, un puente o una prótesis, según lo que necesites. Antes de recomendarlo, el dentista revisa tus encías, el hueso disponible y tu salud general para planear el tratamiento adecuado para ti.',
     },
   },
   'all-on-4': {
@@ -62,8 +62,8 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     subtitle: 'Una prótesis fija para reemplazar una arcada con cuatro implantes.',
     highlights: ['Arcada completa sobre 4 implantes.', 'Dientes fijos en una sola prótesis.', 'Estudio del hueso de cada arcada.'],
     about: {
-      title: 'All-on-4: arcada completa fija',
-      text: 'Si te faltan casi todos los dientes de una arcada, All-on-4 la reemplaza con una prótesis fija sobre cuatro implantes. Es una cirugía con anestesia. El dentista valora tu hueso.',
+      title: 'All on 4 implants',
+      text: 'All on 4 es una opción para reemplazar los dientes de una arcada completa mediante una prótesis fija apoyada en cuatro implantes. Los implantes se colocan en el hueso y sirven de soporte a los nuevos dientes. Antes del procedimiento, el especialista estudia la boca y el hueso para determinar si esta alternativa es apropiada para tu caso.',
     },
   },
   'all-on-6': {
@@ -72,8 +72,8 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     subtitle: 'Una arcada completa y fija con seis puntos de apoyo.',
     highlights: ['Seis implantes por arcada.', 'Prótesis fija sobre implantes.', 'Plan según hueso y mordida.'],
     about: {
-      title: 'All-on-6: arcada completa fija',
-      text: 'Si te faltan casi todos los dientes de una arcada, All-on-6 usa seis implantes, no cuatro, para sostener una prótesis fija. Es una cirugía. El dentista decide según tu hueso.',
+      title: 'All on 6 implants',
+      text: 'All on 6 utiliza seis implantes para sostener una prótesis fija que reemplaza los dientes de una arcada. Puede considerarse cuando faltan casi todos los dientes superiores o inferiores. El número de implantes por sí solo no define cuál tratamiento conviene: el dentista evalúa el hueso, las encías y la mordida antes de proponerte un plan.',
     },
   },
   crowns: {
@@ -82,8 +82,8 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     subtitle: 'Protege tus dientes y devuélveles su forma.',
     highlights: ['Protege dientes debilitados.', 'Cubre todo el diente dañado.', 'Revisión de la mordida.'],
     about: {
-      title: 'La corona dental',
-      text: 'Para colocar una corona, el dentista prepara el diente, revisa cuánto tejido sano queda y evalúa la mordida para que la restauración se adapte bien.',
+      title: 'Coronas',
+      text: 'Una corona es una restauración que cubre un diente para ayudar a recuperar su forma y protegerlo cuando está debilitado o dañado. También puede colocarse sobre un implante. Antes de hacerla, el dentista revisa el estado del diente y la forma en que muerdes; después prepara y ajusta la corona para que funcione con el resto de tu boca.',
     },
   },
   // Columna 2
@@ -94,7 +94,7 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     highlights: ['Mejoran la forma de tus dientes.', 'Pueden ayudar a mejorar la apariencia.', 'Se planean de acuerdo con tu dentadura.'],
     about: {
       title: 'Carillas dentales',
-      text: 'Las carillas pueden ser una opción si quieres mejorar la apariencia de tus dientes. En la consulta se revisa qué quieres cambiar y cómo se ve tu sonrisa en conjunto. Después, el dentista te explica cómo será el procedimiento y qué puedes esperar durante el tratamiento.',
+      text: 'Las carillas son cubiertas delgadas que se colocan sobre la parte frontal de los dientes para mejorar aspectos de su forma o apariencia. El dentista primero revisa la salud de tus dientes y encías y conversa contigo sobre el cambio que buscas. Después planifica cómo adaptar las carillas a tu sonrisa y te explica la preparación y los cuidados necesarios.',
     },
   },
   whitening: {
@@ -104,7 +104,7 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     highlights: ['Evaluación antes de comenzar.', 'Plan según tu caso.', 'Acompañamiento durante el tratamiento.'],
     about: {
       title: 'Blanqueamiento dental',
-      text: 'El blanqueamiento puede ayudarte a lograr una sonrisa más clara. Antes de empezar, se evalúa el estado de tus dientes y encías para elegir la opción adecuada y explicarte el proceso de forma sencilla.',
+      text: 'El blanqueamiento dental busca aclarar el color de los dientes naturales mediante un tratamiento elegido para cada persona. Antes de comenzar, el dentista revisa tus dientes, encías y posibles restauraciones para explicarte qué cambio puedes esperar. No todas las manchas responden igual, y las coronas o carillas existentes no cambian de color con el blanqueamiento.',
     },
   },
   cleaning: {
@@ -113,8 +113,8 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     subtitle: 'Cuida tus dientes y encías desde hoy.',
     highlights: ['Retira sarro y placa acumulados.', 'Pulido de manchas superficiales.', 'Revisión de dientes y encías.'],
     about: {
-      title: 'Limpieza dental profesional',
-      text: 'El cepillo no siempre limpia todas las áreas. Una limpieza dental es una forma sencilla de cuidar la salud de tus dientes y encías para mantener una sonrisa fresca y saludable. Es un cuidado que realmente importa y que muchas personas omiten.',
+      title: 'Limpieza dental',
+      text: 'La limpieza dental profesional retira la placa y el sarro acumulados en los dientes, incluso en zonas difíciles de limpiar en casa. Puede incluir un pulido para reducir algunas manchas superficiales y una revisión de dientes y encías. Complementa el cepillado y la limpieza entre dientes, que siguen siendo necesarios todos los días.',
     },
   },
   // Columna 3
@@ -124,8 +124,8 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     subtitle: 'Atiende el interior de tu diente.',
     highlights: ['Ayuda a conservar tu diente.', 'Atiende la parte interna.', 'Ayuda a conservar la función del diente.'],
     about: {
-      title: 'Endodoncia',
-      text: 'Si un diente está causando dolor o molestias, la endodoncia puede ayudar a conservarlo. El dentista trabaja en la parte interna del diente, retira lo que está afectado y lo deja preparado para continuar con su restauración. El proceso se explica paso a paso.',
+      title: 'Endodoncias',
+      text: 'Una endodoncia trata la parte interna de un diente cuando el tejido que contiene está inflamado o infectado. El dentista retira el tejido afectado, limpia el interior y sella el espacio para intentar conservar la pieza. Después evalúa qué restauración necesita el diente para protegerlo y ayudarlo a seguir funcionando al morder.',
     },
   },
   orthodontics: {
@@ -135,7 +135,7 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     highlights: ['Valoración de tu mordida.', 'Ajustes periódicos del aparato.', 'Seguimiento para revisar tu avance.'],
     about: {
       title: 'Ortodoncia',
-      text: 'La ortodoncia mueve los dientes poco a poco con brackets u otros aparatos. Puede ayudar cuando los dientes están encimados, separados o cuando la mordida no cierra bien. El tiempo y el tipo de tratamiento se revisan con un profesional de acuerdo con tu caso.',
+      text: 'La ortodoncia ayuda a mover los dientes de manera gradual para mejorar su posición y la forma en que encajan al morder. Puede realizarse con brackets u otros aparatos, según las necesidades de cada persona. El tratamiento comienza con una valoración de los dientes y la mordida, y continúa con revisiones y ajustes para seguir el avance.',
     },
   },
   aligners: {
@@ -144,8 +144,8 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     subtitle: 'Una opción discreta para alinear tus dientes.',
     highlights: ['Una opción discreta para mejorar tu sonrisa.', 'Ayudan a mejorar la alineación dental.', 'Favorecen una sonrisa más equilibrada.'],
     about: {
-      title: 'Alineadores transparentes',
-      text: 'El tratamiento con alineadores se planifica de acuerdo con la posición de tus dientes y el resultado que se busca. Durante el proceso, se realizan revisiones para seguir los cambios y hacer los ajustes necesarios. El dentista te explica cada etapa y el tiempo estimado para tu caso.',
+      title: 'Alineadores',
+      text: 'Los alineadores son piezas transparentes y removibles hechas para ajustarse a los dientes. Se utilizan en una secuencia planificada para moverlos poco a poco y requieren revisiones durante el tratamiento. Son una opción discreta, aunque no resultan adecuados para todos los casos. El dentista evalúa tu mordida y la posición de tus dientes antes de recomendarlos.',
     },
   },
   pediatric: {
@@ -154,8 +154,8 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     subtitle: 'Cuidado dental para los más pequeños.',
     highlights: ['Primera visita para conocernos.', 'Prevención de caries infantil.', 'Trato a la medida de cada niño.'],
     about: {
-      title: 'Odontopediatría para niños',
-      text: 'La salud dental de tus niños importa. La odontopediatría ayuda a cuidar sus dientes desde pequeños, prevenir caries y detectar a tiempo cualquier situación que pueda afectar su sonrisa. La consulta se adapta a su edad y busca que se sientan seguros, acompañados y tranquilos.',
+      title: 'Odontopediatría',
+      text: 'La odontopediatría se dedica al cuidado dental de bebés, niños y adolescentes. En la consulta se revisa cómo crecen sus dientes, se buscan señales tempranas de caries y se orienta a la familia sobre hábitos de higiene. La atención se adapta a la edad y a las necesidades de cada niño para acompañarlo mientras desarrolla su salud bucal.',
     },
   },
   // Fuera del submenú (MORE_SERVICE_ROUTES): solo en /servicios/
@@ -165,8 +165,8 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     subtitle: 'Reemplaza los dientes que te faltan.',
     highlights: ['Completas, parciales o inmediatas.', 'Prótesis removible hecha a medida.', 'Ajustes y revisiones periódicas.'],
     about: {
-      title: 'Dentaduras a tu medida',
-      text: 'Las dentaduras pueden ser una opción para reemplazar varios o todos los dientes que faltan. El dentista revisa tu caso, el estado de tu boca y lo que necesitas para orientarte hacia la alternativa más adecuada. Durante el proceso, te acompaña y da seguimiento para que el tratamiento se adapte a ti.',
+      title: 'Dentaduras',
+      text: 'Las dentaduras son prótesis removibles hechas a medida para reemplazar dientes faltantes. Pueden ser parciales, cuando aún conservas algunos dientes, o completas, cuando se necesita sustituir toda una arcada. El dentista revisa tu boca para diseñar una opción que se adapte a ti y realiza ajustes y revisiones para comprobar que siga encajando bien.',
     },
   },
   gum: {
@@ -176,7 +176,7 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     highlights: ['Atención a encías que sangran.', 'Medición de bolsas en encías.', 'Mantenimiento tras el tratamiento.'],
     about: {
       title: 'Periodoncia',
-      text: 'Si te sangran las encías al cepillarte, puede haber inflamación. La periodoncia atiende encías y hueso y busca frenar el daño. El dentista mide el espacio entre encía y diente.',
+      text: 'La periodoncia se ocupa de las encías y de los tejidos que sostienen los dientes. Si tus encías sangran, están inflamadas o presentan otros cambios, el dentista las examina y puede medir los espacios alrededor de los dientes. Según lo que encuentre, propone el cuidado o tratamiento necesario y un plan de seguimiento para mantener la salud de las encías.',
     },
   },
   extractions: {
@@ -185,8 +185,8 @@ const PAGES_ES: Record<ServiceKey, ServiceContent> = {
     subtitle: 'Atención dental cuando un diente necesita retirarse.',
     highlights: ['Extracción simple o quirúrgica.', 'Valoración de muelas del juicio.', 'Radiografías antes de decidir.'],
     about: {
-      title: 'Extracciones dentales',
-      text: 'Una extracción puede ser necesaria cuando un diente no se puede reparar, está causando un problema o una muela del juicio no tiene espacio. Antes de decidir, el dentista revisa la pieza y las radiografías. Esta opción se evalúa con un dentista, quien te orienta y te acompaña durante el proceso.',
+      title: 'Extracciones simples y de juicio',
+      text: 'Una extracción consiste en retirar un diente cuando el dentista determina que es necesario. Puede ser simple o requerir un procedimiento quirúrgico, según la posición y el estado de la pieza. En el caso de las muelas del juicio, primero se revisa si están causando problemas; la exploración y las radiografías ayudan a decidir si conviene retirarlas o vigilarlas.',
     },
   },
 }

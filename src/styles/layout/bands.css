@@ -41,9 +41,14 @@ main > .band:first-child {
   background: var(--color-night);
 }
 
-/* Sin color propio: el degradado fijo (PageGradient) va dentro de la banda. El azul noche cubre mientras carga el CSS. */
+/* Sin color propio: se ve el degradado fijo de toda la página (PageGradient, en App.tsx), el mismo que el footer. */
 .band--gradient {
-  background: var(--color-night);
+  background: transparent;
+}
+
+/* Nosotros: sus fibras van encima del degradado fijo, sin fondo propio que corte con el footer. */
+.band--night.about-page {
+  background: transparent;
 }
 
 /* Aurora: azul noche con luces y estrellas (PageAurora) fijas detrás del contenido; clip (no hidden) para que el sticky funcione. */

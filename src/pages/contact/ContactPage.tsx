@@ -205,6 +205,12 @@ export function ContactPage() {
               <div className="contact-group__head">
                 <BrandIcon name="whatsapp" size={40} />
                 <h2 className="contact-group__title">{direct.whatsappTitle}</h2>
+                {/* Burbuja de "escribiendo…" como la de WhatsApp (decorativa). */}
+                <span className="bento__typing" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </span>
               </div>
               <p className="bento__copy">{direct.whatsappText}</p>
             </div>

@@ -202,6 +202,47 @@
   color: var(--color-white);
 }
 
+/* Burbuja de "escribiendo…" (tres puntos que saltan), a la derecha del título de WhatsApp. */
+.bento__typing {
+  display: inline-flex;
+  flex: none;
+  gap: 5px;
+  align-self: center;
+  padding: 12px 16px;
+  border-radius: 18px 18px 18px 4px;
+  background: rgb(255 255 255 / 0.1);
+}
+
+.bento__typing i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.85);
+  animation: bento-typing 1.2s ease-in-out infinite;
+}
+
+.bento__typing i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.bento__typing i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes bento-typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+
+  30% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
 .bento__copy {
   max-width: 44ch;
   color: rgb(255 255 255 / 0.82);
@@ -496,6 +537,10 @@
   .social-wall__link svg:last-child,
   .social-window__more {
     transition: none;
+  }
+
+  .bento__typing i {
+    animation: none;
   }
 }
 

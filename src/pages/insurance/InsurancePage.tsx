@@ -12,6 +12,7 @@ import { INSURANCES, PARTNERS_CTA } from '@/data/partners'
 import { InsuranceGrid } from '@/pages/insurance/InsuranceGrid'
 import { useLang } from '@/app/lang'
 import { routeOf } from '@/config/routes'
+import { PagePlasma } from '@/components/decor/PagePlasma'
 import { Band } from '@/components/decor/Band'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon } from '@/components/ui/Icon'
@@ -20,7 +21,7 @@ export function InsurancePage() {
   const lang = useLang()
   const benefits = routeOf('benefits', lang)
   return (
-    <Band tone="white" className="insurance" labelledBy="aseguranzas-pagina-titulo">
+    <Band tone="gradient" className="insurance band--clip" decor={<PagePlasma />} labelledBy="aseguranzas-pagina-titulo">
       <div className="container">
         <a className="page-back" href={benefits.path}>
           <Icon name="chevronLeft" size={16} />
@@ -30,7 +31,7 @@ export function InsurancePage() {
         <div className="insurance__head">
           <div>
             <p className="page-eyebrow pill-label">{INSURANCE_INTRO[lang].eyebrow}</p>
-            <h1 id="aseguranzas-pagina-titulo" className="page-title shiny-text shiny-text--ink">
+            <h1 id="aseguranzas-pagina-titulo" className="page-title shiny-text">
               {INSURANCE_INTRO[lang].title}
             </h1>
             <p className="page-lead">{INSURANCE_INTRO[lang].lead}</p>

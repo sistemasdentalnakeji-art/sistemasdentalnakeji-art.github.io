@@ -894,9 +894,39 @@
   margin-top: 32px;
 }
 
+/* Sin panel propio: el carrusel va directo sobre el degradado fijo de la página. */
+.catalog-showcase .spin-shutter {
+  background: none;
+}
+
+.catalog-showcase .spin-shutter__aurora,
+.catalog-showcase .spin-shutter__fibers {
+  display: none;
+}
+
+/* Celular: órbita horizontal (--roll-k: 0 anula el giro diagonal en pantalla), más baja y pegada a las tarjetas; sin el alto
+   mínimo del panel, que era mayor que el contenedor y escondía los botones. */
 @media (max-width: 699.98px) {
   .catalog-showcase {
-    height: 480px;
+    height: 430px;
+    margin-top: 8px;
+    margin-bottom: 40px; /* aire entre el carrusel y el footer */
+  }
+
+  .catalog-showcase .spin-shutter {
+    --roll-k: 0;
+    min-height: 0;
+    padding-block: 8px;
+  }
+
+  /* Las fotos del arco cercano sobresalen por abajo: la escena deja espacio y los botones van por encima, nunca tapados. */
+  .catalog-showcase .spin-shutter__stage {
+    margin-bottom: 36px;
+  }
+
+  .catalog-showcase .spin-shutter__bar {
+    position: relative;
+    z-index: 5;
   }
 }
 

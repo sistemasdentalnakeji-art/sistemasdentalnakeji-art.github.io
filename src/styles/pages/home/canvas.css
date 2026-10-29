@@ -1,6 +1,6 @@
 /* ==========================================================================
    Fondo compartido de la homepage (pages/home/HomePage.tsx): el degradado azul del hero queda fijo del tamaño de la
-   pantalla detrás de TODAS las secciones; las fibras de luz animadas solo en el hero. El footer no cambia.
+   pantalla (lo pone App.tsx en .page-shell) detrás de TODAS las secciones y del footer; las fibras de luz solo en el hero.
    Como en /nosotros/: títulos dorados, textos claros y paneles de vidrio azul translúcido para que el contenido no se
    pierda. Las decoraciones propias de cada sección (diente, curvas del formulario, círculos) se conservan; solo se
    ocultan las olas y el arco blanco, que unían bandas de colores distintos.
@@ -14,7 +14,8 @@
   margin: var(--band-gap) var(--band-gap) 0;
   border-radius: var(--band-radius) var(--band-radius) 0 0;
   /* clip (no hidden): las fibras sticky y las animaciones ligadas al scroll necesitan que no sea contenedor de scroll. */
-  overflow: clip;
+  /* Solo a los lados: abajo, los anillos de Contacto pueden pasar al footer sin quedar cortados en línea recta. */
+  overflow-x: clip;
   color: var(--text-on-dark);
 }
 
@@ -155,4 +156,12 @@
 .home-canvas .contact-item__value,
 .home-canvas .contact-item__value a {
   color: var(--color-white);
+}
+
+/* Celular: las olas de unión están ocultas en la homepage, así que su espacio extra arriba sobra (dejaba saltos grandes
+   entre "Ver todos los servicios" y Aseguranzas, y entre las reseñas y Contacto). */
+@media (max-width: 767.98px) {
+  .home-canvas .band--wave-top {
+    padding-top: var(--band-padding);
+  }
 }

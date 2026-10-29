@@ -1,13 +1,12 @@
 import type { ReactNode } from 'react'
 import { cx } from '@/lib/cx'
 import { PageAurora } from '@/components/decor/PageAurora'
-import { PageGradient } from '@/components/decor/PageGradient'
 import { SectionDecor, type FlowLayout } from '@/components/decor/SectionDecor'
 
 type Wave = 'plain' | 'flip'
 
 interface BandProps {
-  /** gradient: el degradado azul fijo del homepage (PageGradient); aurora: azul noche con luces y estrellas (PageAurora). Ambos se quedan fijos: la banda usa overflow: clip. */
+  /** gradient: sin fondo propio, deja ver el degradado azul fijo de la página (PageGradient en App.tsx); aurora: azul noche con luces y estrellas (PageAurora), fijo: la banda usa overflow: clip. */
   tone: 'white' | 'tint' | 'night' | 'gradient' | 'aurora'
   id?: string
   labelledBy: string
@@ -38,7 +37,6 @@ export function Band({ tone, id, labelledBy, className, waveTop, flow, decor, ch
       )}
       aria-labelledby={labelledBy}
     >
-      {tone === 'gradient' && <PageGradient />}
       {tone === 'aurora' && <PageAurora />}
       {decor}
       {flow &&<SectionDecor variant="flow" layout={flow} />}

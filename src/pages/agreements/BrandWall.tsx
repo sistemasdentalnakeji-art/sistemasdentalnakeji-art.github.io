@@ -8,8 +8,8 @@
 // • Encendida = logo a color, nombre en blanco sobre un chip del color de la marca, ola que respira, contorno estilo Siri y
 //   sombra (`accent` en src/data/partners.ts → variable --brand). El estado va en data-lit; el aspecto, en
 //   src/styles/pages/agreements.css.
-// • Solo donde hay cursor (hover: hover) y movimiento permitido: en táctil, con "reducir movimiento" o con "Pausar animaciones"
-//   no hay ciclo y los logos se ven siempre a color.
+// • También en celular (el ciclo no necesita cursor). Con "reducir movimiento" o con "Pausar animaciones" no hay ciclo y los
+//   logos se ven siempre a color.
 // • Se renderiza también en Node: nada de window/document durante el render, solo dentro de efectos y eventos.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -37,10 +37,10 @@ export function BrandWall({ companies, summary, label }: Props) {
   const [auto, setAuto] = useState(0)
   const [hovered, setHovered] = useState<number | null>(null)
 
-  // El ciclo solo existe mientras el muro se ve y en pantallas con cursor (en táctil los efectos no se dibujan).
+  // El ciclo solo existe mientras el muro se ve (en escritorio y en celular).
   useEffect(() => {
     const wall = wallRef.current
-    if (!wall || !window.matchMedia('(hover: hover)').matches) return
+    if (!wall) return
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) setAuto(0)

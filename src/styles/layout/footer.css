@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Footer — fondo azul marino con hilos de luz animados (mismos colores y
+   Footer — sin fondo propio (degradado fijo de la página) con hilos de luz animados (mismos colores y
    tipografía que el hero). Contenido compacto: logo + columnas + contacto.
    ========================================================================== */
 .site-footer.band {
@@ -8,8 +8,8 @@
   padding-block: calc(clamp(44px, 5vw, 72px) + clamp(44px, 6.3vw, 98px)) 22px;
   border-radius: 0 0 var(--band-radius) var(--band-radius);
   color: rgba(255, 255, 255, 0.78);
-  /* Sin azul en los 2 px de arriba (quedan bajo la ola blanca): evita una línea fina en la unión. */
-  background: linear-gradient(transparent 2px, var(--color-night) 2px);
+  /* Sin fondo propio: el degradado fijo de la página (PageGradient, en App.tsx) pasa por detrás. */
+  background: transparent;
 }
 
 /* Ola superior: del blanco de la sección anterior, por encima de los hilos y el velo. */
@@ -20,8 +20,9 @@
 
 /* Si la página termina en una banda oscura (Nosotros, Servicios, Beneficios, Contacto, el aurora del blog, preguntas y avisos),
    la ola toma ese tono: con blanco se vería una franja entre las dos. */
-main:has(> :is(.band--night, .band--gradient, .band--aurora, .home-canvas):last-child) + .site-footer .decor--wave {
-  color: var(--color-night);
+.page-shell:has(> main > :is(.band--night, .band--gradient, .band--aurora, .home-canvas):last-child) .site-footer .decor--wave {
+  /* Sin ola: rellenarla de azul noche dejaba una franja oscura entre el degradado fijo y el footer. */
+  display: none;
 }
 
 /* Hilos de luz (canvas WebGL); si no hay WebGL queda el azul marino de la banda. */
@@ -33,6 +34,9 @@ main:has(> :is(.band--night, .band--gradient, .band--aurora, .home-canvas):last-
   height: 100%;
   opacity: 0;
   transition: opacity 1.2s var(--ease);
+  /* La máscara desvanece los hilos arriba para que no quede un borde donde empieza el footer sobre el degradado fijo. */
+  -webkit-mask-image: linear-gradient(transparent, #000 140px);
+  mask-image: linear-gradient(transparent, #000 140px);
 }
 
 .site-footer__fibers.is-ready {
@@ -45,6 +49,9 @@ main:has(> :is(.band--night, .band--gradient, .band--aurora, .home-canvas):last-
   inset: 2px 0 0;
   z-index: -1;
   background: linear-gradient(90deg, rgba(var(--hero-scrim-rgb), 0.7) 0%, rgba(var(--hero-scrim-rgb), 0.35) 55%, transparent 85%);
+  /* Se desvanece arriba como los hilos: sin esto, su borde superior marcaba una línea sobre el degradado fijo. */
+  -webkit-mask-image: linear-gradient(transparent, #000 220px);
+  mask-image: linear-gradient(transparent, #000 220px);
   pointer-events: none;
 }
 

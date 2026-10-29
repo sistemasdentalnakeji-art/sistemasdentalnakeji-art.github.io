@@ -81,7 +81,31 @@ function HistoryCarousel({ photos }: { photos: HistoryPhoto[] }) {
   )
 }
 
+/**
+ * Las fibras de fondo terminan al pie de las tarjetas de Administración (no siguen hasta el footer, que tiene sus propios
+ * hilos): deja en la banda `--fibers-end`, la distancia de ese punto al final de la banda, y about.css recorta ahí.
+ */
+function useFibersEnd() {
+  useEffect(() => {
+    const band = document.querySelector<HTMLElement>('.about-page')
+    const area = document.getElementById('equipo-administracion')?.closest<HTMLElement>('.team-area')
+    if (!band || !area) return
+    const measure = () => {
+      const end = band.getBoundingClientRect().bottom - area.getBoundingClientRect().bottom
+      band.style.setProperty('--fibers-end', `${Math.max(0, Math.round(end))}px`)
+    }
+    const observer = new ResizeObserver(measure)
+    observer.observe(band)
+    observer.observe(area)
+    return () => {
+      observer.disconnect()
+      band.style.removeProperty('--fibers-end')
+    }
+  }, [])
+}
+
 export function AboutPage() {
+  useFibersEnd()
   const lang = useLang()
   const a11y = ABOUT_A11Y[lang]
   const intro = ABOUT_INTRO[lang]
