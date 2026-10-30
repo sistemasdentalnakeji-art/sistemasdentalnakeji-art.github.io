@@ -152,6 +152,9 @@ export function ServicesPage() {
             <img
               className="catalog-hero__image"
               src={hero.photo.src}
+              // Versiones de 640 y 1280 px (public/images/servicios/640 y /1280) para celular y tableta.
+              srcSet={`${hero.photo.src.replace('/servicios/', '/servicios/640/')} 640w, ${hero.photo.src.replace('/servicios/', '/servicios/1280/')} 1280w, ${hero.photo.src} ${hero.photo.width}w`}
+              sizes="(max-width: 959.98px) 100vw, 50vw"
               width={hero.photo.width}
               height={hero.photo.height}
               alt={hero.photo.alt}

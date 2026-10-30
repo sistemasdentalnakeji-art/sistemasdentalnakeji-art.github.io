@@ -4,7 +4,7 @@
 // • Servicios y contenido de cada tarjeta (salen del hero de cada página de servicio) → src/data/featuredServices.ts.
 // • Título y texto de la sección → src/data/home.ts (SERVICES_SECTION).
 // • Carrusel: el mismo de Reseñas (src/components/ui/Carousel.tsx, scroll-snap): una tarjeta completa por vista en celular,
-//   2 desde 700 px y 3 desde 1100 px, sin que asome la siguiente; botones centrados debajo y sin autoplay.
+//   2 desde 768 px y 3 desde 1080 px, sin que asome la siguiente; botones centrados debajo y sin autoplay.
 // • Tarjeta: foto arriba con la etiqueta "Más solicitado" y el icono encima, y debajo título, gancho, 3 frases y botón.
 // • Estilos → src/styles/pages/home/services.css.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -39,7 +39,7 @@ function ServiceCard({ item }: { item: FeaturedItem }) {
           <img
             src={image.src}
             srcSet={`${image.src.replace('/servicios/', '/servicios/spin/')} 720w, ${image.src} ${image.width}w`}
-            sizes="(min-width: 1100px) 400px, (min-width: 700px) 50vw, 100vw"
+            sizes="(min-width: 1080px) 400px, (min-width: 768px) 50vw, 100vw"
             width={image.width}
             height={image.height}
             alt=""

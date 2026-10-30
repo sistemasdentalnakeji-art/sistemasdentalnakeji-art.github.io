@@ -21,7 +21,7 @@
   list-style: none;
 }
 
-@media (min-width: 700px) {
+@media (width >= 768px) {
   .brand-wall {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -31,7 +31,7 @@
   }
 }
 
-@media (min-width: 1100px) {
+@media (width >= 1080px) {
   .brand-wall {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
@@ -335,7 +335,7 @@ html[data-motion='paused'] .brand-tile__logo {
 }
 
 /* Celular (2 columnas): 15 fichas dejan una celda suelta; la última ocupa la fila completa. */
-@media (max-width: 699px) {
+@media (width < 768px) {
   .brand-tile:last-child {
     grid-column: span 2;
   }

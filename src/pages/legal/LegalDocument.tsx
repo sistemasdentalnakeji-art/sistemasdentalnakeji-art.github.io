@@ -15,6 +15,7 @@ import { Band } from '@/components/decor/Band'
 import { PagePlasma } from '@/components/decor/PagePlasma'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon } from '@/components/ui/Icon'
+import { atLeast, BP } from '@/config/breakpoints'
 
 function Block({ block }: { block: LegalBlock }) {
   if (typeof block === 'string') return <p className="legal-text">{block}</p>
@@ -43,6 +44,52 @@ function Block({ block }: { block: LegalBlock }) {
   )
 }
 
+// Misma condición que el apilado de legal.css.
+const STACK_QUERY = `${atLeast(BP.lg)} and (min-height: 600px) and (prefers-reduced-motion: no-preference)`
+const MIN_CARD = 176 // px: alto mínimo de una carta (encabezado + unas líneas)
+
+// Cada carta mide lo que pide su texto (con tope en el alto máximo de legal.css) en vez de ser todas igual de altas y quedar vacías.
+// Una carta tapada se recorta por abajo (--cut) hasta quedar por encima del borde inferior de la que la cubre, para que nunca asome.
+function fitCards(deck: HTMLElement) {
+  const cards = Array.from(deck.querySelectorAll<HTMLElement>(':scope > .legal-card'))
+  deck.style.removeProperty('--card-fit')
+  deck.style.removeProperty('--h-last')
+  cards.forEach((card) => {
+    card.style.removeProperty('--h')
+    card.style.removeProperty('--h-prev')
+    card.style.removeProperty('--cut')
+    card.style.removeProperty('--cut-at')
+  })
+  if (!window.matchMedia(STACK_QUERY).matches || cards.length < 2) return
+
+  const cap = cards[0].offsetHeight // sin --h, cada carta mide el tope
+  const off = parseFloat(getComputedStyle(deck).getPropertyValue('--off')) || 18
+  cards.forEach((card) => (card.style.height = 'auto'))
+  const natural = cards.map((card) => card.offsetHeight)
+  cards.forEach((card) => card.style.removeProperty('height'))
+
+  const heights = natural.map((px) => Math.min(cap, Math.max(MIN_CARD, Math.ceil(px))))
+  const last = cards.length - 1
+  const fit = Math.max(...heights)
+  // De atrás hacia delante: el borde inferior de cada carta, ya tapada, queda 4 px por encima del de la que la cubre.
+  // Se logra recortando su parte baja (--cut): el contenido de arriba no se mueve y, tapado, no asoma entre las franjas.
+  let bound = last * off + heights[last]
+  for (let i = last - 1; i >= 0; i--) {
+    const scale = 1 - (cards.length - i) * 0.018
+    const cut = Math.max(0, heights[i] - (bound - 4 - i * off) / scale)
+    cards[i].style.setProperty('--cut', `${cut}px`)
+    // El recorte empieza cuando la carta que la cubre ya pasó por su borde inferior: así nunca se ve el corte.
+    cards[i].style.setProperty('--cut-at', `${fit + last * off - (i * off + heights[i])}px`)
+    bound = i * off + (heights[i] - cut) * scale
+  }
+  cards.forEach((card, i) => {
+    card.style.setProperty('--h', `${heights[i]}px`)
+    if (i > 0) card.style.setProperty('--h-prev', `${heights[i - 1]}px`)
+  })
+  deck.style.setProperty('--card-fit', `${fit}px`)
+  deck.style.setProperty('--h-last', `${heights[last]}px`)
+}
+
 export function LegalDocument({ doc, titleId, compact = false }: { doc: LegalDoc; titleId: string; compact?: boolean }) {
   const { sections } = doc
   const [active, setActive] = useState(sections[0].id)
@@ -56,8 +103,18 @@ export function LegalDocument({ doc, titleId, compact = false }: { doc: LegalDoc
     if (!deck) return
     // Hay apilado cuando la ventana tiene scroll propio (el CSS solo se lo da en escritorio).
     const range = () => deck.scrollHeight - deck.clientHeight
-    const resize = new ResizeObserver(() => setStacked(range() > 1))
+    // El alto de cada carta depende del ancho (el texto se acomoda): solo se vuelve a medir cuando cambia el ancho.
+    let width = 0
+    const resize = new ResizeObserver(() => {
+      if (deck.clientWidth !== width) {
+        width = deck.clientWidth
+        fitCards(deck)
+      }
+      setStacked(range() > 1)
+    })
     resize.observe(deck)
+    // Con la tipografía definitiva el texto ocupa otro alto.
+    void document.fonts?.ready.then(() => fitCards(deck))
     // Con apilado, la carta activa sale del scroll de la ventana (la carta i queda fija en i/(n-1) del recorrido)...
     const onScroll = () => {
       // Se limita el índice: con el rebote elástico (Safari/iOS) scrollTop puede salirse de 0..range.

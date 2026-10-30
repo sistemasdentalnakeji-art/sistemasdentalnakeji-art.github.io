@@ -100,7 +100,7 @@
 
 /* Sangría invisible: ocupa el ancho de unas palabras (data-indent) para que la línea empiece justo debajo de ellas. */
 /* Solo en pantallas anchas: en celular la sangría parte la frase en dos, así que el texto va continuo. */
-@media (min-width: 700px) {
+@media (width >= 768px) {
   .story__line[data-indent]::before {
     content: attr(data-indent);
     white-space: pre;
@@ -136,7 +136,7 @@
 }
 
 /* Celular: hilo y diente activos (usa THREAD_CORNERS_NARROW). Tamaño de punta reducido en celular. */
-@media (max-width: 767.98px) {
+@media (width < 768px) {
   .story__tip {
     width: clamp(36px, 9vw, 46px);
   }
@@ -383,18 +383,23 @@ path.story__tooth-gloss {
      y entra hacia su lugar; el mismo valor a cada lado para que vayan a la par. */
   .story__item--left {
     --from-x: -110%;
+  }
+
+  /* Los dos laterales con el mismo ritmo: terminan de entrar antes de media pantalla (con el ritmo general, en pantallas
+     bajas como 1024×768 el de la derecha seguía cortado por el borde a media pantalla). */
+  :is(.story__item--left, .story__item--right) {
     view-timeline-inset: 0px 12%;
   }
 
-  .story__item--left .story__line {
+  :is(.story__item--left, .story__item--right) .story__line {
     animation-range: cover 0% cover 25%;
   }
 
-  .story__item--left .story__word {
+  :is(.story__item--left, .story__item--right) .story__word {
     animation-range: cover calc(2% + var(--i) * 1.4%) cover calc(20% + var(--i) * 1.4%);
   }
 
-  .story__item--left .story__accent {
+  :is(.story__item--left, .story__item--right) .story__accent {
     animation-range: cover 40% cover 70%;
   }
 
@@ -441,7 +446,7 @@ path.story__tooth-gloss {
     animation-range: cover 12% cover 80%;
   }
 
-  @media (max-width: 767.98px) {
+  @media (width < 768px) {
     .story__item--up {
       --from-y: 200px;
     }
@@ -487,7 +492,7 @@ path.story__tooth-gloss {
 }
 
 /* Celular: títulos más chicos para que el hilo y el diente den la vuelta con más aire hacia la orilla. */
-@media (max-width: 767.98px) {
+@media (width < 768px) {
   .story__item {
     font-size: clamp(1.5rem, 1rem + 2.6vw, 1.9rem);
   }
@@ -506,7 +511,7 @@ path.story__tooth-gloss {
 }
 
 /* Celular: el tercer mensaje corta antes de la orilla para que la vuelta del hilo quede dentro, sin pegarse al borde. */
-@media (max-width: 767.98px) {
+@media (width < 768px) {
   .story__item.story__item--right {
     padding-right: 16%;
   }

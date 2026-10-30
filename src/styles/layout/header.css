@@ -184,7 +184,7 @@
   font-size: 1rem;
 }
 
-@media (min-width: 1080px) {
+@media (width >= 1080px) {
   .lang-switch--bar,
   .schedule-link--bar {
     display: inline-flex;
@@ -207,7 +207,7 @@
 }
 
 /* Pantallas angostas (hasta 400 px): logo + botón + menú no caben con los huecos normales (en inglés "Schedule" es más largo). */
-@media (max-width: 399.98px) {
+@media (width < 400px) {
   .site-header__bar {
     gap: 8px;
   }
@@ -341,7 +341,7 @@
 }
 
 /* Móvil y tableta: menú desplegable a pantalla completa */
-@media (max-width: 1079.98px) {
+@media (width < 1080px) {
   .site-menu {
     display: none;
     position: fixed;
@@ -440,7 +440,7 @@
   }
 }
 
-@media (max-width: 399.98px) {
+@media (width < 400px) {
   .logo {
     --logo-h: 24px;
   }
@@ -457,7 +457,7 @@
 }
 
 /* Escritorio: menú en línea con submenús flotantes */
-@media (min-width: 1080px) {
+@media (width >= 1080px) {
   .menu-toggle {
     display: none;
   }
@@ -492,9 +492,9 @@
 
   /* Tres zonas: logo a la izquierda, rutas centradas y redes + idioma + botón a la derecha. La barra es más ancha que el
      contenido de la página (hasta 1680 px) para que logo y botón queden más hacia los bordes. Con poco ancho las rutas se
-     centran entre el logo y el grupo derecho; desde 1400 px las columnas laterales miden lo mismo y quedan en el centro real. */
+     centran entre el logo y el grupo derecho; desde 1600 px las columnas laterales miden lo mismo y quedan en el centro real. */
   .site-header__bar.container {
-    max-width: 1680px;
+    max-width: calc(var(--container) + 480px); /* 1680 px; crece con el contenido en pantallas grandes */
     display: grid;
     grid-template-columns: auto 1fr auto;
     gap: 24px;
@@ -602,7 +602,7 @@
   }
 }
 
-@media (min-width: 1400px) {
+@media (width >= 1600px) {
   .site-header__bar.container {
     grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
   }
@@ -624,7 +624,7 @@
 }
 
 /* Escritorio angosto: menú un poco más compacto para que todo quepa en una línea */
-@media (min-width: 1080px) and (max-width: 1279.98px) {
+@media (width >= 1080px) and (width < 1280px) {
   .site-header__bar.container {
     gap: 10px;
   }

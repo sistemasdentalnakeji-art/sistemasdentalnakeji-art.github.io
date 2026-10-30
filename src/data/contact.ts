@@ -115,6 +115,6 @@ export const facebookEmbed = (width: number) =>
 export const INSTAGRAM_EMBED = `${SITE.social.instagram.replace(/\/?$/, '/')}embed/`
 
 export const PRIVACY_NOTE: Record<Lang, string> = {
-  en: 'Meta content: may use cookies.',
-  es: 'Contenido de Meta: puede usar cookies.',
+  en: 'Meta content: may use cookies. More information in the privacy notice.',
+  es: 'Contenido de Meta: puede usar cookies. Más información en el aviso de privacidad.',
 }

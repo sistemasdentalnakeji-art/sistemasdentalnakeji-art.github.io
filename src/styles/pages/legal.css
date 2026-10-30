@@ -95,9 +95,9 @@
   gap: clamp(28px, 4vw, 56px);
 }
 
-@media (min-width: 960px) {
+@media (width >= 960px) {
   .legal-doc {
-    grid-template-columns: 260px minmax(0, 1fr);
+    grid-template-columns: 16.25rem minmax(0, 1fr); /* 260 px; crece con la letra en pantallas grandes */
     align-items: start;
   }
 
@@ -119,7 +119,7 @@
 }
 
 /* Celular y tableta: el índice (muy largo) se oculta; en escritorio queda a la izquierda. */
-@media (max-width: 959.98px) {
+@media (width < 960px) {
   .toc {
     display: none;
   }
@@ -271,7 +271,7 @@
 
 /* Cartas compactas (SMS): menos relleno arriba y abajo para que hasta la sección más larga quepa sin desplazarse. */
 .legal-doc--compact .legal-card__head {
-  padding-block: 16px 14px;
+  padding-block: 28px 14px; /* mayor que el desfase de las cartas apiladas (18 px, y más con el encogido): el icono de una tapada no asoma */
 }
 
 .legal-doc--compact .legal-card__body {
@@ -282,19 +282,29 @@
    La ventana (.legal-deck) mide una carta + los desfases y tiene su propio scroll: con la rueda encima, cada carta sube y se fija
    --off px más abajo que la anterior, que se encoge hacia atrás; al terminar, la rueda sigue con la página y el footer queda debajo.
    --n (número de cartas) lo escribe el componente. Fuera de esto (celular, pantalla baja, reduced-motion) queda como lista normal. */
-@media (min-width: 900px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+@media (width >= 960px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
   .legal-doc {
     --off: 18px;
     --card-h: clamp(26rem, calc(100svh - var(--header-height) - 240px), 40rem);
   }
 
-  /* SMS: poco texto por sección, así que las cartas son bajas (≈70 % menos que las del aviso). */
-  .legal-doc--compact {
-    --card-h: 12rem;
+  /* Laptops de pantalla baja (1366×768 con las barras del navegador ≈ 650 px): desfase menor y tope de alto según lo que queda
+     de pantalla, para que la ventana de cartas quepa completa. El texto largo se lee con el scroll de cada carta. */
+  @media (height < 760px) {
+    .legal-doc {
+      --off: 12px;
+    }
+
+    .legal-deck {
+      --card-h: max(15rem, 100svh - var(--header-height) - 56px - (var(--n) - 1) * var(--off));
+    }
   }
 
+  /* --card-h es el TOPE de alto. LegalDocument.tsx mide cada carta y escribe --h (alto de la carta), --h-prev (alto de la anterior),
+     --sy (cuánto se aplasta al quedar tapada), y en la ventana --card-fit (la carta más alta) y --h-last. Sin eso, todas miden el tope. */
   .legal-deck {
-    --deck-h: calc(var(--card-h) + (var(--n) - 1) * var(--off));
+    --fit: var(--card-fit, var(--card-h));
+    --deck-h: calc(var(--fit) + (var(--n) - 1) * var(--off));
     timeline-scope: --lg1, --lg2, --lg3, --lg4, --lg5, --lg6, --lg7, --lg8, --lg9, --lg10, --lg11;
     height: var(--deck-h);
     overflow-y: auto;
@@ -306,13 +316,21 @@
     display: none;
   }
 
+  /* Lo que le falta a la última carta (más baja) para llenar su espacio: mantiene el recorrido del scroll y deja que las cartas
+     altas sigan fijas hasta el final (un relleno normal no cuenta: el límite de una carta fija es el contenido de la ventana). */
+  .legal-deck::after {
+    content: '';
+    display: block;
+    height: calc(var(--fit) - var(--h-last, var(--fit)));
+  }
+
   .legal-card {
     position: sticky;
     --top: calc(var(--i) * var(--off));
     top: var(--top);
     margin: 0;
-    /* Todas igual de altas: así la de encima tapa por completo a la de atrás. */
-    height: var(--card-h);
+    /* Cada una mide lo que pide su texto; la tapada se recorta (--cut) para quedar bajo el borde de la que la cubre. */
+    height: var(--h, var(--card-h));
     border-radius: 32px;
     /* Sombra solo hacia arriba y casi sin salir a los lados: la ventana con scroll la corta en seco y dejaba un rastro gris cuadrado. */
     box-shadow: 0 -10px 16px -12px rgba(42, 66, 105, 0.28);
@@ -323,7 +341,8 @@
   /* Separación mayor que todos los desfases: la siguiente carta queda fuera de la ventana mientras espera el scroll.
      Va como margen SUPERIOR (uno inferior limitaría hasta dónde puede seguir fija cada carta). */
   .legal-card + .legal-card {
-    margin-top: calc((var(--n) - 1) * var(--off) + 16px);
+    /* El hueco compensa el alto de la anterior: cada carta conserva su posición en el recorrido aunque midan distinto. */
+    margin-top: calc((var(--n) - 1) * var(--off) + 16px + var(--fit) - var(--h-prev, var(--fit)));
   }
 
   /* El texto largo se desplaza dentro de su carta; al llegar al final, la rueda sigue con la ventana. */
@@ -338,9 +357,13 @@
      El rango termina justo cuando la siguiente queda fija = alto de la ventana - su "top". */
   @supports (animation-timeline: view()) {
     .legal-card:not(:last-child) {
-      animation: legal-recede linear both;
+      animation:
+        legal-recede linear both,
+        legal-cut linear both;
       animation-timeline: var(--tl-next);
-      animation-range: cover 0% cover calc(var(--deck-h) - var(--top) - var(--off));
+      animation-range:
+        cover 0% cover calc(var(--deck-h) - var(--top) - var(--off)),
+        cover var(--cut-at, 0px) cover calc(var(--deck-h) - var(--top) - var(--off));
     }
   }
 }
@@ -351,14 +374,25 @@
   }
 }
 
+/* Recorte de la parte baja de la carta tapada (margen en los otros tres lados para no cortar la sombra). */
+@keyframes legal-cut {
+  from {
+    clip-path: inset(-24px -24px 0 -24px);
+  }
+
+  to {
+    clip-path: inset(-24px -24px var(--cut, 0px) -24px);
+  }
+}
+
 /* Celular y tableta: las secciones son un menú desplegable (LegalDocument.tsx pone data-open en la abierta; una a la vez, la primera al
    entrar). Una sola tarjeta con filas (icono, título y flecha); al abrir una se muestra su texto y las demás filas siguen debajo, en su
-   lugar. Mismo diseño que las categorías de /servicios/. El escritorio no cambia: nada de esto aplica desde 900 px. */
+   lugar. Mismo diseño que las categorías de /servicios/. El escritorio no cambia: nada de esto aplica desde 960 px. */
 .legal-card__toggle {
   display: none;
 }
 
-@media (max-width: 899.98px) {
+@media (width < 960px) {
   .legal-deck {
     padding: 4px 16px;
     border: 1px solid rgba(42, 66, 105, 0.12);

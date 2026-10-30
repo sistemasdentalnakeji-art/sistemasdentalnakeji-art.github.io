@@ -80,7 +80,7 @@ const buildNav = (lang: Lang): NavItem[] => {
     },
     link('contacto', 'contact'),
     link('nosotros', 'about'),
-    // Información de la clínica, en este orden: blog, términos de SMS y aviso de privacidad.
+    // Información de la clínica, en este orden: blog, términos y condiciones y aviso de privacidad.
     {
       kind: 'menu',
       id: 'mas',

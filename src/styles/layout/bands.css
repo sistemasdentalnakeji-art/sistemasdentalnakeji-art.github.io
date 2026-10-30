@@ -51,7 +51,7 @@ main > .band:first-child {
   background: transparent;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   :root {
     --band-gap: 12px;
   }

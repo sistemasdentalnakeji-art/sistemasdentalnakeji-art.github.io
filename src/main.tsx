@@ -34,6 +34,6 @@ if (container.dataset.path === route.path) {
   // Desarrollo (sin prerender) o una URL sin HTML propio.
   applyHead(route)
   createRoot(container).render(app)
-  // shortcut: espera 1 s a que llegue la página diferida (React.lazy); si tarda más, sus animaciones no se pausan fuera de pantalla.
-  window.setTimeout(pauseOffscreen, 1000)
+  // La página diferida (React.lazy) llega después: pauseOffscreen la revisa sola cuando cambia el DOM.
+  requestAnimationFrame(pauseOffscreen)
 }

@@ -275,7 +275,7 @@
   97%, 100% { opacity: 0; }
 }
 
-@media (min-width: 900px) {
+@media (width >= 960px) {
   .reviews-intro {
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
     gap: 56px;
@@ -323,7 +323,7 @@
   mask-image: linear-gradient(90deg, transparent 3%, #000 9%, #000 91%, transparent 97%);
 }
 
-@media (min-width: 900px) {
+@media (width >= 960px) {
   .reviews-rows {
     -webkit-mask-image: linear-gradient(90deg, transparent 12%, #000 21%, #000 79%, transparent 88%);
     mask-image: linear-gradient(90deg, transparent 12%, #000 21%, #000 79%, transparent 88%);
@@ -335,7 +335,7 @@
   --marquee-gap: 24px;
 }
 
-@media (min-width: 900px) {
+@media (width >= 960px) {
   .reviews-rows .marquee {
     --marquee-gap: 36px;
   }
@@ -514,7 +514,7 @@
 }
 
 /* Celular y tableta: dos tarjetas por fila a la vez, compactas (el autor va en vertical para que quepa). */
-@media (max-width: 899.98px) {
+@media (width < 960px) {
   .reviews-rows .marquee {
     --marquee-gap: 12px;
   }

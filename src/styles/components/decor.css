@@ -86,7 +86,7 @@
   }
 }
 
-@media (max-width: 959.98px) {
+@media (width < 960px) {
   .decor--flow-desktop {
     display: none;
   }
@@ -96,7 +96,7 @@
   }
 }
 
-@media (min-width: 960px) {
+@media (width >= 960px) {
   .decor--flow-mobile {
     display: none;
   }
@@ -190,13 +190,13 @@
   display: none;
 }
 
-@media (min-width: 600px) {
+@media (width >= 600px) {
   .decor-rings {
     --rings-scale: 0.7;
   }
 }
 
-@media (min-width: 960px) {
+@media (width >= 960px) {
   .decor-rings {
     --rings-scale: 1;
   }

@@ -7,7 +7,7 @@
 //    - Para un enlace externo, usa la URL completa: { label: 'Blog', href: 'https://…' }.
 //  • Agregar una columna nueva → añade otro objeto a FOOTER_COLUMNS (id único, título y enlaces).
 //    En escritorio el footer usa 5 columnas fijas: con una columna más, ajusta
-//    grid-template-columns en styles/layout/footer.css (bloque "@media (min-width: 1080px)").
+//    grid-template-columns en styles/layout/footer.css (bloque "@media (width >= 1080px)").
 //  • Cambiar los servicios listados → edita FOOTER_SERVICE_PATHS (4 rutas de SERVICE_ROUTES, config/routes.ts).
 //
 // La columna "Contacto" (dirección, teléfonos, correo) se llena sola con config/site.ts.

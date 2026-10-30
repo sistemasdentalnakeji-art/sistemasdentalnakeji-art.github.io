@@ -1,6 +1,6 @@
 /* ==========================================================================
    Servicios destacados (sections/FeaturedServices.tsx): carrusel de Reseñas (components/carousel.css) con tarjetas de foto arriba.
-   Una tarjeta completa por vista en celular, 2 desde 700 px y 3 desde 1100 px; ninguna deja asomar a la vecina.
+   Una tarjeta completa por vista en celular, 2 desde 768 px y 3 desde 1080 px; ninguna deja asomar a la vecina.
    ========================================================================== */
 .carousel--services .carousel__track {
   --gap: 20px;
@@ -9,7 +9,7 @@
   padding-block: 8px 40px;
 }
 
-@media (min-width: 1100px) {
+@media (width >= 1080px) {
   .carousel--services .carousel__track {
     --per-view: 3;
   }

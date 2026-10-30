@@ -811,7 +811,7 @@
   transition: transform var(--dur) var(--ease-out);
 }
 
-@media (min-width: 961px) {
+@media (width >= 960px) {
   .blog-article-head {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
     align-items: center;
@@ -820,7 +820,7 @@
 }
 
 /* ---------- Pantallas pequeñas ---------- */
-@media (max-width: 960px) {
+@media (width < 960px) {
   .blog-hero,
   .blog-article {
     grid-template-columns: minmax(0, 1fr);
@@ -854,7 +854,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (width < 600px) {
   /* En celular los temas bajan a varias filas de píldoras (todas visibles), sin barra que se corte de lado. */
   /* Clase repetida: le gana a la regla del vidrio oscuro (.blog-dark .blog-chips ul) que va más abajo. */
   .blog-chips.blog-chips ul,
@@ -936,6 +936,15 @@
 
   .blog-card__brand {
     height: 15px;
+  }
+
+  /* Celular chico: logo y fecha no caben a lo ancho; la fecha sube a la línea de arriba del logo. */
+  @media (width < 400px) {
+    .blog-card__stamp {
+      bottom: 46px;
+      right: auto;
+      left: 14px;
+    }
   }
 
   /* Artículo en celular: más compacto (menos aire y letra un peldaño menor) para que no se haga tan largo. */
@@ -1101,13 +1110,13 @@
 
 /* Móvil: el blog es una página muy larga y la lava (plasma con máscara sobre toda la altura) se ve mal en el teléfono.
    Se quita el plasma (el observador de visibilidad lo pausa) y queda solo el degradado azul fijo. Escritorio sin cambios. */
-@media (max-width: 767px) {
+@media (width < 768px) {
   .blog-dark .page-plasma {
     display: none;
   }
 }
 
-@media (max-width: 960px) {
+@media (width < 960px) {
   .blog-dark .blog-article__body {
     padding-inline: var(--space-4);
     border-radius: var(--radius-lg);

@@ -14,9 +14,17 @@ html {
   scroll-padding-top: calc(var(--header-height) + 16px);
 }
 
+/* Pantallas grandes: la letra (todo lo medido en rem) crece poco a poco, de 16 px en 1600 px a 20 px en 2560 px. */
+@media (width >= 1600px) {
+  html {
+    font-size: min(125%, 100% + (100vw - 1600px) * 0.00417);
+  }
+}
+
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100svh;
   background: var(--color-porcelain);
   color: var(--color-text);
   font-family: var(--font-body);

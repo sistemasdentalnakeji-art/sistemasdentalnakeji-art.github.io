@@ -90,6 +90,17 @@
   height: 36px;
 }
 
+/* Sin movimiento la órbita no gira, así que los iconos de atrás quedarían chicos y borrosos: se ponen en fila, todos nítidos. */
+.social-orbit[data-phase='static'] .social-orbit__ring {
+  transform: none;
+}
+
+.social-orbit[data-phase='static'] .social-orbit__item {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: translateX(calc((var(--k) - (var(--n) - 1) / 2) * 30px)) scale(0.8);
+}
+
 html[data-motion='paused'] .social-orbit {
   transition: none !important;
 }

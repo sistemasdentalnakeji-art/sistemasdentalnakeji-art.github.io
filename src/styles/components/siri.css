@@ -40,14 +40,13 @@
   pointer-events: none;
 }
 
-/* Resplandor suave detrás del elemento. */
+/* Resplandor suave detrás del elemento. Solo "respira" (opacidad y escala, que mueve la tarjeta gráfica): girar su degradado
+   obligaba a volver a difuminarlo en cada cuadro, y con el blur el giro casi no se nota. El giro lo lleva el contorno nítido. */
 .siri::before {
   z-index: -1;
   filter: blur(var(--siri-blur));
   opacity: 0.85;
-  animation:
-    siri-spin 3.4s linear infinite reverse,
-    siri-pulse 1.6s ease-in-out infinite alternate;
+  animation: siri-pulse 1.6s ease-in-out infinite alternate;
 }
 
 /* Contorno nítido: el degradado se recorta a un anillo del grosor --siri-width. */

@@ -40,7 +40,8 @@ test.describe('Pantallas principales', () => {
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
       expect(overflow).toBeLessThanOrEqual(1)
       expect(errors).toEqual([])
-      await expect(page).toHaveScreenshot(`${slug(path)}.png`)
+      // Los fondos WebGL y los recuadros de redes cambian solos: se tapan para que la captura sea estable.
+      await expect(page).toHaveScreenshot(`${slug(path)}.png`, { fullPage: true, mask: [page.locator('canvas, iframe')] })
     })
   }
 })
@@ -66,30 +67,32 @@ test.describe('Inicio en español: héroe y sección del diente', () => {
 })
 
 test.describe('Navegación', () => {
-  const openMenu = async (page: Page, isMobile: boolean) => {
-    if (isMobile) await page.getByRole('button', { name: 'Menu' }).click()
+  // Menú de hamburguesa por debajo de 1080 px (BP.nav en src/config/breakpoints.ts): celular y tableta.
+  const narrow = (page: Page) => (page.viewportSize()?.width ?? 0) < 1080
+  const openMenu = async (page: Page) => {
+    if (narrow(page)) await page.getByRole('button', { name: 'Menu' }).click()
   }
 
-  test('un submenú del menú principal abre y lleva a otra página', async ({ page, isMobile }) => {
+  test('un submenú del menú principal abre y lleva a otra página', async ({ page }) => {
     await page.goto('/en/')
-    await openMenu(page, isMobile)
+    await openMenu(page)
     await page.getByRole('navigation', { name: 'Main' }).locator('.nav-button').first().click()
     await page.locator('.dropdown__link:visible').first().click()
     await expect(page).not.toHaveURL(/\/en\/$/)
     await expect(page.locator('h1').first()).toBeVisible()
   })
 
-  test('el selector de idioma cambia a español', async ({ page, isMobile }) => {
+  test('el selector de idioma cambia a español', async ({ page }) => {
     await page.goto('/en/')
-    await openMenu(page, isMobile)
-    await page.locator(isMobile ? 'a.lang-switch--menu' : 'a.lang-switch--bar').click()
+    await openMenu(page)
+    await page.locator(narrow(page) ? 'a.lang-switch--menu' : 'a.lang-switch--bar').click()
     await expect(page).toHaveURL(/\/es\//)
   })
 
-  test('el botón Agendar lleva hasta el formulario', async ({ page, isMobile }) => {
+  test('el botón Agendar lleva hasta el formulario', async ({ page }) => {
     await page.goto('/en/')
-    await openMenu(page, isMobile)
-    await page.locator(isMobile ? '.schedule-link--menu' : '.schedule-link--bar').click()
+    await openMenu(page)
+    await page.locator(narrow(page) ? '.schedule-link--menu' : '.schedule-link--bar').click()
     await expect(page).toHaveURL(/#/)
     await expect(page.locator('#agendar')).toBeInViewport({ timeout: 10_000 })
   })

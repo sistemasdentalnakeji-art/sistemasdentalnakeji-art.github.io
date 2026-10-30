@@ -12,7 +12,7 @@
 }
 
 /* Celular: menos aire arriba (los anillos de esta sección solo se dibujan en escritorio). */
-@media (max-width: 767.98px) {
+@media (width < 768px) {
   .home-canvas .partners-band {
     padding-top: 20px;
   }
@@ -84,13 +84,13 @@
 }
 
 /* Pantallas muy angostas (320 px, zoom al 400 %): el chip pasa a dos líneas en vez de recortarse. */
-@media (max-width: 359px) {
+@media (width < 400px) {
   .rail__badge {
     white-space: normal;
   }
 }
 
-@media (min-width: 960px) {
+@media (width >= 960px) {
   .rail__top .rail__icon {
     width: 56px;
     height: 56px;
@@ -275,7 +275,7 @@
   isolation: isolate;
 }
 
-@media (min-width: 960px) {
+@media (width >= 960px) {
   .rail {
     grid-template-columns: minmax(260px, 0.85fr) 2fr;
     grid-template-rows: auto auto;

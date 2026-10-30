@@ -26,7 +26,7 @@ export function BlogCard({ article, excerpt, level = 3, showTopic = true }: Blog
             className="blog-card__img"
             src={photoOf(key)}
             srcSet={photoSrcSetOf(key)}
-            sizes="(max-width: 640px) 100vw, 400px"
+            sizes="(max-width: 599.98px) 100vw, (max-width: 959.98px) 50vw, 400px"
             alt=""
             width={1280}
             height={720}

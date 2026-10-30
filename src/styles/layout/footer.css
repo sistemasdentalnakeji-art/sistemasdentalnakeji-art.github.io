@@ -114,7 +114,7 @@
 }
 
 /* Contacto: en tablet y escritorio el título va donde empieza el texto, no donde están los iconos (18 px + 10 px). En móvil va alineado con los iconos. */
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .footer-column:last-child .footer-title {
     padding-left: 28px;
   }
@@ -213,7 +213,7 @@
   text-align: center;
 }
 
-@media (max-width: 767.98px) {
+@media (width < 768px) {
   .footer-bottom__links {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -226,7 +226,7 @@
 }
 
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .footer-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -237,7 +237,7 @@
 }
 
 /* Escritorio: el isotipo a la izquierda y, a su lado, las cuatro listas en una fila (Servicios, Beneficios, Clínica, Contacto). */
-@media (min-width: 1080px) {
+@media (width >= 1080px) {
   .footer-grid {
     grid-template-columns: minmax(0, 0.9fr) repeat(4, minmax(0, 1fr));
     gap: 32px 40px;
@@ -250,7 +250,7 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (width >= 1280px) {
   .footer-bottom {
     display: grid;
     grid-template-columns: auto 1fr auto;

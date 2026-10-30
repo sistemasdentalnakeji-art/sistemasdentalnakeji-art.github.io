@@ -137,7 +137,7 @@ a.contact-item__value:hover {
 }
 
 /* Escritorio: debajo del correo, alineado a la derecha; "Síguenos" centrado con las redes */
-@media (min-width: 960px) {
+@media (width >= 960px) {
   .contact__social {
     justify-content: flex-end;
   }
@@ -154,13 +154,13 @@ a.contact-item__value:hover {
 }
 
 /* Una columna ancha (tableta): más alto, para que el plano recortado conserve el pin y su nombre a la vista. */
-@media (min-width: 600px) and (max-width: 959.98px) {
+@media (width >= 600px) and (width < 960px) {
   .contact__map {
     min-height: 520px;
   }
 }
 
-@media (min-width: 960px) {
+@media (width >= 960px) {
   .contact {
     grid-template-columns: 1fr 1.1fr;
   }
@@ -168,7 +168,7 @@ a.contact-item__value:hover {
 
 /* Celular y tableta (una columna): el mapa va entre el texto y las tarjetas de contacto.
    .contact__info deja de ser caja (display: contents) para que sus hijos se ordenen en la columna. */
-@media (max-width: 959.98px) {
+@media (width < 960px) {
   .contact__info {
     display: contents;
   }
@@ -189,7 +189,7 @@ a.contact-item__value:hover {
 
 /* Celular: cerrado, el recuadro se ajusta a la tarjeta (140 px + pista); expandido, recupera la altura del escritorio
    para que el plano no quede recortado. */
-@media (max-width: 599.98px) {
+@media (width < 600px) {
   .contact__intro .section-title {
     margin-top: 12px;
   }

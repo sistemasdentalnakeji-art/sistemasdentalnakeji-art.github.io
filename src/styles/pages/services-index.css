@@ -37,10 +37,11 @@
   opacity: 1;
 }
 
-/* Mucho más ancho que el resto del sitio (hasta 1800 px) para que héroe y cartas llenen la pantalla sin aire vacío a los lados. */
+/* Más ancho que el resto del sitio (igual que la barra del header) para que héroe y cartas llenen la pantalla sin aire vacío a los lados
+   y queden alineados con el logo y el botón del header. */
 .catalog .container {
   --hero-gap: clamp(32px, 4vw, 56px); /* espacio entre el héroe y la primera categoría (también lo usa la pila de cartas) */
-  max-width: calc(1800px + 2 * var(--gutter));
+  max-width: calc(var(--container) + 480px);
 }
 
 /* Encabezado: texto a la izquierda y espacio para la foto a la derecha (en móvil, uno bajo el otro). */
@@ -195,7 +196,7 @@
   }
 }
 
-@media (min-width: 560px) {
+@media (width >= 600px) {
   .catalog-hero__index ol {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(3, auto);
@@ -205,7 +206,7 @@
 
 /* Celular y tableta: orden título + texto → foto → 4 tarjetas 2x2 → índice. El bloque de texto se "disuelve" (display: contents) para poder
    intercalar la foto entre sus hijos con order. */
-@media (max-width: 899.98px) {
+@media (width < 960px) {
   .catalog-hero {
     display: flex;
     flex-direction: column;
@@ -263,7 +264,7 @@
 }
 
 /* Escritorio: la foto se lleva la mayor parte del ancho y se hace más panorámica. */
-@media (min-width: 900px) {
+@media (width >= 960px) {
   .catalog-hero {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
     gap: clamp(32px, 3.5vw, 64px);
@@ -537,7 +538,7 @@
   grid-auto-rows: auto;
 }
 
-@media (min-width: 600px) {
+@media (width >= 600px) {
   .catalog-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -548,7 +549,7 @@
   }
 }
 
-@media (min-width: 900px) {
+@media (width >= 960px) {
   .catalog-group {
     grid-template-columns: 300px 1fr;
     gap: 40px;
@@ -563,7 +564,7 @@
   }
 }
 
-@media (min-width: 1280px) {
+@media (width >= 1280px) {
   .catalog-group {
     grid-template-columns: 380px 1fr;
   }
@@ -571,8 +572,8 @@
 
 /* Celular y tableta: las categorías son un menú desplegable (ServicesPage.tsx pone data-open en la abierta; una a la vez, la primera al entrar).
    Una sola tarjeta con filas (número 01-05, categoría y flecha); al abrir una se muestran su descripción breve y sus servicios compactos
-   (icono, título y botón), y las demás filas siguen debajo, en su lugar. El escritorio no cambia: nada de esto aplica desde 900 px. */
-@media (max-width: 899.98px) {
+   (icono, título y botón), y las demás filas siguen debajo, en su lugar. El escritorio no cambia: nada de esto aplica desde 960 px. */
+@media (width < 960px) {
   .catalog-groups {
     counter-reset: grp;
     margin-top: 24px;
@@ -732,7 +733,7 @@
   display: none;
 }
 
-@media (max-width: 899.98px) {
+@media (width < 960px) {
   .catalog-group__toggle {
     display: block;
   }
@@ -761,7 +762,7 @@
    carta sube y se fija (sticky) 25 px más abajo que la anterior, que se encoge hacia atrás; al terminar, la rueda sigue con la página.
    Nada se monta sobre el héroe ni empuja al footer. Fuera de eso (móvil, pantalla baja, reduced-motion) queda como lista normal.
    Cuentas: alto = 5 cartas, ventana = 1 carta + 4 x 25 px, así el scroll máximo deja las 5 fijas justo al final. */
-@media (min-width: 900px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+@media (width >= 960px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
   /* Las medidas viven en el contenedor de las dos secciones: el Spin Shutter (hermano de la ventana) mide lo mismo que ella. */
   .catalog-split {
     --card-h: 41rem;
@@ -889,7 +890,7 @@
   }
 }
 
-/* Spin Shutter (components/ui/SpinShutter.tsx): sección aparte, bajo las cartas en pantallas menores a 1440 px. */
+/* Spin Shutter (components/ui/SpinShutter.tsx): sección aparte, bajo las cartas en pantallas menores a 1600 px. */
 .catalog-showcase {
   height: 620px;
   margin-top: 32px;
@@ -907,7 +908,7 @@
 
 /* Celular: órbita horizontal (--roll-k: 0 anula el giro diagonal en pantalla), más baja y pegada a las tarjetas; sin el alto
    mínimo del panel, que era mayor que el contenedor y escondía los botones. */
-@media (max-width: 699.98px) {
+@media (width < 768px) {
   .catalog-showcase {
     height: 430px;
     margin-top: 8px;
@@ -934,7 +935,7 @@
 /* Pantallas anchas (con el apilado activo): las cartas (1) a la izquierda y el Spin Shutter (2) a la derecha, del mismo alto que la ventana.
    Las cartas quedan más angostas: el riel (título e intro) se estrecha, se oculta el párrafo de relleno y las tarjetas se compactan.
    La altura de las cartas no cambia, así el apilado de arriba funciona igual. */
-@media (min-width: 1440px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+@media (width >= 1600px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
   .catalog-split {
     display: grid;
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
@@ -995,26 +996,26 @@
 
 /* Altura de las cartas según el ancho (medida con las letras actuales): al ensancharse la pantalla las tarjetas ocupan menos líneas.
    --card-h = las tres primeras (con ~16 px de holgura); --card-h-short = las dos últimas, que solo tienen una fila de servicios. */
-@media (min-width: 1440px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+@media (width >= 1600px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
   .catalog-split {
     --card-h: 46rem;
     --card-h-short: 25.5rem;
   }
 }
 
-@media (min-width: 1600px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+@media (width >= 1600px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
   .catalog-split {
     --card-h: 42.5rem;
   }
 }
 
-@media (min-width: 1760px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+@media (width >= 1920px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
   .catalog-split {
     --card-h-short: 21rem;
   }
 }
 
-@media (min-width: 1920px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+@media (width >= 1920px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
   .catalog-split {
     --card-h: 38rem;
     --card-h-short: 20rem;

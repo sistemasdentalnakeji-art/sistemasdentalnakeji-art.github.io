@@ -227,7 +227,7 @@
 }
 
 /* Celular: la foto llena el ancho de la tarjeta (con alto fijo se quedaba de 240 px, angosta y descentrada). */
-@media (max-width: 767.98px) {
+@media (width < 768px) {
   .timeline-carousel {
     width: 100%;
   }
@@ -321,7 +321,7 @@
   }
 }
 
-@media (min-width: 900px) {
+@media (width >= 960px) {
   .timeline {
     --line-x: 50%;
   }
@@ -357,7 +357,7 @@
   list-style: none;
 }
 
-@media (min-width: 760px) {
+@media (width >= 768px) {
   .purpose {
     grid-template-columns: 1fr 1fr;
   }
@@ -415,7 +415,7 @@
   width: calc(50% - 6px);
 }
 
-@media (min-width: 1000px) {
+@media (width >= 1080px) {
   .values {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: clamp(10px, 1.5vw, 20px);
@@ -472,14 +472,14 @@
   gap: clamp(36px, 5vw, 60px) clamp(20px, 4vw, 48px);
 }
 
-@media (min-width: 1000px) {
+@media (width >= 1080px) {
   .team-areas {
     --card-w: min(calc((100cqw - 2 * var(--card-gap)) / 3), var(--card-max));
   }
 }
 
 /* Desde tableta: las tres primeras áreas ocupan todo el ancho; Laboratorio e Infraestructura comparten la última fila. */
-@media (min-width: 760px) {
+@media (width >= 768px) {
   .team-areas {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -551,7 +551,7 @@
   grid-template-columns: var(--card-w);
 }
 
-@media (min-width: 1000px) {
+@media (width >= 1080px) {
   .team-area:nth-child(-n + 3) .team-grid {
     grid-template-columns: repeat(3, var(--card-w));
   }
@@ -841,7 +841,7 @@
       animation-range: entry calc(20% + var(--d) * 12%) entry calc(75% + var(--d) * 12%);
     }
 
-    @media (min-width: 900px) {
+    @media (width >= 960px) {
       .timeline__item {
         transform-origin: left center;
       }

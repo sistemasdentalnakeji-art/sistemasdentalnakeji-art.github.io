@@ -116,7 +116,7 @@
 }
 
 /* Celular: el panel es angosto y las fotos de 21 % quedaban diminutas; más grandes aunque la órbita asome por los lados. */
-@media (max-width: 699.98px) {
+@media (width < 768px) {
   .spin-shutter__ring {
     --w: 24cqw;
   }
@@ -195,6 +195,9 @@
   background: var(--color-night);
   opacity: 0;
   visibility: hidden;
+  /* Al abrir la foto cambian su posición y tamaño: con `contain: strict` el navegador solo recalcula esta caja (y su imagen),
+     no el resto de la página, en cada cuadro de la transición. */
+  contain: strict;
   transition:
     top 0.7s var(--ss-spring),
     left 0.7s var(--ss-spring),

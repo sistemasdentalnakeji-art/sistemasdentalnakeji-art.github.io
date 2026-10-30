@@ -21,6 +21,7 @@ import { STORY, type StoryLines } from '@/data/story'
 import { AnimatedLines, type Line } from '@/components/decor/SectionDecor'
 import { Band } from '@/components/decor/Band'
 import { storyThread, type StoryLayout } from '@/lib/storyThread'
+import { below, BP } from '@/config/breakpoints'
 
 /** Ancho del área (px) por debajo del cual el hilo pasa más pegado al texto (celular: el texto llega casi a la orilla). */
 const NARROW_AREA = 740
@@ -204,7 +205,7 @@ const noSubscribe = () => () => {}
 /** ¿Hace falta el respaldo? Sí si el navegador no tiene `animation-timeline` o es un celular, salvo "reducir movimiento". */
 const needsScrub = () =>
   // Celular: el diente no seguía el `offset-path` (se quedaba en la esquina), así que ahí siempre se coloca con JS.
-  (!CSS.supports('animation-timeline', 'view()') || window.matchMedia('(max-width: 767.98px)').matches) &&
+  (!CSS.supports('animation-timeline', 'view()') || window.matchMedia(below(BP.md)).matches) &&
   !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /**

@@ -23,6 +23,7 @@ import { UI } from '@/data/ui'
 import { Icon } from '@/components/ui/Icon'
 import { AuroraBackground } from '@/components/decor/AuroraBackground'
 import { motionOff } from '@/lib/motion'
+import { below, BP } from '@/config/breakpoints'
 
 export interface SpinShutterPhoto {
   src: string
@@ -98,7 +99,7 @@ export function SpinShutter({ photos, label, speed = 2.2, tilt = 30, roll = 26 }
     let last = 0
     let painted = ''
     const wobble = { tilt: 0, roll: 0 }
-    const blurOn = !window.matchMedia('(max-width: 699.98px)').matches
+    const blurOn = !window.matchMedia(below(BP.md)).matches
     let opened = motionOff() // sin movimiento no hay apertura: la órbita ya está completa
     // Si cambia a "sin movimiento" mientras está en pila y fuera de pantalla, al verse queda completa y sin transición.
     const finishOpen = () => {

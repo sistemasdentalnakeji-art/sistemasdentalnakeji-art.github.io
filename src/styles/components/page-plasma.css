@@ -28,7 +28,7 @@
 
 /* Móvil: en un lienzo alto y angosto el plasma llena casi toda la pantalla de azul claro; se atenúa para que el
    degradado azul fijo siga mandando. Escritorio sin cambios. */
-@media (max-width: 767px) {
+@media (width < 768px) {
   .page-plasma,
   .catalog__plasma,
   .benefits__plasma {

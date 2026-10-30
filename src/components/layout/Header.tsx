@@ -20,9 +20,10 @@ import { LanguageSwitch } from '@/components/layout/LanguageSwitch'
 import { Logo } from '@/components/layout/Logo'
 import { SocialLinks } from '@/components/ui/SocialLinks'
 import { SocialOrbit } from '@/components/ui/SocialOrbit'
+import { atLeast, BP } from '@/config/breakpoints'
 
 const MENU_ID = 'menu-principal'
-const DESKTOP_QUERY = '(min-width: 1080px)'
+const DESKTOP_QUERY = atLeast(BP.nav)
 
 const buttonId = (id: string) => `nav-${id}-boton`
 const panelId = (id: string) => `nav-${id}-submenu`

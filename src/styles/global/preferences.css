@@ -20,7 +20,7 @@
     opacity: 1;
   }
 
-  .ambient-label:nth-child(n + 4) {
+  .hero__ambient li:nth-child(n + 4) {
     display: none;
   }
 

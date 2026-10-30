@@ -91,3 +91,19 @@
   --measure: 68ch;
   --tap-min: 44px;
 }
+
+/* PUNTOS DE QUIEBRE (los mismos en todo el sitio; copia para JS en src/config/breakpoints.ts).
+   CSS no acepta variables dentro de @media: se escriben con estos números y en sintaxis de rango, sin ".98":
+   `@media (width >= 960px)` para "desde" y `@media (width < 960px)` para "antes de".
+     400  celular chico        600  celular grande / tableta chica    768  tableta
+     960  laptop chica         1080 menú completo del header           1280 escritorio
+     1600 pantalla grande (el contenido y la letra crecen)             1920 Full HD y más
+   No inventes otro número: usa el más cercano. */
+
+/* Pantallas grandes (≥1600 px: 1080p, 2K): el contenido se ensancha poco a poco hasta 1600 px (en 2560 px).
+   La letra crece en base.css. */
+@media (width >= 1600px) {
+  :root {
+    --container: min(1600px, 1200px + (100vw - 1600px) * 0.4167);
+  }
+}

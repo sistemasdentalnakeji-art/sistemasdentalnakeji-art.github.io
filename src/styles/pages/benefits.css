@@ -678,7 +678,7 @@ html[data-motion='paused'] .benefit-card__badge {
 }
 
 /* ---------- Tableta y celular ---------- */
-@media (min-width: 760px) {
+@media (width >= 768px) {
   /* En escritorio el talón queda a la derecha: la perforación es vertical y las muescas van arriba y abajo. */
   .benefits-cta {
     grid-template-columns: minmax(0, 1fr) 320px;
@@ -727,19 +727,19 @@ html[data-motion='paused'] .benefit-card__badge {
   }
 }
 
-@media (max-width: 1023.98px) {
+@media (width < 1080px) {
   .benefit-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 899.98px) {
+@media (width < 960px) {
   .benefits-hero {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 639.98px) {
+@media (width < 600px) {
   .benefit-grid,
   .benefits-hero__features {
     grid-template-columns: 1fr;

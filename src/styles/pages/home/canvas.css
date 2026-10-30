@@ -160,7 +160,7 @@
 
 /* Celular: las olas de unión están ocultas en la homepage, así que su espacio extra arriba sobra (dejaba saltos grandes
    entre "Ver todos los servicios" y Aseguranzas, y entre las reseñas y Contacto). */
-@media (max-width: 767.98px) {
+@media (width < 768px) {
   .home-canvas .band--wave-top {
     padding-top: var(--band-padding);
   }

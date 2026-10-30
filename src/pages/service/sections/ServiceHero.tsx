@@ -37,6 +37,9 @@ export function ServiceHero({ label, content }: ServiceHeroProps) {
         <img
           className={image.flip ? 'service-hero__image service-hero__image--flip' : 'service-hero__image'}
           src={image.src}
+          // Versiones de 640 y 1280 px (public/images/servicios/640 y /1280): el celular no baja la de 2000 px.
+          srcSet={`${image.src.replace('/servicios/', '/servicios/640/')} 640w, ${image.src.replace('/servicios/', '/servicios/1280/')} 1280w, ${image.src} ${image.width}w`}
+          sizes="100vw"
           width={image.width}
           height={image.height}
           alt=""

@@ -413,19 +413,18 @@ const PAGES: PageDef[] = [
   ),
   page('blog', { en: '/en/blog/', es: '/es/blog/' }, withTitle('Blog'), { template: 'blog' }),
   ...BLOG_PAGES,
-  // Requerido por el formulario de citas (LFPDPPP). El texto es el oficial de la clínica, en inglés (src/data/legal.ts).
-  // PENDIENTE: la traducción al español de /es/ (la pide la clínica; no se inventa).
+  // Requerido por el formulario de citas (LFPDPPP). Textos en src/data/legal.ts.
   page(
     'privacy',
     { en: '/en/privacy/', es: '/es/aviso-de-privacidad/' },
-    // El documento oficial está en inglés hasta la traducción de la clínica; el título de /es/ dice qué es, en español.
     {
-      en: withTitle('Notice of Privacy Practices', {
-        description: 'Notice of Privacy Practices of Nakeji Dental: how your health information may be used and disclosed.',
+      en: withTitle('Privacy Notice', {
+        description:
+          'Dental Nakeji Privacy Notice: what data we collect, why we use it, who we share it with, and how to exercise your rights.',
       }),
       es: withTitle('Aviso de privacidad', {
         description:
-          'Aviso de privacidad de Dental Nakeji: cómo puede usarse y compartirse tu información médica. Documento oficial en inglés; traducción pendiente.',
+          'Aviso de privacidad de Dental Nakeji: qué datos recabamos, para qué los usamos, con quién los compartimos y cómo ejercer tus derechos.',
       }),
     },
   ),
@@ -433,12 +432,11 @@ const PAGES: PageDef[] = [
     'terms',
     { en: '/en/terms/', es: '/es/terminos-y-condiciones/' },
     {
-      en: withTitle('SMS Terms & Conditions', {
-        description: 'SMS Terms & Conditions of Nakeji Dental: how to receive, opt out of, and get help with text messages.',
+      en: withTitle('Terms and Conditions', {
+        description: 'Dental Nakeji Terms and Conditions: appointment requests, payments, insurance, messages, and use of the site.',
       }),
-      es: withTitle('Términos de mensajes SMS', {
-        description:
-          'Términos de los mensajes SMS de Dental Nakeji: cómo recibirlos, darte de baja y pedir ayuda. Documento oficial en inglés; traducción pendiente.',
+      es: withTitle('Términos y condiciones', {
+        description: 'Términos y condiciones de Dental Nakeji: solicitudes de cita, pagos, seguros, mensajes y uso del sitio.',
       }),
     },
   ),
