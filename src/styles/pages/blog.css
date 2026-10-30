@@ -210,14 +210,10 @@
   line-height: 1.15;
 }
 
+/* Títulos de categoría: color fijo (sin cambio al pasar el cursor). */
 .blog-shelf__title a {
   color: var(--color-ink-strong);
   text-decoration: none;
-  transition: color var(--dur-fast) var(--ease-out);
-}
-
-.blog-shelf__title a:hover {
-  color: var(--color-brand);
 }
 
 .blog-shelf__text {
@@ -641,25 +637,80 @@
   line-height: 1.2;
 }
 
-/* Cada sección: el título arriba y el texto debajo, a ancho de lectura. */
+/* Cada sección es una tarjeta desplegable (mismo diseño que las de Términos y condiciones): el título arriba, separado por una
+   línea punteada del texto, que se abre y cierra con el botón invisible sobre la cabecera. */
 .blog-article__section {
-  padding-block: var(--space-7);
-  border-top: var(--border-hairline);
+  margin-top: var(--space-4);
+  border: 1px solid var(--color-fog);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow);
 }
 
-.blog-article__section:first-of-type {
-  padding-top: var(--space-4);
-  border-top: 0;
+.blog-article__head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin: 0 clamp(18px, 3vw, 32px);
+  padding-block: clamp(16px, 2.2vw, 24px);
+}
+
+.blog-article__section[data-open] .blog-article__head {
+  border-bottom: 1px dashed var(--color-fog);
+}
+
+/* Flecha: gira al abrir. */
+.blog-article__head::after {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin: -3px 6px 0 auto;
+  border: solid var(--color-brand);
+  border-width: 0 2px 2px 0;
+  rotate: 45deg;
+  transition: rotate var(--dur) var(--ease-out);
+}
+
+.blog-article__section[data-open] .blog-article__head::after {
+  margin-top: 3px;
+  rotate: 225deg;
+}
+
+.blog-article__toggle {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-card);
+  background: transparent;
+  cursor: pointer;
+}
+
+.blog-article__text {
+  padding: var(--space-4) clamp(18px, 3vw, 32px) var(--space-2);
+}
+
+.blog-article__section[data-open] .blog-article__text {
+  animation: blog-section-open var(--dur) var(--ease-out) both;
+}
+
+@keyframes blog-section-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
 }
 
 .blog-article__h2 {
-  margin: 0 0 var(--space-4);
+  margin: 0;
   color: var(--color-ink-strong);
   font-family: var(--font-display);
-  font-size: clamp(1.625rem, 1.2rem + 1.2vw, 2.125rem);
+  font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.625rem);
   font-weight: 700;
   letter-spacing: -0.015em;
-  line-height: 1.14;
+  line-height: 1.2;
   text-wrap: balance;
 }
 
@@ -782,10 +833,6 @@
 
   .blog-article {
     gap: 0;
-  }
-
-  .blog-article__section {
-    padding-block: 36px;
   }
 
   .blog-answer {
@@ -936,15 +983,6 @@
     font-size: 1.25rem;
   }
 
-  .blog-article__section {
-    padding-block: 22px;
-  }
-
-  .blog-article__h2 {
-    margin-bottom: var(--space-2);
-    font-size: 1.375rem;
-  }
-
   .blog-article__section p,
   .blog-article__section p:first-of-type {
     margin-bottom: var(--space-3);
@@ -979,11 +1017,8 @@
   color: rgb(213 232 246 / 0.8);
 }
 
+/* En la página del blog, los cinco títulos de categoría van en azul fijo (sin cambio al pasar el cursor). */
 .blog-dark .blog-shelf__title a {
-  color: var(--color-white);
-}
-
-.blog-dark .blog-shelf__title a:hover {
   color: var(--color-brand-light);
 }
 
@@ -1064,6 +1099,14 @@
   background: var(--color-brand-light);
 }
 
+/* Móvil: el blog es una página muy larga y la lava (plasma con máscara sobre toda la altura) se ve mal en el teléfono.
+   Se quita el plasma (el observador de visibilidad lo pausa) y queda solo el degradado azul fijo. Escritorio sin cambios. */
+@media (max-width: 767px) {
+  .blog-dark .page-plasma {
+    display: none;
+  }
+}
+
 @media (max-width: 960px) {
   .blog-dark .blog-article__body {
     padding-inline: var(--space-4);
@@ -1075,7 +1118,6 @@
 @media (prefers-reduced-motion: reduce) {
   .blog-index__link,
   .blog-chips a,
-  .blog-shelf__title a,
   .blog-topic {
     transition: none;
   }

@@ -12,7 +12,7 @@ import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
 
 import type { CSSProperties } from 'react'
 import { useLang } from '@/app/lang'
-import { SCHEDULE_ANCHOR } from '@/config/routes'
+import { SCHEDULE_ANCHOR, routeOf, type ServiceKey } from '@/config/routes'
 import { SITE } from '@/config/site'
 import { HERO } from '@/data/home'
 import { FibersBackground } from '@/components/decor/FibersBackground'
@@ -21,19 +21,25 @@ import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon } from '@/components/ui/Icon'
 import { SectionDecor } from '@/components/decor/SectionDecor'
 
+/** Servicio al que lleva cada burbuja, en el mismo orden que hero.ambientLabels (data/home.ts). */
+const AMBIENT_SERVICES: ServiceKey[] = ['implants', 'crowns', 'veneers', 'whitening', 'cleaning', 'orthodontics']
+
 export function Hero() {
-  const hero = HERO[useLang()]
+  const lang = useLang()
+  const hero = HERO[lang]
   return (
     <section className={`hero hero--${hero.theme}`} aria-labelledby="hero-titulo">
       <FibersBackground lightMode={hero.theme === 'light'} />
       <div className="hero__scrim" aria-hidden="true" />
       <SectionDecor variant="wave" position="bottom" />
 
-      <ul className="hero__ambient" aria-hidden="true">
+      <ul className="hero__ambient">
         {hero.ambientLabels.map((label, index) => (
-          <li key={label} className="ambient-label" style={{ '--i': index } as CSSProperties}>
-            <Icon name="check" size={18} />
-            {label}
+          <li key={label} style={{ '--i': index } as CSSProperties}>
+            <a className="ambient-label" href={routeOf(AMBIENT_SERVICES[index], lang).path}>
+              <Icon name="check" size={18} />
+              {label}
+            </a>
           </li>
         ))}
       </ul>

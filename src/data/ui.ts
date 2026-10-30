@@ -43,7 +43,6 @@ interface UiText {
     minutes: (n: number) => string
     answer: string
     sources: string
-    related: string
     crumbs: string
     chapters: string
     topicsNav: string
@@ -121,7 +120,6 @@ export const UI: Record<Lang, UiText> = {
       minutes: (n) => `${n} min read`,
       answer: 'Short answer.',
       sources: 'Sources:',
-      related: 'Related service:',
       crumbs: 'Breadcrumb',
       chapters: 'Article sections',
       topicsNav: 'Blog topics',
@@ -202,7 +200,6 @@ export const UI: Record<Lang, UiText> = {
       minutes: (n) => `${n} min de lectura`,
       answer: 'Respuesta breve.',
       sources: 'Fuentes:',
-      related: 'Servicio relacionado:',
       crumbs: 'Migas de pan',
       chapters: 'Secciones del artículo',
       topicsNav: 'Temas del blog',

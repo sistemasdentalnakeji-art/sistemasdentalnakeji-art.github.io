@@ -127,4 +127,4 @@ export const PARTNER_GROUPS = Object.fromEntries(LANGS.map((lang) => [lang, buil
 export const PARTNERS_CTA = { label: 'Consultar mi cobertura', href: SITE.social.whatsapp }
 
 /** Texto del botón de la home por idioma (el resto de páginas aún usa PARTNERS_CTA.label, en español, hasta el paso 4). */
-export const PARTNERS_CTA_LABEL: Record<Lang, string> = { en: 'Ask about my coverage', es: PARTNERS_CTA.label }
+export const PARTNERS_CTA_LABEL: Record<Lang, string> = { en: 'Message', es: 'Mensaje' }

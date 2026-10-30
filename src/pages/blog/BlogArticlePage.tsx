@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { Band } from '@/components/decor/Band'
 import { PagePlasma } from '@/components/decor/PagePlasma'
 import { ChapterScrubber } from '@/components/ui/ChapterScrubber'
@@ -33,8 +33,8 @@ function Links({ text }: { text: string }) {
 }
 
 /**
- * Artículo: cabecera (migas, tema, titular, entradilla, fecha y minutos, foto del servicio), respuesta breve, secciones con riel
- * de capítulos, cierre (fuentes, servicio y CTA) y "Más de este tema" con los otros artículos de su categoría.
+ * Artículo: cabecera (migas, tema, titular, entradilla, fecha y minutos, foto del servicio), respuesta breve, secciones en tarjetas
+ * desplegables (la primera abierta) con riel de capítulos, cierre (fuentes y CTA) y "Más de este tema" con los otros artículos de su categoría.
  */
 export function BlogArticlePage({ route, article }: { route: RouteDef; article: Article }) {
   const { lang } = route
@@ -42,6 +42,23 @@ export function BlogArticlePage({ route, article }: { route: RouteDef; article: 
   const key = keyOf(article)
   const category = BLOG[lang].categories.find((c) => c.name === article.category)
   const more = category ? articlesIn(lang, category).filter((a) => a.route !== article.route) : []
+  // Tarjetas abiertas (índices): la primera al entrar. El riel de capítulos y los enlaces con #seccion-N abren la que señalan.
+  const [open, setOpen] = useState<Set<number>>(() => new Set([0]))
+  const toggle = (i: number) =>
+    setOpen((prev) => {
+      const next = new Set(prev)
+      if (!next.delete(i)) next.add(i)
+      return next
+    })
+  useEffect(() => {
+    const reveal = () => {
+      const hit = /^#seccion-(\d+)$/.exec(window.location.hash)
+      if (hit) setOpen((prev) => new Set(prev).add(Number(hit[1]) - 1))
+    }
+    reveal()
+    window.addEventListener('hashchange', reveal)
+    return () => window.removeEventListener('hashchange', reveal)
+  }, [])
   const chapters = useMemo(() => article.sections.map((s, i) => ({ id: `seccion-${i + 1}`, title: s.title })), [article])
   const trail: { label: string; href?: string }[] = [{ label: 'Blog', href: routeOf('blog', lang).path }]
   if (category) trail.push({ label: category.name, href: category.route })
@@ -87,19 +104,36 @@ export function BlogArticlePage({ route, article }: { route: RouteDef; article: 
               <strong id="articulo-respuesta">{ui.answer}</strong> {article.answer}
             </p>
             {article.sections.map((s, i) => (
-              <section key={chapters[i].id} id={chapters[i].id} className="blog-article__section">
-                <h2 className="blog-article__h2">{s.title}</h2>
-                {paragraphsOf(s).map((p, j) => (
-                  <p key={j}>{p}</p>
-                ))}
+              <section
+                key={chapters[i].id}
+                id={chapters[i].id}
+                className="blog-article__section"
+                data-open={open.has(i) ? '' : undefined}
+                aria-labelledby={`${chapters[i].id}-titulo`}
+              >
+                <header className="blog-article__head">
+                  <h2 id={`${chapters[i].id}-titulo`} className="blog-article__h2">
+                    {s.title}
+                  </h2>
+                  <button
+                    type="button"
+                    className="blog-article__toggle"
+                    aria-expanded={open.has(i)}
+                    aria-controls={`${chapters[i].id}-texto`}
+                    aria-labelledby={`${chapters[i].id}-titulo`}
+                    onClick={() => toggle(i)}
+                  />
+                </header>
+                <div id={`${chapters[i].id}-texto`} className="blog-article__text" hidden={!open.has(i)}>
+                  {paragraphsOf(s).map((p, j) => (
+                    <p key={j}>{p}</p>
+                  ))}
+                </div>
               </section>
             ))}
             <div className="blog-article__end">
               <p className="blog-article__meta">
                 <strong>{ui.sources}</strong> <Links text={article.sources} />.
-              </p>
-              <p className="blog-article__meta">
-                <strong>{ui.related}</strong> <Links text={article.related} />.
               </p>
               <a className="btn btn--primary" href={scheduleHref(route)}>
                 {ui.book}

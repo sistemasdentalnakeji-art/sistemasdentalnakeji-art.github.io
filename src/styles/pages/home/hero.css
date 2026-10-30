@@ -159,17 +159,20 @@
   color: var(--color-gold);
 }
 
-/* Etiquetas ambientales (decorativas) */
+/* Etiquetas ambientales: cada una es un enlace a su servicio. El contenedor no recibe el ratón; solo las etiquetas. */
 .hero__ambient {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 1;
   display: none;
   pointer-events: none;
 }
 
 .ambient-label {
   position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 10px;
