@@ -20,6 +20,7 @@ import { useLang } from '@/app/lang'
 import { STORY, type StoryLines } from '@/data/story'
 import { AnimatedLines, type Line } from '@/components/decor/SectionDecor'
 import { Band } from '@/components/decor/Band'
+import { ParticlesBackground } from '@/components/decor/ParticlesBackground'
 import { storyThread, type StoryLayout } from '@/lib/storyThread'
 import { below, BP } from '@/config/breakpoints'
 
@@ -272,7 +273,7 @@ export function CareStory() {
   const scrub = useScrollScrub(areaRef, layout ? d : undefined)
 
   return (
-    <Band tone="tint" className="story" labelledBy="historia-titulo">
+    <Band tone="tint" className="story" labelledBy="historia-titulo" decor={<ParticlesBackground variant="story" />}>
       <div ref={areaRef} className={scrub ? 'container story__inner story--scrub' : 'container story__inner'}>
         {/* Hilo decorativo: curva animada como las de Agendar, que se va dibujando con el scroll (máscara .decor-reveal)
             con el diente en la punta. */}

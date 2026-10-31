@@ -15,6 +15,7 @@ import { UI } from '@/data/ui'
 import { REVIEWS_SECTION } from '@/data/home'
 import { Marquee } from '@/components/ui/Marquee'
 import { Band } from '@/components/decor/Band'
+import { SectionDecor } from '@/components/decor/SectionDecor'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Stars } from '@/components/ui/Stars'
 import { useGoogleReviews } from '@/lib/useGoogleReviews'
@@ -123,7 +124,7 @@ export function Reviews() {
   const shift = Math.ceil(cards.length / 2)
   const cardsBottom = [...cards.slice(shift), ...cards.slice(0, shift)]
   return (
-    <Band tone="tint" className="reviews-band" labelledBy="resenas-titulo">
+    <Band tone="tint" className="reviews-band" labelledBy="resenas-titulo" decor={<SectionDecor variant="rings" placement="reviews" />}>
       <div className="container">
         <div className="reviews-intro">
           <div className="reviews-intro__google">

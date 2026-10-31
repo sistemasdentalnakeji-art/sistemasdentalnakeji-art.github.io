@@ -16,6 +16,7 @@ import { FEATURED_ITEMS, type FeaturedItem } from '@/data/featuredServices'
 import { SERVICES_SECTION } from '@/data/home'
 import { UI } from '@/data/ui'
 import { Band } from '@/components/decor/Band'
+import { ParticlesBackground } from '@/components/decor/ParticlesBackground'
 import { Carousel } from '@/components/ui/Carousel'
 import { Icon } from '@/components/ui/Icon'
 import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
@@ -82,7 +83,7 @@ export function FeaturedServices() {
   const lang = useLang()
   const section = SERVICES_SECTION[lang]
   return (
-    <Band tone="tint" labelledBy="servicios-titulo" waveTop="flip">
+    <Band tone="tint" labelledBy="servicios-titulo" waveTop="flip" decor={<ParticlesBackground variant="services" />}>
       <div className="container">
         <header className="section-head">
           <h2 id="servicios-titulo" className="section-title">

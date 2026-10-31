@@ -1,15 +1,15 @@
-import { useEffect, useRef, type CSSProperties, type RefObject } from 'react'
+import { useRef, type CSSProperties } from 'react'
 import { cx } from '@/lib/cx'
+import { Rings, type RingsPlacement } from './rings/Rings'
+import { EASE_IN_OUT, useSmilMotion } from './useSmilMotion'
 
 // Decoraciones curvas para el fondo de las bandas (solo visuales, de un solo color).
 // - flow: curvas de esquina a esquina que pasan por debajo del contenido, con movimiento lento.
 //         En escritorio cruzan la banda; en móvil y tableta forman una franja al pie de la sección.
-// - rings: círculo azul completo con arcos concéntricos que respiran y llevan un destello.
+// - rings: círculo con siluetas (ver ./rings/Rings.tsx).
 // - wave: ola a todo lo ancho; une una banda con la siguiente.
 
 export type FlowLayout = 'schedule'
-/** contact: escritorio (arriba a la derecha); contact-mobile: junto a "Síguenos" en móvil y tableta. */
-type RingsPlacement = 'partners' | 'partners-cta' | 'contact' | 'contact-mobile'
 
 type SectionDecorProps =
   | { variant: 'flow'; layout: FlowLayout }
@@ -22,8 +22,6 @@ export interface Line {
   a: string
   b: string
 }
-
-const EASE_IN_OUT = '0.45 0 0.55 1;0.45 0 0.55 1'
 
 /** Curva en S: plana al inicio (izquierda) y al final (derecha). */
 const sCurve = (y0: number, y1: number, c1: number, c2: number, width: number) => ({
@@ -47,41 +45,6 @@ const MOBILE_FLOW: Line[] = Array.from({ length: 5 }, (_, i) => {
     b: `M-10 ${y0}C170 ${y0 - 14} 210 ${y1 + 12} 410 ${y1}`,
   }
 })
-
-const RING_RADII = [72, 122, 172, 222, 272]
-
-/**
- * Detiene las animaciones del SVG (SMIL y CSS) cuando el usuario pide reducir movimiento, pulsa
- * "Pausar animaciones" (evento `motionchange`) o el SVG está fuera de pantalla: así no gastan CPU
- * donde nadie las ve.
- */
-function useSmilMotion(ref: RefObject<SVGSVGElement | null>) {
-  useEffect(() => {
-    const svg = ref.current
-    if (!svg) return
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
-    let visible = true
-    const apply = () => {
-      const paused = media.matches || !visible || document.documentElement.dataset.motion === 'paused'
-      if (paused) svg.pauseAnimations()
-      else svg.unpauseAnimations()
-      svg.classList.toggle('is-paused', paused)
-    }
-    const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting
-      apply()
-    })
-    observer.observe(svg)
-    apply()
-    media.addEventListener('change', apply)
-    window.addEventListener('motionchange', apply)
-    return () => {
-      observer.disconnect()
-      media.removeEventListener('change', apply)
-      window.removeEventListener('motionchange', apply)
-    }
-  }, [ref])
-}
 
 interface AnimatedLinesProps {
   lines: Line[]
@@ -135,51 +98,6 @@ export function AnimatedLines({ lines, className, viewBox, revealId }: AnimatedL
           </g>
         ))}
       </g>
-    </svg>
-  )
-}
-
-function Rings({ placement }: { placement: RingsPlacement }) {
-  const svgRef = useRef<SVGSVGElement>(null)
-  useSmilMotion(svgRef)
-
-  return (
-    <svg
-      ref={svgRef}
-      className={`decor-rings decor-rings--${placement}`}
-      viewBox="-300 -300 600 600"
-      aria-hidden="true"
-      focusable="false"
-    >
-      {RING_RADII.map((radius, index) => {
-        const breathe = (
-          <animate
-            attributeName="r"
-            values={`${radius};${radius + 8};${radius}`}
-            keyTimes="0;0.5;1"
-            calcMode="spline"
-            keySplines={EASE_IN_OUT}
-            dur={`${12 + index * 1.5}s`}
-            begin={`-${index * 2}s`}
-            repeatCount="indefinite"
-          />
-        )
-        return (
-          <g key={radius} style={{ '--i': index } as CSSProperties}>
-            <circle className="decor-ring" r={radius}>
-              {breathe}
-            </circle>
-            <circle className="decor-ring__light" r={radius} pathLength={1000}>
-              {breathe}
-            </circle>
-          </g>
-        )
-      })}
-
-      {/* Círculo central completo, en el azul del logo. */}
-      <circle className="decor-rings__dot" r="30">
-        <animate attributeName="r" values="28;32;28" dur="6s" repeatCount="indefinite" />
-      </circle>
     </svg>
   )
 }

@@ -19,7 +19,6 @@ import { Band } from '@/components/decor/Band'
 import { ExternalLink } from '@/components/ui/ExternalLink'
 import { Icon } from '@/components/ui/Icon'
 import { InteractiveHoverContent } from '@/components/ui/AnimatedButtons'
-import { SectionDecor } from '@/components/decor/SectionDecor'
 
 /** Con logo real: solo el logo, sin tarjeta ni nombre (el nombre va en el alt). Sin logo: marcador con icono y nombre. */
 function Plate({ partner, icon }: { partner: Partner; icon: 'shield' | 'building' }) {
@@ -59,7 +58,6 @@ export function Partners() {
       className="partners-band"
       labelledBy="aseguranzas-titulo"
       waveTop="plain"
-      decor={<SectionDecor variant="rings" placement="partners" />}
     >
       <div className="container">
         <header className="section-head">
